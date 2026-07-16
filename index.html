@@ -166,6 +166,18 @@
     .card{grid-template-columns:1fr;gap:8px;}
     .gantt-legend{padding-left:0;}
   }
+
+  /* New Project modal */
+  .np-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);background:var(--panel);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.22);padding:24px;width:380px;max-width:90vw;z-index:31;display:none;opacity:0;transition:opacity .15s, transform .15s;}
+  .np-modal.open{display:block;opacity:1;transform:translate(-50%,-50%) scale(1);}
+  .np-modal h3{margin:0 0 4px;font-size:16px;}
+  .np-sub{font-size:12.5px;color:var(--muted);margin-bottom:14px;}
+  .np-modal input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;box-sizing:border-box;}
+  .np-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;}
+  .np-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;}
+  .np-btn.np-cancel{background:#fff;border-color:var(--border);color:var(--text);}
+  .np-btn.np-create{background:var(--blue);color:#fff;}
+  .np-btn:disabled{opacity:.6;cursor:default;}
 </style>
 </head>
 <body>
@@ -187,8 +199,19 @@
     <div class="chip" data-filter="pending">Not Started</div>
   </div>
   <button class="newbtn" id="refreshBtn" title="Reload from Google Sheet">↻ Refresh</button>
-  <button class="newbtn">+ New Project</button>
+  <button class="newbtn" id="newProjectBtn">+ New Project</button>
 </header>
+
+<div class="overlay" id="npOverlay"></div>
+<div class="np-modal" id="npModal">
+  <h3>New Project</h3>
+  <div class="np-sub">Adds a project with all 5 WPR phases ready for dates.</div>
+  <input type="text" id="npNameInput" placeholder="e.g. WPR Unit 13" maxlength="80">
+  <div class="np-actions">
+    <button class="np-btn np-cancel" id="npCancel">Cancel</button>
+    <button class="np-btn np-create" id="npCreate">Create</button>
+  </div>
+</div>
 
 <main>
   <div class="sync-banner" id="syncBanner" style="display:none;"></div>
@@ -233,7 +256,7 @@
 <script>
 // Paste the URL from your Apps Script "Deploy > Web app" step here.
 // Until you do, the app runs on blank local data — nothing is saved between visits.
-const API_URL = https://script.google.com/macros/s/AKfycbwpmgVlqQUBd-T2tIwl-QynxBuPx8lut7LhRqZRnO6OO9JPEsi40E9AxOeZaMTGhVBSKw/exec;
+const API_URL = "https://script.google.com/macros/s/AKfycbwpmgVlqQUBd-T2tIwl-QynxBuPx8lut7LhRqZRnO6OO9JPEsi40E9AxOeZaMTGhVBSKw/exec";
 const SYNC_ENABLED = API_URL.indexOf("http") === 0;
 
 function defaultProjects(){
@@ -703,6 +726,80 @@ document.getElementById("searchInput").addEventListener("input", e=>{
 });
 
 document.getElementById("refreshBtn").addEventListener("click", loadProjects);
+
+// ---------- New Project modal ----------
+
+function openNewProjectModal(){
+  document.getElementById("npNameInput").value = "";
+  document.getElementById("npOverlay").classList.add("open");
+  document.getElementById("npModal").classList.add("open");
+  document.getElementById("npNameInput").focus();
+}
+function closeNewProjectModal(){
+  document.getElementById("npOverlay").classList.remove("open");
+  document.getElementById("npModal").classList.remove("open");
+}
+
+function blankTimelines(){
+  return [
+    {key:"handover", label:"WPR Handover (Big-D → WPR)", start:null, end:null},
+    {key:"prewire", label:"Pre-Wire", start:null, end:null},
+    {key:"trim", label:"Trim", start:null, end:null},
+    {key:"install", label:"Install", start:null, end:null},
+    {key:"client", label:"Client", start:null, end:null},
+  ];
+}
+
+async function createNewProject(){
+  const input = document.getElementById("npNameInput");
+  const name = input.value.trim();
+  if(!name){ input.focus(); return; }
+
+  const btn = document.getElementById("npCreate");
+  btn.disabled = true;
+  btn.textContent = "Creating…";
+
+  if(SYNC_ENABLED){
+    try{
+      const res = await fetch(API_URL, {
+        method:"POST",
+        headers:{"Content-Type":"text/plain;charset=utf-8"},
+        body: JSON.stringify({action:"addProject", name})
+      });
+      PROJECTS = await res.json();
+      showSyncBanner("none");
+    } catch(err){
+      console.error("Failed to add project:", err);
+      btn.disabled = false;
+      btn.textContent = "Create";
+      showSyncBanner("error");
+      return;
+    }
+  } else {
+    const maxId = PROJECTS.reduce((m,p)=>Math.max(m,p.id),0);
+    PROJECTS.push({
+      id:maxId+1, name, owner:"Unassigned", team:[],
+      rag:"pending", percent:0, startsAt:null, endsAt:null,
+      milestones:[], tasks:{todo:0, progress:0, done:0}, taskList:[],
+      timelines: blankTimelines(),
+      risks:[]
+    });
+  }
+
+  btn.disabled = false;
+  btn.textContent = "Create";
+  closeNewProjectModal();
+  refreshAll();
+}
+
+document.getElementById("newProjectBtn").addEventListener("click", openNewProjectModal);
+document.getElementById("npCancel").addEventListener("click", closeNewProjectModal);
+document.getElementById("npOverlay").addEventListener("click", closeNewProjectModal);
+document.getElementById("npCreate").addEventListener("click", createNewProject);
+document.getElementById("npNameInput").addEventListener("keydown", e=>{
+  if(e.key==="Enter") createNewProject();
+  if(e.key==="Escape") closeNewProjectModal();
+});
 
 loadProjects();
 </script>
