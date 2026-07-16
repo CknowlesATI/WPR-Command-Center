@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WPR Command Center</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --panel:#ffffff; --border:#e2e6ec; --text:#1f2937; --muted:#6b7280;
+    --green:#1d9a6c; --green-bg:#e7f7ef;
+    --amber:#c98a04; --amber-bg:#fff5e0;
+    --red:#d93636; --red-bg:#fdeaea;
+    --blue:#2f6fed; --blue-bg:#eaf1ff;
+    --shadow:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);}
+  header{background:var(--panel);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:5;}
+  header h1{font-size:18px;margin:0;font-weight:700;white-space:nowrap;}
+  header .sub{font-size:12px;color:var(--muted);margin-top:2px;}
+  .titleblock{display:flex;flex-direction:column;margin-right:8px;}
+  .search{flex:1;max-width:360px;position:relative;}
+  .search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:#fafbfc;}
+  .search svg{position:absolute;left:10px;top:9px;width:16px;height:16px;color:var(--muted);}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;}
+  .chip{padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12.5px;cursor:pointer;color:var(--muted);font-weight:600;}
+  .chip.active{background:var(--text);color:#fff;border-color:var(--text);}
+  .newbtn{background:var(--blue);color:#fff;border:none;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+  #refreshBtn{margin-left:auto;background:#fff;color:var(--text);border:1px solid var(--border);}
+  #refreshBtn:hover{border-color:#c7cedb;}
+
+  main{padding:22px 28px 60px;max-width:1400px;margin:0 auto;}
+
+  .sync-banner{background:var(--amber-bg);color:#8a5a00;border:1px solid #f3d9a3;border-radius:10px;padding:10px 16px;font-size:12.5px;margin-bottom:18px;}
+  .sync-banner.error{background:var(--red-bg);color:#8a1f1f;border-color:#f3b9b9;}
+  .sync-banner code{background:rgba(0,0,0,.06);padding:1px 5px;border-radius:4px;}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:22px;}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);}
+  .kpi .n{font-size:24px;font-weight:700;}
+  .kpi .l{font-size:12px;color:var(--muted);margin-top:2px;}
+  .kpi.green .n{color:var(--green);} .kpi.amber .n{color:var(--amber);} .kpi.red .n{color:var(--red);}
+
+  .sectionhead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
+  .sectionhead h2{font-size:14px;margin:0;color:var(--muted);font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+  .count{font-size:12px;color:var(--muted);}
+
+  .board{display:flex;flex-direction:column;gap:10px;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 18px;box-shadow:var(--shadow);cursor:pointer;display:grid;grid-template-columns:210px 90px 1fr 170px 190px 120px;gap:18px;align-items:center;transition:border-color .1s;}
+  .card:hover{border-color:#c7cedb;}
+  .pname{font-weight:700;font-size:14px;line-height:1.3;}
+  .powner{font-size:12px;color:var(--muted);margin-top:2px;}
+  .rag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;justify-self:start;}
+  .rag.green{background:var(--green-bg);color:var(--green);}
+  .rag.amber{background:var(--amber-bg);color:var(--amber);}
+  .rag.red{background:var(--red-bg);color:var(--red);}
+  .rag.pending{background:#eef0f3;color:#6b7280;}
+  .rag .dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+
+  .timeline{display:flex;flex-direction:column;gap:4px;}
+  .tl-top{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);}
+  .bar{height:6px;border-radius:4px;background:#eceff3;overflow:hidden;}
+  .bar > div{height:100%;border-radius:4px;}
+  .milestone{font-size:12px;color:var(--text);}
+  .milestone .due{color:var(--muted);}
+
+  .taskstatus{display:flex;flex-direction:column;gap:4px;}
+  .tstack{display:flex;height:8px;border-radius:4px;overflow:hidden;background:#eceff3;}
+  .tstack div{height:100%;}
+  .tlegend{font-size:11px;color:var(--muted);}
+
+  .risks{font-size:12px;}
+  .risk-badge{display:inline-flex;align-items:center;gap:5px;font-weight:700;}
+  .risk-badge.none{color:var(--muted);font-weight:500;}
+  .risk-badge.some{color:var(--amber);}
+  .risk-badge.many{color:var(--red);}
+
+  /* Slideover */
+  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;z-index:20;}
+  .overlay.open{display:block;}
+  .panel{position:fixed;top:0;right:0;height:100%;width:480px;max-width:92vw;background:var(--panel);box-shadow:-8px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .18s ease;z-index:21;overflow-y:auto;}
+  .panel.open{transform:translateX(0);}
+  .panel-head{padding:20px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--panel);}
+  .panel-head .close{position:absolute;top:18px;right:18px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);}
+  .panel-head h2{margin:0 0 4px;font-size:17px;}
+  .panel-head .meta{font-size:12.5px;color:var(--muted);}
+  .panel-body{padding:20px 22px;display:flex;flex-direction:column;gap:24px;}
+  .pb-section h3{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:0 0 10px;font-weight:700;}
+  .ms-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f1f3f6;font-size:13px;}
+  .ms-item:last-child{border-bottom:none;}
+  .ms-dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+  .ms-dot.done{background:var(--green);} .ms-dot.next{background:var(--blue);} .ms-dot.future{background:#c8ccd4;}
+  .ms-name{font-weight:600;}
+  .ms-date{color:var(--muted);font-size:12px;}
+  .task-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid #f1f3f6;}
+  .task-row:last-child{border-bottom:none;}
+  .tag{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600;}
+  .tag.todo{background:#eceff3;color:var(--muted);}
+  .tag.progress{background:var(--blue-bg);color:var(--blue);}
+  .tag.done{background:var(--green-bg);color:var(--green);}
+  .risk-item{border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px;}
+  .risk-item .rtop{display:flex;justify-content:space-between;font-weight:700;margin-bottom:4px;}
+  .sev{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:700;}
+  .sev.high{background:var(--red-bg);color:var(--red);}
+  .sev.medium{background:var(--amber-bg);color:var(--amber);}
+  .sev.low{background:#eceff3;color:var(--muted);}
+  .risk-item .rowner{color:var(--muted);font-size:12px;margin-top:4px;}
+  .rdue-row{display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);}
+  .rdue-label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
+  .due-input{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);background:#fafbfc;font-family:inherit;}
+  .rdue-row.overdue .due-input{border-color:var(--red);color:var(--red);background:var(--red-bg);}
+  .rdue-row.overdue .rdue-label{color:var(--red);}
+  .due-clear{border:none;background:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 6px;border-radius:4px;line-height:1;}
+  .due-clear:hover{background:#eceff3;color:var(--text);}
+  .empty{color:var(--muted);font-size:13px;font-style:italic;}
+
+  /* Portfolio Gantt strip */
+  .gantt-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px 14px;box-shadow:var(--shadow);margin-bottom:26px;overflow-x:auto;}
+  .gantt-grid-row{display:grid;grid-template-columns:190px 1fr;align-items:center;column-gap:12px;min-width:640px;}
+  .gantt-grid-row.header-row{margin-bottom:4px;}
+  .gantt-label{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;padding:5px 0;}
+  .gantt-label:hover{color:var(--blue);}
+  .gantt-months-track{position:relative;height:20px;}
+  .gantt-tick{position:absolute;top:0;font-size:11px;color:var(--muted);font-weight:600;transform:translateX(-2px);}
+  .gantt-track{position:relative;height:16px;background:#f4f6f9;border-radius:4px;margin:4px 0;}
+  .gantt-bar{position:absolute;top:0;height:16px;border-radius:4px;cursor:pointer;min-width:6px;}
+  .gantt-bar.green{background:var(--green);} .gantt-bar.amber{background:var(--amber);} .gantt-bar.red{background:var(--red);} .gantt-bar.pending{background:#9aa2b1;}
+  .gantt-today{position:absolute;top:-6px;bottom:-6px;width:2px;background:#111827;opacity:.35;}
+  .gantt-legend{display:flex;gap:16px;margin-top:10px;padding-left:190px;font-size:11.5px;color:var(--muted);flex-wrap:wrap;}
+  .gantt-legend .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle;}
+  .gantt-legend .dot.green{background:var(--green);} .gantt-legend .dot.amber{background:var(--amber);} .gantt-legend .dot.red{background:var(--red);}
+  .gantt-legend .today-dot{display:inline-block;width:2px;height:10px;background:#111827;opacity:.5;margin-right:6px;vertical-align:middle;}
+  .phase-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+  .phase-chips .chip{display:inline-flex;align-items:center;gap:6px;}
+  .gantt-tracks{display:flex;flex-direction:column;gap:3px;}
+  .gantt-track.phase{height:7px;background:#f4f6f9;border-radius:3px;}
+  .gantt-track.single{height:16px;}
+  .gantt-bar.seg{height:7px;border-radius:3px;}
+  .gantt-empty-note{position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:10.5px;color:var(--muted);font-style:italic;white-space:nowrap;}
+
+  /* Per-project WPR timeline phases (detail panel) */
+  .tp-item{margin-bottom:14px;}
+  .tp-item:last-child{margin-bottom:0;}
+  .tp-head{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;margin-bottom:5px;}
+  .tp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .tp-dot.handover{background:#7c5cff;} .tp-bar.handover{background:#7c5cff;}
+  .tp-dot.prewire{background:#14b8a6;} .tp-bar.prewire{background:#14b8a6;}
+  .tp-dot.trim{background:#fb923c;} .tp-bar.trim{background:#fb923c;}
+  .tp-dot.install{background:var(--blue);} .tp-bar.install{background:var(--blue);}
+  .tp-dot.client{background:#ec4899;} .tp-bar.client{background:#ec4899;}
+  .tp-note{font-weight:500;color:var(--muted);font-size:11px;}
+  .tp-dates{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+  .tp-input{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);background:#fafbfc;font-family:inherit;}
+  .tp-sep{color:var(--muted);font-size:12px;}
+  .tp-track{position:relative;height:8px;background:#f4f6f9;border-radius:4px;}
+  .tp-bar{position:absolute;top:0;height:8px;border-radius:4px;}
+
+  /* Per-project visual timeline (detail panel) */
+  .pt-track{position:relative;height:14px;margin:10px 4px 4px;}
+  .pt-line{position:absolute;top:6px;left:0;right:0;height:2px;background:var(--border);}
+  .pt-dot{position:absolute;top:2px;width:10px;height:10px;border-radius:50%;transform:translateX(-50%);border:2px solid #fff;box-shadow:0 0 0 1px var(--border);}
+  .pt-dot.done{background:var(--green);} .pt-dot.next{background:var(--blue);} .pt-dot.future{background:#c8ccd4;}
+  .pt-today{position:absolute;top:-4px;width:2px;height:18px;background:#111827;opacity:.4;transform:translateX(-50%);}
+  .pt-range{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:2px 4px 14px;}
+
+  @media (max-width:1100px){
+    .card{grid-template-columns:1fr;gap:8px;}
+    .gantt-legend{padding-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="titleblock">
+    <h1>WPR Command Center</h1>
+    <div class="sub">Portfolio overview</div>
+  </div>
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="searchInput" placeholder="Search projects or owners…">
+  </div>
+  <div class="chips" id="filterChips">
+    <div class="chip active" data-filter="all">All</div>
+    <div class="chip" data-filter="green">On Track</div>
+    <div class="chip" data-filter="amber">At Risk</div>
+    <div class="chip" data-filter="red">Off Track</div>
+    <div class="chip" data-filter="pending">Not Started</div>
+  </div>
+  <button class="newbtn" id="refreshBtn" title="Reload from Google Sheet">↻ Refresh</button>
+  <button class="newbtn">+ New Project</button>
+</header>
+
+<main>
+  <div class="sync-banner" id="syncBanner" style="display:none;"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="sectionhead">
+    <h2>Schedule Timeline</h2>
+    <div class="count">All projects, plotted by start/end date — click a row to open it</div>
+  </div>
+  <div class="phase-chips" id="phaseChips">
+    <div class="chip active" data-phase="all">All Phases</div>
+    <div class="chip" data-phase="handover"><span class="tp-dot handover"></span>WPR Handover</div>
+    <div class="chip" data-phase="prewire"><span class="tp-dot prewire"></span>Pre-Wire</div>
+    <div class="chip" data-phase="trim"><span class="tp-dot trim"></span>Trim</div>
+    <div class="chip" data-phase="install"><span class="tp-dot install"></span>Install</div>
+    <div class="chip" data-phase="client"><span class="tp-dot client"></span>Client</div>
+  </div>
+  <div class="gantt-wrap">
+    <div class="gantt-grid-row header-row">
+      <div class="gantt-label"></div>
+      <div class="gantt-months-track" id="ganttMonths"></div>
+    </div>
+    <div id="ganttBody"></div>
+    <div class="gantt-legend">
+      <span><span class="dot green"></span>On Track</span>
+      <span><span class="dot amber"></span>At Risk</span>
+      <span><span class="dot red"></span>Off Track</span>
+      <span><span class="today-dot"></span>Today</span>
+    </div>
+  </div>
+
+  <div class="sectionhead">
+    <h2>Projects</h2>
+    <div class="count" id="resultCount"></div>
+  </div>
+  <div class="board" id="board"></div>
+</main>
+
+<div class="overlay" id="overlay"></div>
+<div class="panel" id="panel"></div>
+
+<script>
+// Paste the URL from your Apps Script "Deploy > Web app" step here.
+// Until you do, the app runs on blank local data — nothing is saved between visits.
+const API_URL = https://script.google.com/macros/s/AKfycbwpmgVlqQUBd-T2tIwl-QynxBuPx8lut7LhRqZRnO6OO9JPEsi40E9AxOeZaMTGhVBSKw/exec;
+const SYNC_ENABLED = API_URL.indexOf("http") === 0;
+
+function defaultProjects(){
+  return [
+    "WPR Unit 1","WPR Unit 2","WPR Unit 3","WPR Unit 4","WPR Unit 5","WPR Unit 6",
+    "WPR Unit 7","WPR Unit 8","WPR Unit 9","WPR Unit 10","WPR Unit 11","WPR Unit 12",
+    "WPR Condo 101","WPR Condo 102","WPR Condo 201","WPR Condo 202","WPR Condo Penthouse",
+  ].map((name,i)=>({
+    id:i+1, name, owner:"Unassigned", team:[],
+    rag:"pending", percent:0, startsAt:null, endsAt:null,
+    milestones:[],
+    tasks:{todo:0, progress:0, done:0},
+    taskList:[],
+    timelines:[
+      {key:"handover", label:"WPR Handover (Big-D → WPR)", start:null, end:null},
+      {key:"prewire", label:"Pre-Wire", start:null, end:null},
+      {key:"trim", label:"Trim", start:null, end:null},
+      {key:"install", label:"Install", start:null, end:null},
+      {key:"client", label:"Client", start:null, end:null},
+    ],
+    risks:[]
+  }));
+}
+
+let PROJECTS = [];
+
+function showSyncBanner(kind){
+  const el = document.getElementById("syncBanner");
+  if(kind==="none"){ el.style.display="none"; return; }
+  el.style.display="block";
+  el.classList.toggle("error", kind==="error");
+  if(kind==="unconfigured"){
+    el.innerHTML = `Working on local, unsaved data. Connect this to your Google Sheet by pasting your Apps Script URL into <code>API_URL</code> in the HTML file to save changes across devices.`;
+  } else if(kind==="error"){
+    el.innerHTML = `Couldn't reach the Google Sheet — showing local data instead. Changes won't be saved until the connection is back. Try Refresh in a moment.`;
+  }
+}
+
+async function postUpdate(action, payload){
+  if(!SYNC_ENABLED) return;
+  try{
+    await fetch(API_URL, {
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify({action, ...payload})
+    });
+  } catch(err){
+    console.error("Sync failed:", err);
+  }
+}
+
+async function loadProjects(){
+  if(!SYNC_ENABLED){
+    PROJECTS = defaultProjects();
+    showSyncBanner("unconfigured");
+  } else {
+    try{
+      const res = await fetch(API_URL);
+      PROJECTS = await res.json();
+      showSyncBanner("none");
+    } catch(err){
+      console.error("Failed to load from Google Sheet:", err);
+      PROJECTS = defaultProjects();
+      showSyncBanner("error");
+    }
+  }
+  refreshRagStatuses();
+  renderKPIs();
+  renderGantt();
+  renderBoard();
+}
+
+const state = { filter:"all", search:"", ganttPhase:"all" };
+
+const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+function parseSimpleDate(str, year=2026){
+  const [mon, day] = str.replace(".","").split(" ");
+  return new Date(year, MONTHS[mon], parseInt(day,10));
+}
+function getPortfolioRange(){
+  let min=null, max=null;
+  PROJECTS.forEach(p=>{
+    if(!p.startsAt || !p.endsAt) return;
+    const s = parseSimpleDate(p.startsAt), e = parseSimpleDate(p.endsAt);
+    if(!min || s<min) min=s;
+    if(!max || e>max) max=e;
+  });
+  if(!min || !max){
+    const now = new Date();
+    min = new Date(now.getFullYear(), now.getMonth()-1, 1);
+    max = new Date(now.getFullYear(), now.getMonth()+2, 0);
+    return {min,max};
+  }
+  min = new Date(min.getFullYear(), min.getMonth(), 1);
+  max = new Date(max.getFullYear(), max.getMonth()+1, 0);
+  return {min,max};
+}
+
+function computeRag(p){
+  const defined = p.timelines.filter(t=>t.start && t.end);
+  if(defined.length===0) return "pending";
+
+  const now = new Date();
+  const overdueHigh = p.risks.some(r=>r.severity==="high" && r.due && new Date(r.due) < now);
+  const overdueMedium = p.risks.some(r=>r.severity==="medium" && r.due && new Date(r.due) < now);
+
+  const install = p.timelines.find(t=>t.key==="install");
+  const openTasks = p.tasks.todo + p.tasks.progress;
+  const installOverdue = install && install.end && now > new Date(install.end) && openTasks>0;
+
+  if(overdueHigh || installOverdue) return "red";
+
+  const seqKeys = ["handover","prewire","trim","install"];
+  const seq = seqKeys.map(k=>p.timelines.find(t=>t.key===k));
+  let gapFound = false;
+  for(let i=0;i<seq.length-1;i++){
+    const cur = seq[i], next = seq[i+1];
+    if(cur.start && cur.end && now > new Date(cur.end) && !next.start){
+      gapFound = true;
+      break;
+    }
+  }
+
+  if(overdueMedium || gapFound) return "amber";
+  return "green";
+}
+
+function refreshRagStatuses(){
+  PROJECTS.forEach(p=>{ p.rag = computeRag(p); });
+}
+
+function refreshAll(){
+  refreshRagStatuses();
+  renderKPIs();
+  renderGantt();
+  renderBoard();
+}
+
+function ragLabel(r){ return r==="green" ? "On Track" : r==="amber" ? "At Risk" : r==="red" ? "Off Track" : "Not Started"; }
+function barColor(r){ return r==="green" ? "var(--green)" : r==="amber" ? "var(--amber)" : r==="red" ? "var(--red)" : "#9aa2b1"; }
+
+function renderKPIs(list){
+  const total = PROJECTS.length;
+  const green = PROJECTS.filter(p=>p.rag==="green").length;
+  const amber = PROJECTS.filter(p=>p.rag==="amber").length;
+  const red = PROJECTS.filter(p=>p.rag==="red").length;
+  const pending = PROJECTS.filter(p=>p.rag==="pending").length;
+  const risks = PROJECTS.reduce((a,p)=>a+p.risks.length,0);
+  const highRisks = PROJECTS.reduce((a,p)=>a+p.risks.filter(r=>r.severity==="high").length,0);
+  const kpis = [
+    {n:total, l:"Total Projects", cls:""},
+    {n:green, l:"On Track", cls:"green"},
+    {n:amber, l:"At Risk", cls:"amber"},
+    {n:red, l:"Off Track", cls:"red"},
+    {n:pending, l:"Not Started", cls:""},
+    {n:risks, l:"Open Risks/Issues", cls:""},
+    {n:highRisks, l:"High-Severity Risks", cls:"red"},
+  ];
+  document.getElementById("kpis").innerHTML = kpis.map(k=>`
+    <div class="kpi ${k.cls}"><div class="n">${k.n}</div><div class="l">${k.l}</div></div>
+  `).join("");
+}
+
+function riskBadge(p){
+  const n = p.risks.length;
+  if(n===0) return `<span class="risk-badge none">No open risks</span>`;
+  const high = p.risks.filter(r=>r.severity==="high").length;
+  const cls = high>0 ? "many" : "some";
+  return `<span class="risk-badge ${cls}">${n} open ${n===1?"risk":"risks"}${high>0?` · ${high} high`:""}</span>`;
+}
+
+function nextMilestone(p){
+  if(!p.milestones.length) return null;
+  const m = p.milestones.find(m=>m.state==="next") || p.milestones[p.milestones.length-1];
+  return m;
+}
+
+function renderBoard(){
+  const q = state.search.trim().toLowerCase();
+  const filtered = PROJECTS.filter(p=>{
+    if(state.filter!=="all" && p.rag!==state.filter) return false;
+    if(q && !(p.name.toLowerCase().includes(q) || p.owner.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  document.getElementById("resultCount").textContent = `${filtered.length} of ${PROJECTS.length}`;
+  const board = document.getElementById("board");
+  if(filtered.length===0){
+    board.innerHTML = `<div class="empty">No projects match your filters.</div>`;
+    return;
+  }
+  board.innerHTML = filtered.map(p=>{
+    const m = nextMilestone(p);
+    const totalTasks = p.tasks.todo + p.tasks.progress + p.tasks.done;
+    const donePct = totalTasks? Math.round(p.tasks.done/totalTasks*100):0;
+    const progPct = totalTasks? Math.round(p.tasks.progress/totalTasks*100):0;
+    return `
+    <div class="card" data-id="${p.id}">
+      <div>
+        <div class="pname">${p.name}</div>
+        <div class="powner">${p.owner}</div>
+      </div>
+      <div class="rag ${p.rag}"><span class="dot"></span>${ragLabel(p.rag)}</div>
+      <div class="timeline">
+        <div class="tl-top"><span>${p.percent}% complete</span><span>${p.startsAt && p.endsAt ? `${p.startsAt} – ${p.endsAt}` : "Not scheduled yet"}</span></div>
+        <div class="bar"><div style="width:${p.percent}%;background:${barColor(p.rag)}"></div></div>
+        <div class="milestone">${m ? `Next: <strong>${m.name}</strong> <span class="due">(${m.date})</span>` : "No milestones added yet"}</div>
+      </div>
+      <div class="taskstatus">
+        <div class="tstack">
+          <div style="width:${donePct}%;background:var(--green)"></div>
+          <div style="width:${progPct}%;background:var(--blue)"></div>
+        </div>
+        <div class="tlegend">${totalTasks ? `${p.tasks.done} done · ${p.tasks.progress} in progress · ${p.tasks.todo} to do` : "No tasks added yet"}</div>
+      </div>
+      <div class="risks">${riskBadge(p)}</div>
+      <div class="teamline">${p.team.length ? p.team.join(", ") : "Unassigned"}</div>
+    </div>`;
+  }).join("");
+
+  board.querySelectorAll(".card").forEach(card=>{
+    card.addEventListener("click", ()=> openPanel(Number(card.dataset.id)));
+  });
+}
+
+function monthLabel(d){ return d.toLocaleString("en-US",{month:"short"}); }
+
+function renderGantt(){
+  const {min,max} = getPortfolioRange();
+  const totalMs = max-min;
+  const todayPct = Math.min(100, Math.max(0, (new Date()-min)/totalMs*100));
+
+  const ticks=[];
+  let cur = new Date(min.getFullYear(), min.getMonth(), 1);
+  while(cur<=max){
+    const pct = (cur-min)/totalMs*100;
+    ticks.push(`<div class="gantt-tick" style="left:${pct}%">${monthLabel(cur)}</div>`);
+    cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1);
+  }
+  document.getElementById("ganttMonths").innerHTML = ticks.join("");
+
+  const phase = state.ganttPhase;
+
+  const rows = PROJECTS.map(p=>{
+    let trackHTML;
+    if(phase==="all"){
+      let mainBar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
+      if(p.startsAt && p.endsAt){
+        const s = parseSimpleDate(p.startsAt), e = parseSimpleDate(p.endsAt);
+        const leftPct = (s-min)/totalMs*100;
+        const widthPct = Math.max(1.5, (e-s)/totalMs*100);
+        mainBar = `<div class="gantt-bar ${p.rag}" style="left:${leftPct}%;width:${widthPct}%" title="${p.name}: ${p.startsAt} – ${p.endsAt}"></div>`;
+      }
+      const segs = p.timelines.filter(t=>t.start && t.end).map(t=>{
+        const ts = new Date(t.start), te = new Date(t.end);
+        const segLeft = (ts-min)/totalMs*100;
+        const segWidth = Math.max(1, (te-ts)/totalMs*100);
+        return `<div class="gantt-bar seg ${t.key}" style="left:${segLeft}%;width:${segWidth}%" title="${t.label}: ${t.start} – ${t.end}"></div>`;
+      }).join("");
+      trackHTML = `
+      <div class="gantt-tracks">
+        <div class="gantt-track main">
+          ${mainBar}
+          <div class="gantt-today" style="left:${todayPct}%"></div>
+        </div>
+        <div class="gantt-track phase">
+          ${segs}
+          <div class="gantt-today" style="left:${todayPct}%"></div>
+        </div>
+      </div>`;
+    } else {
+      const t = p.timelines.find(x=>x.key===phase);
+      let bar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
+      if(t && t.start && t.end){
+        const ts = new Date(t.start), te = new Date(t.end);
+        const leftPct = (ts-min)/totalMs*100;
+        const widthPct = Math.max(1.5, (te-ts)/totalMs*100);
+        bar = `<div class="gantt-bar ${t.key}" style="left:${leftPct}%;width:${widthPct}%" title="${t.label}: ${t.start} – ${t.end}"></div>`;
+      }
+      trackHTML = `
+      <div class="gantt-track single">
+        ${bar}
+        <div class="gantt-today" style="left:${todayPct}%"></div>
+      </div>`;
+    }
+    return `
+    <div class="gantt-grid-row" data-id="${p.id}">
+      <div class="gantt-label">${p.name}</div>
+      ${trackHTML}
+    </div>`;
+  }).join("");
+  const body = document.getElementById("ganttBody");
+  body.innerHTML = rows;
+  body.querySelectorAll(".gantt-grid-row").forEach(row=>{
+    row.addEventListener("click", ()=> openPanel(Number(row.dataset.id)));
+  });
+}
+
+function renderTimelinePhases(p){
+  const defined = p.timelines.filter(t=>t.start && t.end);
+  let min=null, max=null;
+  defined.forEach(t=>{
+    const s=new Date(t.start), e=new Date(t.end);
+    if(!min||s<min) min=s;
+    if(!max||e>max) max=e;
+  });
+  const hasRange = min && max && max>min;
+  return p.timelines.map((t,i)=>{
+    let track = `<div class="tp-track"></div>`;
+    if(hasRange && t.start && t.end){
+      const s=new Date(t.start), e=new Date(t.end);
+      const totalMs = max-min;
+      const leftPct = (s-min)/totalMs*100;
+      const widthPct = Math.max(2,(e-s)/totalMs*100);
+      track = `<div class="tp-track"><div class="tp-bar ${t.key}" style="left:${leftPct}%;width:${widthPct}%"></div></div>`;
+    }
+    return `
+    <div class="tp-item">
+      <div class="tp-head"><span class="tp-dot ${t.key}"></span>${t.label}${t.key==="client"?` <span class="tp-note">(tied to Install)</span>`:""}</div>
+      <div class="tp-dates">
+        <input type="date" class="tp-input" data-pid="${p.id}" data-idx="${i}" data-field="start" value="${t.start||""}">
+        <span class="tp-sep">→</span>
+        <input type="date" class="tp-input" data-pid="${p.id}" data-idx="${i}" data-field="end" value="${t.end||""}">
+      </div>
+      ${track}
+    </div>`;
+  }).join("");
+}
+
+function milestoneTimelineHTML(p){
+  if(!p.startsAt || !p.endsAt || !p.milestones.length){
+    return `<div class="empty">No milestones added yet.</div>`;
+  }
+  const s = parseSimpleDate(p.startsAt), e = parseSimpleDate(p.endsAt);
+  const totalMs = e-s;
+  const dots = p.milestones.map(m=>{
+    const d = parseSimpleDate(m.date);
+    const pct = totalMs ? Math.min(100, Math.max(0, (d-s)/totalMs*100)) : 0;
+    return `<div class="pt-dot ${m.state}" style="left:${pct}%" title="${m.name} — ${m.date}"></div>`;
+  }).join("");
+  const todayPct = totalMs ? (new Date()-s)/totalMs*100 : -1;
+  const showToday = todayPct>=0 && todayPct<=100;
+  return `
+    <div class="pt-track">
+      <div class="pt-line"></div>
+      ${dots}
+      ${showToday?`<div class="pt-today" style="left:${todayPct}%" title="Today"></div>`:""}
+    </div>
+    <div class="pt-range"><span>${p.startsAt}</span><span>${p.endsAt}</span></div>`;
+}
+
+function openPanel(id){
+  const p = PROJECTS.find(x=>x.id===id);
+  const panel = document.getElementById("panel");
+  const overlay = document.getElementById("overlay");
+  const msHTML = p.milestones.map(m=>`
+    <div class="ms-item">
+      <div class="ms-dot ${m.state}"></div>
+      <div><div class="ms-name">${m.name}</div><div class="ms-date">${m.date}</div></div>
+    </div>`).join("");
+  const taskHTML = p.taskList.map(t=>`
+    <div class="task-row"><span>${t.name}</span><span class="tag ${t.status}">${t.status==="progress"?"In progress":t.status==="done"?"Done":"To do"}</span></div>
+  `).join("") || `<div class="empty">No open tasks listed.</div>`;
+  const riskHTML = p.risks.map(r=>{
+    const overdue = r.due && new Date(r.due) < new Date();
+    return `
+    <div class="risk-item">
+      <div class="rtop"><span>${r.title}</span><span class="sev ${r.severity}">${r.severity}</span></div>
+      <div>${r.note}</div>
+      <div class="rowner">Owner: ${r.owner}</div>
+      <div class="rdue-row ${overdue?"overdue":""}">
+        <span class="rdue-label">Due</span>
+        <input type="datetime-local" class="due-input" data-pid="${p.id}" data-riskid="${r.id}" value="${r.due||""}">
+        <button class="due-clear" data-pid="${p.id}" data-riskid="${r.id}" title="Clear due date">✕</button>
+      </div>
+    </div>`;
+  }).join("") || `<div class="empty">No open tasks or issues.</div>`;
+
+  panel.innerHTML = `
+    <div class="panel-head">
+      <button class="close" id="closeBtn">✕</button>
+      <h2>${p.name}</h2>
+      <div class="meta">Owner: ${p.owner} · Team: ${p.team.length ? p.team.join(", ") : "Unassigned"} · ${p.startsAt && p.endsAt ? `${p.startsAt} – ${p.endsAt}` : "Dates not scheduled"}</div>
+      <div style="margin-top:8px;" class="rag ${p.rag}"><span class="dot"></span>${ragLabel(p.rag)} · ${p.percent}% complete</div>
+    </div>
+    <div class="panel-body">
+      <div class="pb-section">
+        <h3>Project Timelines</h3>
+        ${renderTimelinePhases(p)}
+      </div>
+      <div class="pb-section">
+        <h3>Milestones</h3>
+        ${milestoneTimelineHTML(p)}
+        ${msHTML}
+      </div>
+      <div class="pb-section">
+        <h3>Task Status (${p.tasks.done + p.tasks.progress + p.tasks.todo} total)</h3>
+        ${taskHTML}
+      </div>
+      <div class="pb-section">
+        <h3>Tasks &amp; Issues</h3>
+        ${riskHTML}
+      </div>
+    </div>
+  `;
+  panel.classList.add("open");
+  overlay.classList.add("open");
+  document.getElementById("closeBtn").addEventListener("click", closePanel);
+}
+function closePanel(){
+  document.getElementById("panel").classList.remove("open");
+  document.getElementById("overlay").classList.remove("open");
+}
+document.getElementById("overlay").addEventListener("click", closePanel);
+
+document.getElementById("panel").addEventListener("change", e=>{
+  const inp = e.target.closest(".due-input");
+  if(inp){
+    const proj = PROJECTS.find(x=>x.id===Number(inp.dataset.pid));
+    const risk = proj.risks.find(r=>String(r.id)===inp.dataset.riskid);
+    risk.due = inp.value || null;
+    postUpdate("updateRiskDue", {riskId: risk.id, value: risk.due});
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
+  const tpInp = e.target.closest(".tp-input");
+  if(tpInp){
+    const proj = PROJECTS.find(x=>x.id===Number(tpInp.dataset.pid));
+    const idx = Number(tpInp.dataset.idx);
+    const field = tpInp.dataset.field;
+    proj.timelines[idx][field] = tpInp.value || null;
+    postUpdate("updateTimeline", {projectId: proj.id, key: proj.timelines[idx].key, field, value: tpInp.value || null});
+    refreshAll();
+    openPanel(proj.id);
+  }
+});
+document.getElementById("panel").addEventListener("click", e=>{
+  const btn = e.target.closest(".due-clear");
+  if(!btn) return;
+  const proj = PROJECTS.find(x=>x.id===Number(btn.dataset.pid));
+  const risk = proj.risks.find(r=>String(r.id)===btn.dataset.riskid);
+  risk.due = null;
+  postUpdate("updateRiskDue", {riskId: risk.id, value: null});
+  refreshAll();
+  openPanel(proj.id);
+});
+
+document.getElementById("phaseChips").addEventListener("click", e=>{
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  document.querySelectorAll("#phaseChips .chip").forEach(c=>c.classList.remove("active"));
+  chip.classList.add("active");
+  state.ganttPhase = chip.dataset.phase;
+  renderGantt();
+});
+document.getElementById("filterChips").addEventListener("click", e=>{
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  document.querySelectorAll("#filterChips .chip").forEach(c=>c.classList.remove("active"));
+  chip.classList.add("active");
+  state.filter = chip.dataset.filter;
+  renderBoard();
+});
+document.getElementById("searchInput").addEventListener("input", e=>{
+  state.search = e.target.value;
+  renderBoard();
+});
+
+document.getElementById("refreshBtn").addEventListener("click", loadProjects);
+
+loadProjects();
+</script>
+</body>
+</html>
