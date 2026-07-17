@@ -298,21 +298,18 @@ function defaultProjects(){
     "WPR Unit 1","WPR Unit 2","WPR Unit 3","WPR Unit 4","WPR Unit 5","WPR Unit 6",
     "WPR Unit 7","WPR Unit 8","WPR Unit 9","WPR Unit 10","WPR Unit 11","WPR Unit 12",
     "WPR Condo 101","WPR Condo 102","WPR Condo 201","WPR Condo 202","WPR Condo Penthouse",
-  ].map((name,i)=>({
-    id:i+1, name, ...defaultProjectMeta(name),
+  ].map((name,i)=>{
+    const meta = defaultProjectMeta(name);
+    return {
+    id:i+1, name, ...meta,
     rag:"pending", percent:0, startsAt:null, endsAt:null,
     milestones:[],
     tasks:{todo:0, progress:0, done:0},
     taskList:[],
-    timelines:[
-      {key:"handover", label:"WPR Handover (Big-D → WPR)", start:null, end:null},
-      {key:"prewire", label:"Pre-Wire", start:null, end:null},
-      {key:"trim", label:"Trim", start:null, end:null},
-      {key:"install", label:"Install", start:null, end:null},
-      {key:"client", label:"Client", start:null, end:null},
-    ],
+    timelines:blankTimelines(meta.projectGroup),
     risks:[]
-  }));
+  };
+  });
 }
 
 let PROJECTS = [];
@@ -374,6 +371,9 @@ const PHASES = [
   {key:"install", label:"Install"},
   {key:"client", label:"Client"},
 ];
+function phaseTemplateFor(project){
+  return project && project.projectGroup==="WPR" ? PHASES : PHASES.filter(p=>p.key!=="handover");
+}
 const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
 function escapeHTML(value){
   return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
@@ -397,14 +397,15 @@ function normalizeDateString(value, allowDateTime=false){
 function normalizeProjects(projects){
   return (Array.isArray(projects) ? projects : []).map(p=>{
     const meta = defaultProjectMeta(p.name);
-    const timelines = PHASES.map(def=>{
+    const projectGroup = p.projectGroup || meta.projectGroup;
+    const timelines = phaseTemplateFor({projectGroup}).map(def=>{
       const found = (p.timelines || []).find(t=>t.key===def.key) || {};
       return {key:def.key, label:found.label || def.label, start:normalizeDateString(found.start), end:normalizeDateString(found.end), status:found.status==="complete" ? "complete" : ""};
     });
     return {
       id:Number(p.id),
       name:p.name || "Untitled project",
-      projectGroup:p.projectGroup || meta.projectGroup,
+      projectGroup,
       segment:p.segment || meta.segment,
       externalTeam:p.externalTeam || meta.externalTeam,
       rag:p.rag || "pending",
@@ -493,7 +494,8 @@ function getPortfolioRange(list=PROJECTS){
 }
 
 function computeRag(p){
-  const activeTimelines = p.timelines.filter(t=>!isPhaseComplete(t));
+  const timelines = phaseTemplateFor(p).map(def=>p.timelines.find(t=>t.key===def.key)).filter(Boolean);
+  const activeTimelines = timelines.filter(t=>!isPhaseComplete(t));
   const defined = activeTimelines.filter(t=>t.start && t.end);
   if(defined.length===0) return "pending";
 
@@ -501,7 +503,7 @@ function computeRag(p){
   const overdueHigh = p.risks.some(r=>r.severity==="high" && r.due && parseDateValue(r.due) < now);
   const overdueMedium = p.risks.some(r=>r.severity==="medium" && r.due && parseDateValue(r.due) < now);
 
-  const install = p.timelines.find(t=>t.key==="install");
+  const install = timelines.find(t=>t.key==="install");
   const openTasks = p.tasks.todo + p.tasks.progress;
   const installEnd = install && parseDateValue(install.end);
   const installOverdue = install && !isPhaseComplete(install) && installEnd && now > installEnd && openTasks>0;
@@ -509,7 +511,7 @@ function computeRag(p){
   if(overdueHigh || installOverdue) return "red";
 
   const seqKeys = ["handover","prewire","trim","install"];
-  const seq = seqKeys.map(k=>p.timelines.find(t=>t.key===k));
+  const seq = seqKeys.map(k=>timelines.find(t=>t.key===k)).filter(Boolean);
   let gapFound = false;
   for(let i=0;i<seq.length-1;i++){
     const cur = seq[i], next = seq[i+1];
@@ -533,6 +535,7 @@ function refreshAll(){
   renderKPIs();
   renderGroupFilters();
   renderSegmentFilters();
+  renderPhaseFilters();
   renderAttention();
   renderGantt();
   renderBoard();
@@ -589,6 +592,17 @@ function renderSegmentFilters(){
   ].join("");
 }
 
+function renderPhaseFilters(){
+  const visibleProjects = groupFilteredProjects();
+  const phaseOptions = PHASES.filter(phase=>phase.key!=="handover" || visibleProjects.some(p=>p.projectGroup==="WPR"));
+  if(!phaseOptions.some(p=>p.key===state.ganttPhase)) state.ganttPhase = "all";
+  const el = document.getElementById("phaseChips");
+  el.innerHTML = [
+    `<div class="chip ${state.ganttPhase==="all"?"active":""}" data-phase="all">All Phases</div>`,
+    ...phaseOptions.map(phase=>`<div class="chip ${state.ganttPhase===phase.key?"active":""}" data-phase="${phase.key}"><span class="tp-dot ${phase.key}"></span>${escapeHTML(phase.label)}</div>`)
+  ].join("");
+}
+
 function buildAttentionItems(){
   const items = [];
   const now = new Date();
@@ -614,7 +628,8 @@ function buildAttentionItems(){
       }
     });
 
-    const activeTimelines = p.timelines.filter(t=>!isPhaseComplete(t));
+    const timelines = phaseTemplateFor(p).map(def=>p.timelines.find(t=>t.key===def.key)).filter(Boolean);
+    const activeTimelines = timelines.filter(t=>!isPhaseComplete(t));
     const missing = activeTimelines.filter(t=>!t.start || !t.end);
     if(activeTimelines.length && missing.length===activeTimelines.length){
       items.push({
@@ -636,8 +651,8 @@ function buildAttentionItems(){
 
     const seqKeys = ["handover","prewire","trim","install","client"];
     for(let i=0;i<seqKeys.length-1;i++){
-      const cur = p.timelines.find(t=>t.key===seqKeys[i]);
-      const next = p.timelines.find(t=>t.key===seqKeys[i+1]);
+      const cur = timelines.find(t=>t.key===seqKeys[i]);
+      const next = timelines.find(t=>t.key===seqKeys[i+1]);
       const curEnd = cur && parseDateValue(cur.end);
       if(cur && !isPhaseComplete(cur) && curEnd && curEnd < now && next && !isPhaseComplete(next) && !next.start){
         items.push({
@@ -788,7 +803,7 @@ function renderGantt(){
           mainBar = `<div class="gantt-bar ${p.rag}" style="left:${leftPct}%;width:${widthPct}%" title="${escapeHTML(p.name)}: ${escapeHTML(formatDateRange(p.startsAt, p.endsAt))}"></div>`;
         }
       }
-      const segs = p.timelines.filter(t=>t.start && t.end).map(t=>{
+      const segs = phaseTemplateFor(p).map(def=>p.timelines.find(t=>t.key===def.key)).filter(t=>t && t.start && t.end).map(t=>{
         const ts = parseDateValue(t.start), te = parseDateValue(t.end);
         if(!ts || !te) return "";
         const segLeft = (ts-min)/totalMs*100;
@@ -807,7 +822,7 @@ function renderGantt(){
         </div>
       </div>`;
     } else {
-      const t = p.timelines.find(x=>x.key===phase);
+      const t = phaseTemplateFor(p).some(def=>def.key===phase) ? p.timelines.find(x=>x.key===phase) : null;
       let bar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
       if(t && t.start && t.end){
         const ts = parseDateValue(t.start), te = parseDateValue(t.end);
@@ -837,7 +852,8 @@ function renderGantt(){
 }
 
 function renderTimelinePhases(p){
-  const defined = p.timelines.filter(t=>t.start && t.end);
+  const timelines = phaseTemplateFor(p).map(def=>p.timelines.find(t=>t.key===def.key)).filter(Boolean);
+  const defined = timelines.filter(t=>t.start && t.end);
   let min=null, max=null;
   defined.forEach(t=>{
     const s=parseDateValue(t.start), e=parseDateValue(t.end);
@@ -846,7 +862,8 @@ function renderTimelinePhases(p){
     if(!max||e>max) max=e;
   });
   const hasRange = min && max && max>min;
-  return p.timelines.map((t,i)=>{
+  return timelines.map(t=>{
+    const i = p.timelines.findIndex(x=>x.key===t.key);
     let track = `<div class="tp-track"></div>`;
     if(hasRange && t.start && t.end){
       const s=parseDateValue(t.start), e=parseDateValue(t.end);
@@ -1088,6 +1105,7 @@ document.getElementById("groupChips").addEventListener("click", e=>{
   state.segment = "all";
   renderGroupFilters();
   renderSegmentFilters();
+  renderPhaseFilters();
   renderKPIs();
   renderAttention();
   renderGantt();
@@ -1098,6 +1116,7 @@ document.getElementById("segmentChips").addEventListener("click", e=>{
   if(!chip) return;
   state.segment = chip.dataset.segment;
   renderSegmentFilters();
+  renderPhaseFilters();
   renderKPIs();
   renderAttention();
   renderGantt();
@@ -1123,8 +1142,8 @@ function closeNewProjectModal(){
   document.getElementById("npModal").classList.remove("open");
 }
 
-function blankTimelines(){
-  return PHASES.map(p=>({...p, start:null, end:null, status:""}));
+function blankTimelines(projectGroup="WPR"){
+  return phaseTemplateFor({projectGroup}).map(p=>({...p, start:null, end:null, status:""}));
 }
 
 async function createNewProject(){
@@ -1153,7 +1172,7 @@ async function createNewProject(){
       id:maxId+1, name, ...meta,
       rag:"pending", percent:0, startsAt:null, endsAt:null,
       milestones:[], tasks:{todo:0, progress:0, done:0}, taskList:[],
-      timelines: blankTimelines(),
+      timelines: blankTimelines(meta.projectGroup),
       risks:[]
     });
   }

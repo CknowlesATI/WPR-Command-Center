@@ -100,7 +100,7 @@ function getAllData() {
       .filter(t => String(t.projectId) === String(p.id))
       .map(t => ({ name: t.name, status: t.status })),
     timelines: timelines
-      .filter(t => String(t.projectId) === String(p.id))
+      .filter(t => String(t.projectId) === String(p.id) && phaseKeysForGroup(p.projectGroup || defaultProjectMeta(p.name).projectGroup).indexOf(t.key) !== -1)
       .map(t => ({ key: t.key, label: t.label, start: t.start || null, end: t.end || null, status: t.status || "" })),
     risks: risks
       .filter(r => String(r.projectId) === String(p.id))
@@ -206,13 +206,7 @@ function addProject(body) {
 
   ensureTimelineSchema();
   const tlSheet = sheet("Timelines");
-  const phaseDefs = [
-    ["handover", "WPR Handover (Big-D → WPR)"],
-    ["prewire", "Pre-Wire"],
-    ["trim", "Trim"],
-    ["install", "Install"],
-    ["client", "Client"],
-  ];
+  const phaseDefs = phaseDefsForGroup(meta.projectGroup);
   phaseDefs.forEach(([key, label]) => tlSheet.appendRow([newId, key, label, "", "", ""]));
   } finally {
     lock.releaseLock();
@@ -295,6 +289,21 @@ function defaultProjectMeta(name) {
     return { projectGroup: "WPR", segment: "General", externalTeam: "" };
   }
   return { projectGroup: "Other Projects", segment: "", externalTeam: "" };
+}
+
+function phaseDefsForGroup(projectGroup) {
+  const phases = [
+    ["handover", "WPR Handover (Big-D → WPR)"],
+    ["prewire", "Pre-Wire"],
+    ["trim", "Trim"],
+    ["install", "Install"],
+    ["client", "Client"],
+  ];
+  return projectGroup === "WPR" ? phases : phases.filter(p => p[0] !== "handover");
+}
+
+function phaseKeysForGroup(projectGroup) {
+  return phaseDefsForGroup(projectGroup).map(p => p[0]);
 }
 
 // ---------- One-time setup: DELETES and rebuilds the tabs with 17 projects ----------
