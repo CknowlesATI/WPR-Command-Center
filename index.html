@@ -100,6 +100,11 @@
   .panel-head .meta{font-size:12.5px;color:var(--muted);}
   .panel-body{padding:20px 22px;display:flex;flex-direction:column;gap:24px;}
   .pb-section h3{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:0 0 10px;font-weight:700;}
+  .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .summary-field.full{grid-column:1 / -1;}
+  .summary-field label{display:block;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px;}
+  .summary-field input{width:100%;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 8px;color:var(--text);background:#fafbfc;font-family:inherit;}
+  .summary-field input:focus{outline:none;border-color:#9bb8f5;background:#fff;}
   .ms-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f1f3f6;font-size:13px;}
   .ms-item:last-child{border-bottom:none;}
   .ms-dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex-shrink:0;}
@@ -862,6 +867,27 @@ function openPanel(id){
     </div>
     <div class="panel-body">
       <div class="pb-section">
+        <h3>Project Summary</h3>
+        <div class="summary-grid">
+          <div class="summary-field">
+            <label for="projectOwner">Owner</label>
+            <input id="projectOwner" class="project-input" data-pid="${p.id}" data-field="owner" value="${escapeHTML(p.owner)}">
+          </div>
+          <div class="summary-field">
+            <label for="projectTeam">Team</label>
+            <input id="projectTeam" class="project-input" data-pid="${p.id}" data-field="team" value="${escapeHTML(p.team.join(", "))}" placeholder="Name, Name">
+          </div>
+          <div class="summary-field">
+            <label for="projectStart">Project Start</label>
+            <input id="projectStart" type="date" class="project-input" data-pid="${p.id}" data-field="startsAt" value="${p.startsAt||""}">
+          </div>
+          <div class="summary-field">
+            <label for="projectEnd">Project End</label>
+            <input id="projectEnd" type="date" class="project-input" data-pid="${p.id}" data-field="endsAt" value="${p.endsAt||""}">
+          </div>
+        </div>
+      </div>
+      <div class="pb-section">
         <h3>Project Timelines</h3>
         ${renderTimelinePhases(p)}
       </div>
@@ -891,6 +917,26 @@ function closePanel(){
 document.getElementById("overlay").addEventListener("click", closePanel);
 
 document.getElementById("panel").addEventListener("change", async e=>{
+  const projectInp = e.target.closest(".project-input");
+  if(projectInp){
+    const proj = PROJECTS.find(x=>x.id===Number(projectInp.dataset.pid));
+    const field = projectInp.dataset.field;
+    if(!proj || !["owner","team","startsAt","endsAt"].includes(field)) return;
+    const previous = Array.isArray(proj[field]) ? [...proj[field]] : proj[field];
+    const nextValue = projectInp.value.trim();
+    try{
+      if(field==="team") proj.team = nextValue ? nextValue.split(",").map(s=>s.trim()).filter(Boolean) : [];
+      else proj[field] = nextValue || null;
+      await postUpdate("updateProjectField", {projectId: proj.id, field, value: nextValue || null});
+    } catch(err){
+      console.error("Failed to save project field:", err);
+      proj[field] = previous;
+      showSyncBanner("error", "That project detail could not be saved. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
   const inp = e.target.closest(".due-input");
   if(inp){
     const proj = PROJECTS.find(x=>x.id===Number(inp.dataset.pid));

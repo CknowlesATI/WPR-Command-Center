@@ -27,6 +27,7 @@ function doPost(e) {
     const body = JSON.parse((e.postData && e.postData.contents) || "{}");
     if (body.action === "updateTimeline") updateTimeline(body);
     else if (body.action === "updateRiskDue") updateRiskDue(body);
+    else if (body.action === "updateProjectField") updateProjectField(body);
     else if (body.action === "addProject") addProject(body);
     else throw new Error("Unknown action: " + body.action);
     return respond({ ok: true, data: getAllData() });
@@ -105,6 +106,29 @@ function getAllData() {
 }
 
 // ---------- Writing data (only the fields the app can edit today) ----------
+
+function updateProjectField(body) {
+  const projectId = requireValue(body.projectId, "projectId");
+  const field = requireValue(body.field, "field");
+  const allowedFields = ["owner", "team", "startsAt", "endsAt"];
+  if (allowedFields.indexOf(field) === -1) throw new Error("Invalid project field: " + field);
+  let value = body.value || "";
+  if (field === "startsAt" || field === "endsAt") value = normalizeDateValue(value, false);
+  else value = String(value).trim();
+
+  const sh = sheet("Projects");
+  const values = sh.getDataRange().getValues();
+  const headers = values[0];
+  const idCol = columnIndex(headers, "id");
+  const writeCol = columnIndex(headers, field);
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][idCol]) === String(projectId)) {
+      sh.getRange(i + 1, writeCol + 1).setValue(value);
+      return;
+    }
+  }
+  throw new Error("Project row not found: " + projectId);
+}
 
 function updateTimeline(body) {
   const projectId = requireValue(body.projectId, "projectId");
