@@ -268,7 +268,7 @@ function defaultProjectMeta(name) {
   if (/WPR Condo|Penthouse/i.test(text)) {
     return { projectGroup: "WPR", segment: "Condos/Penthouse", externalTeam: "Big-D Condos/Penthouse" };
   }
-  if (/WPR.*Skier|Skier.*WPR/i.test(text)) {
+  if (/Skier Services|WPR.*Skier|Skier.*WPR/i.test(text)) {
     return { projectGroup: "WPR", segment: "Skier Services", externalTeam: "Big-D Skier Services" };
   }
   if (/^WPR\b/i.test(text)) {
