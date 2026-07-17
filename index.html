@@ -270,9 +270,9 @@
   </div>
   <div class="phase-chips" id="phaseChips">
     <div class="chip active" data-phase="all">All Phases</div>
-    <div class="chip" data-phase="handover"><span class="tp-dot handover"></span>WPR Handover</div>
     <div class="chip" data-phase="prewire"><span class="tp-dot prewire"></span>Pre-Wire</div>
     <div class="chip" data-phase="trim"><span class="tp-dot trim"></span>Trim</div>
+    <div class="chip" data-phase="handover"><span class="tp-dot handover"></span>WPR Handover</div>
     <div class="chip" data-phase="install"><span class="tp-dot install"></span>Install</div>
     <div class="chip" data-phase="client"><span class="tp-dot client"></span>Client</div>
   </div>
@@ -378,9 +378,9 @@ async function loadProjects(){
 const state = { filter:"all", group:"all", segment:"all", search:"", ganttPhase:"all" };
 
 const PHASES = [
-  {key:"handover", label:"WPR Handover (Big-D → WPR)"},
   {key:"prewire", label:"Pre-Wire"},
   {key:"trim", label:"Trim"},
+  {key:"handover", label:"WPR Handover (Big-D → WPR)"},
   {key:"install", label:"Install"},
   {key:"client", label:"Client"},
 ];
@@ -523,7 +523,7 @@ function computeRag(p){
 
   if(overdueHigh || installOverdue) return "red";
 
-  const seqKeys = ["handover","prewire","trim","install"];
+  const seqKeys = ["prewire","trim","handover","install"];
   const seq = seqKeys.map(k=>timelines.find(t=>t.key===k)).filter(Boolean);
   let gapFound = false;
   for(let i=0;i<seq.length-1;i++){
@@ -662,7 +662,7 @@ function buildAttentionItems(){
       });
     }
 
-    const seqKeys = ["handover","prewire","trim","install","client"];
+    const seqKeys = ["prewire","trim","handover","install","client"];
     for(let i=0;i<seqKeys.length-1;i++){
       const cur = timelines.find(t=>t.key===seqKeys[i]);
       const next = timelines.find(t=>t.key===seqKeys[i+1]);

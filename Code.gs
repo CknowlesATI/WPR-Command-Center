@@ -473,9 +473,9 @@ function defaultProjectMeta(name) {
 
 function phaseDefsForGroup(projectGroup) {
   const phases = [
-    ["handover", "WPR Handover (Big-D → WPR)"],
     ["prewire", "Pre-Wire"],
     ["trim", "Trim"],
+    ["handover", "WPR Handover (Big-D → WPR)"],
     ["install", "Install"],
     ["client", "Client"],
   ];
@@ -506,9 +506,9 @@ function seedData() {
     [7, 8]); // startsAt, endsAt as plain text
 
   const phaseDefs = [
-    ["handover", "WPR Handover (Big-D → WPR)"],
     ["prewire", "Pre-Wire"],
     ["trim", "Trim"],
+    ["handover", "WPR Handover (Big-D → WPR)"],
     ["install", "Install"],
     ["client", "Client"],
   ];
