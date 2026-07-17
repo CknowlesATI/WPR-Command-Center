@@ -283,7 +283,7 @@ function defaultProjects(){
 
 let PROJECTS = [];
 
-function showSyncBanner(kind){
+function showSyncBanner(kind, message){
   const el = document.getElementById("syncBanner");
   if(kind==="none"){ el.style.display="none"; return; }
   el.style.display="block";
@@ -291,56 +291,127 @@ function showSyncBanner(kind){
   if(kind==="unconfigured"){
     el.innerHTML = `Working on local, unsaved data. Connect this to your Google Sheet by pasting your Apps Script URL into <code>API_URL</code> in the HTML file to save changes across devices.`;
   } else if(kind==="error"){
-    el.innerHTML = `Couldn't reach the Google Sheet — showing local data instead. Changes won't be saved until the connection is back. Try Refresh in a moment.`;
+    el.textContent = message || `Couldn't reach the Google Sheet - showing local data instead. Changes won't be saved until the connection is back. Try Refresh in a moment.`;
   }
 }
 
 async function postUpdate(action, payload){
-  if(!SYNC_ENABLED) return;
-  try{
-    await fetch(API_URL, {
-      method:"POST",
-      headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body: JSON.stringify({action, ...payload})
-    });
-  } catch(err){
-    console.error("Sync failed:", err);
-  }
+  if(!SYNC_ENABLED) return null;
+  const res = await fetch(API_URL, {
+    method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body: JSON.stringify({action, ...payload})
+  });
+  if(!res.ok) throw new Error(`Save failed (${res.status})`);
+  const json = await res.json();
+  if(json && json.ok === false) throw new Error(json.error || "Save failed");
+  const data = Array.isArray(json) ? json : json.data;
+  if(Array.isArray(data)) PROJECTS = normalizeProjects(data);
+  showSyncBanner("none");
+  return data;
 }
 
 async function loadProjects(){
   if(!SYNC_ENABLED){
-    PROJECTS = defaultProjects();
+    PROJECTS = normalizeProjects(defaultProjects());
     showSyncBanner("unconfigured");
   } else {
     try{
       const res = await fetch(API_URL);
-      PROJECTS = await res.json();
+      if(!res.ok) throw new Error(`Load failed (${res.status})`);
+      const json = await res.json();
+      PROJECTS = normalizeProjects(Array.isArray(json) ? json : json.data);
       showSyncBanner("none");
     } catch(err){
       console.error("Failed to load from Google Sheet:", err);
-      PROJECTS = defaultProjects();
+      PROJECTS = normalizeProjects(defaultProjects());
       showSyncBanner("error");
     }
   }
-  refreshRagStatuses();
-  renderKPIs();
-  renderGantt();
-  renderBoard();
+  refreshAll();
 }
 
 const state = { filter:"all", search:"", ganttPhase:"all" };
 
+const PHASES = [
+  {key:"handover", label:"WPR Handover (Big-D → WPR)"},
+  {key:"prewire", label:"Pre-Wire"},
+  {key:"trim", label:"Trim"},
+  {key:"install", label:"Install"},
+  {key:"client", label:"Client"},
+];
 const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-function parseSimpleDate(str, year=2026){
-  const [mon, day] = str.replace(".","").split(" ");
-  return new Date(year, MONTHS[mon], parseInt(day,10));
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
+}
+function clampPercent(value){
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : 0;
+}
+function normalizeDateString(value, allowDateTime=false){
+  if(!value) return null;
+  const text = String(value).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  if(allowDateTime && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(text)) return text.slice(0,16);
+  const d = parseDateValue(text);
+  if(!d) return null;
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  const dd = String(d.getDate()).padStart(2,"0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+function normalizeProjects(projects){
+  return (Array.isArray(projects) ? projects : []).map(p=>{
+    const timelines = PHASES.map(def=>{
+      const found = (p.timelines || []).find(t=>t.key===def.key) || {};
+      return {key:def.key, label:found.label || def.label, start:normalizeDateString(found.start), end:normalizeDateString(found.end)};
+    });
+    return {
+      id:Number(p.id),
+      name:p.name || "Untitled project",
+      owner:p.owner || "Unassigned",
+      team:Array.isArray(p.team) ? p.team.filter(Boolean) : String(p.team || "").split(",").map(s=>s.trim()).filter(Boolean),
+      rag:p.rag || "pending",
+      percent:clampPercent(p.percent),
+      startsAt:normalizeDateString(p.startsAt),
+      endsAt:normalizeDateString(p.endsAt),
+      milestones:(p.milestones || []).map(m=>({name:m.name || "", date:normalizeDateString(m.date) || m.date || "", state:m.state || "future"})),
+      tasks:{
+        todo:Number(p.tasks && p.tasks.todo) || 0,
+        progress:Number(p.tasks && p.tasks.progress) || 0,
+        done:Number(p.tasks && p.tasks.done) || 0,
+      },
+      taskList:(p.taskList || []).map(t=>({name:t.name || "", status:["todo","progress","done"].includes(t.status) ? t.status : "todo"})),
+      timelines,
+      risks:(p.risks || []).map(r=>({id:r.id, title:r.title || "", severity:["high","medium","low"].includes(r.severity) ? r.severity : "low", owner:r.owner || "Unassigned", note:r.note || "", due:normalizeDateString(r.due, true)})),
+    };
+  }).filter(p=>Number.isFinite(p.id));
+}
+function parseDateValue(value){
+  if(!value) return null;
+  const text = String(value).trim();
+  let match = text.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/);
+  if(match) return new Date(Number(match[1]), Number(match[2])-1, Number(match[3]), Number(match[4]||0), Number(match[5]||0));
+  match = text.replace(".","").match(/^([A-Za-z]{3})\s+(\d{1,2})(?:,\s*(\d{4}))?$/);
+  if(match && MONTHS[match[1]] !== undefined){
+    return new Date(Number(match[3]) || new Date().getFullYear(), MONTHS[match[1]], Number(match[2]));
+  }
+  const d = new Date(text);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+function formatDate(value){
+  const d = parseDateValue(value);
+  return d ? d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "";
+}
+function formatDateRange(start, end){
+  return start && end ? `${formatDate(start)} - ${formatDate(end)}` : "Not scheduled yet";
 }
 function getPortfolioRange(){
   let min=null, max=null;
   PROJECTS.forEach(p=>{
     if(!p.startsAt || !p.endsAt) return;
-    const s = parseSimpleDate(p.startsAt), e = parseSimpleDate(p.endsAt);
+    const s = parseDateValue(p.startsAt), e = parseDateValue(p.endsAt);
+    if(!s || !e) return;
     if(!min || s<min) min=s;
     if(!max || e>max) max=e;
   });
@@ -360,12 +431,13 @@ function computeRag(p){
   if(defined.length===0) return "pending";
 
   const now = new Date();
-  const overdueHigh = p.risks.some(r=>r.severity==="high" && r.due && new Date(r.due) < now);
-  const overdueMedium = p.risks.some(r=>r.severity==="medium" && r.due && new Date(r.due) < now);
+  const overdueHigh = p.risks.some(r=>r.severity==="high" && r.due && parseDateValue(r.due) < now);
+  const overdueMedium = p.risks.some(r=>r.severity==="medium" && r.due && parseDateValue(r.due) < now);
 
   const install = p.timelines.find(t=>t.key==="install");
   const openTasks = p.tasks.todo + p.tasks.progress;
-  const installOverdue = install && install.end && now > new Date(install.end) && openTasks>0;
+  const installEnd = install && parseDateValue(install.end);
+  const installOverdue = installEnd && now > installEnd && openTasks>0;
 
   if(overdueHigh || installOverdue) return "red";
 
@@ -374,7 +446,8 @@ function computeRag(p){
   let gapFound = false;
   for(let i=0;i<seq.length-1;i++){
     const cur = seq[i], next = seq[i+1];
-    if(cur.start && cur.end && now > new Date(cur.end) && !next.start){
+    const curEnd = cur && parseDateValue(cur.end);
+    if(cur && cur.start && curEnd && now > curEnd && !next.start){
       gapFound = true;
       break;
     }
@@ -398,7 +471,7 @@ function refreshAll(){
 function ragLabel(r){ return r==="green" ? "On Track" : r==="amber" ? "At Risk" : r==="red" ? "Off Track" : "Not Started"; }
 function barColor(r){ return r==="green" ? "var(--green)" : r==="amber" ? "var(--amber)" : r==="red" ? "var(--red)" : "#9aa2b1"; }
 
-function renderKPIs(list){
+function renderKPIs(){
   const total = PROJECTS.length;
   const green = PROJECTS.filter(p=>p.rag==="green").length;
   const amber = PROJECTS.filter(p=>p.rag==="amber").length;
@@ -455,14 +528,14 @@ function renderBoard(){
     return `
     <div class="card" data-id="${p.id}">
       <div>
-        <div class="pname">${p.name}</div>
-        <div class="powner">${p.owner}</div>
+        <div class="pname">${escapeHTML(p.name)}</div>
+        <div class="powner">${escapeHTML(p.owner)}</div>
       </div>
       <div class="rag ${p.rag}"><span class="dot"></span>${ragLabel(p.rag)}</div>
       <div class="timeline">
-        <div class="tl-top"><span>${p.percent}% complete</span><span>${p.startsAt && p.endsAt ? `${p.startsAt} – ${p.endsAt}` : "Not scheduled yet"}</span></div>
+        <div class="tl-top"><span>${p.percent}% complete</span><span>${formatDateRange(p.startsAt, p.endsAt)}</span></div>
         <div class="bar"><div style="width:${p.percent}%;background:${barColor(p.rag)}"></div></div>
-        <div class="milestone">${m ? `Next: <strong>${m.name}</strong> <span class="due">(${m.date})</span>` : "No milestones added yet"}</div>
+        <div class="milestone">${m ? `Next: <strong>${escapeHTML(m.name)}</strong> <span class="due">(${escapeHTML(formatDate(m.date) || m.date)})</span>` : "No milestones added yet"}</div>
       </div>
       <div class="taskstatus">
         <div class="tstack">
@@ -472,7 +545,7 @@ function renderBoard(){
         <div class="tlegend">${totalTasks ? `${p.tasks.done} done · ${p.tasks.progress} in progress · ${p.tasks.todo} to do` : "No tasks added yet"}</div>
       </div>
       <div class="risks">${riskBadge(p)}</div>
-      <div class="teamline">${p.team.length ? p.team.join(", ") : "Unassigned"}</div>
+      <div class="teamline">${p.team.length ? escapeHTML(p.team.join(", ")) : "Unassigned"}</div>
     </div>`;
   }).join("");
 
@@ -504,16 +577,19 @@ function renderGantt(){
     if(phase==="all"){
       let mainBar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
       if(p.startsAt && p.endsAt){
-        const s = parseSimpleDate(p.startsAt), e = parseSimpleDate(p.endsAt);
-        const leftPct = (s-min)/totalMs*100;
-        const widthPct = Math.max(1.5, (e-s)/totalMs*100);
-        mainBar = `<div class="gantt-bar ${p.rag}" style="left:${leftPct}%;width:${widthPct}%" title="${p.name}: ${p.startsAt} – ${p.endsAt}"></div>`;
+        const s = parseDateValue(p.startsAt), e = parseDateValue(p.endsAt);
+        if(s && e){
+          const leftPct = (s-min)/totalMs*100;
+          const widthPct = Math.max(1.5, (e-s)/totalMs*100);
+          mainBar = `<div class="gantt-bar ${p.rag}" style="left:${leftPct}%;width:${widthPct}%" title="${escapeHTML(p.name)}: ${escapeHTML(formatDateRange(p.startsAt, p.endsAt))}"></div>`;
+        }
       }
       const segs = p.timelines.filter(t=>t.start && t.end).map(t=>{
-        const ts = new Date(t.start), te = new Date(t.end);
+        const ts = parseDateValue(t.start), te = parseDateValue(t.end);
+        if(!ts || !te) return "";
         const segLeft = (ts-min)/totalMs*100;
         const segWidth = Math.max(1, (te-ts)/totalMs*100);
-        return `<div class="gantt-bar seg ${t.key}" style="left:${segLeft}%;width:${segWidth}%" title="${t.label}: ${t.start} – ${t.end}"></div>`;
+        return `<div class="gantt-bar seg ${t.key}" style="left:${segLeft}%;width:${segWidth}%" title="${escapeHTML(t.label)}: ${escapeHTML(formatDateRange(t.start, t.end))}"></div>`;
       }).join("");
       trackHTML = `
       <div class="gantt-tracks">
@@ -530,10 +606,12 @@ function renderGantt(){
       const t = p.timelines.find(x=>x.key===phase);
       let bar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
       if(t && t.start && t.end){
-        const ts = new Date(t.start), te = new Date(t.end);
-        const leftPct = (ts-min)/totalMs*100;
-        const widthPct = Math.max(1.5, (te-ts)/totalMs*100);
-        bar = `<div class="gantt-bar ${t.key}" style="left:${leftPct}%;width:${widthPct}%" title="${t.label}: ${t.start} – ${t.end}"></div>`;
+        const ts = parseDateValue(t.start), te = parseDateValue(t.end);
+        if(ts && te){
+          const leftPct = (ts-min)/totalMs*100;
+          const widthPct = Math.max(1.5, (te-ts)/totalMs*100);
+          bar = `<div class="gantt-bar ${t.key}" style="left:${leftPct}%;width:${widthPct}%" title="${escapeHTML(t.label)}: ${escapeHTML(formatDateRange(t.start, t.end))}"></div>`;
+        }
       }
       trackHTML = `
       <div class="gantt-track single">
@@ -543,7 +621,7 @@ function renderGantt(){
     }
     return `
     <div class="gantt-grid-row" data-id="${p.id}">
-      <div class="gantt-label">${p.name}</div>
+      <div class="gantt-label">${escapeHTML(p.name)}</div>
       ${trackHTML}
     </div>`;
   }).join("");
@@ -558,7 +636,8 @@ function renderTimelinePhases(p){
   const defined = p.timelines.filter(t=>t.start && t.end);
   let min=null, max=null;
   defined.forEach(t=>{
-    const s=new Date(t.start), e=new Date(t.end);
+    const s=parseDateValue(t.start), e=parseDateValue(t.end);
+    if(!s || !e) return;
     if(!min||s<min) min=s;
     if(!max||e>max) max=e;
   });
@@ -566,7 +645,8 @@ function renderTimelinePhases(p){
   return p.timelines.map((t,i)=>{
     let track = `<div class="tp-track"></div>`;
     if(hasRange && t.start && t.end){
-      const s=new Date(t.start), e=new Date(t.end);
+      const s=parseDateValue(t.start), e=parseDateValue(t.end);
+      if(!s || !e) return "";
       const totalMs = max-min;
       const leftPct = (s-min)/totalMs*100;
       const widthPct = Math.max(2,(e-s)/totalMs*100);
@@ -574,7 +654,7 @@ function renderTimelinePhases(p){
     }
     return `
     <div class="tp-item">
-      <div class="tp-head"><span class="tp-dot ${t.key}"></span>${t.label}${t.key==="client"?` <span class="tp-note">(tied to Install)</span>`:""}</div>
+      <div class="tp-head"><span class="tp-dot ${t.key}"></span>${escapeHTML(t.label)}${t.key==="client"?` <span class="tp-note">(tied to Install)</span>`:""}</div>
       <div class="tp-dates">
         <input type="date" class="tp-input" data-pid="${p.id}" data-idx="${i}" data-field="start" value="${t.start||""}">
         <span class="tp-sep">→</span>
@@ -589,12 +669,14 @@ function milestoneTimelineHTML(p){
   if(!p.startsAt || !p.endsAt || !p.milestones.length){
     return `<div class="empty">No milestones added yet.</div>`;
   }
-  const s = parseSimpleDate(p.startsAt), e = parseSimpleDate(p.endsAt);
+  const s = parseDateValue(p.startsAt), e = parseDateValue(p.endsAt);
+  if(!s || !e) return `<div class="empty">Project date range is incomplete.</div>`;
   const totalMs = e-s;
   const dots = p.milestones.map(m=>{
-    const d = parseSimpleDate(m.date);
+    const d = parseDateValue(m.date);
+    if(!d) return "";
     const pct = totalMs ? Math.min(100, Math.max(0, (d-s)/totalMs*100)) : 0;
-    return `<div class="pt-dot ${m.state}" style="left:${pct}%" title="${m.name} — ${m.date}"></div>`;
+    return `<div class="pt-dot ${m.state}" style="left:${pct}%" title="${escapeHTML(m.name)} - ${escapeHTML(formatDate(m.date) || m.date)}"></div>`;
   }).join("");
   const todayPct = totalMs ? (new Date()-s)/totalMs*100 : -1;
   const showToday = todayPct>=0 && todayPct<=100;
@@ -604,32 +686,34 @@ function milestoneTimelineHTML(p){
       ${dots}
       ${showToday?`<div class="pt-today" style="left:${todayPct}%" title="Today"></div>`:""}
     </div>
-    <div class="pt-range"><span>${p.startsAt}</span><span>${p.endsAt}</span></div>`;
+    <div class="pt-range"><span>${escapeHTML(formatDate(p.startsAt))}</span><span>${escapeHTML(formatDate(p.endsAt))}</span></div>`;
 }
 
 function openPanel(id){
   const p = PROJECTS.find(x=>x.id===id);
+  if(!p) return;
   const panel = document.getElementById("panel");
   const overlay = document.getElementById("overlay");
   const msHTML = p.milestones.map(m=>`
     <div class="ms-item">
       <div class="ms-dot ${m.state}"></div>
-      <div><div class="ms-name">${m.name}</div><div class="ms-date">${m.date}</div></div>
+      <div><div class="ms-name">${escapeHTML(m.name)}</div><div class="ms-date">${escapeHTML(formatDate(m.date) || m.date)}</div></div>
     </div>`).join("");
   const taskHTML = p.taskList.map(t=>`
-    <div class="task-row"><span>${t.name}</span><span class="tag ${t.status}">${t.status==="progress"?"In progress":t.status==="done"?"Done":"To do"}</span></div>
+    <div class="task-row"><span>${escapeHTML(t.name)}</span><span class="tag ${t.status}">${t.status==="progress"?"In progress":t.status==="done"?"Done":"To do"}</span></div>
   `).join("") || `<div class="empty">No open tasks listed.</div>`;
   const riskHTML = p.risks.map(r=>{
-    const overdue = r.due && new Date(r.due) < new Date();
+    const due = parseDateValue(r.due);
+    const overdue = due && due < new Date();
     return `
     <div class="risk-item">
-      <div class="rtop"><span>${r.title}</span><span class="sev ${r.severity}">${r.severity}</span></div>
-      <div>${r.note}</div>
-      <div class="rowner">Owner: ${r.owner}</div>
+      <div class="rtop"><span>${escapeHTML(r.title)}</span><span class="sev ${r.severity}">${escapeHTML(r.severity)}</span></div>
+      <div>${escapeHTML(r.note)}</div>
+      <div class="rowner">Owner: ${escapeHTML(r.owner)}</div>
       <div class="rdue-row ${overdue?"overdue":""}">
         <span class="rdue-label">Due</span>
-        <input type="datetime-local" class="due-input" data-pid="${p.id}" data-riskid="${r.id}" value="${r.due||""}">
-        <button class="due-clear" data-pid="${p.id}" data-riskid="${r.id}" title="Clear due date">✕</button>
+        <input type="datetime-local" class="due-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" value="${r.due||""}">
+        <button class="due-clear" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" title="Clear due date">✕</button>
       </div>
     </div>`;
   }).join("") || `<div class="empty">No open tasks or issues.</div>`;
@@ -637,8 +721,8 @@ function openPanel(id){
   panel.innerHTML = `
     <div class="panel-head">
       <button class="close" id="closeBtn">✕</button>
-      <h2>${p.name}</h2>
-      <div class="meta">Owner: ${p.owner} · Team: ${p.team.length ? p.team.join(", ") : "Unassigned"} · ${p.startsAt && p.endsAt ? `${p.startsAt} – ${p.endsAt}` : "Dates not scheduled"}</div>
+      <h2>${escapeHTML(p.name)}</h2>
+      <div class="meta">Owner: ${escapeHTML(p.owner)} · Team: ${p.team.length ? escapeHTML(p.team.join(", ")) : "Unassigned"} · ${escapeHTML(formatDateRange(p.startsAt, p.endsAt))}</div>
       <div style="margin-top:8px;" class="rag ${p.rag}"><span class="dot"></span>${ragLabel(p.rag)} · ${p.percent}% complete</div>
     </div>
     <div class="panel-body">
@@ -671,13 +755,21 @@ function closePanel(){
 }
 document.getElementById("overlay").addEventListener("click", closePanel);
 
-document.getElementById("panel").addEventListener("change", e=>{
+document.getElementById("panel").addEventListener("change", async e=>{
   const inp = e.target.closest(".due-input");
   if(inp){
     const proj = PROJECTS.find(x=>x.id===Number(inp.dataset.pid));
-    const risk = proj.risks.find(r=>String(r.id)===inp.dataset.riskid);
-    risk.due = inp.value || null;
-    postUpdate("updateRiskDue", {riskId: risk.id, value: risk.due});
+    const risk = proj && proj.risks.find(r=>String(r.id)===inp.dataset.riskid);
+    if(!proj || !risk) return;
+    const previous = risk.due;
+    try{
+      risk.due = inp.value || null;
+      await postUpdate("updateRiskDue", {riskId: risk.id, value: risk.due});
+    } catch(err){
+      console.error("Failed to save risk due date:", err);
+      risk.due = previous;
+      showSyncBanner("error", "That due date could not be saved. Refresh or try again in a moment.");
+    }
     refreshAll();
     openPanel(proj.id);
     return;
@@ -687,19 +779,35 @@ document.getElementById("panel").addEventListener("change", e=>{
     const proj = PROJECTS.find(x=>x.id===Number(tpInp.dataset.pid));
     const idx = Number(tpInp.dataset.idx);
     const field = tpInp.dataset.field;
-    proj.timelines[idx][field] = tpInp.value || null;
-    postUpdate("updateTimeline", {projectId: proj.id, key: proj.timelines[idx].key, field, value: tpInp.value || null});
+    if(!proj || !proj.timelines[idx] || !["start","end"].includes(field)) return;
+    const previous = proj.timelines[idx][field];
+    try{
+      proj.timelines[idx][field] = tpInp.value || null;
+      await postUpdate("updateTimeline", {projectId: proj.id, key: proj.timelines[idx].key, field, value: tpInp.value || null});
+    } catch(err){
+      console.error("Failed to save timeline:", err);
+      proj.timelines[idx][field] = previous;
+      showSyncBanner("error", "That timeline date could not be saved. Refresh or try again in a moment.");
+    }
     refreshAll();
     openPanel(proj.id);
   }
 });
-document.getElementById("panel").addEventListener("click", e=>{
+document.getElementById("panel").addEventListener("click", async e=>{
   const btn = e.target.closest(".due-clear");
   if(!btn) return;
   const proj = PROJECTS.find(x=>x.id===Number(btn.dataset.pid));
-  const risk = proj.risks.find(r=>String(r.id)===btn.dataset.riskid);
-  risk.due = null;
-  postUpdate("updateRiskDue", {riskId: risk.id, value: null});
+  const risk = proj && proj.risks.find(r=>String(r.id)===btn.dataset.riskid);
+  if(!proj || !risk) return;
+  const previous = risk.due;
+  try{
+    risk.due = null;
+    await postUpdate("updateRiskDue", {riskId: risk.id, value: null});
+  } catch(err){
+    console.error("Failed to clear risk due date:", err);
+    risk.due = previous;
+    showSyncBanner("error", "That due date could not be cleared. Refresh or try again in a moment.");
+  }
   refreshAll();
   openPanel(proj.id);
 });
@@ -741,13 +849,7 @@ function closeNewProjectModal(){
 }
 
 function blankTimelines(){
-  return [
-    {key:"handover", label:"WPR Handover (Big-D → WPR)", start:null, end:null},
-    {key:"prewire", label:"Pre-Wire", start:null, end:null},
-    {key:"trim", label:"Trim", start:null, end:null},
-    {key:"install", label:"Install", start:null, end:null},
-    {key:"client", label:"Client", start:null, end:null},
-  ];
+  return PHASES.map(p=>({...p, start:null, end:null}));
 }
 
 async function createNewProject(){
@@ -761,18 +863,12 @@ async function createNewProject(){
 
   if(SYNC_ENABLED){
     try{
-      const res = await fetch(API_URL, {
-        method:"POST",
-        headers:{"Content-Type":"text/plain;charset=utf-8"},
-        body: JSON.stringify({action:"addProject", name})
-      });
-      PROJECTS = await res.json();
-      showSyncBanner("none");
+      await postUpdate("addProject", {name});
     } catch(err){
       console.error("Failed to add project:", err);
       btn.disabled = false;
       btn.textContent = "Create";
-      showSyncBanner("error");
+      showSyncBanner("error", "That project could not be created. Refresh or try again in a moment.");
       return;
     }
   } else {

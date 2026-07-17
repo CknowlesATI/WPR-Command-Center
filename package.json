@@ -1,0 +1,15 @@
+{
+  "name": "wpr-command-center",
+  "private": true,
+  "scripts": {
+    "clasp": "clasp",
+    "apps:login": "clasp login",
+    "apps:status": "clasp status",
+    "apps:pull": "clasp pull",
+    "apps:push": "clasp push",
+    "apps:open": "clasp open-script"
+  },
+  "devDependencies": {
+    "@google/clasp": "^3.3.0"
+  }
+}
