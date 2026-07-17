@@ -477,7 +477,6 @@ function phaseDefsForGroup(projectGroup) {
     ["trim", "Trim"],
     ["handover", "WPR Handover (Big-D → WPR)"],
     ["install", "Install"],
-    ["client", "Client"],
   ];
   return projectGroup === "WPR" ? phases : phases.filter(p => p[0] !== "handover");
 }
@@ -510,7 +509,6 @@ function seedData() {
     ["trim", "Trim"],
     ["handover", "WPR Handover (Big-D → WPR)"],
     ["install", "Install"],
-    ["client", "Client"],
   ];
   const timelineRows = [];
   projectNames.forEach((_, i) => {

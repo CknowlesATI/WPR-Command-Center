@@ -181,7 +181,6 @@
   .tp-dot.prewire{background:#14b8a6;} .tp-bar.prewire{background:#14b8a6;}
   .tp-dot.trim{background:#fb923c;} .tp-bar.trim{background:#fb923c;}
   .tp-dot.install{background:var(--blue);} .tp-bar.install{background:var(--blue);}
-  .tp-dot.client{background:#ec4899;} .tp-bar.client{background:#ec4899;}
   .tp-note{font-weight:500;color:var(--muted);font-size:11px;}
   .tp-dates{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
   .tp-input{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);background:#fafbfc;font-family:inherit;}
@@ -274,7 +273,6 @@
     <div class="chip" data-phase="trim"><span class="tp-dot trim"></span>Trim</div>
     <div class="chip" data-phase="handover"><span class="tp-dot handover"></span>WPR Handover</div>
     <div class="chip" data-phase="install"><span class="tp-dot install"></span>Install</div>
-    <div class="chip" data-phase="client"><span class="tp-dot client"></span>Client</div>
   </div>
   <div class="gantt-wrap">
     <div class="gantt-grid-row header-row">
@@ -382,7 +380,6 @@ const PHASES = [
   {key:"trim", label:"Trim"},
   {key:"handover", label:"WPR Handover (Big-D → WPR)"},
   {key:"install", label:"Install"},
-  {key:"client", label:"Client"},
 ];
 function phaseTemplateFor(project){
   return project && project.projectGroup==="WPR" ? PHASES : PHASES.filter(p=>p.key!=="handover");
@@ -662,7 +659,7 @@ function buildAttentionItems(){
       });
     }
 
-    const seqKeys = ["prewire","trim","handover","install","client"];
+    const seqKeys = ["prewire","trim","handover","install"];
     for(let i=0;i<seqKeys.length-1;i++){
       const cur = timelines.find(t=>t.key===seqKeys[i]);
       const next = timelines.find(t=>t.key===seqKeys[i+1]);
@@ -888,7 +885,7 @@ function renderTimelinePhases(p){
     }
     return `
     <div class="tp-item">
-      <div class="tp-head"><span class="tp-dot ${t.key}"></span>${escapeHTML(t.label)}${t.key==="client"?` <span class="tp-note">(tied to Install)</span>`:""}</div>
+      <div class="tp-head"><span class="tp-dot ${t.key}"></span>${escapeHTML(t.label)}</div>
       <div class="tp-dates">
         <input type="date" class="tp-input" data-pid="${p.id}" data-idx="${i}" data-field="start" value="${t.start||""}">
         <span class="tp-sep">→</span>
