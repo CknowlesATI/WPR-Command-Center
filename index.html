@@ -536,13 +536,14 @@ function ragLabel(r){ return r==="green" ? "On Track" : r==="amber" ? "At Risk" 
 function barColor(r){ return r==="green" ? "var(--green)" : r==="amber" ? "var(--amber)" : r==="red" ? "var(--red)" : "#9aa2b1"; }
 
 function renderKPIs(){
-  const total = PROJECTS.length;
-  const green = PROJECTS.filter(p=>p.rag==="green").length;
-  const amber = PROJECTS.filter(p=>p.rag==="amber").length;
-  const red = PROJECTS.filter(p=>p.rag==="red").length;
-  const pending = PROJECTS.filter(p=>p.rag==="pending").length;
-  const risks = PROJECTS.reduce((a,p)=>a+p.risks.length,0);
-  const highRisks = PROJECTS.reduce((a,p)=>a+p.risks.filter(r=>r.severity==="high").length,0);
+  const scoped = groupFilteredProjects();
+  const total = scoped.length;
+  const green = scoped.filter(p=>p.rag==="green").length;
+  const amber = scoped.filter(p=>p.rag==="amber").length;
+  const red = scoped.filter(p=>p.rag==="red").length;
+  const pending = scoped.filter(p=>p.rag==="pending").length;
+  const risks = scoped.reduce((a,p)=>a+p.risks.length,0);
+  const highRisks = scoped.reduce((a,p)=>a+p.risks.filter(r=>r.severity==="high").length,0);
   const kpis = [
     {n:total, l:"Total Projects", cls:""},
     {n:green, l:"On Track", cls:"green"},
@@ -1075,6 +1076,7 @@ document.getElementById("groupChips").addEventListener("click", e=>{
   state.segment = "all";
   renderGroupFilters();
   renderSegmentFilters();
+  renderKPIs();
   renderAttention();
   renderGantt();
   renderBoard();
@@ -1084,6 +1086,7 @@ document.getElementById("segmentChips").addEventListener("click", e=>{
   if(!chip) return;
   state.segment = chip.dataset.segment;
   renderSegmentFilters();
+  renderKPIs();
   renderAttention();
   renderGantt();
   renderBoard();
