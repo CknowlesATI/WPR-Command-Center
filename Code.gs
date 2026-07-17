@@ -1,12 +1,12 @@
 /*
-  WPR Command Center - Google Sheets backend (Google Apps Script)
+  Project Command Center - Google Sheets backend (Google Apps Script)
   ------------------------------------------------------------------
   This file is NOT a standalone program you run on your computer. It's code
   that lives inside a Google Sheet and turns that Sheet into a tiny web API
-  that the WPR Command Center HTML app can read from and write to.
+  that the Project Command Center HTML app can read from and write to.
 
   SETUP (see CLASP_SETUP.md for the full walkthrough):
-  1. Create a new Google Sheet, name it "WPR Command Center Data".
+  1. Create a new Google Sheet, name it "Project Command Center Data".
   2. Extensions > Apps Script. Delete any starter code, paste this whole file in.
   3. In the function dropdown at the top, select "seedData", click Run once.
      This builds the 5 tabs and loads your 17 WPR projects.
@@ -71,6 +71,7 @@ function normalizeCell(value) {
 }
 
 function getAllData() {
+  ensureProjectSchema();
   const projects = readRows("Projects");
   const timelines = readRows("Timelines");
   const tasks = readRows("Tasks");
@@ -80,8 +81,9 @@ function getAllData() {
   return projects.map(p => ({
     id: p.id,
     name: p.name,
-    owner: p.owner || "Unassigned",
-    team: p.team ? String(p.team).split(",").map(s => s.trim()).filter(Boolean) : [],
+    projectGroup: p.projectGroup || defaultProjectMeta(p.name).projectGroup,
+    segment: p.segment || defaultProjectMeta(p.name).segment,
+    externalTeam: p.externalTeam || defaultProjectMeta(p.name).externalTeam,
     percent: Number(p.percent) || 0,
     startsAt: p.startsAt || null,
     endsAt: p.endsAt || null,
@@ -108,9 +110,10 @@ function getAllData() {
 // ---------- Writing data (only the fields the app can edit today) ----------
 
 function updateProjectField(body) {
+  ensureProjectSchema();
   const projectId = requireValue(body.projectId, "projectId");
   const field = requireValue(body.field, "field");
-  const allowedFields = ["owner", "team", "startsAt", "endsAt"];
+  const allowedFields = ["projectGroup", "segment", "externalTeam", "startsAt", "endsAt"];
   if (allowedFields.indexOf(field) === -1) throw new Error("Invalid project field: " + field);
   let value = body.value || "";
   if (field === "startsAt" || field === "endsAt") value = normalizeDateValue(value, false);
@@ -171,19 +174,33 @@ function updateRiskDue(body) {
 function addProject(body) {
   const name = (body.name || "").toString().trim();
   if (!name) throw new Error("Project name is required");
+  const meta = defaultProjectMeta(name);
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
+  ensureProjectSchema();
   const projSheet = sheet("Projects");
   const values = projSheet.getDataRange().getValues();
+  const headers = values[0];
+  const row = headers.map(h => {
+    if (h === "id") return "";
+    if (h === "name") return name;
+    if (h === "projectGroup") return meta.projectGroup;
+    if (h === "segment") return meta.segment;
+    if (h === "externalTeam") return meta.externalTeam;
+    if (h === "percent") return 0;
+    return "";
+  });
   let maxId = 0;
+  const idCol = columnIndex(headers, "id");
   for (let i = 1; i < values.length; i++) {
-    const id = Number(values[i][0]);
+    const id = Number(values[i][idCol]);
     if (id > maxId) maxId = id;
   }
   const newId = maxId + 1;
-  projSheet.appendRow([newId, name, "Unassigned", "", 0, "", ""]);
+  row[idCol] = newId;
+  projSheet.appendRow(row);
 
   const tlSheet = sheet("Timelines");
   const phaseDefs = [
@@ -218,6 +235,48 @@ function normalizeDateValue(value, allowDateTime) {
   return text;
 }
 
+function ensureProjectSchema() {
+  const sh = sheet("Projects");
+  const values = sh.getDataRange().getValues();
+  if (!values.length) throw new Error("Projects sheet is empty");
+  const required = ["projectGroup", "segment", "externalTeam"];
+  let headers = values[0];
+  required.forEach(name => {
+    if (headers.indexOf(name) === -1) {
+      sh.getRange(1, headers.length + 1).setValue(name);
+      headers.push(name);
+    }
+  });
+  values.slice(1).forEach((row, i) => {
+    const name = row[columnIndex(headers, "name")];
+    const meta = defaultProjectMeta(name);
+    required.forEach(field => {
+      const col = columnIndex(headers, field);
+      if (!row[col]) sh.getRange(i + 2, col + 1).setValue(meta[field]);
+    });
+  });
+}
+
+function defaultProjectMeta(name) {
+  const text = String(name || "");
+  const unitMatch = text.match(/WPR Unit\s+(\d+)/i);
+  if (unitMatch) {
+    const unit = Number(unitMatch[1]);
+    if (unit >= 1 && unit <= 6) return { projectGroup: "WPR", segment: "Units 1-6", externalTeam: "Big-D Units 1-6" };
+    if (unit >= 7 && unit <= 12) return { projectGroup: "WPR", segment: "Units 7-12", externalTeam: "Big-D Units 7-12" };
+  }
+  if (/WPR Condo|Penthouse/i.test(text)) {
+    return { projectGroup: "WPR", segment: "Condos/Penthouse", externalTeam: "Big-D Condos/Penthouse" };
+  }
+  if (/WPR.*Skier|Skier.*WPR/i.test(text)) {
+    return { projectGroup: "WPR", segment: "Skier Services", externalTeam: "Big-D Skier Services" };
+  }
+  if (/^WPR\b/i.test(text)) {
+    return { projectGroup: "WPR", segment: "General", externalTeam: "" };
+  }
+  return { projectGroup: "Other Projects", segment: "", externalTeam: "" };
+}
+
 // ---------- One-time setup: DELETES and rebuilds the tabs with 17 projects ----------
 
 function seedData() {
@@ -230,9 +289,12 @@ function seedData() {
   ];
 
   setTab(ss, "Projects",
-    ["id", "name", "owner", "team", "percent", "startsAt", "endsAt"],
-    projectNames.map((name, i) => [i + 1, name, "Unassigned", "", 0, "", ""]),
-    [6, 7]); // startsAt, endsAt as plain text
+    ["id", "name", "projectGroup", "segment", "externalTeam", "percent", "startsAt", "endsAt"],
+    projectNames.map((name, i) => {
+      const meta = defaultProjectMeta(name);
+      return [i + 1, name, meta.projectGroup, meta.segment, meta.externalTeam, 0, "", ""];
+    }),
+    [7, 8]); // startsAt, endsAt as plain text
 
   const phaseDefs = [
     ["handover", "WPR Handover (Big-D → WPR)"],

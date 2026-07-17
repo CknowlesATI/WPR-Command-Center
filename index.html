@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WPR Command Center</title>
+<title>Project Command Center</title>
 <style>
   :root{
     --bg:#f4f6f9; --panel:#ffffff; --border:#e2e6ec; --text:#1f2937; --muted:#6b7280;
@@ -151,6 +151,8 @@
   .gantt-legend .today-dot{display:inline-block;width:2px;height:10px;background:#111827;opacity:.5;margin-right:6px;vertical-align:middle;}
   .phase-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
   .phase-chips .chip{display:inline-flex;align-items:center;gap:6px;}
+  .portfolio-filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px;}
+  .portfolio-filters .chip{border-radius:8px;}
   .gantt-tracks{display:flex;flex-direction:column;gap:3px;}
   .gantt-track.phase{height:7px;background:#f4f6f9;border-radius:3px;}
   .gantt-track.single{height:16px;}
@@ -204,12 +206,12 @@
 
 <header>
   <div class="titleblock">
-    <h1>WPR Command Center</h1>
+    <h1>Project Command Center</h1>
     <div class="sub">Portfolio overview</div>
   </div>
   <div class="search">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input id="searchInput" placeholder="Search projects or owners…">
+    <input id="searchInput" placeholder="Search projects, groups, or teams…">
   </div>
   <div class="chips" id="filterChips">
     <div class="chip active" data-filter="all">All</div>
@@ -225,8 +227,8 @@
 <div class="overlay" id="npOverlay"></div>
 <div class="np-modal" id="npModal">
   <h3>New Project</h3>
-  <div class="np-sub">Adds a project with all 5 WPR phases ready for dates.</div>
-  <input type="text" id="npNameInput" placeholder="e.g. WPR Unit 13" maxlength="80">
+  <div class="np-sub">Adds a project with timeline phases ready for dates.</div>
+  <input type="text" id="npNameInput" placeholder="e.g. WPR Unit 13 or Aspen AV Install" maxlength="80">
   <div class="np-actions">
     <button class="np-btn np-cancel" id="npCancel">Cancel</button>
     <button class="np-btn np-create" id="npCreate">Create</button>
@@ -236,6 +238,8 @@
 <main>
   <div class="sync-banner" id="syncBanner" style="display:none;"></div>
   <div class="kpis" id="kpis"></div>
+  <div class="portfolio-filters" id="groupChips"></div>
+  <div class="portfolio-filters" id="segmentChips"></div>
 
   <div class="attention-wrap">
     <div class="sectionhead">
@@ -293,7 +297,7 @@ function defaultProjects(){
     "WPR Unit 7","WPR Unit 8","WPR Unit 9","WPR Unit 10","WPR Unit 11","WPR Unit 12",
     "WPR Condo 101","WPR Condo 102","WPR Condo 201","WPR Condo 202","WPR Condo Penthouse",
   ].map((name,i)=>({
-    id:i+1, name, owner:"Unassigned", team:[],
+    id:i+1, name, ...defaultProjectMeta(name),
     rag:"pending", percent:0, startsAt:null, endsAt:null,
     milestones:[],
     tasks:{todo:0, progress:0, done:0},
@@ -359,7 +363,7 @@ async function loadProjects(){
   refreshAll();
 }
 
-const state = { filter:"all", search:"", ganttPhase:"all" };
+const state = { filter:"all", group:"all", segment:"all", search:"", ganttPhase:"all" };
 
 const PHASES = [
   {key:"handover", label:"WPR Handover (Big-D → WPR)"},
@@ -390,6 +394,7 @@ function normalizeDateString(value, allowDateTime=false){
 }
 function normalizeProjects(projects){
   return (Array.isArray(projects) ? projects : []).map(p=>{
+    const meta = defaultProjectMeta(p.name);
     const timelines = PHASES.map(def=>{
       const found = (p.timelines || []).find(t=>t.key===def.key) || {};
       return {key:def.key, label:found.label || def.label, start:normalizeDateString(found.start), end:normalizeDateString(found.end)};
@@ -397,8 +402,9 @@ function normalizeProjects(projects){
     return {
       id:Number(p.id),
       name:p.name || "Untitled project",
-      owner:p.owner || "Unassigned",
-      team:Array.isArray(p.team) ? p.team.filter(Boolean) : String(p.team || "").split(",").map(s=>s.trim()).filter(Boolean),
+      projectGroup:p.projectGroup || meta.projectGroup,
+      segment:p.segment || meta.segment,
+      externalTeam:p.externalTeam || meta.externalTeam,
       rag:p.rag || "pending",
       percent:clampPercent(p.percent),
       startsAt:normalizeDateString(p.startsAt),
@@ -414,6 +420,19 @@ function normalizeProjects(projects){
       risks:(p.risks || []).map(r=>({id:r.id, title:r.title || "", severity:["high","medium","low"].includes(r.severity) ? r.severity : "low", owner:r.owner || "Unassigned", note:r.note || "", due:normalizeDateString(r.due, true)})),
     };
   }).filter(p=>Number.isFinite(p.id));
+}
+function defaultProjectMeta(name){
+  const text = String(name || "");
+  const unitMatch = text.match(/WPR Unit\s+(\d+)/i);
+  if(unitMatch){
+    const unit = Number(unitMatch[1]);
+    if(unit>=1 && unit<=6) return {projectGroup:"WPR", segment:"Units 1-6", externalTeam:"Big-D Units 1-6"};
+    if(unit>=7 && unit<=12) return {projectGroup:"WPR", segment:"Units 7-12", externalTeam:"Big-D Units 7-12"};
+  }
+  if(/WPR Condo|Penthouse/i.test(text)) return {projectGroup:"WPR", segment:"Condos/Penthouse", externalTeam:"Big-D Condos/Penthouse"};
+  if(/WPR.*Skier|Skier.*WPR/i.test(text)) return {projectGroup:"WPR", segment:"Skier Services", externalTeam:"Big-D Skier Services"};
+  if(/^WPR\b/i.test(text)) return {projectGroup:"WPR", segment:"General", externalTeam:""};
+  return {projectGroup:"Other Projects", segment:"", externalTeam:""};
 }
 function parseDateValue(value){
   if(!value) return null;
@@ -441,9 +460,16 @@ function daysFromNow(date){
   target.setHours(0,0,0,0);
   return Math.round((target-start)/86400000);
 }
-function getPortfolioRange(){
+function groupFilteredProjects(){
+  return PROJECTS.filter(p=>{
+    if(state.group!=="all" && p.projectGroup!==state.group) return false;
+    if(state.segment!=="all" && p.segment!==state.segment) return false;
+    return true;
+  });
+}
+function getPortfolioRange(list=PROJECTS){
   let min=null, max=null;
-  PROJECTS.forEach(p=>{
+  list.forEach(p=>{
     if(!p.startsAt || !p.endsAt) return;
     const s = parseDateValue(p.startsAt), e = parseDateValue(p.endsAt);
     if(!s || !e) return;
@@ -499,6 +525,8 @@ function refreshRagStatuses(){
 function refreshAll(){
   refreshRagStatuses();
   renderKPIs();
+  renderGroupFilters();
+  renderSegmentFilters();
   renderAttention();
   renderGantt();
   renderBoard();
@@ -529,10 +557,35 @@ function renderKPIs(){
   `).join("");
 }
 
+function renderGroupFilters(){
+  const groups = [...new Set(PROJECTS.map(p=>p.projectGroup).filter(Boolean))].sort();
+  const el = document.getElementById("groupChips");
+  el.innerHTML = [
+    `<div class="chip ${state.group==="all"?"active":""}" data-group="all">All Groups</div>`,
+    ...groups.map(group=>`<div class="chip ${state.group===group?"active":""}" data-group="${escapeHTML(group)}">${escapeHTML(group)}</div>`)
+  ].join("");
+}
+
+function renderSegmentFilters(){
+  const source = state.group==="all" ? PROJECTS : PROJECTS.filter(p=>p.projectGroup===state.group);
+  const segments = [...new Set(source.map(p=>p.segment).filter(Boolean))].sort();
+  const el = document.getElementById("segmentChips");
+  if(!segments.length){
+    el.innerHTML = "";
+    state.segment = "all";
+    return;
+  }
+  if(state.segment!=="all" && !segments.includes(state.segment)) state.segment = "all";
+  el.innerHTML = [
+    `<div class="chip ${state.segment==="all"?"active":""}" data-segment="all">All Segments</div>`,
+    ...segments.map(segment=>`<div class="chip ${state.segment===segment?"active":""}" data-segment="${escapeHTML(segment)}">${escapeHTML(segment)}</div>`)
+  ].join("");
+}
+
 function buildAttentionItems(){
   const items = [];
   const now = new Date();
-  PROJECTS.forEach(p=>{
+  groupFilteredProjects().forEach(p=>{
     p.risks.forEach(r=>{
       const due = parseDateValue(r.due);
       if(r.severity==="high"){
@@ -649,12 +702,14 @@ function nextMilestone(p){
 
 function renderBoard(){
   const q = state.search.trim().toLowerCase();
-  const filtered = PROJECTS.filter(p=>{
+  const scoped = groupFilteredProjects();
+  const filtered = scoped.filter(p=>{
     if(state.filter!=="all" && p.rag!==state.filter) return false;
-    if(q && !(p.name.toLowerCase().includes(q) || p.owner.toLowerCase().includes(q))) return false;
+    const haystack = [p.name, p.projectGroup, p.segment, p.externalTeam].join(" ").toLowerCase();
+    if(q && !haystack.includes(q)) return false;
     return true;
   });
-  document.getElementById("resultCount").textContent = `${filtered.length} of ${PROJECTS.length}`;
+  document.getElementById("resultCount").textContent = `${filtered.length} of ${scoped.length}`;
   const board = document.getElementById("board");
   if(filtered.length===0){
     board.innerHTML = `<div class="empty">No projects match your filters.</div>`;
@@ -669,7 +724,7 @@ function renderBoard(){
     <div class="card" data-id="${p.id}">
       <div>
         <div class="pname">${escapeHTML(p.name)}</div>
-        <div class="powner">${escapeHTML(p.owner)}</div>
+        <div class="powner">${escapeHTML([p.projectGroup, p.segment].filter(Boolean).join(" / ") || "Ungrouped")}</div>
       </div>
       <div class="rag ${p.rag}"><span class="dot"></span>${ragLabel(p.rag)}</div>
       <div class="timeline">
@@ -685,7 +740,7 @@ function renderBoard(){
         <div class="tlegend">${totalTasks ? `${p.tasks.done} done · ${p.tasks.progress} in progress · ${p.tasks.todo} to do` : "No tasks added yet"}</div>
       </div>
       <div class="risks">${riskBadge(p)}</div>
-      <div class="teamline">${p.team.length ? escapeHTML(p.team.join(", ")) : "Unassigned"}</div>
+      <div class="teamline">${escapeHTML(p.externalTeam || "No external team")}</div>
     </div>`;
   }).join("");
 
@@ -697,7 +752,8 @@ function renderBoard(){
 function monthLabel(d){ return d.toLocaleString("en-US",{month:"short"}); }
 
 function renderGantt(){
-  const {min,max} = getPortfolioRange();
+  const visibleProjects = groupFilteredProjects();
+  const {min,max} = getPortfolioRange(visibleProjects);
   const totalMs = max-min;
   const todayPct = Math.min(100, Math.max(0, (new Date()-min)/totalMs*100));
 
@@ -712,7 +768,7 @@ function renderGantt(){
 
   const phase = state.ganttPhase;
 
-  const rows = PROJECTS.map(p=>{
+  const rows = visibleProjects.map(p=>{
     let trackHTML;
     if(phase==="all"){
       let mainBar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
@@ -862,7 +918,7 @@ function openPanel(id){
     <div class="panel-head">
       <button class="close" id="closeBtn">✕</button>
       <h2>${escapeHTML(p.name)}</h2>
-      <div class="meta">Owner: ${escapeHTML(p.owner)} · Team: ${p.team.length ? escapeHTML(p.team.join(", ")) : "Unassigned"} · ${escapeHTML(formatDateRange(p.startsAt, p.endsAt))}</div>
+      <div class="meta">${escapeHTML([p.projectGroup, p.segment].filter(Boolean).join(" / ") || "Ungrouped")} · ${escapeHTML(p.externalTeam || "No external team")} · ${escapeHTML(formatDateRange(p.startsAt, p.endsAt))}</div>
       <div style="margin-top:8px;" class="rag ${p.rag}"><span class="dot"></span>${ragLabel(p.rag)} · ${p.percent}% complete</div>
     </div>
     <div class="panel-body">
@@ -870,12 +926,16 @@ function openPanel(id){
         <h3>Project Summary</h3>
         <div class="summary-grid">
           <div class="summary-field">
-            <label for="projectOwner">Owner</label>
-            <input id="projectOwner" class="project-input" data-pid="${p.id}" data-field="owner" value="${escapeHTML(p.owner)}">
+            <label for="projectGroup">Project Group</label>
+            <input id="projectGroup" class="project-input" data-pid="${p.id}" data-field="projectGroup" value="${escapeHTML(p.projectGroup)}">
           </div>
           <div class="summary-field">
-            <label for="projectTeam">Team</label>
-            <input id="projectTeam" class="project-input" data-pid="${p.id}" data-field="team" value="${escapeHTML(p.team.join(", "))}" placeholder="Name, Name">
+            <label for="projectSegment">Segment / Area</label>
+            <input id="projectSegment" class="project-input" data-pid="${p.id}" data-field="segment" value="${escapeHTML(p.segment)}">
+          </div>
+          <div class="summary-field full">
+            <label for="projectExternalTeam">External Team</label>
+            <input id="projectExternalTeam" class="project-input" data-pid="${p.id}" data-field="externalTeam" value="${escapeHTML(p.externalTeam)}" placeholder="Big-D team, vendor, or key contact">
           </div>
           <div class="summary-field">
             <label for="projectStart">Project Start</label>
@@ -921,12 +981,11 @@ document.getElementById("panel").addEventListener("change", async e=>{
   if(projectInp){
     const proj = PROJECTS.find(x=>x.id===Number(projectInp.dataset.pid));
     const field = projectInp.dataset.field;
-    if(!proj || !["owner","team","startsAt","endsAt"].includes(field)) return;
-    const previous = Array.isArray(proj[field]) ? [...proj[field]] : proj[field];
+    if(!proj || !["projectGroup","segment","externalTeam","startsAt","endsAt"].includes(field)) return;
+    const previous = proj[field];
     const nextValue = projectInp.value.trim();
     try{
-      if(field==="team") proj.team = nextValue ? nextValue.split(",").map(s=>s.trim()).filter(Boolean) : [];
-      else proj[field] = nextValue || null;
+      proj[field] = nextValue || null;
       await postUpdate("updateProjectField", {projectId: proj.id, field, value: nextValue || null});
     } catch(err){
       console.error("Failed to save project field:", err);
@@ -1009,6 +1068,26 @@ document.getElementById("filterChips").addEventListener("click", e=>{
   state.filter = chip.dataset.filter;
   renderBoard();
 });
+document.getElementById("groupChips").addEventListener("click", e=>{
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  state.group = chip.dataset.group;
+  state.segment = "all";
+  renderGroupFilters();
+  renderSegmentFilters();
+  renderAttention();
+  renderGantt();
+  renderBoard();
+});
+document.getElementById("segmentChips").addEventListener("click", e=>{
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  state.segment = chip.dataset.segment;
+  renderSegmentFilters();
+  renderAttention();
+  renderGantt();
+  renderBoard();
+});
 document.getElementById("searchInput").addEventListener("input", e=>{
   state.search = e.target.value;
   renderBoard();
@@ -1054,8 +1133,9 @@ async function createNewProject(){
     }
   } else {
     const maxId = PROJECTS.reduce((m,p)=>Math.max(m,p.id),0);
+    const meta = defaultProjectMeta(name);
     PROJECTS.push({
-      id:maxId+1, name, owner:"Unassigned", team:[],
+      id:maxId+1, name, ...meta,
       rag:"pending", percent:0, startsAt:null, endsAt:null,
       milestones:[], tasks:{todo:0, progress:0, done:0}, taskList:[],
       timelines: blankTimelines(),
