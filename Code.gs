@@ -28,6 +28,15 @@ function doPost(e) {
     if (body.action === "updateTimeline") updateTimeline(body);
     else if (body.action === "updateRiskDue") updateRiskDue(body);
     else if (body.action === "updateProjectField") updateProjectField(body);
+    else if (body.action === "addTask") addTask(body);
+    else if (body.action === "updateTask") updateTask(body);
+    else if (body.action === "deleteTask") deleteById("Tasks", body.taskId);
+    else if (body.action === "addRisk") addRisk(body);
+    else if (body.action === "updateRisk") updateRisk(body);
+    else if (body.action === "deleteRisk") deleteById("Risks", body.riskId);
+    else if (body.action === "addMilestone") addMilestone(body);
+    else if (body.action === "updateMilestone") updateMilestone(body);
+    else if (body.action === "deleteMilestone") deleteById("Milestones", body.milestoneId);
     else if (body.action === "addProject") addProject(body);
     else throw new Error("Unknown action: " + body.action);
     return respond({ ok: true, data: getAllData() });
@@ -73,6 +82,8 @@ function normalizeCell(value) {
 function getAllData() {
   ensureProjectSchema();
   ensureTimelineSchema();
+  ensureTaskSchema();
+  ensureMilestoneSchema();
   const projects = readRows("Projects");
   const timelines = readRows("Timelines");
   const tasks = readRows("Tasks");
@@ -90,7 +101,7 @@ function getAllData() {
     endsAt: p.endsAt || null,
     milestones: milestones
       .filter(m => String(m.projectId) === String(p.id))
-      .map(m => ({ name: m.name, date: m.date, state: m.state })),
+      .map(m => ({ id: m.id, name: m.name, date: m.date, state: m.state })),
     tasks: {
       todo: tasks.filter(t => String(t.projectId) === String(p.id) && t.status === "todo").length,
       progress: tasks.filter(t => String(t.projectId) === String(p.id) && t.status === "progress").length,
@@ -98,7 +109,7 @@ function getAllData() {
     },
     taskList: tasks
       .filter(t => String(t.projectId) === String(p.id))
-      .map(t => ({ name: t.name, status: t.status })),
+      .map(t => ({ id: t.id, name: t.name, status: t.status })),
     timelines: timelines
       .filter(t => String(t.projectId) === String(p.id) && phaseKeysForGroup(p.projectGroup || defaultProjectMeta(p.name).projectGroup).indexOf(t.key) !== -1)
       .map(t => ({ key: t.key, label: t.label, start: t.start || null, end: t.end || null, status: t.status || "" })),
@@ -173,6 +184,76 @@ function updateRiskDue(body) {
   throw new Error("Risk row not found: " + riskId);
 }
 
+function addTask(body) {
+  ensureTaskSchema();
+  const projectId = requireValue(body.projectId, "projectId");
+  const name = String(requireValue(body.name, "name")).trim();
+  const status = normalizeTaskStatus(body.status || "todo");
+  appendRowByHeaders("Tasks", { id: nextId("Tasks"), projectId, name, status });
+}
+
+function updateTask(body) {
+  ensureTaskSchema();
+  const taskId = requireValue(body.taskId, "taskId");
+  const field = requireValue(body.field, "field");
+  if (["name", "status"].indexOf(field) === -1) throw new Error("Invalid task field: " + field);
+  const value = field === "status" ? normalizeTaskStatus(body.value) : String(body.value || "").trim();
+  if (field === "name" && !value) throw new Error("Task name is required");
+  updateById("Tasks", taskId, field, value);
+}
+
+function addRisk(body) {
+  const projectId = requireValue(body.projectId, "projectId");
+  const title = String(requireValue(body.title, "title")).trim();
+  appendRowByHeaders("Risks", {
+    id: nextId("Risks"),
+    projectId,
+    title,
+    severity: normalizeRiskSeverity(body.severity || "medium"),
+    owner: String(body.owner || "").trim(),
+    note: String(body.note || "").trim(),
+    due: normalizeDateValue(body.due, true)
+  });
+}
+
+function updateRisk(body) {
+  const riskId = requireValue(body.riskId, "riskId");
+  const field = requireValue(body.field, "field");
+  if (["title", "severity", "owner", "note", "due"].indexOf(field) === -1) throw new Error("Invalid risk field: " + field);
+  let value = body.value || "";
+  if (field === "severity") value = normalizeRiskSeverity(value);
+  else if (field === "due") value = normalizeDateValue(value, true);
+  else value = String(value).trim();
+  if (field === "title" && !value) throw new Error("Risk title is required");
+  updateById("Risks", riskId, field, value);
+}
+
+function addMilestone(body) {
+  ensureMilestoneSchema();
+  const projectId = requireValue(body.projectId, "projectId");
+  const name = String(requireValue(body.name, "name")).trim();
+  appendRowByHeaders("Milestones", {
+    projectId,
+    name,
+    date: normalizeDateValue(body.date, false),
+    state: normalizeMilestoneState(body.state || "future"),
+    id: nextId("Milestones")
+  });
+}
+
+function updateMilestone(body) {
+  ensureMilestoneSchema();
+  const milestoneId = requireValue(body.milestoneId, "milestoneId");
+  const field = requireValue(body.field, "field");
+  if (["name", "date", "state"].indexOf(field) === -1) throw new Error("Invalid milestone field: " + field);
+  let value = body.value || "";
+  if (field === "date") value = normalizeDateValue(value, false);
+  else if (field === "state") value = normalizeMilestoneState(value);
+  else value = String(value).trim();
+  if (field === "name" && !value) throw new Error("Milestone name is required");
+  updateById("Milestones", milestoneId, field, value);
+}
+
 function addProject(body) {
   const name = (body.name || "").toString().trim();
   if (!name) throw new Error("Project name is required");
@@ -239,6 +320,73 @@ function normalizeTimelineStatus(value) {
   throw new Error("Invalid timeline status: " + text);
 }
 
+function normalizeTaskStatus(value) {
+  const text = String(value || "").trim();
+  if (["todo", "progress", "done"].indexOf(text) === -1) throw new Error("Invalid task status: " + text);
+  return text;
+}
+
+function normalizeRiskSeverity(value) {
+  const text = String(value || "").trim();
+  if (["low", "medium", "high"].indexOf(text) === -1) throw new Error("Invalid risk severity: " + text);
+  return text;
+}
+
+function normalizeMilestoneState(value) {
+  const text = String(value || "").trim();
+  if (["done", "next", "future"].indexOf(text) === -1) throw new Error("Invalid milestone state: " + text);
+  return text;
+}
+
+function appendRowByHeaders(sheetName, valuesByHeader) {
+  const sh = sheet(sheetName);
+  const headers = sh.getDataRange().getValues()[0];
+  sh.appendRow(headers.map(h => valuesByHeader[h] === undefined ? "" : valuesByHeader[h]));
+}
+
+function updateById(sheetName, id, field, value) {
+  const sh = sheet(sheetName);
+  const values = sh.getDataRange().getValues();
+  const headers = values[0];
+  const idCol = columnIndex(headers, "id");
+  const writeCol = columnIndex(headers, field);
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][idCol]) === String(id)) {
+      sh.getRange(i + 1, writeCol + 1).setValue(value);
+      return;
+    }
+  }
+  throw new Error(sheetName + " row not found: " + id);
+}
+
+function deleteById(sheetName, id) {
+  id = requireValue(id, "id");
+  const sh = sheet(sheetName);
+  const values = sh.getDataRange().getValues();
+  const headers = values[0];
+  const idCol = columnIndex(headers, "id");
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][idCol]) === String(id)) {
+      sh.deleteRow(i + 1);
+      return;
+    }
+  }
+  throw new Error(sheetName + " row not found: " + id);
+}
+
+function nextId(sheetName) {
+  const sh = sheet(sheetName);
+  const values = sh.getDataRange().getValues();
+  const headers = values[0];
+  const idCol = columnIndex(headers, "id");
+  let maxId = 0;
+  for (let i = 1; i < values.length; i++) {
+    const id = Number(values[i][idCol]);
+    if (id > maxId) maxId = id;
+  }
+  return maxId + 1;
+}
+
 function ensureProjectSchema() {
   const sh = sheet("Projects");
   const values = sh.getDataRange().getValues();
@@ -268,6 +416,38 @@ function ensureTimelineSchema() {
   const headers = values[0];
   if (headers.indexOf("status") === -1) {
     sh.getRange(1, headers.length + 1).setValue("status");
+  }
+}
+
+function ensureTaskSchema() {
+  ensureIdColumn("Tasks");
+}
+
+function ensureMilestoneSchema() {
+  ensureIdColumn("Milestones");
+}
+
+function ensureIdColumn(sheetName) {
+  const sh = sheet(sheetName);
+  const values = sh.getDataRange().getValues();
+  if (!values.length) throw new Error(sheetName + " sheet is empty");
+  const headers = values[0];
+  let idCol = headers.indexOf("id");
+  if (idCol === -1) {
+    idCol = headers.length;
+    sh.getRange(1, idCol + 1).setValue("id");
+    headers.push("id");
+  }
+  let maxId = 0;
+  for (let i = 1; i < values.length; i++) {
+    const id = Number(values[i][idCol]);
+    if (id > maxId) maxId = id;
+  }
+  for (let i = 1; i < values.length; i++) {
+    if (!values[i][idCol]) {
+      maxId += 1;
+      sh.getRange(i + 1, idCol + 1).setValue(maxId);
+    }
   }
 }
 
@@ -338,9 +518,9 @@ function seedData() {
   });
   setTab(ss, "Timelines", ["projectId", "key", "label", "start", "end", "status"], timelineRows, [4, 5]);
 
-  setTab(ss, "Tasks", ["projectId", "name", "status"], []);
+  setTab(ss, "Tasks", ["projectId", "name", "status", "id"], []);
   setTab(ss, "Risks", ["id", "projectId", "title", "severity", "owner", "note", "due"], [], [7]);
-  setTab(ss, "Milestones", ["projectId", "name", "date", "state"], [], [3]);
+  setTab(ss, "Milestones", ["projectId", "name", "date", "state", "id"], [], [3]);
 
   SpreadsheetApp.getActiveSpreadsheet().toast("Done! 5 tabs created and 17 projects loaded.");
 }

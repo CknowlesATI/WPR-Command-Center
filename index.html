@@ -113,6 +113,19 @@
   .ms-date{color:var(--muted);font-size:12px;}
   .task-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid #f1f3f6;}
   .task-row:last-child{border-bottom:none;}
+  .edit-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #f1f3f6;}
+  .edit-row:last-child{border-bottom:none;}
+  .edit-row.risk-edit{grid-template-columns:1fr 92px 32px;align-items:start;}
+  .edit-row.milestone-edit{grid-template-columns:1fr 120px 84px 32px;}
+  .edit-row input,.edit-row select,.edit-row textarea,.add-row input,.add-row select,.add-row textarea{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:6px 7px;color:var(--text);background:#fafbfc;font-family:inherit;min-width:0;}
+  .edit-row textarea,.add-row textarea{resize:vertical;min-height:34px;}
+  .edit-main{display:flex;flex-direction:column;gap:6px;}
+  .add-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);}
+  .add-row.risk-add{grid-template-columns:1fr 92px auto;}
+  .add-row.milestone-add{grid-template-columns:1fr 120px 84px auto;}
+  .icon-btn{border:1px solid var(--border);background:#fff;color:var(--muted);border-radius:6px;min-width:32px;height:32px;cursor:pointer;font-size:13px;}
+  .icon-btn:hover{border-color:#c7cedb;color:var(--text);}
+  .add-btn{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
   .tag{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600;}
   .tag.todo{background:#eceff3;color:var(--muted);}
   .tag.progress{background:var(--blue-bg);color:var(--blue);}
@@ -412,13 +425,13 @@ function normalizeProjects(projects){
       percent:clampPercent(p.percent),
       startsAt:normalizeDateString(p.startsAt),
       endsAt:normalizeDateString(p.endsAt),
-      milestones:(p.milestones || []).map(m=>({name:m.name || "", date:normalizeDateString(m.date) || m.date || "", state:m.state || "future"})),
+      milestones:(p.milestones || []).map(m=>({id:m.id, name:m.name || "", date:normalizeDateString(m.date) || m.date || "", state:m.state || "future"})),
       tasks:{
         todo:Number(p.tasks && p.tasks.todo) || 0,
         progress:Number(p.tasks && p.tasks.progress) || 0,
         done:Number(p.tasks && p.tasks.done) || 0,
       },
-      taskList:(p.taskList || []).map(t=>({name:t.name || "", status:["todo","progress","done"].includes(t.status) ? t.status : "todo"})),
+      taskList:(p.taskList || []).map(t=>({id:t.id, name:t.name || "", status:["todo","progress","done"].includes(t.status) ? t.status : "todo"})),
       timelines,
       risks:(p.risks || []).map(r=>({id:r.id, title:r.title || "", severity:["high","medium","low"].includes(r.severity) ? r.severity : "low", owner:r.owner || "Unassigned", note:r.note || "", due:normalizeDateString(r.due, true)})),
     };
@@ -920,28 +933,66 @@ function openPanel(id){
   const panel = document.getElementById("panel");
   const overlay = document.getElementById("overlay");
   const msHTML = p.milestones.map(m=>`
-    <div class="ms-item">
-      <div class="ms-dot ${m.state}"></div>
-      <div><div class="ms-name">${escapeHTML(m.name)}</div><div class="ms-date">${escapeHTML(formatDate(m.date) || m.date)}</div></div>
-    </div>`).join("");
+    <div class="edit-row milestone-edit">
+      <input class="milestone-input" data-pid="${p.id}" data-mid="${escapeHTML(m.id)}" data-field="name" value="${escapeHTML(m.name)}" placeholder="Milestone">
+      <input type="date" class="milestone-input" data-pid="${p.id}" data-mid="${escapeHTML(m.id)}" data-field="date" value="${m.date||""}">
+      <select class="milestone-input" data-pid="${p.id}" data-mid="${escapeHTML(m.id)}" data-field="state">
+        <option value="future" ${m.state==="future"?"selected":""}>Future</option>
+        <option value="next" ${m.state==="next"?"selected":""}>Next</option>
+        <option value="done" ${m.state==="done"?"selected":""}>Done</option>
+      </select>
+      <button class="icon-btn milestone-delete" data-pid="${p.id}" data-mid="${escapeHTML(m.id)}" title="Remove milestone">✕</button>
+    </div>`).join("") || `<div class="empty">No milestones added yet.</div>`;
+  const milestoneAddHTML = `
+    <div class="add-row milestone-add">
+      <input id="newMilestoneName" placeholder="Add milestone">
+      <input type="date" id="newMilestoneDate">
+      <select id="newMilestoneState"><option value="future">Future</option><option value="next">Next</option><option value="done">Done</option></select>
+      <button class="add-btn" id="addMilestoneBtn" data-pid="${p.id}">Add</button>
+    </div>`;
   const taskHTML = p.taskList.map(t=>`
-    <div class="task-row"><span>${escapeHTML(t.name)}</span><span class="tag ${t.status}">${t.status==="progress"?"In progress":t.status==="done"?"Done":"To do"}</span></div>
-  `).join("") || `<div class="empty">No open tasks listed.</div>`;
+    <div class="edit-row">
+      <input class="task-input" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" data-field="name" value="${escapeHTML(t.name)}" placeholder="Task">
+      <select class="task-input" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" data-field="status">
+        <option value="todo" ${t.status==="todo"?"selected":""}>To do</option>
+        <option value="progress" ${t.status==="progress"?"selected":""}>In progress</option>
+        <option value="done" ${t.status==="done"?"selected":""}>Done</option>
+      </select>
+      <button class="icon-btn task-delete" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" title="Remove task">✕</button>
+    </div>
+  `).join("") || `<div class="empty">No tasks listed.</div>`;
+  const taskAddHTML = `
+    <div class="add-row">
+      <input id="newTaskName" placeholder="Add task">
+      <button class="add-btn" id="addTaskBtn" data-pid="${p.id}">Add</button>
+    </div>`;
   const riskHTML = p.risks.map(r=>{
     const due = parseDateValue(r.due);
     const overdue = due && due < new Date();
     return `
-    <div class="risk-item">
-      <div class="rtop"><span>${escapeHTML(r.title)}</span><span class="sev ${r.severity}">${escapeHTML(r.severity)}</span></div>
-      <div>${escapeHTML(r.note)}</div>
-      <div class="rowner">Owner: ${escapeHTML(r.owner)}</div>
-      <div class="rdue-row ${overdue?"overdue":""}">
-        <span class="rdue-label">Due</span>
-        <input type="datetime-local" class="due-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" value="${r.due||""}">
-        <button class="due-clear" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" title="Clear due date">✕</button>
+    <div class="risk-item ${overdue?"rdue-row overdue":""}">
+      <div class="edit-row risk-edit">
+        <div class="edit-main">
+          <input class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="title" value="${escapeHTML(r.title)}" placeholder="Risk or issue">
+          <input class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="owner" value="${escapeHTML(r.owner)}" placeholder="Owner/contact">
+          <textarea class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="note" placeholder="Notes">${escapeHTML(r.note)}</textarea>
+          <input type="datetime-local" class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="due" value="${r.due||""}">
+        </div>
+        <select class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="severity">
+          <option value="low" ${r.severity==="low"?"selected":""}>Low</option>
+          <option value="medium" ${r.severity==="medium"?"selected":""}>Medium</option>
+          <option value="high" ${r.severity==="high"?"selected":""}>High</option>
+        </select>
+        <button class="icon-btn risk-delete" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" title="Remove risk">✕</button>
       </div>
     </div>`;
   }).join("") || `<div class="empty">No open tasks or issues.</div>`;
+  const riskAddHTML = `
+    <div class="add-row risk-add">
+      <input id="newRiskTitle" placeholder="Add risk or issue">
+      <select id="newRiskSeverity"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select>
+      <button class="add-btn" id="addRiskBtn" data-pid="${p.id}">Add</button>
+    </div>`;
 
   panel.innerHTML = `
     <div class="panel-head">
@@ -984,14 +1035,17 @@ function openPanel(id){
         <h3>Milestones</h3>
         ${milestoneTimelineHTML(p)}
         ${msHTML}
+        ${milestoneAddHTML}
       </div>
       <div class="pb-section">
         <h3>Task Status (${p.tasks.done + p.tasks.progress + p.tasks.todo} total)</h3>
         ${taskHTML}
+        ${taskAddHTML}
       </div>
       <div class="pb-section">
         <h3>Tasks &amp; Issues</h3>
         ${riskHTML}
+        ${riskAddHTML}
       </div>
     </div>
   `;
@@ -1006,6 +1060,51 @@ function closePanel(){
 document.getElementById("overlay").addEventListener("click", closePanel);
 
 document.getElementById("panel").addEventListener("change", async e=>{
+  const taskInp = e.target.closest(".task-input");
+  if(taskInp){
+    const proj = PROJECTS.find(x=>x.id===Number(taskInp.dataset.pid));
+    const field = taskInp.dataset.field;
+    if(!proj || !["name","status"].includes(field)) return;
+    try{
+      await postUpdate("updateTask", {taskId: taskInp.dataset.taskid, field, value: taskInp.value});
+    } catch(err){
+      console.error("Failed to save task:", err);
+      showSyncBanner("error", "That task could not be saved. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
+  const milestoneInp = e.target.closest(".milestone-input");
+  if(milestoneInp){
+    const proj = PROJECTS.find(x=>x.id===Number(milestoneInp.dataset.pid));
+    const field = milestoneInp.dataset.field;
+    if(!proj || !["name","date","state"].includes(field)) return;
+    try{
+      await postUpdate("updateMilestone", {milestoneId: milestoneInp.dataset.mid, field, value: milestoneInp.value});
+    } catch(err){
+      console.error("Failed to save milestone:", err);
+      showSyncBanner("error", "That milestone could not be saved. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
+  const riskInp = e.target.closest(".risk-input");
+  if(riskInp){
+    const proj = PROJECTS.find(x=>x.id===Number(riskInp.dataset.pid));
+    const field = riskInp.dataset.field;
+    if(!proj || !["title","severity","owner","note","due"].includes(field)) return;
+    try{
+      await postUpdate("updateRisk", {riskId: riskInp.dataset.riskid, field, value: riskInp.value || null});
+    } catch(err){
+      console.error("Failed to save risk:", err);
+      showSyncBanner("error", "That risk or issue could not be saved. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
   const projectInp = e.target.closest(".project-input");
   if(projectInp){
     const proj = PROJECTS.find(x=>x.id===Number(projectInp.dataset.pid));
@@ -1064,6 +1163,96 @@ document.getElementById("panel").addEventListener("change", async e=>{
   }
 });
 document.getElementById("panel").addEventListener("click", async e=>{
+  const addTask = e.target.closest("#addTaskBtn");
+  if(addTask){
+    const proj = PROJECTS.find(x=>x.id===Number(addTask.dataset.pid));
+    const name = document.getElementById("newTaskName").value.trim();
+    if(!proj || !name) return;
+    try{
+      await postUpdate("addTask", {projectId: proj.id, name, status:"todo"});
+    } catch(err){
+      console.error("Failed to add task:", err);
+      showSyncBanner("error", "That task could not be added. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
+  const addMilestone = e.target.closest("#addMilestoneBtn");
+  if(addMilestone){
+    const proj = PROJECTS.find(x=>x.id===Number(addMilestone.dataset.pid));
+    const name = document.getElementById("newMilestoneName").value.trim();
+    const date = document.getElementById("newMilestoneDate").value;
+    const stateValue = document.getElementById("newMilestoneState").value;
+    if(!proj || !name || !date) return;
+    try{
+      await postUpdate("addMilestone", {projectId: proj.id, name, date, state:stateValue});
+    } catch(err){
+      console.error("Failed to add milestone:", err);
+      showSyncBanner("error", "That milestone could not be added. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
+  const addRisk = e.target.closest("#addRiskBtn");
+  if(addRisk){
+    const proj = PROJECTS.find(x=>x.id===Number(addRisk.dataset.pid));
+    const title = document.getElementById("newRiskTitle").value.trim();
+    const severity = document.getElementById("newRiskSeverity").value;
+    if(!proj || !title) return;
+    try{
+      await postUpdate("addRisk", {projectId: proj.id, title, severity, owner:"", note:"", due:null});
+    } catch(err){
+      console.error("Failed to add risk:", err);
+      showSyncBanner("error", "That risk or issue could not be added. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
+  const taskDelete = e.target.closest(".task-delete");
+  if(taskDelete){
+    const proj = PROJECTS.find(x=>x.id===Number(taskDelete.dataset.pid));
+    if(!proj) return;
+    try{
+      await postUpdate("deleteTask", {taskId: taskDelete.dataset.taskid});
+    } catch(err){
+      console.error("Failed to remove task:", err);
+      showSyncBanner("error", "That task could not be removed. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
+  const milestoneDelete = e.target.closest(".milestone-delete");
+  if(milestoneDelete){
+    const proj = PROJECTS.find(x=>x.id===Number(milestoneDelete.dataset.pid));
+    if(!proj) return;
+    try{
+      await postUpdate("deleteMilestone", {milestoneId: milestoneDelete.dataset.mid});
+    } catch(err){
+      console.error("Failed to remove milestone:", err);
+      showSyncBanner("error", "That milestone could not be removed. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
+  const riskDelete = e.target.closest(".risk-delete");
+  if(riskDelete){
+    const proj = PROJECTS.find(x=>x.id===Number(riskDelete.dataset.pid));
+    if(!proj) return;
+    try{
+      await postUpdate("deleteRisk", {riskId: riskDelete.dataset.riskid});
+    } catch(err){
+      console.error("Failed to remove risk:", err);
+      showSyncBanner("error", "That risk or issue could not be removed. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
   const btn = e.target.closest(".due-clear");
   if(!btn) return;
   const proj = PROJECTS.find(x=>x.id===Number(btn.dataset.pid));
