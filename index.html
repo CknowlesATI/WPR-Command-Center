@@ -172,6 +172,8 @@
   .tp-note{font-weight:500;color:var(--muted);font-size:11px;}
   .tp-dates{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
   .tp-input{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);background:#fafbfc;font-family:inherit;}
+  .tp-status{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);margin:-1px 0 7px;}
+  .tp-status input{margin:0;}
   .tp-sep{color:var(--muted);font-size:12px;}
   .tp-track{position:relative;height:8px;background:#f4f6f9;border-radius:4px;}
   .tp-bar{position:absolute;top:0;height:8px;border-radius:4px;}
@@ -397,7 +399,7 @@ function normalizeProjects(projects){
     const meta = defaultProjectMeta(p.name);
     const timelines = PHASES.map(def=>{
       const found = (p.timelines || []).find(t=>t.key===def.key) || {};
-      return {key:def.key, label:found.label || def.label, start:normalizeDateString(found.start), end:normalizeDateString(found.end)};
+      return {key:def.key, label:found.label || def.label, start:normalizeDateString(found.start), end:normalizeDateString(found.end), status:found.status==="complete" ? "complete" : ""};
     });
     return {
       id:Number(p.id),
@@ -453,6 +455,9 @@ function formatDate(value){
 function formatDateRange(start, end){
   return start && end ? `${formatDate(start)} - ${formatDate(end)}` : "Not scheduled yet";
 }
+function isPhaseComplete(t){
+  return t && t.status==="complete";
+}
 function daysFromNow(date){
   const start = new Date();
   start.setHours(0,0,0,0);
@@ -488,7 +493,8 @@ function getPortfolioRange(list=PROJECTS){
 }
 
 function computeRag(p){
-  const defined = p.timelines.filter(t=>t.start && t.end);
+  const activeTimelines = p.timelines.filter(t=>!isPhaseComplete(t));
+  const defined = activeTimelines.filter(t=>t.start && t.end);
   if(defined.length===0) return "pending";
 
   const now = new Date();
@@ -498,7 +504,7 @@ function computeRag(p){
   const install = p.timelines.find(t=>t.key==="install");
   const openTasks = p.tasks.todo + p.tasks.progress;
   const installEnd = install && parseDateValue(install.end);
-  const installOverdue = installEnd && now > installEnd && openTasks>0;
+  const installOverdue = install && !isPhaseComplete(install) && installEnd && now > installEnd && openTasks>0;
 
   if(overdueHigh || installOverdue) return "red";
 
@@ -508,7 +514,7 @@ function computeRag(p){
   for(let i=0;i<seq.length-1;i++){
     const cur = seq[i], next = seq[i+1];
     const curEnd = cur && parseDateValue(cur.end);
-    if(cur && cur.start && curEnd && now > curEnd && !next.start){
+    if(cur && !isPhaseComplete(cur) && cur.start && curEnd && now > curEnd && next && !isPhaseComplete(next) && !next.start){
       gapFound = true;
       break;
     }
@@ -608,8 +614,9 @@ function buildAttentionItems(){
       }
     });
 
-    const missing = p.timelines.filter(t=>!t.start || !t.end);
-    if(missing.length===PHASES.length){
+    const activeTimelines = p.timelines.filter(t=>!isPhaseComplete(t));
+    const missing = activeTimelines.filter(t=>!t.start || !t.end);
+    if(activeTimelines.length && missing.length===activeTimelines.length){
       items.push({
         projectId:p.id, severity:"pending", kind:"Missing dates",
         title:"No phase dates scheduled",
@@ -632,7 +639,7 @@ function buildAttentionItems(){
       const cur = p.timelines.find(t=>t.key===seqKeys[i]);
       const next = p.timelines.find(t=>t.key===seqKeys[i+1]);
       const curEnd = cur && parseDateValue(cur.end);
-      if(curEnd && curEnd < now && next && !next.start){
+      if(cur && !isPhaseComplete(cur) && curEnd && curEnd < now && next && !isPhaseComplete(next) && !next.start){
         items.push({
           projectId:p.id, severity:"amber", kind:"Phase handoff",
           title:`${cur.label} ended with no next phase start`,
@@ -644,7 +651,7 @@ function buildAttentionItems(){
       }
     }
 
-    p.timelines.forEach(t=>{
+    activeTimelines.forEach(t=>{
       const start = parseDateValue(t.start);
       if(!start) return;
       const days = daysFromNow(start);
@@ -857,6 +864,10 @@ function renderTimelinePhases(p){
         <span class="tp-sep">→</span>
         <input type="date" class="tp-input" data-pid="${p.id}" data-idx="${i}" data-field="end" value="${t.end||""}">
       </div>
+      <label class="tp-status">
+        <input type="checkbox" class="tp-input" data-pid="${p.id}" data-idx="${i}" data-field="status" ${isPhaseComplete(t)?"checked":""}>
+        Complete / not needed
+      </label>
       ${track}
     </div>`;
   }).join("");
@@ -1020,11 +1031,12 @@ document.getElementById("panel").addEventListener("change", async e=>{
     const proj = PROJECTS.find(x=>x.id===Number(tpInp.dataset.pid));
     const idx = Number(tpInp.dataset.idx);
     const field = tpInp.dataset.field;
-    if(!proj || !proj.timelines[idx] || !["start","end"].includes(field)) return;
+    if(!proj || !proj.timelines[idx] || !["start","end","status"].includes(field)) return;
     const previous = proj.timelines[idx][field];
+    const value = field==="status" ? (tpInp.checked ? "complete" : null) : (tpInp.value || null);
     try{
-      proj.timelines[idx][field] = tpInp.value || null;
-      await postUpdate("updateTimeline", {projectId: proj.id, key: proj.timelines[idx].key, field, value: tpInp.value || null});
+      proj.timelines[idx][field] = value;
+      await postUpdate("updateTimeline", {projectId: proj.id, key: proj.timelines[idx].key, field, value});
     } catch(err){
       console.error("Failed to save timeline:", err);
       proj.timelines[idx][field] = previous;
@@ -1112,7 +1124,7 @@ function closeNewProjectModal(){
 }
 
 function blankTimelines(){
-  return PHASES.map(p=>({...p, start:null, end:null}));
+  return PHASES.map(p=>({...p, start:null, end:null, status:""}));
 }
 
 async function createNewProject(){

@@ -72,6 +72,7 @@ function normalizeCell(value) {
 
 function getAllData() {
   ensureProjectSchema();
+  ensureTimelineSchema();
   const projects = readRows("Projects");
   const timelines = readRows("Timelines");
   const tasks = readRows("Tasks");
@@ -100,7 +101,7 @@ function getAllData() {
       .map(t => ({ name: t.name, status: t.status })),
     timelines: timelines
       .filter(t => String(t.projectId) === String(p.id))
-      .map(t => ({ key: t.key, label: t.label, start: t.start || null, end: t.end || null })),
+      .map(t => ({ key: t.key, label: t.label, start: t.start || null, end: t.end || null, status: t.status || "" })),
     risks: risks
       .filter(r => String(r.projectId) === String(p.id))
       .map(r => ({ id: r.id, title: r.title, severity: r.severity, owner: r.owner, note: r.note, due: r.due || null })),
@@ -134,11 +135,12 @@ function updateProjectField(body) {
 }
 
 function updateTimeline(body) {
+  ensureTimelineSchema();
   const projectId = requireValue(body.projectId, "projectId");
   const key = requireValue(body.key, "key");
   const field = requireValue(body.field, "field");
-  if (field !== "start" && field !== "end") throw new Error("Invalid timeline field: " + field);
-  const value = normalizeDateValue(body.value, false);
+  if (["start", "end", "status"].indexOf(field) === -1) throw new Error("Invalid timeline field: " + field);
+  const value = field === "status" ? normalizeTimelineStatus(body.value) : normalizeDateValue(body.value, false);
   const sh = sheet("Timelines");
   const values = sh.getDataRange().getValues();
   const headers = values[0];
@@ -202,6 +204,7 @@ function addProject(body) {
   row[idCol] = newId;
   projSheet.appendRow(row);
 
+  ensureTimelineSchema();
   const tlSheet = sheet("Timelines");
   const phaseDefs = [
     ["handover", "WPR Handover (Big-D → WPR)"],
@@ -210,7 +213,7 @@ function addProject(body) {
     ["install", "Install"],
     ["client", "Client"],
   ];
-  phaseDefs.forEach(([key, label]) => tlSheet.appendRow([newId, key, label, "", ""]));
+  phaseDefs.forEach(([key, label]) => tlSheet.appendRow([newId, key, label, "", "", ""]));
   } finally {
     lock.releaseLock();
   }
@@ -235,6 +238,13 @@ function normalizeDateValue(value, allowDateTime) {
   return text;
 }
 
+function normalizeTimelineStatus(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  if (text === "complete") return text;
+  throw new Error("Invalid timeline status: " + text);
+}
+
 function ensureProjectSchema() {
   const sh = sheet("Projects");
   const values = sh.getDataRange().getValues();
@@ -255,6 +265,16 @@ function ensureProjectSchema() {
       if (!row[col]) sh.getRange(i + 2, col + 1).setValue(meta[field]);
     });
   });
+}
+
+function ensureTimelineSchema() {
+  const sh = sheet("Timelines");
+  const values = sh.getDataRange().getValues();
+  if (!values.length) throw new Error("Timelines sheet is empty");
+  const headers = values[0];
+  if (headers.indexOf("status") === -1) {
+    sh.getRange(1, headers.length + 1).setValue("status");
+  }
 }
 
 function defaultProjectMeta(name) {
@@ -305,9 +325,9 @@ function seedData() {
   ];
   const timelineRows = [];
   projectNames.forEach((_, i) => {
-    phaseDefs.forEach(([key, label]) => timelineRows.push([i + 1, key, label, "", ""]));
+    phaseDefs.forEach(([key, label]) => timelineRows.push([i + 1, key, label, "", "", ""]));
   });
-  setTab(ss, "Timelines", ["projectId", "key", "label", "start", "end"], timelineRows, [4, 5]);
+  setTab(ss, "Timelines", ["projectId", "key", "label", "start", "end", "status"], timelineRows, [4, 5]);
 
   setTab(ss, "Tasks", ["projectId", "name", "status"], []);
   setTab(ss, "Risks", ["id", "projectId", "title", "severity", "owner", "note", "due"], [], [7]);
