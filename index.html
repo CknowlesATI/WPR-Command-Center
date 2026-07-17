@@ -40,6 +40,21 @@
   .kpi .l{font-size:12px;color:var(--muted);margin-top:2px;}
   .kpi.green .n{color:var(--green);} .kpi.amber .n{color:var(--amber);} .kpi.red .n{color:var(--red);}
 
+  .attention-wrap{margin-bottom:24px;}
+  .attention-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .attention-item{background:var(--panel);border:1px solid var(--border);border-left:4px solid #c8ccd4;border-radius:8px;padding:12px 14px;box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column;gap:5px;min-height:92px;}
+  .attention-item:hover{border-color:#c7cedb;}
+  .attention-item.red{border-left-color:var(--red);}
+  .attention-item.amber{border-left-color:var(--amber);}
+  .attention-item.blue{border-left-color:var(--blue);}
+  .attention-item.pending{border-left-color:#9aa2b1;}
+  .attention-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;}
+  .attention-title{font-size:13px;font-weight:700;line-height:1.25;}
+  .attention-kind{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);white-space:nowrap;}
+  .attention-project{font-size:12px;color:var(--muted);font-weight:600;}
+  .attention-detail{font-size:12px;color:var(--text);line-height:1.35;}
+  .attention-empty{background:var(--panel);border:1px dashed var(--border);border-radius:8px;padding:14px 16px;color:var(--muted);font-size:13px;}
+
   .sectionhead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
   .sectionhead h2{font-size:14px;margin:0;color:var(--muted);font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
   .count{font-size:12px;color:var(--muted);}
@@ -216,6 +231,14 @@
 <main>
   <div class="sync-banner" id="syncBanner" style="display:none;"></div>
   <div class="kpis" id="kpis"></div>
+
+  <div class="attention-wrap">
+    <div class="sectionhead">
+      <h2>Attention Needed</h2>
+      <div class="count" id="attentionCount"></div>
+    </div>
+    <div class="attention-list" id="attentionList"></div>
+  </div>
 
   <div class="sectionhead">
     <h2>Schedule Timeline</h2>
@@ -406,6 +429,13 @@ function formatDate(value){
 function formatDateRange(start, end){
   return start && end ? `${formatDate(start)} - ${formatDate(end)}` : "Not scheduled yet";
 }
+function daysFromNow(date){
+  const start = new Date();
+  start.setHours(0,0,0,0);
+  const target = new Date(date);
+  target.setHours(0,0,0,0);
+  return Math.round((target-start)/86400000);
+}
 function getPortfolioRange(){
   let min=null, max=null;
   PROJECTS.forEach(p=>{
@@ -464,6 +494,7 @@ function refreshRagStatuses(){
 function refreshAll(){
   refreshRagStatuses();
   renderKPIs();
+  renderAttention();
   renderGantt();
   renderBoard();
 }
@@ -491,6 +522,110 @@ function renderKPIs(){
   document.getElementById("kpis").innerHTML = kpis.map(k=>`
     <div class="kpi ${k.cls}"><div class="n">${k.n}</div><div class="l">${k.l}</div></div>
   `).join("");
+}
+
+function buildAttentionItems(){
+  const items = [];
+  const now = new Date();
+  PROJECTS.forEach(p=>{
+    p.risks.forEach(r=>{
+      const due = parseDateValue(r.due);
+      if(r.severity==="high"){
+        items.push({
+          projectId:p.id, severity:due && due < now ? "red" : "amber", kind:"High risk",
+          title:r.title || "High-severity risk",
+          project:p.name,
+          detail:due ? `Due ${formatDate(r.due)}` : "No due date assigned",
+          score:due && due < now ? 100 : 80
+        });
+      } else if(due && due < now){
+        items.push({
+          projectId:p.id, severity:r.severity==="medium" ? "amber" : "pending", kind:"Overdue risk",
+          title:r.title || "Risk due date is overdue",
+          project:p.name,
+          detail:`Was due ${formatDate(r.due)}`,
+          score:r.severity==="medium" ? 75 : 55
+        });
+      }
+    });
+
+    const missing = p.timelines.filter(t=>!t.start || !t.end);
+    if(missing.length===PHASES.length){
+      items.push({
+        projectId:p.id, severity:"pending", kind:"Missing dates",
+        title:"No phase dates scheduled",
+        project:p.name,
+        detail:"Add WPR phase dates when available.",
+        score:35
+      });
+    } else if(missing.length){
+      items.push({
+        projectId:p.id, severity:"amber", kind:"Missing dates",
+        title:`${missing.length} phase ${missing.length===1 ? "date range is" : "date ranges are"} incomplete`,
+        project:p.name,
+        detail:missing.slice(0,2).map(t=>t.label).join(", ") + (missing.length>2 ? "..." : ""),
+        score:45
+      });
+    }
+
+    const seqKeys = ["handover","prewire","trim","install","client"];
+    for(let i=0;i<seqKeys.length-1;i++){
+      const cur = p.timelines.find(t=>t.key===seqKeys[i]);
+      const next = p.timelines.find(t=>t.key===seqKeys[i+1]);
+      const curEnd = cur && parseDateValue(cur.end);
+      if(curEnd && curEnd < now && next && !next.start){
+        items.push({
+          projectId:p.id, severity:"amber", kind:"Phase handoff",
+          title:`${cur.label} ended with no next phase start`,
+          project:p.name,
+          detail:`Ended ${formatDate(cur.end)}. Add ${next.label} start date.`,
+          score:70
+        });
+        break;
+      }
+    }
+
+    p.timelines.forEach(t=>{
+      const start = parseDateValue(t.start);
+      if(!start) return;
+      const days = daysFromNow(start);
+      if(days >= 0 && days <= 14){
+        items.push({
+          projectId:p.id, severity:"blue", kind:"Upcoming phase",
+          title:t.label,
+          project:p.name,
+          detail:`Starts ${formatDate(t.start)}${days===0 ? " (today)" : ` (${days} days)`}`,
+          score:30 - days
+        });
+      }
+    });
+  });
+  return items.sort((a,b)=>b.score-a.score || a.project.localeCompare(b.project));
+}
+
+function renderAttention(){
+  const allItems = buildAttentionItems();
+  const items = allItems.slice(0,8);
+  const list = document.getElementById("attentionList");
+  const count = document.getElementById("attentionCount");
+  count.textContent = allItems.length ? `Top ${items.length} of ${allItems.length}` : "Nothing urgent";
+  if(!items.length){
+    list.innerHTML = `<div class="attention-empty">No urgent project items found. Keep phase dates and risk due dates current, and this area will surface what needs your attention.</div>`;
+    return;
+  }
+  list.innerHTML = items.map(item=>`
+    <div class="attention-item ${item.severity}" data-id="${item.projectId}">
+      <div class="attention-top">
+        <div class="attention-title">${escapeHTML(item.title)}</div>
+        <div class="attention-kind">${escapeHTML(item.kind)}</div>
+      </div>
+      <div class="attention-project">${escapeHTML(item.project)}</div>
+      <div class="attention-detail">${escapeHTML(item.detail)}</div>
+    </div>
+  `).join("");
+  list.querySelectorAll(".attention-item").forEach(item=>{
+    item.addEventListener("click", ()=> openPanel(Number(item.dataset.id)));
+  });
 }
 
 function riskBadge(p){
