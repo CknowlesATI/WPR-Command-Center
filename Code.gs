@@ -25,12 +25,15 @@ function doGet(e) {
 function doPost(e) {
   try {
     const body = JSON.parse((e.postData && e.postData.contents) || "{}");
+    let result = null;
     if (body.action === "updateTimeline") updateTimeline(body);
     else if (body.action === "updateRiskDue") updateRiskDue(body);
     else if (body.action === "updateProjectField") updateProjectField(body);
     else if (body.action === "addTask") addTask(body);
     else if (body.action === "updateTask") updateTask(body);
     else if (body.action === "deleteTask") deleteById("Tasks", body.taskId);
+    else if (body.action === "syncExternalTasks") result = syncExternalTasks(body);
+    else if (body.action === "ensureProject") result = ensureProject(body);
     else if (body.action === "addRisk") addRisk(body);
     else if (body.action === "updateRisk") updateRisk(body);
     else if (body.action === "deleteRisk") deleteById("Risks", body.riskId);
@@ -39,7 +42,7 @@ function doPost(e) {
     else if (body.action === "deleteMilestone") deleteById("Milestones", body.milestoneId);
     else if (body.action === "addProject") addProject(body);
     else throw new Error("Unknown action: " + body.action);
-    return respond({ ok: true, data: getAllData() });
+    return respond({ ok: true, result, data: getAllData() });
   } catch (err) {
     return respond({ ok: false, error: err.message || String(err) });
   }
@@ -109,7 +112,19 @@ function getAllData() {
     },
     taskList: tasks
       .filter(t => String(t.projectId) === String(p.id))
-      .map(t => ({ id: t.id, name: t.name, status: t.status })),
+      .map(t => ({
+        id: t.id,
+        name: t.name,
+        status: t.status,
+        priority: t.priority || "medium",
+        source: t.source || "",
+        externalId: t.externalId || "",
+        externalUrl: t.externalUrl || "",
+        assignee: t.assignee || "",
+        dueDate: t.dueDate || null,
+        notes: t.notes || "",
+        lastSyncedAt: t.lastSyncedAt || null
+      })),
     timelines: timelines
       .filter(t => String(t.projectId) === String(p.id) && phaseKeysForGroup(p.projectGroup || defaultProjectMeta(p.name).projectGroup).indexOf(t.key) !== -1)
       .map(t => ({ key: t.key, label: t.label, start: t.start || null, end: t.end || null, status: t.status || "" })),
@@ -125,7 +140,7 @@ function updateProjectField(body) {
   ensureProjectSchema();
   const projectId = requireValue(body.projectId, "projectId");
   const field = requireValue(body.field, "field");
-  const allowedFields = ["projectGroup", "segment", "externalTeam", "startsAt", "endsAt"];
+  const allowedFields = ["name", "projectGroup", "segment", "externalTeam", "startsAt", "endsAt"];
   if (allowedFields.indexOf(field) === -1) throw new Error("Invalid project field: " + field);
   let value = body.value || "";
   if (field === "startsAt" || field === "endsAt") value = normalizeDateValue(value, false);
@@ -143,6 +158,36 @@ function updateProjectField(body) {
     }
   }
   throw new Error("Project row not found: " + projectId);
+}
+
+function ensureProject(body) {
+  ensureProjectSchema();
+  const name = String(requireValue(body.name, "name")).trim();
+  const meta = defaultProjectMeta(name);
+  const rowData = {
+    name,
+    projectGroup: String(body.projectGroup || meta.projectGroup || "").trim(),
+    segment: String(body.segment || meta.segment || "").trim(),
+    externalTeam: String(body.externalTeam || meta.externalTeam || "").trim(),
+    percent: Number(body.percent) || 0,
+    startsAt: normalizeDateValue(body.startsAt || "", false),
+    endsAt: normalizeDateValue(body.endsAt || "", false)
+  };
+
+  const sh = sheet("Projects");
+  const values = sh.getDataRange().getValues();
+  const headers = values[0];
+  const idCol = columnIndex(headers, "id");
+  const nameCol = columnIndex(headers, "name");
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][nameCol] || "").trim().toLowerCase() === name.toLowerCase()) {
+      return { id: values[i][idCol], created: false };
+    }
+  }
+
+  const id = nextId("Projects");
+  appendRowByHeaders("Projects", Object.assign({ id }, rowData));
+  return { id, created: true };
 }
 
 function updateTimeline(body) {
@@ -189,17 +234,101 @@ function addTask(body) {
   const projectId = requireValue(body.projectId, "projectId");
   const name = String(requireValue(body.name, "name")).trim();
   const status = normalizeTaskStatus(body.status || "todo");
-  appendRowByHeaders("Tasks", { id: nextId("Tasks"), projectId, name, status });
+  const priority = normalizeTaskPriority(body.priority || "medium");
+  appendRowByHeaders("Tasks", { id: nextId("Tasks"), projectId, name, status, priority });
 }
 
 function updateTask(body) {
   ensureTaskSchema();
   const taskId = requireValue(body.taskId, "taskId");
   const field = requireValue(body.field, "field");
-  if (["name", "status"].indexOf(field) === -1) throw new Error("Invalid task field: " + field);
-  const value = field === "status" ? normalizeTaskStatus(body.value) : String(body.value || "").trim();
+  if (["name", "status", "priority"].indexOf(field) === -1) throw new Error("Invalid task field: " + field);
+  let value = String(body.value || "").trim();
+  if (field === "status") value = normalizeTaskStatus(value);
+  else if (field === "priority") value = normalizeTaskPriority(value);
   if (field === "name" && !value) throw new Error("Task name is required");
   updateById("Tasks", taskId, field, value);
+}
+
+function syncExternalTasks(body) {
+  ensureTaskSchema();
+  const source = String(requireValue(body.source, "source")).trim();
+  const incoming = body.tasks;
+  if (!Array.isArray(incoming)) throw new Error("tasks must be an array");
+
+  const now = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd'T'HH:mm:ss");
+  const sh = sheet("Tasks");
+  const values = sh.getDataRange().getValues();
+  const headers = values[0];
+  const cols = {};
+  headers.forEach((h, i) => cols[h] = i);
+
+  const existingByExternalId = {};
+  for (let i = 1; i < values.length; i++) {
+    const rowSource = String(values[i][cols.source] || "");
+    const externalId = String(values[i][cols.externalId] || "");
+    if (rowSource === source && externalId) existingByExternalId[externalId] = i + 1;
+  }
+
+  const seen = {};
+  let nextTaskId = nextId("Tasks");
+  const stats = { created: 0, updated: 0, skipped: 0, completedMissing: 0 };
+  incoming.forEach(item => {
+    const externalId = String(requireValue(item.externalId, "externalId")).trim();
+    if (seen[externalId]) {
+      stats.skipped += 1;
+      return;
+    }
+    seen[externalId] = true;
+
+    const projectId = requireValue(item.projectId, "projectId");
+    const name = String(requireValue(item.name, "name")).trim();
+    const status = normalizeTaskStatus(item.status || "todo");
+    const priority = normalizeTaskPriority(item.priority || "medium");
+    const rowData = {
+      projectId,
+      name,
+      status,
+      priority,
+      source,
+      externalId,
+      externalProjectId: String(item.externalProjectId || "").trim(),
+      externalProjectName: String(item.externalProjectName || "").trim(),
+      externalUrl: String(item.externalUrl || "").trim(),
+      assignee: String(item.assignee || "").trim(),
+      dueDate: normalizeDateValue(item.dueDate, false),
+      notes: String(item.notes || "").trim(),
+      lastSyncedAt: now
+    };
+
+    const rowNumber = existingByExternalId[externalId];
+    if (rowNumber) {
+      Object.keys(rowData).forEach(field => {
+        sh.getRange(rowNumber, cols[field] + 1).setValue(rowData[field]);
+      });
+      stats.updated += 1;
+    } else {
+      rowData.id = nextTaskId;
+      nextTaskId += 1;
+      appendRowByHeaders("Tasks", rowData);
+      stats.created += 1;
+    }
+  });
+
+  if (body.completeMissing === true) {
+    for (let i = 1; i < values.length; i++) {
+      const rowSource = String(values[i][cols.source] || "");
+      const externalId = String(values[i][cols.externalId] || "");
+      const status = String(values[i][cols.status] || "");
+      if (rowSource === source && externalId && !seen[externalId] && status !== "done") {
+        sh.getRange(i + 1, cols.status + 1).setValue("done");
+        sh.getRange(i + 1, cols.lastSyncedAt + 1).setValue(now);
+        stats.completedMissing += 1;
+      }
+    }
+  }
+
+  return stats;
 }
 
 function addRisk(body) {
@@ -326,6 +455,12 @@ function normalizeTaskStatus(value) {
   return text;
 }
 
+function normalizeTaskPriority(value) {
+  const text = String(value || "").trim().toLowerCase();
+  if (["low", "medium", "high"].indexOf(text) === -1) throw new Error("Invalid task priority: " + text);
+  return text;
+}
+
 function normalizeRiskSeverity(value) {
   const text = String(value || "").trim();
   if (["low", "medium", "high"].indexOf(text) === -1) throw new Error("Invalid risk severity: " + text);
@@ -421,6 +556,18 @@ function ensureTimelineSchema() {
 
 function ensureTaskSchema() {
   ensureIdColumn("Tasks");
+  ensureColumns("Tasks", [
+    "source",
+    "externalId",
+    "externalProjectId",
+    "externalProjectName",
+    "externalUrl",
+    "assignee",
+    "dueDate",
+    "priority",
+    "notes",
+    "lastSyncedAt"
+  ]);
 }
 
 function ensureMilestoneSchema() {
@@ -451,6 +598,19 @@ function ensureIdColumn(sheetName) {
   }
 }
 
+function ensureColumns(sheetName, required) {
+  const sh = sheet(sheetName);
+  const values = sh.getDataRange().getValues();
+  if (!values.length) throw new Error(sheetName + " sheet is empty");
+  const headers = values[0];
+  required.forEach(name => {
+    if (headers.indexOf(name) === -1) {
+      sh.getRange(1, headers.length + 1).setValue(name);
+      headers.push(name);
+    }
+  });
+}
+
 function defaultProjectMeta(name) {
   const text = String(name || "");
   const unitMatch = text.match(/WPR Unit\s+(\d+)/i);
@@ -464,6 +624,9 @@ function defaultProjectMeta(name) {
   }
   if (/Skier Services|WPR.*Skier|Skier.*WPR/i.test(text)) {
     return { projectGroup: "WPR", segment: "Skier Services", externalTeam: "Big-D Skier Services" };
+  }
+  if (/Procore Observation Review/i.test(text)) {
+    return { projectGroup: "Review", segment: "Unmapped Procore", externalTeam: "Procore" };
   }
   if (/^WPR\b/i.test(text)) {
     return { projectGroup: "WPR", segment: "General", externalTeam: "" };
@@ -516,7 +679,7 @@ function seedData() {
   });
   setTab(ss, "Timelines", ["projectId", "key", "label", "start", "end", "status"], timelineRows, [4, 5]);
 
-  setTab(ss, "Tasks", ["projectId", "name", "status", "id"], []);
+  setTab(ss, "Tasks", ["projectId", "name", "status", "id", "source", "externalId", "externalProjectId", "externalProjectName", "externalUrl", "assignee", "dueDate", "priority", "notes", "lastSyncedAt"], [], [11, 14]);
   setTab(ss, "Risks", ["id", "projectId", "title", "severity", "owner", "note", "due"], [], [7]);
   setTab(ss, "Milestones", ["projectId", "name", "date", "state", "id"], [], [3]);
 
