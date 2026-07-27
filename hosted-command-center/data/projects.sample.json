@@ -1,0 +1,95 @@
+{
+  "lastUpdated": "2026-07-27T09:00:00-06:00",
+  "source": "sample",
+  "projects": [
+    {
+      "id": "wpr-unit-1",
+      "name": "WPR Unit 1",
+      "area": "Units 1-6",
+      "team": "Big-D Units 1-6",
+      "health": "amber",
+      "phase": "Trim",
+      "startDate": "2026-07-01",
+      "endDate": "2026-08-14",
+      "openTasks": 7,
+      "overdueTasks": 2,
+      "highPriorityTasks": 3,
+      "risks": 1,
+      "nextHandoff": "2026-08-05",
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Verify rack trim checklist",
+          "dueDate": "2026-07-24",
+          "source": "Pulse"
+        },
+        {
+          "severity": "amber",
+          "label": "High priority",
+          "detail": "Confirm TV backbox location before final paint",
+          "dueDate": "2026-07-30",
+          "source": "Procore"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-8",
+      "name": "WPR Unit 8",
+      "area": "Units 7-12",
+      "team": "Big-D Units 7-12",
+      "health": "green",
+      "phase": "Pre-Wire",
+      "startDate": "2026-07-15",
+      "endDate": "2026-09-04",
+      "openTasks": 4,
+      "overdueTasks": 0,
+      "highPriorityTasks": 1,
+      "risks": 0,
+      "nextHandoff": "2026-08-19",
+      "attention": [
+        {
+          "severity": "amber",
+          "label": "Upcoming handoff",
+          "detail": "Pre-wire inspection window approaching",
+          "dueDate": "2026-08-19",
+          "source": "Command Center"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-penthouse",
+      "name": "WPR Condo Penthouse",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "red",
+      "phase": "Install",
+      "startDate": "2026-06-24",
+      "endDate": "2026-08-22",
+      "openTasks": 11,
+      "overdueTasks": 4,
+      "highPriorityTasks": 5,
+      "risks": 2,
+      "nextHandoff": "2026-08-02",
+      "attention": [
+        {
+          "severity": "red",
+          "label": "High risk",
+          "detail": "Missing final equipment confirmation",
+          "dueDate": "2026-07-26",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue observation",
+          "detail": "Open Procore observation needs owner response",
+          "dueDate": "2026-07-25",
+          "source": "Procore"
+        }
+      ],
+      "links": []
+    }
+  ]
+}

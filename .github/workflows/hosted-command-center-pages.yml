@@ -1,0 +1,56 @@
+name: Hosted Command Center Pages
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * 1-5"
+  push:
+    branches:
+      - codex/hosted-shared-command-center
+    paths:
+      - "hosted-command-center/**"
+      - ".github/workflows/hosted-command-center-pages.yml"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: hosted-command-center-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Refresh hosted data
+        env:
+          COMMAND_CENTER_API_URL: ${{ secrets.COMMAND_CENTER_API_URL }}
+        run: |
+          if [ -n "$COMMAND_CENTER_API_URL" ]; then
+            node hosted-command-center/tools/export-hosted-data.mjs --url "$COMMAND_CENTER_API_URL"
+          else
+            echo "COMMAND_CENTER_API_URL is not set. Using checked-in hosted data."
+          fi
+
+      - name: Validate hosted data
+        run: node hosted-command-center/tools/validate-hosted-data.mjs
+
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: hosted-command-center
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

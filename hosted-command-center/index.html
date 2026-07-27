@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WPR Command Center</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --panel: #ffffff;
+    --text: #202936;
+    --muted: #657184;
+    --border: #dfe4eb;
+    --green: #18794e;
+    --green-bg: #e9f7ef;
+    --amber: #9b6500;
+    --amber-bg: #fff4d8;
+    --red: #bf2f2f;
+    --red-bg: #fde9e9;
+    --blue: #245fc8;
+    --blue-bg: #e9f0ff;
+    --shadow: 0 1px 2px rgba(17, 24, 39, .06), 0 8px 24px rgba(17, 24, 39, .06);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(255, 255, 255, .96);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(220px, 360px);
+    gap: 16px;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px 22px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .search {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--text);
+    background: #fbfcfd;
+  }
+
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px 22px 48px;
+  }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .updated {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 7px 11px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .chip.active {
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+  }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(130px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .kpi {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .kpi strong {
+    display: block;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .kpi span {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 650;
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin: 22px 0 10px;
+  }
+
+  .section-head h2 {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .count {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .attention-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .attention-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--amber);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  .attention-card.red { border-left-color: var(--red); }
+  .attention-card.green { border-left-color: var(--green); }
+
+  .attention-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+
+  .attention-title {
+    margin-top: 7px;
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1.3;
+  }
+
+  .attention-meta {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .project-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .project-card {
+    display: grid;
+    grid-template-columns: minmax(190px, 1.2fr) 90px minmax(150px, .7fr) repeat(4, minmax(70px, .35fr));
+    gap: 12px;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .project-card.has-signal {
+    border-left: 4px solid var(--amber);
+  }
+
+  .project-card.has-signal.red {
+    border-left-color: var(--red);
+  }
+
+  .project-title {
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .project-sub {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .health {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: max-content;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .health::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .health.green { background: var(--green-bg); color: var(--green); }
+  .health.amber { background: var(--amber-bg); color: var(--amber); }
+  .health.red { background: var(--red-bg); color: var(--red); }
+  .health.pending { background: #eef1f5; color: var(--muted); }
+
+  .metric {
+    min-width: 0;
+  }
+
+  .metric strong {
+    display: block;
+    font-size: 18px;
+  }
+
+  .metric span {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .links {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 9px;
+  }
+
+  .links a {
+    color: var(--blue);
+    background: var(--blue-bg);
+    border: 1px solid #cbd9fb;
+    border-radius: 6px;
+    padding: 4px 7px;
+    font-size: 11px;
+    font-weight: 750;
+    text-decoration: none;
+  }
+
+  .project-signal {
+    grid-column: 1 / -1;
+    border-top: 1px solid #edf0f4;
+    padding-top: 11px;
+    display: grid;
+    grid-template-columns: minmax(160px, .35fr) 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .signal-label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .signal-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .signal-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 9px;
+    background: #fff;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .signal-pill::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    flex: 0 0 auto;
+  }
+
+  .signal-pill.red {
+    background: var(--red-bg);
+    border-color: #f3c5c5;
+    color: var(--red);
+  }
+
+  .signal-pill.red::before {
+    background: var(--red);
+  }
+
+  .signal-pill.amber {
+    background: var(--amber-bg);
+    border-color: #efd28f;
+    color: var(--amber);
+  }
+
+  .empty {
+    border: 1px dashed var(--border);
+    background: #fff;
+    border-radius: 8px;
+    padding: 18px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  @media (max-width: 980px) {
+    .topbar,
+    .project-card {
+      grid-template-columns: 1fr;
+    }
+
+    .project-signal {
+      grid-template-columns: 1fr;
+    }
+
+    .kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attention-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .topbar,
+    main {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .kpis {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div>
+      <h1>WPR Command Center</h1>
+      <div class="subtitle">Shared project signal view for field teams</div>
+    </div>
+    <input class="search" id="searchInput" type="search" placeholder="Search project, area, team, phase">
+  </div>
+</header>
+
+<main>
+  <div class="status-row">
+    <div class="updated" id="updatedText">Loading project data...</div>
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section>
+    <div class="section-head">
+      <h2>Attention Needed</h2>
+      <div class="count" id="attentionCount"></div>
+    </div>
+    <div class="attention-list" id="attentionList"></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Projects</h2>
+      <div class="count" id="projectCount"></div>
+    </div>
+    <div class="project-list" id="projectList"></div>
+  </section>
+</main>
+
+<script>
+const state = {
+  projects: [],
+  filter: "all",
+  query: ""
+};
+
+const healthLabels = {
+  green: "On Track",
+  amber: "At Risk",
+  red: "Needs Help",
+  pending: "Not Started"
+};
+
+const fallbackData = {
+  lastUpdated: "2026-07-27T09:00:00-06:00",
+  source: "fallback",
+  projects: []
+};
+
+async function loadData() {
+  try {
+    const response = await fetch("data/projects.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Data file unavailable");
+    const data = await response.json();
+    state.projects = normalizeProjects(data.projects);
+    document.getElementById("updatedText").textContent = `Last updated ${formatDateTime(data.lastUpdated)} from ${data.source || "Command Center"}`;
+  } catch (error) {
+    state.projects = normalizeProjects(fallbackData.projects);
+    document.getElementById("updatedText").textContent = "Project data could not be loaded.";
+  }
+  render();
+}
+
+function normalizeProjects(projects) {
+  return Array.isArray(projects) ? projects.map(project => ({
+    id: project.id || project.name,
+    name: project.name || "Untitled project",
+    area: project.area || "Unassigned",
+    team: project.team || "No team listed",
+    health: ["green", "amber", "red", "pending"].includes(project.health) ? project.health : "pending",
+    phase: project.phase || "Not scheduled",
+    startDate: project.startDate || null,
+    endDate: project.endDate || null,
+    openTasks: Number(project.openTasks) || 0,
+    overdueTasks: Number(project.overdueTasks) || 0,
+    highPriorityTasks: Number(project.highPriorityTasks) || 0,
+    risks: Number(project.risks) || 0,
+    nextHandoff: project.nextHandoff || null,
+    attention: Array.isArray(project.attention) ? project.attention : [],
+    links: Array.isArray(project.links) ? project.links : []
+  })) : [];
+}
+
+function render() {
+  renderFilters();
+  renderKpis();
+  renderAttention();
+  renderProjects();
+}
+
+function visibleProjects() {
+  const query = state.query.trim().toLowerCase();
+  return state.projects.filter(project => {
+    if (state.filter !== "all" && project.health !== state.filter) return false;
+    if (!query) return true;
+    return [project.name, project.area, project.team, project.phase].join(" ").toLowerCase().includes(query);
+  });
+}
+
+function renderFilters() {
+  const options = [
+    ["all", "All"],
+    ["red", "Needs Help"],
+    ["amber", "At Risk"],
+    ["green", "On Track"],
+    ["pending", "Not Started"]
+  ];
+  document.getElementById("filters").innerHTML = options.map(([value, label]) => (
+    `<button class="chip ${state.filter === value ? "active" : ""}" data-filter="${value}" type="button">${label}</button>`
+  )).join("");
+}
+
+function renderKpis() {
+  const projects = visibleProjects();
+  const totals = {
+    projects: projects.length,
+    openTasks: sum(projects, "openTasks"),
+    overdueTasks: sum(projects, "overdueTasks"),
+    highPriorityTasks: sum(projects, "highPriorityTasks"),
+    risks: sum(projects, "risks")
+  };
+  const cards = [
+    [totals.projects, "Visible Projects"],
+    [totals.openTasks, "Open Tasks"],
+    [totals.overdueTasks, "Overdue Tasks"],
+    [totals.highPriorityTasks, "High Priority"],
+    [totals.risks, "Open Risks"]
+  ];
+  document.getElementById("kpis").innerHTML = cards.map(([value, label]) => (
+    `<div class="kpi"><strong>${value}</strong><span>${label}</span></div>`
+  )).join("");
+}
+
+function renderAttention() {
+  const items = visibleProjects()
+    .flatMap(project => project.attention.map(item => ({ ...item, projectName: project.name })))
+    .sort((a, b) => severityScore(b.severity) - severityScore(a.severity));
+
+  document.getElementById("attentionCount").textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
+  document.getElementById("attentionList").innerHTML = items.length ? items.map(item => `
+    <article class="attention-card ${escapeHtml(item.severity || "amber")}">
+      <div class="attention-label">
+        <span>${escapeHtml(item.label || "Attention")}</span>
+        <span>${escapeHtml(item.source || "Command Center")}</span>
+      </div>
+      <div class="attention-title">${escapeHtml(item.detail || "Review needed")}</div>
+      <div class="attention-meta">${escapeHtml(item.projectName)}${item.dueDate ? ` · Due ${formatDate(item.dueDate)}` : ""}</div>
+    </article>
+  `).join("") : `<div class="empty">No attention items match the current view.</div>`;
+}
+
+function renderProjects() {
+  const projects = visibleProjects();
+  document.getElementById("projectCount").textContent = `${projects.length} project${projects.length === 1 ? "" : "s"}`;
+  document.getElementById("projectList").innerHTML = projects.length ? projects.map(project => `
+    <article class="project-card ${project.attention.length ? `has-signal ${topSeverity(project.attention)}` : ""}">
+      <div>
+        <div class="project-title">${escapeHtml(project.name)}</div>
+        <div class="project-sub">${escapeHtml(project.area)} · ${escapeHtml(project.team)}</div>
+        ${renderLinks(project.links)}
+      </div>
+      <div><span class="health ${project.health}">${healthLabels[project.health]}</span></div>
+      <div class="metric"><strong>${escapeHtml(project.phase)}</strong><span>${formatDateRange(project.startDate, project.endDate)}</span></div>
+      <div class="metric"><strong>${project.openTasks}</strong><span>Open</span></div>
+      <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
+      <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
+      <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
+      ${renderProjectSignal(project)}
+    </article>
+  `).join("") : `<div class="empty">No projects match the current view.</div>`;
+}
+
+function renderProjectSignal(project) {
+  const items = project.attention.slice(0, 3);
+  if (!items.length) return "";
+  return `
+    <div class="project-signal">
+      <div class="signal-label">Top Signal</div>
+      <div class="signal-list">
+        ${items.map(item => `<span class="signal-pill ${escapeHtml(item.severity || "amber")}">${escapeHtml(item.detail || item.label || "Review needed")}${item.dueDate ? ` · ${formatDate(item.dueDate)}` : ""}</span>`).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function topSeverity(items) {
+  return items.some(item => item.severity === "red") ? "red" : items.some(item => item.severity === "amber") ? "amber" : "green";
+}
+
+function renderLinks(links) {
+  const visibleLinks = links.filter(link => link && link.url);
+  if (!visibleLinks.length) return "";
+  return `<div class="links">${visibleLinks.map(link => `<a href="${escapeAttribute(link.url)}" target="_blank" rel="noopener">${escapeHtml(link.label || "Open Source")}</a>`).join("")}</div>`;
+}
+
+function sum(projects, key) {
+  return projects.reduce((total, project) => total + (Number(project[key]) || 0), 0);
+}
+
+function severityScore(severity) {
+  if (severity === "red") return 3;
+  if (severity === "amber") return 2;
+  if (severity === "green") return 1;
+  return 0;
+}
+
+function formatDate(value) {
+  if (!value) return "";
+  const date = new Date(`${value}T00:00:00`);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function formatDateTime(value) {
+  if (!value) return "unknown";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "unknown" : date.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+
+function formatDateRange(startDate, endDate) {
+  if (!startDate && !endDate) return "No date range";
+  if (startDate && endDate) return `${formatDate(startDate)} to ${formatDate(endDate)}`;
+  return startDate ? `Starts ${formatDate(startDate)}` : `Ends ${formatDate(endDate)}`;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value).replaceAll("`", "&#096;");
+}
+
+document.getElementById("filters").addEventListener("click", event => {
+  const button = event.target.closest("[data-filter]");
+  if (!button) return;
+  state.filter = button.dataset.filter;
+  render();
+});
+
+document.getElementById("searchInput").addEventListener("input", event => {
+  state.query = event.target.value;
+  render();
+});
+
+loadData();
+</script>
+</body>
+</html>
