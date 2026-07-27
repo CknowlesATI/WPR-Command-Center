@@ -7,14 +7,7 @@
     "apps:status": "clasp status",
     "apps:pull": "clasp pull",
     "apps:push": "clasp push",
-    "apps:open": "clasp open-script",
-    "pulse:login-test": "node pulse-sync/pulse-sync.js login-test",
-    "pulse:dry-run": "node pulse-sync/pulse-sync.js dry-run",
-    "pulse:sync": "node pulse-sync/pulse-sync.js sync",
-    "pulse:search-projects": "node pulse-sync/pulse-sync.js search-projects",
-    "procore:pdf": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\procore-pdf-sync\\run-procore-pdf-sync.ps1",
-    "procore:api": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\procore-api-sync\\run-procore-api-sync.ps1",
-    "procore:browser": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\procore-browser-sync\\run-procore-browser-sync.ps1"
+    "apps:open": "clasp open-script"
   },
   "devDependencies": {
     "@google/clasp": "^3.3.0"

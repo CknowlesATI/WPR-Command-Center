@@ -1,16 +1,3 @@
 .clasp.json
 .clasprc.json
 node_modules/
-.env
-pulse-sync/.env
-pulse-sync/logs/
-logs/
-procore-pdf-sync/output/
-procore-api-sync/.env
-procore-api-sync/output/
-procore-browser-sync/.env
-procore-browser-sync/.browser-profile/
-procore-browser-sync/.browser-profile-*/
-procore-browser-sync/.pw-smoke/
-procore-browser-sync/output/
-tmp/
