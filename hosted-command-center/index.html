@@ -171,6 +171,27 @@
     gap: 10px;
   }
 
+  .section-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .text-button {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    border-radius: 7px;
+    padding: 6px 9px;
+    font-size: 12px;
+    font-weight: 750;
+    cursor: pointer;
+  }
+
+  .text-button:hover {
+    border-color: #c9d1dc;
+  }
+
   .attention-card {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -214,13 +235,13 @@
 
   .project-card {
     display: grid;
-    grid-template-columns: minmax(190px, 1.2fr) 90px minmax(150px, .7fr) repeat(4, minmax(70px, .35fr));
-    gap: 12px;
+    grid-template-columns: minmax(190px, 1.2fr) 104px minmax(150px, .7fr) minmax(240px, 1fr) 32px;
+    gap: 10px;
     align-items: center;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 14px;
+    padding: 11px 12px;
     box-shadow: var(--shadow);
   }
 
@@ -284,6 +305,37 @@
     font-weight: 650;
   }
 
+  .metric-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(44px, 1fr));
+    gap: 6px;
+  }
+
+  .metric-strip .metric {
+    border: 1px solid #edf0f4;
+    border-radius: 7px;
+    padding: 7px 8px;
+    background: #fbfcfd;
+  }
+
+  .expand-button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--muted);
+    border-radius: 7px;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .expand-button[aria-expanded="true"] {
+    color: var(--blue);
+    border-color: #cbd9fb;
+    background: var(--blue-bg);
+  }
+
   .links {
     display: flex;
     gap: 6px;
@@ -305,11 +357,15 @@
   .project-signal {
     grid-column: 1 / -1;
     border-top: 1px solid #edf0f4;
-    padding-top: 11px;
+    padding-top: 10px;
     display: grid;
     grid-template-columns: minmax(160px, .35fr) 1fr;
     gap: 12px;
     align-items: start;
+  }
+
+  .project-signal[hidden] {
+    display: none;
   }
 
   .signal-label {
@@ -338,6 +394,15 @@
     color: var(--text);
     font-size: 12px;
     font-weight: 700;
+  }
+
+  .signal-pill.more {
+    background: #f5f7fa;
+    color: var(--muted);
+  }
+
+  .signal-pill.more::before {
+    display: none;
   }
 
   .signal-pill::before {
@@ -380,6 +445,25 @@
       grid-template-columns: 1fr;
     }
 
+    .project-card {
+      gap: 8px;
+    }
+
+    .metric-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .expand-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .project-card {
+      position: relative;
+      padding-right: 52px;
+    }
+
     .project-signal {
       grid-template-columns: 1fr;
     }
@@ -401,7 +485,48 @@
     }
 
     .kpis {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .kpi {
+      padding: 10px;
+    }
+
+    .kpi strong {
+      font-size: 20px;
+    }
+
+    .status-row {
+      margin-bottom: 10px;
+    }
+
+    .filters {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      width: 100%;
+      padding-bottom: 3px;
+    }
+
+    .chip {
+      white-space: nowrap;
+    }
+
+    .metric-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .project-signal {
+      gap: 7px;
+    }
+
+    .signal-list {
+      flex-direction: column;
+    }
+
+    .signal-pill {
+      border-radius: 7px;
+      align-items: flex-start;
     }
   }
 </style>
@@ -446,8 +571,12 @@
 const state = {
   projects: [],
   filter: "all",
-  query: ""
+  query: "",
+  attentionExpanded: false,
+  expandedProjects: new Set()
 };
+
+const COLLAPSED_ATTENTION_LIMIT = 6;
 
 const healthLabels = {
   green: "On Track",
@@ -551,8 +680,13 @@ function renderAttention() {
     .flatMap(project => project.attention.map(item => ({ ...item, projectName: project.name })))
     .sort((a, b) => severityScore(b.severity) - severityScore(a.severity));
 
-  document.getElementById("attentionCount").textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
-  document.getElementById("attentionList").innerHTML = items.length ? items.map(item => `
+  const visibleItems = state.attentionExpanded ? items : items.slice(0, COLLAPSED_ATTENTION_LIMIT);
+  const remaining = Math.max(0, items.length - visibleItems.length);
+  document.getElementById("attentionCount").innerHTML = `
+    <span>${items.length} item${items.length === 1 ? "" : "s"}</span>
+    ${items.length > COLLAPSED_ATTENTION_LIMIT ? `<button class="text-button" id="attentionToggle" type="button">${state.attentionExpanded ? "Show Less" : `Show All ${items.length}`}</button>` : ""}
+  `;
+  document.getElementById("attentionList").innerHTML = visibleItems.length ? visibleItems.map(item => `
     <article class="attention-card ${escapeHtml(item.severity || "amber")}">
       <div class="attention-label">
         <span>${escapeHtml(item.label || "Attention")}</span>
@@ -561,13 +695,15 @@ function renderAttention() {
       <div class="attention-title">${escapeHtml(item.detail || "Review needed")}</div>
       <div class="attention-meta">${escapeHtml(item.projectName)}${item.dueDate ? ` · Due ${formatDate(item.dueDate)}` : ""}</div>
     </article>
-  `).join("") : `<div class="empty">No attention items match the current view.</div>`;
+  `).join("") + (remaining ? `<div class="empty">${remaining} more attention items hidden. Use Show All to review the full list.</div>` : "") : `<div class="empty">No attention items match the current view.</div>`;
 }
 
 function renderProjects() {
   const projects = visibleProjects();
   document.getElementById("projectCount").textContent = `${projects.length} project${projects.length === 1 ? "" : "s"}`;
-  document.getElementById("projectList").innerHTML = projects.length ? projects.map(project => `
+  document.getElementById("projectList").innerHTML = projects.length ? projects.map(project => {
+    const expanded = state.expandedProjects.has(project.id);
+    return `
     <article class="project-card ${project.attention.length ? `has-signal ${topSeverity(project.attention)}` : ""}">
       <div>
         <div class="project-title">${escapeHtml(project.name)}</div>
@@ -576,23 +712,30 @@ function renderProjects() {
       </div>
       <div><span class="health ${project.health}">${healthLabels[project.health]}</span></div>
       <div class="metric"><strong>${escapeHtml(project.phase)}</strong><span>${formatDateRange(project.startDate, project.endDate)}</span></div>
-      <div class="metric"><strong>${project.openTasks}</strong><span>Open</span></div>
-      <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
-      <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
-      <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
-      ${renderProjectSignal(project)}
+      <div class="metric-strip">
+        <div class="metric"><strong>${project.openTasks}</strong><span>Open</span></div>
+        <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
+        <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
+        <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
+      </div>
+      <button class="expand-button" type="button" data-project-toggle="${escapeAttribute(project.id)}" aria-expanded="${expanded}" aria-label="${expanded ? "Collapse" : "Expand"} ${escapeAttribute(project.name)}">${expanded ? "−" : "+"}</button>
+      ${renderProjectSignal(project, expanded)}
     </article>
-  `).join("") : `<div class="empty">No projects match the current view.</div>`;
+  `;
+  }).join("") : `<div class="empty">No projects match the current view.</div>`;
 }
 
-function renderProjectSignal(project) {
-  const items = project.attention.slice(0, 3);
+function renderProjectSignal(project, expanded) {
+  const limit = expanded ? 6 : 1;
+  const items = project.attention.slice(0, limit);
   if (!items.length) return "";
+  const remaining = Math.max(0, project.attention.length - items.length);
   return `
-    <div class="project-signal">
+    <div class="project-signal" ${expanded ? "" : "hidden"}>
       <div class="signal-label">Top Signal</div>
       <div class="signal-list">
         ${items.map(item => `<span class="signal-pill ${escapeHtml(item.severity || "amber")}">${escapeHtml(item.detail || item.label || "Review needed")}${item.dueDate ? ` · ${formatDate(item.dueDate)}` : ""}</span>`).join("")}
+        ${remaining ? `<span class="signal-pill more">${remaining} more</span>` : ""}
       </div>
     </div>
   `;
@@ -655,6 +798,21 @@ document.getElementById("filters").addEventListener("click", event => {
   if (!button) return;
   state.filter = button.dataset.filter;
   render();
+});
+
+document.addEventListener("click", event => {
+  if (event.target.closest("#attentionToggle")) {
+    state.attentionExpanded = !state.attentionExpanded;
+    renderAttention();
+    return;
+  }
+
+  const projectToggle = event.target.closest("[data-project-toggle]");
+  if (!projectToggle) return;
+  const id = projectToggle.dataset.projectToggle;
+  if (state.expandedProjects.has(id)) state.expandedProjects.delete(id);
+  else state.expandedProjects.add(id);
+  renderProjects();
 });
 
 document.getElementById("searchInput").addEventListener("input", event => {
