@@ -233,6 +233,111 @@
     gap: 7px;
   }
 
+  .timeline-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+
+  .timeline-grid {
+    min-width: 680px;
+  }
+
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  .timeline-row:last-child {
+    border-bottom: 0;
+  }
+
+  .timeline-months {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 10px;
+    margin-bottom: 3px;
+  }
+
+  .month-track {
+    position: relative;
+    height: 18px;
+  }
+
+  .month-label {
+    position: absolute;
+    top: 0;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 750;
+  }
+
+  .timeline-name {
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .timeline-track {
+    position: relative;
+    height: 20px;
+    border-radius: 5px;
+    background: #f1f4f7;
+  }
+
+  .timeline-bar {
+    position: absolute;
+    top: 4px;
+    height: 12px;
+    min-width: 5px;
+    border-radius: 4px;
+  }
+
+  .timeline-bar.prewire { background: #14b8a6; }
+  .timeline-bar.trim { background: #fb923c; }
+  .timeline-bar.handover { background: #7c5cff; }
+  .timeline-bar.install { background: var(--blue); }
+  .timeline-today {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 2px;
+    background: #111827;
+    opacity: .38;
+  }
+
+  .timeline-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+
+  .legend-dot.prewire { background: #14b8a6; }
+  .legend-dot.trim { background: #fb923c; }
+  .legend-dot.handover { background: #7c5cff; }
+  .legend-dot.install { background: var(--blue); }
+
   .project-card {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -589,6 +694,28 @@
 
   <section>
     <div class="section-head">
+      <h2>Schedule Timeline</h2>
+      <div class="count" id="timelineCount"></div>
+    </div>
+    <div class="timeline-wrap">
+      <div class="timeline-grid">
+        <div class="timeline-months">
+          <div></div>
+          <div class="month-track" id="timelineMonths"></div>
+        </div>
+        <div id="timelineRows"></div>
+      </div>
+      <div class="timeline-legend">
+        <span><span class="legend-dot prewire"></span>Pre-Wire</span>
+        <span><span class="legend-dot trim"></span>Trim</span>
+        <span><span class="legend-dot handover"></span>WPR Handover</span>
+        <span><span class="legend-dot install"></span>Install</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
       <h2>Projects</h2>
       <div class="count" id="projectCount"></div>
     </div>
@@ -650,7 +777,14 @@ function normalizeProjects(projects) {
     risks: Number(project.risks) || 0,
     nextHandoff: project.nextHandoff || null,
     attention: Array.isArray(project.attention) ? project.attention : [],
-    links: Array.isArray(project.links) ? project.links : []
+    links: Array.isArray(project.links) ? project.links : [],
+    timelines: Array.isArray(project.timelines) ? project.timelines.map(item => ({
+      key: item.key || "",
+      label: item.label || "",
+      start: item.start || null,
+      end: item.end || null,
+      status: item.status || ""
+    })) : []
   })) : [];
 }
 
@@ -658,6 +792,7 @@ function render() {
   renderFilters();
   renderKpis();
   renderAttention();
+  renderTimeline();
   renderProjects();
 }
 
@@ -725,6 +860,72 @@ function renderAttention() {
       <div class="attention-meta">${escapeHtml(item.projectName)}${item.dueDate ? ` · Due ${formatDate(item.dueDate)}` : ""}</div>
     </article>
   `).join("") + (remaining ? `<div class="empty">${remaining} more attention items hidden. Use Show All to review the full list.</div>` : "") : `<div class="empty">No attention items match the current view.</div>`;
+}
+
+function renderTimeline() {
+  const projects = visibleProjects();
+  const range = getTimelineRange();
+  const rows = projects.map(project => renderTimelineRow(project, range)).join("");
+  document.getElementById("timelineCount").textContent = `${projects.length} project${projects.length === 1 ? "" : "s"}`;
+  document.getElementById("timelineMonths").innerHTML = renderMonthLabels(range);
+  document.getElementById("timelineRows").innerHTML = rows || `<div class="empty">No projects match the current view.</div>`;
+}
+
+function renderTimelineRow(project, range) {
+  const bars = project.timelines
+    .map(item => {
+      const seg = timelineSegment(item.start, item.end, range.min, range.max);
+      if (!seg) return "";
+      return `<div class="timeline-bar ${escapeHtml(item.key)}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeAttribute(project.name)} - ${escapeAttribute(item.label)}: ${escapeAttribute(formatDateRange(item.start, item.end))}"></div>`;
+    })
+    .join("");
+  const today = timelineToday(range);
+  return `
+    <div class="timeline-row">
+      <div class="timeline-name">${escapeHtml(project.name)}</div>
+      <div class="timeline-track">
+        ${today === null ? "" : `<div class="timeline-today" style="left:${today}%"></div>`}
+        ${bars || `<span class="project-sub" style="position:absolute;left:7px;top:3px;">Not scheduled</span>`}
+      </div>
+    </div>
+  `;
+}
+
+function renderMonthLabels(range) {
+  const labels = [];
+  const start = new Date(range.min.getFullYear(), range.min.getMonth(), 1);
+  for (let cursor = start; cursor <= range.max; cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)) {
+    labels.push(`<span class="month-label" style="left:${((cursor - range.min) / (range.max - range.min)) * 100}%">${cursor.toLocaleDateString("en-US", { month: "short" })}</span>`);
+  }
+  return labels.join("");
+}
+
+function getTimelineRange() {
+  const now = new Date();
+  return {
+    min: new Date(now.getFullYear(), now.getMonth(), 1),
+    max: new Date(now.getFullYear(), now.getMonth() + 3, 0)
+  };
+}
+
+function timelineSegment(start, end, min, max) {
+  const startDate = parseDate(start);
+  const endDate = parseDate(end);
+  if (!startDate || !endDate || endDate < min || startDate > max) return null;
+  const total = max - min;
+  const clippedStart = startDate < min ? min : startDate;
+  const clippedEnd = endDate > max ? max : endDate;
+  return {
+    left: Math.max(0, ((clippedStart - min) / total) * 100),
+    width: Math.max(1.5, ((clippedEnd - clippedStart) / total) * 100)
+  };
+}
+
+function timelineToday(range) {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  if (now < range.min || now > range.max) return null;
+  return ((now - range.min) / (range.max - range.min)) * 100;
 }
 
 function renderProjects() {
@@ -801,9 +1002,13 @@ function severityScore(severity) {
 }
 
 function formatDate(value) {
-  if (!value) return "";
-  const date = new Date(`${value}T00:00:00`);
+  const date = parseDate(value);
   return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function parseDate(value) {
+  if (!value) return new Date(NaN);
+  return new Date(`${String(value).slice(0, 10)}T00:00:00`);
 }
 
 function formatDateTime(value) {

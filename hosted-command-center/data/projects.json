@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-27T17:29:25.520Z",
+  "lastUpdated": "2026-07-27T20:28:42.059Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -16,6 +16,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": "complete"
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -55,6 +85,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -87,6 +147,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -112,6 +202,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -158,6 +278,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -211,6 +361,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -257,6 +437,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -317,6 +527,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -363,6 +603,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -388,6 +658,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -427,6 +727,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [],
       "links": []
     },
@@ -444,6 +774,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [],
       "links": []
     },
@@ -461,6 +821,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": "2026-08-10",
+          "end": "2026-08-24",
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -521,6 +911,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -560,6 +980,36 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -592,6 +1042,36 @@
       "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -631,6 +1111,36 @@
       "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -691,6 +1201,36 @@
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -751,6 +1291,29 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -797,6 +1360,29 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [],
       "links": []
     },
@@ -814,6 +1400,29 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": "2026-04-13",
+          "end": "2026-07-13",
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": "2026-11-09",
+          "end": "2026-11-16",
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": "2026-11-30",
+          "end": "2026-12-14",
+          "status": ""
+        }
+      ],
       "attention": [],
       "links": []
     },
@@ -831,6 +1440,29 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": "complete"
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [],
       "links": []
     },
@@ -848,6 +1480,29 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",

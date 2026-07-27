@@ -24,8 +24,17 @@ smaller and safer than the current internal Command Center data.
 - `highPriorityTasks`: count only.
 - `risks`: count only.
 - `nextHandoff`: next handoff date, `YYYY-MM-DD` or `null`.
+- `timelines`: sanitized phase schedule rows.
 - `attention`: short list of sanitized attention signals.
 - `links`: optional reviewed source links.
+
+## Timeline Fields
+
+- `key`: `prewire`, `trim`, `handover`, or `install`.
+- `label`: visible phase label.
+- `start`: phase start date, `YYYY-MM-DD` or `null`.
+- `end`: phase end date, `YYYY-MM-DD` or `null`.
+- `status`: `complete` or empty string.
 
 ## Attention Fields
 

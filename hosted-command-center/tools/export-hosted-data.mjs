@@ -58,9 +58,23 @@ function toHostedProject(project, options) {
     highPriorityTasks,
     risks: risks.length,
     nextHandoff: nextHandoffDate(timelines),
+    timelines: hostedTimelines(timelines),
     attention,
     links: options.includeLinks ? buildLinks(tasks) : []
   };
+}
+
+function hostedTimelines(timelines) {
+  return PHASE_ORDER
+    .map(key => timelines.find(item => item.key === key))
+    .filter(Boolean)
+    .map(item => ({
+      key: item.key,
+      label: PHASE_LABELS[item.key] || text(item.label, "Phase"),
+      start: dateOnly(item.start),
+      end: dateOnly(item.end),
+      status: isComplete(item) ? "complete" : ""
+    }));
 }
 
 function buildAttention(project, tasks, risks, timelines) {

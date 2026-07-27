@@ -16,6 +16,36 @@
       "highPriorityTasks": 3,
       "risks": 1,
       "nextHandoff": "2026-08-05",
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": "2026-07-01",
+          "end": "2026-07-12",
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": "2026-07-15",
+          "end": "2026-08-02",
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": "2026-08-05",
+          "end": "2026-08-05",
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": "2026-08-06",
+          "end": "2026-08-14",
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",
@@ -48,6 +78,22 @@
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": "2026-08-19",
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": "2026-07-15",
+          "end": "2026-08-16",
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": "2026-08-19",
+          "end": "2026-08-19",
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "amber",
@@ -73,6 +119,29 @@
       "highPriorityTasks": 5,
       "risks": 2,
       "nextHandoff": "2026-08-02",
+      "timelines": [
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": "2026-06-24",
+          "end": "2026-07-15",
+          "status": "complete"
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": "2026-08-02",
+          "end": "2026-08-02",
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": "2026-08-03",
+          "end": "2026-08-22",
+          "status": ""
+        }
+      ],
       "attention": [
         {
           "severity": "red",

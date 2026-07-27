@@ -18,11 +18,13 @@ const allowedProjectFields = new Set([
   "highPriorityTasks",
   "risks",
   "nextHandoff",
+  "timelines",
   "attention",
   "links"
 ]);
 const allowedAttentionFields = new Set(["severity", "label", "detail", "dueDate", "source"]);
 const allowedLinkFields = new Set(["label", "url"]);
+const allowedTimelineFields = new Set(["key", "label", "start", "end", "status"]);
 const forbiddenFieldPattern = /(note|notes|externalId|externalProjectId|assignee|owner|credential|token|password|secret)/i;
 
 const errors = [];
@@ -46,6 +48,15 @@ if (!data || typeof data !== "object") {
   requireNumber(project.highPriorityTasks, `${prefix}.highPriorityTasks`);
   requireNumber(project.risks, `${prefix}.risks`);
   checkAllowedFields(project, allowedProjectFields, prefix);
+
+  if (!Array.isArray(project.timelines)) errors.push(`${prefix}.timelines must be an array.`);
+  (project.timelines || []).forEach((item, itemIndex) => {
+    const itemPrefix = `${prefix}.timelines[${itemIndex}]`;
+    requireEnum(item.key, ["prewire", "trim", "handover", "install"], `${itemPrefix}.key`);
+    requireText(item.label, `${itemPrefix}.label`);
+    if (item.status) requireEnum(item.status, ["complete"], `${itemPrefix}.status`);
+    checkAllowedFields(item, allowedTimelineFields, itemPrefix);
+  });
 
   if (!Array.isArray(project.attention)) errors.push(`${prefix}.attention must be an array.`);
   (project.attention || []).forEach((item, itemIndex) => {
