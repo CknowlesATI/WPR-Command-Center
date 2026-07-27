@@ -230,32 +230,49 @@
 
   .project-list {
     display: grid;
-    gap: 10px;
+    gap: 7px;
   }
 
   .project-card {
-    display: grid;
-    grid-template-columns: minmax(190px, 1.2fr) 104px minmax(150px, .7fr) minmax(240px, 1fr) 32px;
-    gap: 10px;
-    align-items: center;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 11px 12px;
+    padding: 0;
     box-shadow: var(--shadow);
+    overflow: hidden;
   }
 
   .project-card.has-signal {
-    border-left: 4px solid var(--amber);
+    border-left: 3px solid var(--amber);
   }
 
   .project-card.has-signal.red {
     border-left-color: var(--red);
   }
 
+  .project-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .project-summary:hover {
+    background: #fbfcfd;
+  }
+
   .project-title {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
+    line-height: 1.25;
   }
 
   .project-sub {
@@ -273,6 +290,11 @@
     padding: 5px 9px;
     font-size: 12px;
     font-weight: 800;
+  }
+
+  .health.compact {
+    padding: 4px 8px;
+    font-size: 11px;
   }
 
   .health::before {
@@ -336,6 +358,35 @@
     background: var(--blue-bg);
   }
 
+  .project-file {
+    border-top: 1px solid #edf0f4;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: minmax(160px, .65fr) minmax(220px, 1fr);
+    gap: 12px;
+    background: #fff;
+  }
+
+  .project-file[hidden] {
+    display: none;
+  }
+
+  .file-panel {
+    border: 1px solid #edf0f4;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fbfcfd;
+  }
+
+  .file-label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
   .links {
     display: flex;
     gap: 6px;
@@ -355,17 +406,11 @@
   }
 
   .project-signal {
-    grid-column: 1 / -1;
-    border-top: 1px solid #edf0f4;
-    padding-top: 10px;
-    display: grid;
-    grid-template-columns: minmax(160px, .35fr) 1fr;
-    gap: 12px;
-    align-items: start;
+    display: block;
   }
 
-  .project-signal[hidden] {
-    display: none;
+  .project-file .project-signal {
+    grid-column: 1 / -1;
   }
 
   .signal-label {
@@ -440,31 +485,15 @@
   }
 
   @media (max-width: 980px) {
-    .topbar,
-    .project-card {
+    .topbar {
       grid-template-columns: 1fr;
-    }
-
-    .project-card {
-      gap: 8px;
     }
 
     .metric-strip {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    .expand-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-    }
-
-    .project-card {
-      position: relative;
-      padding-right: 52px;
-    }
-
-    .project-signal {
+    .project-file {
       grid-template-columns: 1fr;
     }
 
@@ -705,37 +734,46 @@ function renderProjects() {
     const expanded = state.expandedProjects.has(project.id);
     return `
     <article class="project-card ${project.attention.length ? `has-signal ${topSeverity(project.attention)}` : ""}">
-      <div>
-        <div class="project-title">${escapeHtml(project.name)}</div>
-        <div class="project-sub">${escapeHtml(project.area)} · ${escapeHtml(project.team)}</div>
-        ${renderLinks(project.links)}
-      </div>
-      <div><span class="health ${project.health}">${healthLabels[project.health]}</span></div>
-      <div class="metric"><strong>${escapeHtml(project.phase)}</strong><span>${formatDateRange(project.startDate, project.endDate)}</span></div>
-      <div class="metric-strip">
-        <div class="metric"><strong>${project.openTasks}</strong><span>Open</span></div>
-        <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
-        <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
-        <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
-      </div>
-      <button class="expand-button" type="button" data-project-toggle="${escapeAttribute(project.id)}" aria-expanded="${expanded}" aria-label="${expanded ? "Collapse" : "Expand"} ${escapeAttribute(project.name)}">${expanded ? "−" : "+"}</button>
-      ${renderProjectSignal(project, expanded)}
+      <button class="project-summary" type="button" data-project-toggle="${escapeAttribute(project.id)}" aria-expanded="${expanded}" aria-label="${expanded ? "Close" : "Open"} ${escapeAttribute(project.name)} project file">
+        <div>
+          <div class="project-title">${escapeHtml(project.name)}</div>
+          <div class="project-sub">${escapeHtml(project.area)}</div>
+        </div>
+        <span class="health compact ${project.health}">${healthLabels[project.health]}</span>
+        <span class="expand-button" aria-hidden="true">${expanded ? "−" : "+"}</span>
+      </button>
+      ${renderProjectFile(project, expanded)}
     </article>
   `;
   }).join("") : `<div class="empty">No projects match the current view.</div>`;
 }
 
-function renderProjectSignal(project, expanded) {
-  const limit = expanded ? 6 : 1;
-  const items = project.attention.slice(0, limit);
-  if (!items.length) return "";
+function renderProjectFile(project, expanded) {
+  const items = project.attention.slice(0, 6);
   const remaining = Math.max(0, project.attention.length - items.length);
   return `
-    <div class="project-signal" ${expanded ? "" : "hidden"}>
-      <div class="signal-label">Top Signal</div>
-      <div class="signal-list">
-        ${items.map(item => `<span class="signal-pill ${escapeHtml(item.severity || "amber")}">${escapeHtml(item.detail || item.label || "Review needed")}${item.dueDate ? ` · ${formatDate(item.dueDate)}` : ""}</span>`).join("")}
-        ${remaining ? `<span class="signal-pill more">${remaining} more</span>` : ""}
+    <div class="project-file" ${expanded ? "" : "hidden"}>
+      <div class="file-panel">
+        <div class="file-label">Project File</div>
+        <div class="metric"><strong>${escapeHtml(project.phase)}</strong><span>${formatDateRange(project.startDate, project.endDate)}</span></div>
+        <div class="project-sub">${escapeHtml(project.team)}</div>
+        ${renderLinks(project.links)}
+      </div>
+      <div class="file-panel">
+        <div class="file-label">Counts</div>
+        <div class="metric-strip">
+          <div class="metric"><strong>${project.openTasks}</strong><span>Open</span></div>
+          <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
+          <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
+          <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
+        </div>
+      </div>
+      <div class="file-panel project-signal">
+        <div class="file-label">Top Signals</div>
+        <div class="signal-list">
+          ${items.length ? items.map(item => `<span class="signal-pill ${escapeHtml(item.severity || "amber")}">${escapeHtml(item.detail || item.label || "Review needed")}${item.dueDate ? ` · ${formatDate(item.dueDate)}` : ""}</span>`).join("") : `<span class="project-sub">No current signals.</span>`}
+          ${remaining ? `<span class="signal-pill more">${remaining} more</span>` : ""}
+        </div>
       </div>
     </div>
   `;
