@@ -45,7 +45,7 @@ function toHostedProject(project, options) {
   const attention = buildAttention(project, tasks, risks, timelines);
 
   return {
-    id: slug(project.id || project.name),
+    id: slug(project.name),
     name: text(project.name, "Untitled project"),
     area: text(project.segment || project.projectGroup, "Unassigned"),
     team: text(project.externalTeam, "No team listed"),

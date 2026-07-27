@@ -39,6 +39,7 @@ if (!data || typeof data !== "object") {
   const prefix = `projects[${index}]`;
   requireText(project.name, `${prefix}.name`);
   requireText(project.id, `${prefix}.id`);
+  requireHostedId(project.id, `${prefix}.id`);
   requireEnum(project.health, ["green", "amber", "red", "pending"], `${prefix}.health`);
   requireNumber(project.openTasks, `${prefix}.openTasks`);
   requireNumber(project.overdueTasks, `${prefix}.overdueTasks`);
@@ -81,6 +82,11 @@ function checkAllowedFields(value, allowed, prefix) {
 
 function requireText(value, label) {
   if (typeof value !== "string" || value.trim() === "") errors.push(`${label} must be a non-empty string.`);
+}
+
+function requireHostedId(value, label) {
+  if (typeof value !== "string") return;
+  if (/^\d+$/.test(value.trim())) errors.push(`${label} must be a hosted slug, not a raw numeric internal ID.`);
 }
 
 function requireNumber(value, label) {

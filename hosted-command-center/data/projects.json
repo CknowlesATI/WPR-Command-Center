@@ -1,35 +1,304 @@
 {
-  "lastUpdated": "2026-07-27T09:00:00-06:00",
-  "source": "sample",
+  "lastUpdated": "2026-07-27T17:29:25.520Z",
+  "source": "command-center-api",
   "projects": [
     {
       "id": "wpr-unit-1",
       "name": "WPR Unit 1",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "amber",
-      "phase": "Trim",
-      "startDate": "2026-07-01",
-      "endDate": "2026-08-14",
-      "openTasks": 7,
-      "overdueTasks": 2,
-      "highPriorityTasks": 3,
-      "risks": 1,
-      "nextHandoff": "2026-08-05",
+      "health": "pending",
+      "phase": "WPR Handover",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 8,
+      "overdueTasks": 3,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
       "attention": [
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Verify rack trim checklist",
-          "dueDate": "2026-07-24",
+          "detail": "Install: Unit 1 - Level 2 - observation 2415 - Av not to right dimension, does not line up (THE REQUEST IS THAT IT NEEDS TO BE CENTERED ON T",
+          "dueDate": "2026-04-17",
           "source": "Pulse"
         },
         {
-          "severity": "amber",
-          "label": "High priority",
-          "detail": "Confirm TV backbox location before final paint",
-          "dueDate": "2026-07-30",
-          "source": "Procore"
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Lvl 1 - AV Mech - missing AV panel cover (see if we can find this onsite somewhere",
+          "dueDate": "2026-04-20",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
+          "dueDate": "2026-06-26",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-2",
+      "name": "WPR Unit 2",
+      "area": "Units 1-6",
+      "team": "Big-D Units 1-6",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 12,
+      "overdueTasks": 2,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Lvl2 Bed 5 - tv single gang box height does not match power. (Too high)",
+          "dueDate": "2026-05-26",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Big-D Information Request - go into system to double check product documentation. Wwhat they are asking for is in the notes. (AV/Secu",
+          "dueDate": "2026-07-14",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-3",
+      "name": "WPR Unit 3",
+      "area": "Units 1-6",
+      "team": "Big-D Units 1-6",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 6,
+      "overdueTasks": 1,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Unit 3 - Observation #2027: QC - FIELD OBSERVATION - Doorbell Wrong Location",
+          "dueDate": "2025-11-19",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-4",
+      "name": "WPR Unit 4",
+      "area": "Units 1-6",
+      "team": "Big-D Units 1-6",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 11,
+      "overdueTasks": 4,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: AV Deposit has been paid",
+          "dueDate": "2026-02-27",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Unit 4 - Lvl 3 - Flex - will need horizontal adapter for tv mount with where the WB was placed on the wall (see pic in notes)",
+          "dueDate": "2026-03-06",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Unit 4 - Primary Bedroom - possibly need vertical adapter for tv mount with where the back box is placed. See pic in notes",
+          "dueDate": "2026-03-06",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Lvl 3 - we are not doing pendant speakers in this unit. We need to clean up the speaker wire hanging from the beams",
+          "dueDate": "2026-06-10",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-5",
+      "name": "WPR Unit 5",
+      "area": "Units 1-6",
+      "team": "Big-D Units 1-6",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 9,
+      "overdueTasks": 5,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Unit 5 - Lvl 2 - Family - WB box is not centered, need horizontal adapter for tv mount at install (pic in notes)",
+          "dueDate": "2026-03-06",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Unit 5 - LVL 2 - bedrooms entry - do we need to center this AP? Talk to Tanner (pic in notes)",
+          "dueDate": "2026-04-17",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Lvl 1 - AV Mech - Missing Av Panel Brush Plate (look around onsite to see if you can find this)",
+          "dueDate": "2026-04-17",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Tanner's List 5/18 - General item - Low voltage trim (verify all trim out locations have been terminamted and are ready for wall pl",
+          "dueDate": "2026-05-21",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Tanner's List 5/18 - Garage - ATI - Clarify what boxes in the ceiling can be covered or patched (mark using tape)",
+          "dueDate": "2026-05-21",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-6",
+      "name": "WPR Unit 6",
+      "area": "Units 1-6",
+      "team": "Big-D Units 1-6",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 16,
+      "overdueTasks": 4,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Review plans 3/16/26 for changes (link in notes) - No green light until we get approval.",
+          "dueDate": "2026-03-19",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Primary SITTING - install WB21 back box",
+          "dueDate": "2026-04-24",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Lvl 1 front door - stone needs cut for doorbell box",
+          "dueDate": "2026-05-22",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Lvl 3 Flex Room - verify WB26 is installed (65\" Tv going here)",
+          "dueDate": "2026-05-22",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-7",
+      "name": "WPR Unit 7",
+      "area": "Units 7-12",
+      "team": "Big-D Units 7-12",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 19,
+      "overdueTasks": 8,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "dueDate": "2026-01-23",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: All bedrooms will be getting WB boxes. Need sizes and approval",
+          "dueDate": "2026-02-20",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Eliminate all security wiring? Bury? what are we doing with the panel? (I will discuss on 2/20 from Landon)",
+          "dueDate": "2026-02-20",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Lvl 3 - Living - verify with Landon we are blind wiring the tv location or putting up single gang box",
+          "dueDate": "2026-02-27",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Walk unit and mark up plan accordingly. Install cover plates where needed.",
+          "dueDate": "2026-05-26",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: PENDING APPROVAL - Bedroom 1,2,3,4 will get WB26 Tv back boxes (for 65\" Tvs)",
+          "dueDate": "2026-06-12",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -39,53 +308,566 @@
       "name": "WPR Unit 8",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "green",
+      "health": "pending",
       "phase": "Pre-Wire",
-      "startDate": "2026-07-15",
-      "endDate": "2026-09-04",
-      "openTasks": 4,
-      "overdueTasks": 0,
-      "highPriorityTasks": 1,
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 10,
+      "overdueTasks": 4,
+      "highPriorityTasks": 0,
       "risks": 0,
-      "nextHandoff": "2026-08-19",
+      "nextHandoff": null,
       "attention": [
         {
-          "severity": "amber",
-          "label": "Upcoming handoff",
-          "detail": "Pre-wire inspection window approaching",
-          "dueDate": "2026-08-19",
-          "source": "Command Center"
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Unit 8 access control",
+          "dueDate": "2026-01-20",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "dueDate": "2026-01-23",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Unit 8 level 1 bed 1 wap",
+          "dueDate": "2026-01-28",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Lvl 3 WestTerrace - Land speaker wire (2) in planter boxes once the planter boxes have been installed.",
+          "dueDate": "2026-06-12",
+          "source": "Pulse"
         }
       ],
       "links": []
     },
     {
-      "id": "wpr-penthouse",
-      "name": "WPR Condo Penthouse",
-      "area": "Condos/Penthouse",
-      "team": "Big-D Condos/Penthouse",
-      "health": "red",
-      "phase": "Install",
-      "startDate": "2026-06-24",
-      "endDate": "2026-08-22",
-      "openTasks": 11,
-      "overdueTasks": 4,
-      "highPriorityTasks": 5,
-      "risks": 2,
-      "nextHandoff": "2026-08-02",
+      "id": "wpr-unit-9",
+      "name": "WPR Unit 9",
+      "area": "Units 7-12",
+      "team": "Big-D Units 7-12",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 5,
+      "overdueTasks": 1,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
       "attention": [
         {
           "severity": "red",
-          "label": "High risk",
-          "detail": "Missing final equipment confirmation",
-          "dueDate": "2026-07-26",
+          "label": "Overdue task",
+          "detail": "Install: WB Back boxes are onsite (9 total) - these need to be installed. Some areas still need framing finished. (talk to Bill about which ",
+          "dueDate": "2026-06-05",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-10",
+      "name": "WPR Unit 10",
+      "area": "Units 7-12",
+      "team": "Big-D Units 7-12",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 7,
+      "overdueTasks": 3,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: NEED FRAMING COMPLETED for WB Back boxes (8 total) - talk to Bill to make sure they have the info and layouts needed to complete fr",
+          "dueDate": "2026-06-05",
           "source": "Pulse"
         },
         {
           "severity": "red",
-          "label": "Overdue observation",
-          "detail": "Open Procore observation needs owner response",
-          "dueDate": "2026-07-25",
+          "label": "Overdue task",
+          "detail": "Install: Place staging request with warehouse for WB Back Boxes once framing is complete.",
+          "dueDate": "2026-06-12",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Install WB Back boxes (8 total)",
+          "dueDate": "2026-06-19",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-11",
+      "name": "WPR Unit 11",
+      "area": "Units 7-12",
+      "team": "Big-D Units 7-12",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 4,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "wpr-unit-12",
+      "name": "WPR Unit 12",
+      "area": "Units 7-12",
+      "team": "Big-D Units 7-12",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 2,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "wpr-condo-101",
+      "name": "WPR Condo 101",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "green",
+      "phase": "Trim",
+      "startDate": "2025-06-02",
+      "endDate": "2026-09-01",
+      "openTasks": 13,
+      "overdueTasks": 6,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Correct the Lighting Plan based on Thomas Hickman's markup.",
+          "dueDate": "2025-10-10",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Primary Closet - need a change order to swap the 2 current speakers to a DVC due to speaker placement capability",
+          "dueDate": "2026-06-08",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Turn auto reboot back on in rack PDU 1 once rack is up and running stable.",
+          "dueDate": "2026-07-14",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Update As-builts - Primary Closet change from 2 speakers to 1 DVC (once the work has been completed)",
+          "dueDate": "2026-07-17",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Unit 101 Bed 3 TV Back Box Not Level",
+          "dueDate": "2026-07-22",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Warehouse: Please stage the bin for this job",
+          "dueDate": "2026-07-24",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-condo-102",
+      "name": "WPR Condo 102",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 7,
+      "overdueTasks": 3,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Living Room - find out if we will blind wire the Tv wiring or if we need to put it in a single gang box",
+          "dueDate": "2026-05-26",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Move WAP location in Pantry; center it between door and access panel.",
+          "dueDate": "2026-05-27",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Update As-builts (Tv locations and any other wiring changes)",
+          "dueDate": "2026-07-24",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-condo-201",
+      "name": "WPR Condo 201",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 8,
+      "overdueTasks": 2,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "dueDate": "2026-01-23",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Living Room - Sub location needs power (either move sub or get them to move power)",
+          "dueDate": "2026-06-01",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-condo-202",
+      "name": "WPR Condo 202",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 7,
+      "overdueTasks": 3,
+      "highPriorityTasks": 2,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "dueDate": "2026-01-23",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Procore #1471: Unit #202 elevator closet the data port is not centered per RCP",
+          "dueDate": "2026-03-09",
+          "source": "Procore"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Procore #1540: Unit 202 elevator vestibule the keypad is to high.",
+          "dueDate": "2026-03-23",
+          "source": "Procore"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "wpr-condo-penthouse",
+      "name": "WPR Condo Penthouse",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 15,
+      "overdueTasks": 10,
+      "highPriorityTasks": 2,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "dueDate": "2026-01-23",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Primary Bath Small Ap Speakers - 3\" round retro (bezel)",
+          "dueDate": "2026-04-08",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Procore #1645: Unit #300 primary suite data port is at 5’ AFF",
+          "dueDate": "2026-04-15",
+          "source": "Procore"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Primary Steam Shower - need to see if we can get a cat6 to the steam shower controller (need to verify with Shamrock/Plummers if th",
+          "dueDate": "2026-04-30",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Current Proposal - Rec Room shows PS 80 mount... we only have a WB31 in place here. This will need to be a PS65 mount and will requir",
+          "dueDate": "2026-05-08",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Rec Room WB31 - touch base with Jason to see if this box can be mounted yet (it was left tacked to the wall). See if BigD need any ",
+          "dueDate": "2026-05-14",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "skier-services",
+      "name": "Skier Services",
+      "area": "Skier Services",
+      "team": "Big-D Skier Services",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": "2025-06-04",
+      "endDate": "2026-11-30",
+      "openTasks": 14,
+      "overdueTasks": 10,
+      "highPriorityTasks": 1,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Wade, where are we at with the change order for the volume controls and touch panels? Do we have time to edit that C/O for a few more",
+          "dueDate": "2026-06-17",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Procore #257: Incomplete Speakers at member lockers",
+          "dueDate": "2026-06-18",
+          "source": "Procore"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: (2) WB21 back boxes have been pulled from stock for the LL Fitness area. (1) WB31 pulled from stock for ML Member Lounge. These are o",
+          "dueDate": "2026-06-19",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Use RCP for Speaker Grills (Round or Square) - we will need to order accordingly (possible C/O)",
+          "dueDate": "2026-06-19",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: AV Mech - NEED CHANGE ORDER - switch AV Rack to match the rack being provided for the IT rack. Model information is in the notes (als",
+          "dueDate": "2026-06-19",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Possible C/O - need to check speaker count on RCP compared to our contract.",
+          "dueDate": "2026-06-19",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "metni",
+      "name": "Metni",
+      "area": "Other Projects",
+      "team": "No team listed",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 54,
+      "overdueTasks": 4,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "AV: ML - Garage: Security switch on 2nd door to the right: see if it can be fished down and brought through lower plate",
+          "dueDate": "2026-04-21",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "AV: Techs Priority List: Transfer Sonos to customer account or default Ports and Amps if no account created by end of install.",
+          "dueDate": "2026-05-08",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "AV: Admin: Update Solar System Network drawings",
+          "dueDate": "2026-06-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "AV: Admin: Check Wifi is disabled on Hardwired Sonos devices - unless wireless needed to a sub.",
+          "dueDate": "2026-06-29",
+          "source": "Pulse"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "d35",
+      "name": "D35",
+      "area": "Other Projects",
+      "team": "No team listed",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 0,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "d4",
+      "name": "D4",
+      "area": "Other Projects",
+      "team": "No team listed",
+      "health": "green",
+      "phase": "Pre-Wire",
+      "startDate": "2026-02-02",
+      "endDate": "2026-12-28",
+      "openTasks": 0,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "parkin",
+      "name": "Parkin",
+      "area": "Other Projects",
+      "team": "Jennifer Parkin",
+      "health": "pending",
+      "phase": "Install",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 0,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "procore-observation-review",
+      "name": "Procore Observation Review",
+      "area": "Unmapped Procore",
+      "team": "Procore",
+      "health": "pending",
+      "phase": "Pre-Wire",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 4,
+      "overdueTasks": 3,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "attention": [
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Review Procore #1005: Data Wire Running Thru-Wall",
+          "dueDate": "2025-09-24",
+          "source": "Procore"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Review Procore #3378: GENERAL - loose roller shade screws",
+          "dueDate": "2026-04-01",
+          "source": "Procore"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Review Procore #3373: Need Form Work Removed for Planter Wall Panels",
+          "dueDate": "2026-04-01",
           "source": "Procore"
         }
       ],
