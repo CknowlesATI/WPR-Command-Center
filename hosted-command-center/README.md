@@ -27,6 +27,8 @@ This version should stay:
   the safer hosted data shape.
 - `tools/validate-hosted-data.mjs` checks that hosted data follows the shared
   read-only contract.
+- `run-preview.ps1` starts a local preview for this hosted folder.
+- `DATA_CONTRACT.md` documents the safe shared data shape.
 
 The current dashboard uses static JSON so it can be hosted without a paid
 database or backend. Later phases can add a cloud sync job or database only if
