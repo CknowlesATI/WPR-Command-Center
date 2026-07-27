@@ -32,16 +32,7 @@
           "source": "Procore"
         }
       ],
-      "links": [
-        {
-          "label": "Pulse Project",
-          "url": ""
-        },
-        {
-          "label": "Procore Observations",
-          "url": ""
-        }
-      ]
+      "links": []
     },
     {
       "id": "wpr-unit-8",
@@ -66,12 +57,7 @@
           "source": "Command Center"
         }
       ],
-      "links": [
-        {
-          "label": "Pulse Project",
-          "url": ""
-        }
-      ]
+      "links": []
     },
     {
       "id": "wpr-penthouse",
@@ -103,16 +89,7 @@
           "source": "Procore"
         }
       ],
-      "links": [
-        {
-          "label": "Pulse Project",
-          "url": ""
-        },
-        {
-          "label": "Procore Observations",
-          "url": ""
-        }
-      ]
+      "links": []
     }
   ]
 }

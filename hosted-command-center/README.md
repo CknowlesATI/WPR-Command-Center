@@ -25,6 +25,8 @@ This version should stay:
 - `data/projects.sample.json` is the example data contract for future sync work.
 - `tools/export-hosted-data.mjs` converts current Command Center API data into
   the safer hosted data shape.
+- `tools/validate-hosted-data.mjs` checks that hosted data follows the shared
+  read-only contract.
 
 The current dashboard uses static JSON so it can be hosted without a paid
 database or backend. Later phases can add a cloud sync job or database only if
@@ -61,6 +63,12 @@ links are reviewed and considered safe for the intended audience.
 
 The GitHub Pages workflow is scheduled for weekday mornings and can also be run
 manually.
+
+Hosted data can be checked with:
+
+```powershell
+node hosted-command-center/tools/validate-hosted-data.mjs
+```
 
 ## Data Safety Rules
 

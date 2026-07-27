@@ -43,6 +43,9 @@ jobs:
             echo "COMMAND_CENTER_API_URL is not set. Using checked-in hosted data."
           fi
 
+      - name: Validate hosted data
+        run: node hosted-command-center/tools/validate-hosted-data.mjs
+
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
