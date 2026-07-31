@@ -273,7 +273,7 @@
 
   <div class="sectionhead">
     <h2>Schedule Timeline</h2>
-    <div class="count">All projects, plotted by start/end date — click a row to open it</div>
+    <div class="count">Next 3 months, plotted by schedule dates — click a row to open it</div>
   </div>
   <div class="phase-chips" id="phaseChips">
     <div class="chip active" data-phase="all">All Phases</div>
@@ -526,23 +526,10 @@ function groupFilteredProjects(){
     return true;
   });
 }
-function getPortfolioRange(list=PROJECTS){
-  let min=null, max=null;
-  list.forEach(p=>{
-    if(!p.startsAt || !p.endsAt) return;
-    const s = parseDateValue(p.startsAt), e = parseDateValue(p.endsAt);
-    if(!s || !e) return;
-    if(!min || s<min) min=s;
-    if(!max || e>max) max=e;
-  });
-  if(!min || !max){
-    const now = new Date();
-    min = new Date(now.getFullYear(), now.getMonth()-1, 1);
-    max = new Date(now.getFullYear(), now.getMonth()+2, 0);
-    return {min,max};
-  }
-  min = new Date(min.getFullYear(), min.getMonth(), 1);
-  max = new Date(max.getFullYear(), max.getMonth()+1, 0);
+function getPortfolioRange(){
+  const now = new Date();
+  const min = new Date(now.getFullYear(), now.getMonth(), 1);
+  const max = new Date(now.getFullYear(), now.getMonth()+3, 0);
   return {min,max};
 }
 
@@ -827,6 +814,18 @@ function renderBoard(){
 
 function monthLabel(d){ return d.toLocaleString("en-US",{month:"short"}); }
 
+function clippedBar(start, end, min, max, minimumWidth=1.5){
+  const s = parseDateValue(start), e = parseDateValue(end);
+  if(!s || !e || e < min || s > max) return null;
+  const totalMs = max-min;
+  const clippedStart = s < min ? min : s;
+  const clippedEnd = e > max ? max : e;
+  return {
+    left:(clippedStart-min)/totalMs*100,
+    width:Math.max(minimumWidth, (clippedEnd-clippedStart)/totalMs*100)
+  };
+}
+
 function renderGantt(){
   const visibleProjects = groupFilteredProjects();
   const {min,max} = getPortfolioRange(visibleProjects);
@@ -849,19 +848,15 @@ function renderGantt(){
     if(phase==="all"){
       let mainBar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
       if(p.startsAt && p.endsAt){
-        const s = parseDateValue(p.startsAt), e = parseDateValue(p.endsAt);
-        if(s && e){
-          const leftPct = (s-min)/totalMs*100;
-          const widthPct = Math.max(1.5, (e-s)/totalMs*100);
-          mainBar = `<div class="gantt-bar ${p.rag}" style="left:${leftPct}%;width:${widthPct}%" title="${escapeHTML(p.name)}: ${escapeHTML(formatDateRange(p.startsAt, p.endsAt))}"></div>`;
-        }
+        const seg = clippedBar(p.startsAt, p.endsAt, min, max, 1.5);
+        mainBar = seg
+          ? `<div class="gantt-bar ${p.rag}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeHTML(p.name)}: ${escapeHTML(formatDateRange(p.startsAt, p.endsAt))}"></div>`
+          : `<div class="gantt-empty-note">Outside 3-month window</div>`;
       }
       const segs = phaseTemplateFor(p).map(def=>p.timelines.find(t=>t.key===def.key)).filter(t=>t && t.start && t.end).map(t=>{
-        const ts = parseDateValue(t.start), te = parseDateValue(t.end);
-        if(!ts || !te) return "";
-        const segLeft = (ts-min)/totalMs*100;
-        const segWidth = Math.max(1, (te-ts)/totalMs*100);
-        return `<div class="gantt-bar seg ${t.key}" style="left:${segLeft}%;width:${segWidth}%" title="${escapeHTML(t.label)}: ${escapeHTML(formatDateRange(t.start, t.end))}"></div>`;
+        const seg = clippedBar(t.start, t.end, min, max, 1);
+        if(!seg) return "";
+        return `<div class="gantt-bar seg ${t.key}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeHTML(t.label)}: ${escapeHTML(formatDateRange(t.start, t.end))}"></div>`;
       }).join("");
       trackHTML = `
       <div class="gantt-tracks">
@@ -878,12 +873,10 @@ function renderGantt(){
       const t = phaseTemplateFor(p).some(def=>def.key===phase) ? p.timelines.find(x=>x.key===phase) : null;
       let bar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
       if(t && t.start && t.end){
-        const ts = parseDateValue(t.start), te = parseDateValue(t.end);
-        if(ts && te){
-          const leftPct = (ts-min)/totalMs*100;
-          const widthPct = Math.max(1.5, (te-ts)/totalMs*100);
-          bar = `<div class="gantt-bar ${t.key}" style="left:${leftPct}%;width:${widthPct}%" title="${escapeHTML(t.label)}: ${escapeHTML(formatDateRange(t.start, t.end))}"></div>`;
-        }
+        const seg = clippedBar(t.start, t.end, min, max, 1.5);
+        bar = seg
+          ? `<div class="gantt-bar ${t.key}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeHTML(t.label)}: ${escapeHTML(formatDateRange(t.start, t.end))}"></div>`
+          : `<div class="gantt-empty-note">Outside 3-month window</div>`;
       }
       trackHTML = `
       <div class="gantt-track single">
