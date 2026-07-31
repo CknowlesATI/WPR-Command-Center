@@ -833,45 +833,6 @@
       "nextHandoff": null,
       "attention": [],
       "links": []
-    },
-    {
-      "id": "procore-observation-review",
-      "name": "Procore Observation Review",
-      "area": "Unmapped Procore",
-      "team": "Procore",
-      "health": "pending",
-      "phase": "Pre-Wire",
-      "startDate": null,
-      "endDate": null,
-      "openTasks": 4,
-      "overdueTasks": 3,
-      "highPriorityTasks": 0,
-      "risks": 0,
-      "nextHandoff": null,
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Review Procore #1005: Data Wire Running Thru-Wall",
-          "dueDate": "2025-09-24",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Review Procore #3378: GENERAL - loose roller shade screws",
-          "dueDate": "2026-04-01",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Review Procore #3373: Need Form Work Removed for Planter Wall Panels",
-          "dueDate": "2026-04-01",
-          "source": "Procore"
-        }
-      ],
-      "links": []
     }
   ]
 }
