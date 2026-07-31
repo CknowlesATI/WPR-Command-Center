@@ -90,7 +90,7 @@ function getAllData() {
   const risks = readRows("Risks");
   const milestones = readRows("Milestones");
 
-  return projects.map(p => ({
+  return projects.filter(isDashboardProject).map(p => ({
     id: p.id,
     name: p.name,
     projectGroup: p.projectGroup || defaultProjectMeta(p.name).projectGroup,
@@ -109,7 +109,13 @@ function getAllData() {
     },
     taskList: tasks
       .filter(t => String(t.projectId) === String(p.id))
-      .map(t => ({ id: t.id, name: t.name, status: t.status })),
+      .map(t => ({
+        id: t.id,
+        name: t.name,
+        status: t.status,
+        source: t.source || "",
+        externalUrl: t.externalUrl || t.url || t.link || ""
+      })),
     timelines: timelines
       .filter(t => String(t.projectId) === String(p.id) && phaseKeysForGroup(p.projectGroup || defaultProjectMeta(p.name).projectGroup).indexOf(t.key) !== -1)
       .map(t => ({ key: t.key, label: t.label, start: t.start || null, end: t.end || null, status: t.status || "" })),
@@ -117,6 +123,19 @@ function getAllData() {
       .filter(r => String(r.projectId) === String(p.id))
       .map(r => ({ id: r.id, title: r.title, severity: r.severity, owner: r.owner, note: r.note, due: r.due || null })),
   }));
+}
+
+function isDashboardProject(project) {
+  const name = String((project && project.name) || "").trim();
+  const group = String((project && project.projectGroup) || "").trim();
+  const segment = String((project && project.segment) || "").trim();
+  const team = String((project && project.externalTeam) || "").trim();
+  return !(
+    name === "Procore Observation Review" ||
+    group === "Unmapped Procore" ||
+    segment === "Unmapped Procore" ||
+    (team === "Procore" && (group === "Unmapped Procore" || segment === "Unmapped Procore"))
+  );
 }
 
 // ---------- Writing data (only the fields the app can edit today) ----------
@@ -421,10 +440,24 @@ function ensureTimelineSchema() {
 
 function ensureTaskSchema() {
   ensureIdColumn("Tasks");
+  ensureColumns("Tasks", ["source", "externalUrl"]);
 }
 
 function ensureMilestoneSchema() {
   ensureIdColumn("Milestones");
+}
+
+function ensureColumns(sheetName, names) {
+  const sh = sheet(sheetName);
+  const values = sh.getDataRange().getValues();
+  if (!values.length) throw new Error(sheetName + " sheet is empty");
+  const headers = values[0];
+  names.forEach(name => {
+    if (headers.indexOf(name) === -1) {
+      sh.getRange(1, headers.length + 1).setValue(name);
+      headers.push(name);
+    }
+  });
 }
 
 function ensureIdColumn(sheetName) {

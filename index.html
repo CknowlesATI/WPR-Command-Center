@@ -117,10 +117,16 @@
   .edit-row:last-child{border-bottom:none;}
   .edit-row.risk-edit{grid-template-columns:1fr 92px 32px;align-items:start;}
   .edit-row.milestone-edit{grid-template-columns:1fr 120px 84px 32px;}
+  .edit-row.task-edit{grid-template-columns:minmax(0,1fr) auto auto auto;align-items:start;}
   .edit-row input,.edit-row select,.edit-row textarea,.add-row input,.add-row select,.add-row textarea{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:6px 7px;color:var(--text);background:#fafbfc;font-family:inherit;min-width:0;}
   .edit-row textarea,.add-row textarea{resize:vertical;min-height:34px;}
   .task-textarea{width:100%;line-height:1.35;white-space:pre-wrap;overflow:hidden;resize:none;overflow-wrap:anywhere;}
   .edit-row .task-textarea,.add-row .task-textarea{min-height:34px;}
+  .source-link,.source-chip{display:inline-flex;align-items:center;justify-content:center;min-height:32px;border:1px solid var(--border);border-radius:6px;padding:0 8px;background:#fff;color:var(--muted);font-size:11px;font-weight:800;text-decoration:none;white-space:nowrap;}
+  .source-link:hover{border-color:#c7cedb;color:var(--text);}
+  .source-link.pulse,.source-chip.pulse{background:var(--blue-bg);border-color:#cbd9fb;color:var(--blue);}
+  .source-link.procore,.source-chip.procore{background:var(--amber-bg);border-color:#efd28f;color:var(--amber);}
+  .source-placeholder{visibility:hidden;}
   .edit-main{display:flex;flex-direction:column;gap:6px;}
   .add-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);}
   .add-row.risk-add{grid-template-columns:1fr 92px auto;}
@@ -407,7 +413,7 @@ function normalizeDateString(value, allowDateTime=false){
   return `${yyyy}-${mm}-${dd}`;
 }
 function normalizeProjects(projects){
-  return (Array.isArray(projects) ? projects : []).map(p=>{
+  return (Array.isArray(projects) ? projects : []).filter(isDashboardProject).map(p=>{
     const meta = defaultProjectMeta(p.name);
     const projectGroup = p.projectGroup || meta.projectGroup;
     const timelines = phaseTemplateFor({projectGroup}).map(def=>{
@@ -430,11 +436,29 @@ function normalizeProjects(projects){
         progress:Number(p.tasks && p.tasks.progress) || 0,
         done:Number(p.tasks && p.tasks.done) || 0,
       },
-      taskList:(p.taskList || []).map(t=>({id:t.id, name:t.name || "", status:["todo","progress","done"].includes(t.status) ? t.status : "todo"})),
+      taskList:(p.taskList || []).map(t=>({
+        id:t.id,
+        name:t.name || "",
+        status:["todo","progress","done"].includes(t.status) ? t.status : "todo",
+        source:normalizeTaskSource(t.source),
+        externalUrl:normalizeUrl(t.externalUrl || t.url || t.link)
+      })),
       timelines,
       risks:(p.risks || []).map(r=>({id:r.id, title:r.title || "", severity:["high","medium","low"].includes(r.severity) ? r.severity : "low", owner:r.owner || "Unassigned", note:r.note || "", due:normalizeDateString(r.due, true)})),
     };
   }).filter(p=>Number.isFinite(p.id));
+}
+function isDashboardProject(project){
+  const name = String(project && project.name || "").trim();
+  const group = String(project && project.projectGroup || "").trim();
+  const segment = String(project && project.segment || "").trim();
+  const team = String(project && project.externalTeam || "").trim();
+  return !(
+    name === "Procore Observation Review" ||
+    group === "Unmapped Procore" ||
+    segment === "Unmapped Procore" ||
+    (team === "Procore" && (group === "Unmapped Procore" || segment === "Unmapped Procore"))
+  );
 }
 function defaultProjectMeta(name){
   const text = String(name || "");
@@ -467,6 +491,23 @@ function formatDate(value){
 }
 function formatDateRange(start, end){
   return start && end ? `${formatDate(start)} - ${formatDate(end)}` : "Not scheduled yet";
+}
+function normalizeTaskSource(value){
+  const text = String(value || "").trim().toLowerCase();
+  if(text==="pulse") return "pulse";
+  if(text==="procore" || text==="procore-review" || text==="procore-pdf") return "procore";
+  return text ? "command-center" : "";
+}
+function taskSourceLabel(source){
+  if(source==="pulse") return "Pulse";
+  if(source==="procore") return "Procore";
+  if(source==="command-center") return "Command Center";
+  return "";
+}
+function normalizeUrl(value){
+  const text = String(value || "").trim();
+  if(!/^https?:\/\//i.test(text)) return "";
+  try{ return new URL(text).href; } catch { return ""; }
 }
 function isPhaseComplete(t){
   return t && t.status==="complete";
@@ -950,8 +991,9 @@ function openPanel(id){
       <button class="add-btn" id="addMilestoneBtn" data-pid="${p.id}">Add</button>
     </div>`;
   const taskHTML = p.taskList.map(t=>`
-    <div class="edit-row">
+    <div class="edit-row task-edit">
       <textarea class="task-input task-textarea" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" data-field="name" placeholder="Task">${escapeHTML(t.name)}</textarea>
+      ${renderTaskSource(t)}
       <select class="task-input" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" data-field="status">
         <option value="todo" ${t.status==="todo"?"selected":""}>To do</option>
         <option value="progress" ${t.status==="progress"?"selected":""}>In progress</option>
@@ -1058,6 +1100,16 @@ function autosizeTaskTextareas(root=document){
     el.style.height = "auto";
     el.style.height = `${el.scrollHeight + 4}px`;
   });
+}
+function renderTaskSource(task){
+  const source = normalizeTaskSource(task && task.source);
+  const label = taskSourceLabel(source);
+  if(!label) return `<span class="source-chip source-placeholder" aria-hidden="true">Source</span>`;
+  const className = escapeHTML(source);
+  if(task.externalUrl){
+    return `<a class="source-link ${className}" href="${escapeHTML(task.externalUrl)}" target="_blank" rel="noopener" title="Open ${escapeHTML(label)}">${escapeHTML(label)}</a>`;
+  }
+  return `<span class="source-chip ${className}" title="${escapeHTML(label)}">${escapeHTML(label)}</span>`;
 }
 function closePanel(){
   document.getElementById("panel").classList.remove("open");
