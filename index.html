@@ -119,6 +119,8 @@
   .edit-row.milestone-edit{grid-template-columns:1fr 120px 84px 32px;}
   .edit-row input,.edit-row select,.edit-row textarea,.add-row input,.add-row select,.add-row textarea{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:6px 7px;color:var(--text);background:#fafbfc;font-family:inherit;min-width:0;}
   .edit-row textarea,.add-row textarea{resize:vertical;min-height:34px;}
+  .task-textarea{width:100%;line-height:1.35;white-space:pre-wrap;overflow:hidden;resize:none;overflow-wrap:anywhere;}
+  .edit-row .task-textarea,.add-row .task-textarea{min-height:34px;}
   .edit-main{display:flex;flex-direction:column;gap:6px;}
   .add-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);}
   .add-row.risk-add{grid-template-columns:1fr 92px auto;}
@@ -949,7 +951,7 @@ function openPanel(id){
     </div>`;
   const taskHTML = p.taskList.map(t=>`
     <div class="edit-row">
-      <input class="task-input" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" data-field="name" value="${escapeHTML(t.name)}" placeholder="Task">
+      <textarea class="task-input task-textarea" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" data-field="name" placeholder="Task">${escapeHTML(t.name)}</textarea>
       <select class="task-input" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" data-field="status">
         <option value="todo" ${t.status==="todo"?"selected":""}>To do</option>
         <option value="progress" ${t.status==="progress"?"selected":""}>In progress</option>
@@ -960,7 +962,7 @@ function openPanel(id){
   `).join("") || `<div class="empty">No tasks listed.</div>`;
   const taskAddHTML = `
     <div class="add-row">
-      <input id="newTaskName" placeholder="Add task">
+      <textarea id="newTaskName" class="task-textarea" placeholder="Add task"></textarea>
       <button class="add-btn" id="addTaskBtn" data-pid="${p.id}">Add</button>
     </div>`;
   const riskHTML = p.risks.map(r=>{
@@ -1048,7 +1050,14 @@ function openPanel(id){
   `;
   panel.classList.add("open");
   overlay.classList.add("open");
+  autosizeTaskTextareas(panel);
   document.getElementById("closeBtn").addEventListener("click", closePanel);
+}
+function autosizeTaskTextareas(root=document){
+  root.querySelectorAll(".task-textarea").forEach(el=>{
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight + 4}px`;
+  });
 }
 function closePanel(){
   document.getElementById("panel").classList.remove("open");
@@ -1158,6 +1167,10 @@ document.getElementById("panel").addEventListener("change", async e=>{
     refreshAll();
     openPanel(proj.id);
   }
+});
+document.getElementById("panel").addEventListener("input", e=>{
+  const taskText = e.target.closest(".task-textarea");
+  if(taskText) autosizeTaskTextareas(taskText.parentElement || document);
 });
 document.getElementById("panel").addEventListener("click", async e=>{
   const addTask = e.target.closest("#addTaskBtn");
