@@ -762,7 +762,7 @@ async function loadData() {
 }
 
 function normalizeProjects(projects) {
-  return Array.isArray(projects) ? projects.map(project => ({
+  return Array.isArray(projects) ? projects.filter(isDashboardProject).map(project => ({
     id: project.id || project.name,
     name: project.name || "Untitled project",
     area: project.area || "Unassigned",
@@ -786,6 +786,17 @@ function normalizeProjects(projects) {
       status: item.status || ""
     })) : []
   })) : [];
+}
+
+function isDashboardProject(project) {
+  const name = String(project && project.name || "").trim();
+  const area = String(project && project.area || "").trim();
+  const team = String(project && project.team || "").trim();
+  return !(
+    name === "Procore Observation Review" ||
+    area === "Unmapped Procore" ||
+    (team === "Procore" && area === "Unmapped Procore")
+  );
 }
 
 function render() {

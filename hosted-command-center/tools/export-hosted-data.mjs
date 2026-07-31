@@ -26,12 +26,25 @@ const projects = Array.isArray(rawData) ? rawData : rawData.projects || rawData.
 const hostedData = {
   lastUpdated: new Date().toISOString(),
   source: inputPath ? "local-export" : "command-center-api",
-  projects: projects.map(project => toHostedProject(project, { includeLinks }))
+  projects: projects
+    .filter(shouldExportProject)
+    .map(project => toHostedProject(project, { includeLinks }))
 };
 
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(hostedData, null, 2)}\n`, "utf8");
 console.log(`Exported ${hostedData.projects.length} hosted projects to ${outputPath}`);
+
+function shouldExportProject(project) {
+  const name = text(project && project.name, "");
+  const area = text(project && (project.segment || project.projectGroup), "");
+  const team = text(project && project.externalTeam, "");
+  return !(
+    name === "Procore Observation Review" ||
+    area === "Unmapped Procore" ||
+    (team === "Procore" && area === "Unmapped Procore")
+  );
+}
 
 function toHostedProject(project, options) {
   const tasks = Array.isArray(project.taskList) ? project.taskList : [];
