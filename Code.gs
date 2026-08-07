@@ -28,6 +28,7 @@ function doPost(e) {
     if (body.action === "updateTimeline") updateTimeline(body);
     else if (body.action === "updateRiskDue") updateRiskDue(body);
     else if (body.action === "updateProjectField") updateProjectField(body);
+    else if (body.action === "updateProjectControl") updateProjectControl(body);
     else if (body.action === "addTask") addTask(body);
     else if (body.action === "updateTask") updateTask(body);
     else if (body.action === "deleteTask") deleteById("Tasks", body.taskId);
@@ -81,10 +82,13 @@ function normalizeCell(value) {
 
 function getAllData() {
   ensureProjectSchema();
+  ensureProjectControlSchema();
+  ensureProjectControlHistorySchema();
   ensureTimelineSchema();
   ensureTaskSchema();
   ensureMilestoneSchema();
   const projects = readRows("Projects");
+  const controls = readRows("ProjectControls");
   const timelines = readRows("Timelines");
   const tasks = readRows("Tasks");
   const risks = readRows("Risks");
@@ -122,6 +126,7 @@ function getAllData() {
     risks: risks
       .filter(r => String(r.projectId) === String(p.id))
       .map(r => ({ id: r.id, title: r.title, severity: r.severity, owner: r.owner, note: r.note, due: r.due || null })),
+    control: normalizeProjectControl(controls.find(c => String(c.projectId) === String(p.id)) || { projectId: p.id }),
   }));
 }
 
@@ -162,6 +167,65 @@ function updateProjectField(body) {
     }
   }
   throw new Error("Project row not found: " + projectId);
+}
+
+function updateProjectControl(body) {
+  ensureProjectControlSchema();
+  ensureProjectControlHistorySchema();
+  const projectId = requireValue(body.projectId, "projectId");
+  const field = requireValue(body.field, "field");
+  const allowedFields = [
+    "nextOutcome",
+    "nextMoveOwner",
+    "operatingState",
+    "blocked",
+    "blockerReason",
+    "delayConsequence",
+    "nextAction",
+    "responseDate",
+    "reviewDate",
+    "escalationDate",
+    "lastMovementDate",
+    "evidence",
+    "controlNotes",
+    "escalationLevel",
+    "lastEscalationAction",
+    "eventTrigger",
+    "overrideDaily"
+  ];
+  if (allowedFields.indexOf(field) === -1) throw new Error("Invalid control field: " + field);
+
+  const sh = sheet("ProjectControls");
+  const values = sh.getDataRange().getValues();
+  const headers = values[0];
+  const projectCol = columnIndex(headers, "projectId");
+  let rowIndex = -1;
+  let existing = {};
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][projectCol]) === String(projectId)) {
+      rowIndex = i + 1;
+      headers.forEach((h, col) => existing[h] = normalizeCell(values[i][col]));
+      break;
+    }
+  }
+
+  if (rowIndex === -1) {
+    existing = normalizeProjectControl({ projectId: projectId });
+    sh.appendRow(headers.map(h => existing[h] === undefined ? "" : existing[h]));
+    rowIndex = sh.getLastRow();
+  }
+
+  let value = normalizeControlField(field, body.value);
+  const next = normalizeProjectControl(Object.assign({}, existing, { projectId: projectId }));
+  next[field] = value;
+  validateProjectControl(next, field);
+
+  const writeCol = columnIndex(headers, field);
+  sh.getRange(rowIndex, writeCol + 1).setValue(value);
+  const updatedCol = columnIndex(headers, "updatedAt");
+  sh.getRange(rowIndex, updatedCol + 1).setValue(currentIsoMinute());
+
+  appendControlHistory(projectId, field, existing[field] || "", value);
 }
 
 function updateTimeline(body) {
@@ -308,6 +372,9 @@ function addProject(body) {
   const tlSheet = sheet("Timelines");
   const phaseDefs = phaseDefsForGroup(meta.projectGroup);
   phaseDefs.forEach(([key, label]) => tlSheet.appendRow([newId, key, label, "", "", ""]));
+
+  ensureProjectControlSchema();
+  appendRowByHeaders("ProjectControls", normalizeProjectControl({ projectId: newId }));
   } finally {
     lock.releaseLock();
   }
@@ -357,10 +424,90 @@ function normalizeMilestoneState(value) {
   return text;
 }
 
+function normalizeProjectControl(control) {
+  return {
+    projectId: control.projectId || "",
+    nextOutcome: control.nextOutcome || "",
+    nextMoveOwner: control.nextMoveOwner || "",
+    operatingState: normalizeOperatingState(control.operatingState || "Stable"),
+    blocked: normalizeBoolean(control.blocked),
+    blockerReason: control.blockerReason || "",
+    delayConsequence: control.delayConsequence || "",
+    nextAction: control.nextAction || "",
+    responseDate: control.responseDate || "",
+    reviewDate: control.reviewDate || "",
+    escalationDate: control.escalationDate || "",
+    lastMovementDate: control.lastMovementDate || "",
+    evidence: control.evidence || "",
+    controlNotes: control.controlNotes || "",
+    escalationLevel: normalizeEscalationLevel(control.escalationLevel || ""),
+    lastEscalationAction: control.lastEscalationAction || "",
+    eventTrigger: control.eventTrigger || "",
+    overrideDaily: normalizeBoolean(control.overrideDaily),
+    updatedAt: control.updatedAt || ""
+  };
+}
+
+function normalizeControlField(field, value) {
+  if (field === "blocked" || field === "overrideDaily") return normalizeBoolean(value);
+  if (["responseDate", "reviewDate", "escalationDate", "lastMovementDate"].indexOf(field) !== -1) return normalizeDateValue(value, false);
+  if (field === "operatingState") return normalizeOperatingState(value);
+  if (field === "escalationLevel") return normalizeEscalationLevel(value);
+  return String(value || "").trim();
+}
+
+function normalizeOperatingState(value) {
+  const text = String(value || "").trim();
+  const allowed = ["Action Needed", "Follow-Up Needed", "Monitor", "Stable"];
+  if (allowed.indexOf(text) === -1) throw new Error("Invalid operating state: " + text);
+  return text;
+}
+
+function normalizeEscalationLevel(value) {
+  if (value === "" || value === null || value === undefined) return "";
+  const text = String(value).trim();
+  if (["1", "2", "3", "4", "5", "6"].indexOf(text) === -1) throw new Error("Invalid escalation level: " + text);
+  return text;
+}
+
+function normalizeBoolean(value) {
+  return value === true || value === "true" || value === "TRUE" || value === "Yes" || value === "yes";
+}
+
+function validateProjectControl(control, changedField) {
+  const state = normalizeOperatingState(control.operatingState || "Stable");
+  const nextOutcome = String(control.nextOutcome || "").trim();
+  const owner = String(control.nextMoveOwner || "").trim();
+  const reviewOrTrigger = String(control.reviewDate || control.eventTrigger || "").trim();
+  if (nextOutcome && isVagueOutcome(nextOutcome)) throw new Error("Next outcome needs the answer, decision, approval, date, or changed condition being sought.");
+  if (changedField === "operatingState" && state === "Monitor" && !reviewOrTrigger) throw new Error("Monitor needs a review date or event trigger.");
+  if (changedField === "blocked" && normalizeBoolean(control.blocked) && !String(control.blockerReason || "").trim()) throw new Error("Blocked items need a blocker reason.");
+}
+
+function isVagueOutcome(value) {
+  const text = String(value || "").trim().toLowerCase();
+  return /^(follow up|check status|review email|touch base|circle back|send email|call|email|review)$/.test(text);
+}
+
 function appendRowByHeaders(sheetName, valuesByHeader) {
   const sh = sheet(sheetName);
   const headers = sh.getDataRange().getValues()[0];
   sh.appendRow(headers.map(h => valuesByHeader[h] === undefined ? "" : valuesByHeader[h]));
+}
+
+function appendControlHistory(projectId, field, oldValue, newValue) {
+  appendRowByHeaders("ProjectControlHistory", {
+    id: nextId("ProjectControlHistory"),
+    projectId,
+    changedAt: currentIsoMinute(),
+    field,
+    oldValue,
+    newValue
+  });
+}
+
+function currentIsoMinute() {
+  return Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd'T'HH:mm");
 }
 
 function updateById(sheetName, id, field, value) {
@@ -460,6 +607,60 @@ function ensureColumns(sheetName, names) {
   });
 }
 
+function ensureProjectControlSchema() {
+  const headers = [
+    "projectId",
+    "nextOutcome",
+    "nextMoveOwner",
+    "operatingState",
+    "blocked",
+    "blockerReason",
+    "delayConsequence",
+    "nextAction",
+    "responseDate",
+    "reviewDate",
+    "escalationDate",
+    "lastMovementDate",
+    "evidence",
+    "controlNotes",
+    "escalationLevel",
+    "lastEscalationAction",
+    "eventTrigger",
+    "overrideDaily",
+    "updatedAt"
+  ];
+  ensureSheetWithHeaders("ProjectControls", headers, [9, 10, 11, 12]);
+}
+
+function ensureProjectControlHistorySchema() {
+  ensureSheetWithHeaders("ProjectControlHistory", ["id", "projectId", "changedAt", "field", "oldValue", "newValue"], [3]);
+  ensureIdColumn("ProjectControlHistory");
+}
+
+function ensureSheetWithHeaders(sheetName, requiredHeaders, textCols) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(sheetName);
+  if (!sh) {
+    sh = ss.insertSheet(sheetName);
+    sh.appendRow(requiredHeaders);
+    sh.setFrozenRows(1);
+    (textCols || []).forEach(col => sh.getRange(1, col, 1000, 1).setNumberFormat("@"));
+    return;
+  }
+  const values = sh.getDataRange().getValues();
+  if (!values.length) {
+    sh.appendRow(requiredHeaders);
+    return;
+  }
+  const headers = values[0];
+  requiredHeaders.forEach(name => {
+    if (headers.indexOf(name) === -1) {
+      sh.getRange(1, headers.length + 1).setValue(name);
+      headers.push(name);
+    }
+  });
+}
+
 function ensureIdColumn(sheetName) {
   const sh = sheet(sheetName);
   const values = sh.getDataRange().getValues();
@@ -552,8 +753,32 @@ function seedData() {
   setTab(ss, "Tasks", ["projectId", "name", "status", "id"], []);
   setTab(ss, "Risks", ["id", "projectId", "title", "severity", "owner", "note", "due"], [], [7]);
   setTab(ss, "Milestones", ["projectId", "name", "date", "state", "id"], [], [3]);
+  setTab(ss, "ProjectControls", [
+    "projectId",
+    "nextOutcome",
+    "nextMoveOwner",
+    "operatingState",
+    "blocked",
+    "blockerReason",
+    "delayConsequence",
+    "nextAction",
+    "responseDate",
+    "reviewDate",
+    "escalationDate",
+    "lastMovementDate",
+    "evidence",
+    "controlNotes",
+    "escalationLevel",
+    "lastEscalationAction",
+    "eventTrigger",
+    "overrideDaily",
+    "updatedAt"
+  ], projectNames.map((name, i) => {
+    return [i + 1, "", "", "Stable", false, "", "", "", "", "", "", "", "", "", "", "", "", false, ""];
+  }), [9, 10, 11, 12]);
+  setTab(ss, "ProjectControlHistory", ["id", "projectId", "changedAt", "field", "oldValue", "newValue"], [], [3]);
 
-  SpreadsheetApp.getActiveSpreadsheet().toast("Done! 5 tabs created and 17 projects loaded.");
+  SpreadsheetApp.getActiveSpreadsheet().toast("Done! 7 tabs created and 17 projects loaded.");
 }
 
 // Creates (or replaces) a tab, writes headers + rows, and forces given

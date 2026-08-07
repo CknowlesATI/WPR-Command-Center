@@ -4,6 +4,10 @@ This folder is the separate online/shared version of Project Command Center.
 It is intentionally kept apart from the current Google Apps Script operating
 baseline at the repository root.
 
+Unless Christen explicitly specifies the original/internal command center, this
+online/shared version is the default target for Command Center work. See
+`../OPERATING_PROCEDURES.md` before making changes that might cross versions.
+
 ## Purpose
 
 The hosted version is for WPR techs and project participants who need a quick,

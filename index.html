@@ -55,6 +55,35 @@
   .attention-detail{font-size:12px;color:var(--text);line-height:1.35;}
   .attention-empty{background:var(--panel);border:1px dashed var(--border);border-radius:8px;padding:14px 16px;color:var(--muted);font-size:13px;}
 
+  .daily-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-bottom:24px;}
+  .daily-card{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;padding:13px 14px;box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:150px;}
+  .daily-card:hover{border-color:#c7cedb;}
+  .daily-card.red{border-left-color:var(--red);}
+  .daily-card.amber{border-left-color:var(--amber);}
+  .daily-card.green{border-left-color:var(--green);}
+  .daily-type{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);}
+  .daily-project{font-size:13px;font-weight:700;}
+  .daily-outcome{font-size:13px;line-height:1.35;}
+  .daily-meta{font-size:12px;color:var(--muted);line-height:1.4;}
+  .daily-action{font-size:12px;background:#f7f8fa;border:1px solid var(--border);border-radius:6px;padding:7px 8px;}
+  .weekly-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);margin-bottom:26px;overflow:hidden;}
+  .weekly-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .weekly-table th,.weekly-table td{border-bottom:1px solid #eef1f5;padding:9px 10px;text-align:left;vertical-align:top;}
+  .weekly-table th{background:#f8fafc;color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;}
+  .weekly-table tr:last-child td{border-bottom:none;}
+  .weekly-project{font-weight:700;font-size:12.5px;}
+  .state-pill{display:inline-flex;align-items:center;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:700;background:#eef0f3;color:var(--muted);white-space:nowrap;}
+  .state-pill.action{background:var(--blue-bg);color:var(--blue);}
+  .state-pill.follow{background:var(--amber-bg);color:var(--amber);}
+  .state-pill.monitor{background:#eef7f2;color:var(--green);}
+  .state-pill.stable{background:#eef0f3;color:var(--muted);}
+  .control-flags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+  .flag{display:inline-flex;border-radius:999px;padding:2px 7px;font-size:10.5px;font-weight:700;background:#eef0f3;color:var(--muted);}
+  .flag.red{background:var(--red-bg);color:var(--red);}
+  .flag.amber{background:var(--amber-bg);color:var(--amber);}
+  .flag.blue{background:var(--blue-bg);color:var(--blue);}
+  .flag.green{background:var(--green-bg);color:var(--green);}
+
   .sectionhead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
   .sectionhead h2{font-size:14px;margin:0;color:var(--muted);font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
   .count{font-size:12px;color:var(--muted);}
@@ -104,7 +133,13 @@
   .summary-field.full{grid-column:1 / -1;}
   .summary-field label{display:block;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px;}
   .summary-field input{width:100%;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 8px;color:var(--text);background:#fafbfc;font-family:inherit;}
+  .summary-field select,.summary-field textarea{width:100%;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 8px;color:var(--text);background:#fafbfc;font-family:inherit;}
+  .summary-field textarea{resize:vertical;min-height:60px;}
   .summary-field input:focus{outline:none;border-color:#9bb8f5;background:#fff;}
+  .control-help{font-size:11.5px;color:var(--muted);line-height:1.4;margin:-2px 0 10px;}
+  .control-warning{background:var(--amber-bg);border:1px solid #f3d9a3;color:#8a5a00;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.4;margin-bottom:10px;}
+  .control-warning.red{background:var(--red-bg);border-color:#f3b9b9;color:#8a1f1f;}
+  .control-check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);}
   .ms-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f1f3f6;font-size:13px;}
   .ms-item:last-child{border-bottom:none;}
   .ms-dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex-shrink:0;}
@@ -263,12 +298,38 @@
   <div class="portfolio-filters" id="groupChips"></div>
   <div class="portfolio-filters" id="segmentChips"></div>
 
+  <div class="sectionhead">
+    <h2>Daily Direction</h2>
+    <div class="count" id="dailyCount"></div>
+  </div>
+  <div class="daily-list" id="dailyList"></div>
+
   <div class="attention-wrap">
     <div class="sectionhead">
       <h2>Attention Needed</h2>
       <div class="count" id="attentionCount"></div>
     </div>
     <div class="attention-list" id="attentionList"></div>
+  </div>
+
+  <div class="sectionhead">
+    <h2>Weekly Portfolio Control</h2>
+    <div class="count" id="weeklyCount"></div>
+  </div>
+  <div class="weekly-wrap">
+    <table class="weekly-table">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>State</th>
+          <th>Next Outcome</th>
+          <th>Owner</th>
+          <th>Review</th>
+          <th>Flags</th>
+        </tr>
+      </thead>
+      <tbody id="weeklyBody"></tbody>
+    </table>
   </div>
 
   <div class="sectionhead">
@@ -326,7 +387,8 @@ function defaultProjects(){
     tasks:{todo:0, progress:0, done:0},
     taskList:[],
     timelines:blankTimelines(meta.projectGroup),
-    risks:[]
+    risks:[],
+    control:blankControl(i+1)
   };
   });
 }
@@ -445,8 +507,50 @@ function normalizeProjects(projects){
       })),
       timelines,
       risks:(p.risks || []).map(r=>({id:r.id, title:r.title || "", severity:["high","medium","low"].includes(r.severity) ? r.severity : "low", owner:r.owner || "Unassigned", note:r.note || "", due:normalizeDateString(r.due, true)})),
+      control:normalizeControl(p.control, Number(p.id)),
     };
   }).filter(p=>Number.isFinite(p.id));
+}
+
+function blankControl(projectId){
+  return {
+    projectId,
+    nextOutcome:"",
+    nextMoveOwner:"",
+    operatingState:"Stable",
+    blocked:false,
+    blockerReason:"",
+    delayConsequence:"",
+    nextAction:"",
+    responseDate:"",
+    reviewDate:"",
+    escalationDate:"",
+    lastMovementDate:"",
+    evidence:"",
+    controlNotes:"",
+    escalationLevel:"",
+    lastEscalationAction:"",
+    eventTrigger:"",
+    overrideDaily:false,
+    updatedAt:""
+  };
+}
+
+function normalizeControl(control, projectId){
+  const incoming = control && typeof control==="object" ? control : {};
+  const stateValue = ["Action Needed","Follow-Up Needed","Monitor","Stable"].includes(incoming.operatingState) ? incoming.operatingState : "Stable";
+  return {
+    ...blankControl(projectId),
+    ...incoming,
+    projectId,
+    operatingState:stateValue,
+    blocked:incoming.blocked===true || incoming.blocked==="true" || incoming.blocked==="TRUE",
+    overrideDaily:incoming.overrideDaily===true || incoming.overrideDaily==="true" || incoming.overrideDaily==="TRUE",
+    responseDate:normalizeDateString(incoming.responseDate) || "",
+    reviewDate:normalizeDateString(incoming.reviewDate) || "",
+    escalationDate:normalizeDateString(incoming.escalationDate) || "",
+    lastMovementDate:normalizeDateString(incoming.lastMovementDate) || "",
+  };
 }
 function isDashboardProject(project){
   const name = String(project && project.name || "").trim();
@@ -576,7 +680,9 @@ function refreshAll(){
   renderGroupFilters();
   renderSegmentFilters();
   renderPhaseFilters();
+  renderDailyDirection();
   renderAttention();
+  renderWeeklyControl();
   renderGantt();
   renderBoard();
 }
@@ -722,6 +828,178 @@ function buildAttentionItems(){
     });
   });
   return items.sort((a,b)=>b.score-a.score || a.project.localeCompare(b.project));
+}
+
+function buildDailyRecommendations(){
+  const projects = groupFilteredProjects();
+  const picked = [];
+  const categories = [
+    {key:"field", label:"Field / Schedule", match:p=>/(field|schedule|access|install|turnover|handoff|rework)/i.test(controlText(p)) || p.rag==="red"},
+    {key:"approval", label:"Approval / Money", match:p=>/(approval|approve|contract|procure|payment|invoice|lead.?time|financial|cost|change order)/i.test(controlText(p))},
+    {key:"quiet", label:"Quiet Project", match:p=>true}
+  ];
+  categories.forEach(category=>{
+    const candidate = projects
+      .filter(p=>!picked.some(item=>item.project.id===p.id))
+      .filter(p=>category.match(p))
+      .map(p=>({project:p, category:category.label, score:dailyScore(p), reasons:dailyReasons(p)}))
+      .sort((a,b)=>b.score-a.score || a.project.name.localeCompare(b.project.name))[0];
+    if(candidate && (candidate.score>0 || category.key==="quiet")) picked.push(candidate);
+  });
+  return picked.slice(0,3);
+}
+
+function controlText(p){
+  const c = p.control || blankControl(p.id);
+  return [c.nextOutcome, c.delayConsequence, c.nextAction, c.blockerReason, c.controlNotes, c.lastEscalationAction].join(" ");
+}
+
+function dailyScore(p){
+  const c = p.control || blankControl(p.id);
+  let score = 0;
+  if(c.overrideDaily) score += 120;
+  if(c.blocked) score += 90;
+  if(c.operatingState==="Action Needed") score += 75;
+  if(c.operatingState==="Follow-Up Needed") score += 65;
+  if(c.operatingState==="Monitor") score += 15;
+  if(p.rag==="red") score += 45;
+  if(p.rag==="amber") score += 25;
+  if(isOverdue(c.escalationDate) || isOverdue(c.responseDate) || isOverdue(c.reviewDate)) score += 50;
+  const soonDate = [c.escalationDate, c.responseDate, c.reviewDate, p.startsAt, p.endsAt].filter(Boolean).map(daysFromNow).sort((a,b)=>a-b)[0];
+  if(Number.isFinite(soonDate) && soonDate>=0 && soonDate<=7) score += 25 - soonDate;
+  const quietDays = daysSince(c.lastMovementDate);
+  if(quietDays !== null && quietDays >= 14) score += Math.min(35, quietDays);
+  score += controlIssues(p).length * 8;
+  return score;
+}
+
+function dailyReasons(p){
+  const c = p.control || blankControl(p.id);
+  const reasons = [];
+  if(c.overrideDaily) reasons.push("You marked this for today.");
+  if(c.blocked) reasons.push(`Blocked${c.blockerReason ? `: ${c.blockerReason}` : ""}.`);
+  if(isOverdue(c.escalationDate)) reasons.push(`Escalation date passed ${formatDate(c.escalationDate)}.`);
+  else if(isOverdue(c.responseDate)) reasons.push(`Response date passed ${formatDate(c.responseDate)}.`);
+  else if(isOverdue(c.reviewDate)) reasons.push(`Review date passed ${formatDate(c.reviewDate)}.`);
+  if(c.delayConsequence) reasons.push(c.delayConsequence);
+  const quietDays = daysSince(c.lastMovementDate);
+  if(quietDays !== null && quietDays >= 14) reasons.push(`${quietDays} days since meaningful movement.`);
+  if(!reasons.length && p.rag==="red") reasons.push("Schedule or risk signals are off track.");
+  if(!reasons.length && p.rag==="amber") reasons.push("At-risk schedule or issue signals need a look.");
+  if(!reasons.length) reasons.push("Quiet enough to review deliberately.");
+  return reasons;
+}
+
+function renderDailyDirection(){
+  const items = buildDailyRecommendations();
+  const list = document.getElementById("dailyList");
+  document.getElementById("dailyCount").textContent = items.length ? `${items.length} outcome${items.length===1?"":"s"}` : "No direction yet";
+  if(!items.length){
+    list.innerHTML = `<div class="attention-empty">Add next outcomes, owners, and review dates to start getting daily recommendations.</div>`;
+    return;
+  }
+  list.innerHTML = items.map(item=>{
+    const p = item.project;
+    const c = p.control || blankControl(p.id);
+    return `
+      <article class="daily-card ${controlSeverity(p)}" data-id="${p.id}">
+        <div class="daily-type">${escapeHTML(item.category)}</div>
+        <div class="daily-project">${escapeHTML(p.name)}</div>
+        <div class="daily-outcome">${escapeHTML(c.nextOutcome || "No next outcome recorded")}</div>
+        <div class="daily-meta">${statePill(c.operatingState)} &nbsp; Owner: ${escapeHTML(c.nextMoveOwner || "Missing")}</div>
+        <div class="daily-meta">${escapeHTML(item.reasons.slice(0,2).join(" "))}</div>
+        <div class="daily-action">${escapeHTML(c.nextAction || "Record the exact next action.")}</div>
+        <div class="daily-meta">${reviewLabel(c)}</div>
+      </article>
+    `;
+  }).join("");
+  list.querySelectorAll(".daily-card").forEach(item=>{
+    item.addEventListener("click", ()=> openPanel(Number(item.dataset.id)));
+  });
+}
+
+function renderWeeklyControl(){
+  const projects = groupFilteredProjects()
+    .map(p=>({project:p, issues:controlIssues(p), score:dailyScore(p)}))
+    .sort((a,b)=>b.issues.length-a.issues.length || b.score-a.score || a.project.name.localeCompare(b.project.name));
+  document.getElementById("weeklyCount").textContent = `${projects.length} active project${projects.length===1?"":"s"}`;
+  document.getElementById("weeklyBody").innerHTML = projects.length ? projects.map(({project:p, issues})=>{
+    const c = p.control || blankControl(p.id);
+    return `
+      <tr data-id="${p.id}" class="weekly-row">
+        <td><div class="weekly-project">${escapeHTML(p.name)}</div><div class="daily-meta">${escapeHTML([p.projectGroup,p.segment].filter(Boolean).join(" / "))}</div></td>
+        <td>${statePill(c.operatingState)}${c.blocked ? `<div class="control-flags"><span class="flag red">Blocked</span></div>` : ""}</td>
+        <td>${escapeHTML(c.nextOutcome || "Missing")}</td>
+        <td>${escapeHTML(c.nextMoveOwner || "Missing")}</td>
+        <td>${escapeHTML(reviewLabel(c))}</td>
+        <td><div class="control-flags">${issues.length ? issues.map(issue=>`<span class="flag ${issue.kind}">${escapeHTML(issue.label)}</span>`).join("") : `<span class="flag green">Controlled</span>`}</div></td>
+      </tr>
+    `;
+  }).join("") : `<tr><td colspan="6" class="empty">No projects match your filters.</td></tr>`;
+  document.querySelectorAll(".weekly-row").forEach(row=>{
+    row.addEventListener("click", ()=> openPanel(Number(row.dataset.id)));
+  });
+}
+
+function controlIssues(p){
+  const c = p.control || blankControl(p.id);
+  const issues = [];
+  if(!c.nextOutcome && c.operatingState!=="Stable") issues.push({kind:"red", label:"No outcome"});
+  if(c.nextOutcome && isVagueOutcome(c.nextOutcome)) issues.push({kind:"red", label:"Vague outcome"});
+  if(!c.nextMoveOwner && c.operatingState!=="Stable") issues.push({kind:"red", label:"No owner"});
+  if(c.operatingState==="Monitor" && !c.reviewDate && !c.eventTrigger) issues.push({kind:"red", label:"Monitor needs review"});
+  if(c.reviewDate && isOverdue(c.reviewDate)) issues.push({kind:"amber", label:"Review overdue"});
+  if(c.responseDate && isOverdue(c.responseDate)) issues.push({kind:"amber", label:"Response overdue"});
+  if(c.escalationDate && isOverdue(c.escalationDate)) issues.push({kind:"amber", label:"Escalation overdue"});
+  if(c.blocked && !c.blockerReason) issues.push({kind:"red", label:"No blocker reason"});
+  if(!c.delayConsequence && c.operatingState!=="Stable") issues.push({kind:"blue", label:"No consequence"});
+  if(!c.nextAction && c.operatingState!=="Stable") issues.push({kind:"blue", label:"No action"});
+  const quietDays = daysSince(c.lastMovementDate);
+  if(quietDays !== null && quietDays >= 14) issues.push({kind:"amber", label:"Quiet"});
+  return issues;
+}
+
+function controlSeverity(p){
+  const c = p.control || blankControl(p.id);
+  if(c.blocked || p.rag==="red" || isOverdue(c.escalationDate) || isOverdue(c.responseDate)) return "red";
+  if(p.rag==="amber" || isOverdue(c.reviewDate) || controlIssues(p).some(i=>i.kind==="amber")) return "amber";
+  if(c.operatingState==="Monitor" || c.operatingState==="Stable") return "green";
+  return "";
+}
+
+function statePill(value){
+  const cls = value==="Action Needed" ? "action" : value==="Follow-Up Needed" ? "follow" : value==="Monitor" ? "monitor" : "stable";
+  return `<span class="state-pill ${cls}">${escapeHTML(value || "Stable")}</span>`;
+}
+
+function reviewLabel(c){
+  if(c.escalationDate) return `Escalate ${formatDate(c.escalationDate)}`;
+  if(c.responseDate) return `Response ${formatDate(c.responseDate)}`;
+  if(c.reviewDate) return `Review ${formatDate(c.reviewDate)}`;
+  if(c.eventTrigger) return `Trigger: ${c.eventTrigger}`;
+  return "No review date";
+}
+
+function isOverdue(value){
+  const d = parseDateValue(value);
+  if(!d) return false;
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  d.setHours(0,0,0,0);
+  return d < today;
+}
+
+function daysSince(value){
+  const d = parseDateValue(value);
+  if(!d) return null;
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  d.setHours(0,0,0,0);
+  return Math.floor((today-d)/(1000*60*60*24));
+}
+
+function isVagueOutcome(value){
+  return /^(follow up|check status|review email|touch base|circle back|send email|call|email|review)$/i.test(String(value || "").trim());
 }
 
 function renderAttention(){
@@ -1027,6 +1305,8 @@ function openPanel(id){
       <select id="newRiskSeverity"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select>
       <button class="add-btn" id="addRiskBtn" data-pid="${p.id}">Add</button>
     </div>`;
+  const c = p.control || blankControl(p.id);
+  const controlWarnings = controlIssues(p).map(issue=>issue.label).slice(0,4);
 
   panel.innerHTML = `
     <div class="panel-head">
@@ -1036,6 +1316,94 @@ function openPanel(id){
       <div style="margin-top:8px;" class="rag ${p.rag}"><span class="dot"></span>${ragLabel(p.rag)} · ${p.percent}% complete</div>
     </div>
     <div class="panel-body">
+      <div class="pb-section">
+        <h3>Outcome Control</h3>
+        <div class="control-help">Use this to decide what moves next. The next outcome should name the answer, approval, decision, date, or changed condition you need.</div>
+        ${controlWarnings.length ? `<div class="control-warning ${controlWarnings.some(w=>/No outcome|No owner|Monitor|Vague|blocker/i.test(w)) ? "red" : ""}">${escapeHTML(controlWarnings.join(" · "))}</div>` : ""}
+        <div class="summary-grid">
+          <div class="summary-field full">
+            <label for="controlNextOutcome">Next Outcome</label>
+            <textarea id="controlNextOutcome" class="control-input" data-pid="${p.id}" data-field="nextOutcome" placeholder="Decision, approval, date, or changed condition needed">${escapeHTML(c.nextOutcome)}</textarea>
+          </div>
+          <div class="summary-field">
+            <label for="controlOwner">Owner Of Next Move</label>
+            <input id="controlOwner" class="control-input" data-pid="${p.id}" data-field="nextMoveOwner" value="${escapeHTML(c.nextMoveOwner)}" placeholder="Person, company, or ATI role">
+          </div>
+          <div class="summary-field">
+            <label for="controlState">Operating State</label>
+            <select id="controlState" class="control-input" data-pid="${p.id}" data-field="operatingState">
+              <option value="Action Needed" ${c.operatingState==="Action Needed"?"selected":""}>Action Needed</option>
+              <option value="Follow-Up Needed" ${c.operatingState==="Follow-Up Needed"?"selected":""}>Follow-Up Needed</option>
+              <option value="Monitor" ${c.operatingState==="Monitor"?"selected":""}>Monitor</option>
+              <option value="Stable" ${c.operatingState==="Stable"?"selected":""}>Stable</option>
+            </select>
+          </div>
+          <div class="summary-field full">
+            <label for="controlConsequence">Consequence Of Delay</label>
+            <input id="controlConsequence" class="control-input" data-pid="${p.id}" data-field="delayConsequence" value="${escapeHTML(c.delayConsequence)}" placeholder="Schedule, field work, rework, access, procurement, approval, payment, client impact">
+          </div>
+          <div class="summary-field full">
+            <label for="controlAction">Exact Next Action</label>
+            <textarea id="controlAction" class="control-input" data-pid="${p.id}" data-field="nextAction" placeholder="Specific action to take next">${escapeHTML(c.nextAction)}</textarea>
+          </div>
+          <div class="summary-field">
+            <label for="controlResponse">Response Date</label>
+            <input id="controlResponse" type="date" class="control-input" data-pid="${p.id}" data-field="responseDate" value="${c.responseDate}">
+          </div>
+          <div class="summary-field">
+            <label for="controlReview">Review Date</label>
+            <input id="controlReview" type="date" class="control-input" data-pid="${p.id}" data-field="reviewDate" value="${c.reviewDate}">
+          </div>
+          <div class="summary-field">
+            <label for="controlEscalationDate">Escalation Date</label>
+            <input id="controlEscalationDate" type="date" class="control-input" data-pid="${p.id}" data-field="escalationDate" value="${c.escalationDate}">
+          </div>
+          <div class="summary-field">
+            <label for="controlMovement">Last Movement</label>
+            <input id="controlMovement" type="date" class="control-input" data-pid="${p.id}" data-field="lastMovementDate" value="${c.lastMovementDate}">
+          </div>
+          <div class="summary-field">
+            <label for="controlEscalationLevel">Escalation Level</label>
+            <select id="controlEscalationLevel" class="control-input" data-pid="${p.id}" data-field="escalationLevel">
+              <option value="" ${!c.escalationLevel?"selected":""}>None</option>
+              <option value="1" ${String(c.escalationLevel)==="1"?"selected":""}>1 Initial request</option>
+              <option value="2" ${String(c.escalationLevel)==="2"?"selected":""}>2 Follow-up date</option>
+              <option value="3" ${String(c.escalationLevel)==="3"?"selected":""}>3 Call or text</option>
+              <option value="4" ${String(c.escalationLevel)==="4"?"selected":""}>4 Decision authority</option>
+              <option value="5" ${String(c.escalationLevel)==="5"?"selected":""}>5 Consequence stated</option>
+              <option value="6" ${String(c.escalationLevel)==="6"?"selected":""}>6 ATI blocked</option>
+            </select>
+          </div>
+          <div class="summary-field">
+            <label for="controlTrigger">Event Trigger</label>
+            <input id="controlTrigger" class="control-input" data-pid="${p.id}" data-field="eventTrigger" value="${escapeHTML(c.eventTrigger)}" placeholder="Inspection passed, reply received">
+          </div>
+          <div class="summary-field full">
+            <label for="controlEscalationAction">Last Escalation Action</label>
+            <input id="controlEscalationAction" class="control-input" data-pid="${p.id}" data-field="lastEscalationAction" value="${escapeHTML(c.lastEscalationAction)}" placeholder="What was last done to move this">
+          </div>
+          <div class="summary-field full">
+            <label for="controlEvidence">Evidence / Source</label>
+            <input id="controlEvidence" class="control-input" data-pid="${p.id}" data-field="evidence" value="${escapeHTML(c.evidence)}" placeholder="Pulse, Procore, email, call note, or source reference">
+          </div>
+          <div class="summary-field full">
+            <label for="controlNotes">Notes</label>
+            <textarea id="controlNotes" class="control-input" data-pid="${p.id}" data-field="controlNotes" placeholder="Optional context">${escapeHTML(c.controlNotes)}</textarea>
+          </div>
+          <label class="control-check">
+            <input type="checkbox" class="control-input" data-pid="${p.id}" data-field="blocked" ${c.blocked ? "checked" : ""}>
+            Blocked
+          </label>
+          <label class="control-check">
+            <input type="checkbox" class="control-input" data-pid="${p.id}" data-field="overrideDaily" ${c.overrideDaily ? "checked" : ""}>
+            Include in Daily Direction
+          </label>
+          <div class="summary-field full">
+            <label for="controlBlocker">Blocker Reason</label>
+            <input id="controlBlocker" class="control-input" data-pid="${p.id}" data-field="blockerReason" value="${escapeHTML(c.blockerReason)}" placeholder="Named decision or action holding ATI">
+          </div>
+        </div>
+      </div>
       <div class="pb-section">
         <h3>Project Summary</h3>
         <div class="summary-grid">
@@ -1111,6 +1479,26 @@ function closePanel(){
 document.getElementById("overlay").addEventListener("click", closePanel);
 
 document.getElementById("panel").addEventListener("change", async e=>{
+  const controlInp = e.target.closest(".control-input");
+  if(controlInp){
+    const proj = PROJECTS.find(x=>x.id===Number(controlInp.dataset.pid));
+    const field = controlInp.dataset.field;
+    const allowed = ["nextOutcome","nextMoveOwner","operatingState","blocked","blockerReason","delayConsequence","nextAction","responseDate","reviewDate","escalationDate","lastMovementDate","evidence","controlNotes","escalationLevel","lastEscalationAction","eventTrigger","overrideDaily"];
+    if(!proj || !allowed.includes(field)) return;
+    const previous = proj.control[field];
+    const value = controlInp.type==="checkbox" ? controlInp.checked : controlInp.value.trim();
+    try{
+      proj.control[field] = value;
+      await postUpdate("updateProjectControl", {projectId: proj.id, field, value});
+    } catch(err){
+      console.error("Failed to save control field:", err);
+      proj.control[field] = previous;
+      showSyncBanner("error", err.message || "That control detail could not be saved. Refresh or try again in a moment.");
+    }
+    refreshAll();
+    openPanel(proj.id);
+    return;
+  }
   const taskInp = e.target.closest(".task-input");
   if(taskInp){
     const proj = PROJECTS.find(x=>x.id===Number(taskInp.dataset.pid));
@@ -1351,7 +1739,9 @@ document.getElementById("groupChips").addEventListener("click", e=>{
   renderSegmentFilters();
   renderPhaseFilters();
   renderKPIs();
+  renderDailyDirection();
   renderAttention();
+  renderWeeklyControl();
   renderGantt();
   renderBoard();
 });
@@ -1362,7 +1752,9 @@ document.getElementById("segmentChips").addEventListener("click", e=>{
   renderSegmentFilters();
   renderPhaseFilters();
   renderKPIs();
+  renderDailyDirection();
   renderAttention();
+  renderWeeklyControl();
   renderGantt();
   renderBoard();
 });
@@ -1417,7 +1809,8 @@ async function createNewProject(){
       rag:"pending", percent:0, startsAt:null, endsAt:null,
       milestones:[], tasks:{todo:0, progress:0, done:0}, taskList:[],
       timelines: blankTimelines(meta.projectGroup),
-      risks:[]
+      risks:[],
+      control:blankControl(maxId+1)
     });
   }
 

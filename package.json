@@ -2,6 +2,7 @@
   "name": "wpr-command-center",
   "private": true,
   "scripts": {
+    "test": "node tools/validate-control-rules.mjs && node hosted-command-center/tools/validate-hosted-data.mjs",
     "clasp": "clasp",
     "apps:login": "clasp login",
     "apps:status": "clasp status",

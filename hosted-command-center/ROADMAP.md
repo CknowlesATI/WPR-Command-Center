@@ -4,6 +4,10 @@ This roadmap is for the online/shared Command Center branch. It should not
 change the current Google Apps Script operating baseline unless Christen
 explicitly asks for that later.
 
+Operational default: ambiguous Command Center requests should be handled in
+`hosted-command-center/`, not in the original/internal root app. Use
+`../OPERATING_PROCEDURES.md` as the version map.
+
 ## Phase 1 - Static Shared Dashboard
 
 Status: in progress
