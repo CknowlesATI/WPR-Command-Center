@@ -468,6 +468,9 @@
   }
 
   .expand-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 32px;
     height: 32px;
     border: 1px solid var(--border);
@@ -661,6 +664,38 @@
   .source-link {
     color: var(--blue);
     text-decoration: none;
+  }
+
+  .source-chip {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 7px;
+    font-size: 10.5px;
+    font-weight: 850;
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  .source-chip.pulse {
+    background: #f0f6ff;
+    border-color: #b9d5ff;
+    color: #0b63ce;
+  }
+
+  .source-chip.procore {
+    background: #fff3e6;
+    border-color: #ffc98a;
+    color: #c45f00;
+  }
+
+  .source-chip.command,
+  .source-chip.other {
+    background: #f4f6f8;
+    border-color: var(--border);
+    color: var(--muted);
   }
 
   .add-task-row {
@@ -1440,8 +1475,9 @@ function taskSourceRank(source) {
 
 function renderTaskSource(task) {
   const label = taskSourceLabel(task.source);
-  if (task.externalUrl) return `<a class="source-link" href="${escapeAttribute(task.externalUrl)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
-  return escapeHtml(label);
+  const className = taskSourceGroup(task.source);
+  if (task.externalUrl) return `<a class="source-chip ${escapeAttribute(className)}" href="${escapeAttribute(task.externalUrl)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+  return `<span class="source-chip ${escapeAttribute(className)}">${escapeHtml(label)}</span>`;
 }
 
 function taskSourceLabel(source) {
