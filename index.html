@@ -2,1922 +2,1570 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Project Command Center</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WPR Command Center</title>
 <style>
-  :root{
-    --bg:#f4f6f9; --panel:#ffffff; --border:#e2e6ec; --text:#1f2937; --muted:#6b7280;
-    --green:#1d9a6c; --green-bg:#e7f7ef;
-    --amber:#c98a04; --amber-bg:#fff5e0;
-    --red:#d93636; --red-bg:#fdeaea;
-    --blue:#2f6fed; --blue-bg:#eaf1ff;
-    --shadow:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);}
-  header{background:var(--panel);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:5;}
-  header h1{font-size:18px;margin:0;font-weight:700;white-space:nowrap;}
-  header .sub{font-size:12px;color:var(--muted);margin-top:2px;}
-  .titleblock{display:flex;flex-direction:column;margin-right:8px;}
-  .search{flex:1;max-width:360px;position:relative;}
-  .search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:#fafbfc;}
-  .search svg{position:absolute;left:10px;top:9px;width:16px;height:16px;color:var(--muted);}
-  .chips{display:flex;gap:6px;flex-wrap:wrap;}
-  .chip{padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12.5px;cursor:pointer;color:var(--muted);font-weight:600;}
-  .chip.active{background:var(--text);color:#fff;border-color:var(--text);}
-  .newbtn{background:var(--blue);color:#fff;border:none;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
-  #refreshBtn{margin-left:auto;background:#fff;color:var(--text);border:1px solid var(--border);}
-  #refreshBtn:hover{border-color:#c7cedb;}
-
-  main{padding:22px 28px 60px;max-width:1400px;margin:0 auto;}
-
-  .sync-banner{background:var(--amber-bg);color:#8a5a00;border:1px solid #f3d9a3;border-radius:10px;padding:10px 16px;font-size:12.5px;margin-bottom:18px;}
-  .sync-banner.error{background:var(--red-bg);color:#8a1f1f;border-color:#f3b9b9;}
-  .sync-banner code{background:rgba(0,0,0,.06);padding:1px 5px;border-radius:4px;}
-
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:22px;}
-  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);}
-  .kpi .n{font-size:24px;font-weight:700;}
-  .kpi .l{font-size:12px;color:var(--muted);margin-top:2px;}
-  .kpi.green .n{color:var(--green);} .kpi.amber .n{color:var(--amber);} .kpi.red .n{color:var(--red);}
-
-  .attention-wrap{margin-bottom:24px;}
-  .attention-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
-  .attention-item{background:var(--panel);border:1px solid var(--border);border-left:4px solid #c8ccd4;border-radius:8px;padding:12px 14px;box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column;gap:5px;min-height:92px;}
-  .attention-item:hover{border-color:#c7cedb;}
-  .attention-item.red{border-left-color:var(--red);}
-  .attention-item.amber{border-left-color:var(--amber);}
-  .attention-item.blue{border-left-color:var(--blue);}
-  .attention-item.pending{border-left-color:#9aa2b1;}
-  .attention-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;}
-  .attention-title{font-size:13px;font-weight:700;line-height:1.25;}
-  .attention-kind{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);white-space:nowrap;}
-  .attention-project{font-size:12px;color:var(--muted);font-weight:600;}
-  .attention-detail{font-size:12px;color:var(--text);line-height:1.35;}
-  .attention-empty{background:var(--panel);border:1px dashed var(--border);border-radius:8px;padding:14px 16px;color:var(--muted);font-size:13px;}
-
-  .daily-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-bottom:24px;}
-  .daily-card{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;padding:13px 14px;box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:150px;}
-  .daily-card:hover{border-color:#c7cedb;}
-  .daily-card.red{border-left-color:var(--red);}
-  .daily-card.amber{border-left-color:var(--amber);}
-  .daily-card.green{border-left-color:var(--green);}
-  .daily-type{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);}
-  .daily-project{font-size:13px;font-weight:700;}
-  .daily-outcome{font-size:13px;line-height:1.35;}
-  .daily-meta{font-size:12px;color:var(--muted);line-height:1.4;}
-  .daily-action{font-size:12px;background:#f7f8fa;border:1px solid var(--border);border-radius:6px;padding:7px 8px;}
-  .weekly-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);margin-bottom:26px;overflow:hidden;}
-  .weekly-table{width:100%;border-collapse:collapse;font-size:12px;}
-  .weekly-table th,.weekly-table td{border-bottom:1px solid #eef1f5;padding:9px 10px;text-align:left;vertical-align:top;}
-  .weekly-table th{background:#f8fafc;color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;}
-  .weekly-table tr:last-child td{border-bottom:none;}
-  .weekly-project{font-weight:700;font-size:12.5px;}
-  .state-pill{display:inline-flex;align-items:center;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:700;background:#eef0f3;color:var(--muted);white-space:nowrap;}
-  .state-pill.action{background:var(--blue-bg);color:var(--blue);}
-  .state-pill.follow{background:var(--amber-bg);color:var(--amber);}
-  .state-pill.monitor{background:#eef7f2;color:var(--green);}
-  .state-pill.stable{background:#eef0f3;color:var(--muted);}
-  .control-flags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
-  .flag{display:inline-flex;border-radius:999px;padding:2px 7px;font-size:10.5px;font-weight:700;background:#eef0f3;color:var(--muted);}
-  .flag.red{background:var(--red-bg);color:var(--red);}
-  .flag.amber{background:var(--amber-bg);color:var(--amber);}
-  .flag.blue{background:var(--blue-bg);color:var(--blue);}
-  .flag.green{background:var(--green-bg);color:var(--green);}
-
-  .sectionhead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
-  .sectionhead h2{font-size:14px;margin:0;color:var(--muted);font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
-  .count{font-size:12px;color:var(--muted);}
-
-  .board{display:flex;flex-direction:column;gap:10px;}
-  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 18px;box-shadow:var(--shadow);cursor:pointer;display:grid;grid-template-columns:190px 90px 1fr 160px 170px 180px 110px;gap:16px;align-items:center;transition:border-color .1s;}
-  .card:hover{border-color:#c7cedb;}
-  .pname{font-weight:700;font-size:14px;line-height:1.3;}
-  .powner{font-size:12px;color:var(--muted);margin-top:2px;}
-  .rag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;justify-self:start;}
-  .rag.green{background:var(--green-bg);color:var(--green);}
-  .rag.amber{background:var(--amber-bg);color:var(--amber);}
-  .rag.red{background:var(--red-bg);color:var(--red);}
-  .rag.pending{background:#eef0f3;color:#6b7280;}
-  .rag .dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
-
-  .timeline{display:flex;flex-direction:column;gap:4px;}
-  .tl-top{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);}
-  .bar{height:6px;border-radius:4px;background:#eceff3;overflow:hidden;}
-  .bar > div{height:100%;border-radius:4px;}
-  .milestone{font-size:12px;color:var(--text);}
-  .milestone .due{color:var(--muted);}
-
-  .taskstatus{display:flex;flex-direction:column;gap:4px;}
-  .tstack{display:flex;height:8px;border-radius:4px;overflow:hidden;background:#eceff3;}
-  .tstack div{height:100%;}
-  .tlegend{font-size:11px;color:var(--muted);}
-
-  .risks{font-size:12px;}
-  .risk-badge{display:inline-flex;align-items:center;gap:5px;font-weight:700;}
-  .risk-badge.none{color:var(--muted);font-weight:500;}
-  .risk-badge.some{color:var(--amber);}
-  .risk-badge.many{color:var(--red);}
-  .approval-snapshot{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--muted);line-height:1.25;}
-  .approval-title{font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;font-weight:800;color:var(--muted);}
-  .approval-line{display:flex;justify-content:space-between;gap:8px;}
-  .approval-label{color:var(--muted);}
-  .approval-value{font-weight:700;color:var(--text);text-align:right;}
-  .approval-value.good{color:var(--green);}
-  .approval-value.watch{color:var(--amber);}
-  .approval-value.bad{color:var(--red);}
-
-  /* Slideover */
-  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;z-index:20;}
-  .overlay.open{display:block;}
-  .panel{position:fixed;top:0;right:0;height:100%;width:480px;max-width:92vw;background:var(--panel);box-shadow:-8px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .18s ease;z-index:21;overflow-y:auto;}
-  .panel.open{transform:translateX(0);}
-  .panel-head{padding:20px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--panel);}
-  .panel-head .close{position:absolute;top:18px;right:18px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);}
-  .panel-head h2{margin:0 0 4px;font-size:17px;}
-  .panel-head .meta{font-size:12.5px;color:var(--muted);}
-  .panel-body{padding:20px 22px;display:flex;flex-direction:column;gap:24px;}
-  .pb-section h3{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:0 0 10px;font-weight:700;}
-  .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .summary-field.full{grid-column:1 / -1;}
-  .summary-field label{display:block;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px;}
-  .summary-field input{width:100%;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 8px;color:var(--text);background:#fafbfc;font-family:inherit;}
-  .summary-field select,.summary-field textarea{width:100%;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 8px;color:var(--text);background:#fafbfc;font-family:inherit;}
-  .summary-field textarea{resize:vertical;min-height:60px;}
-  .summary-field input:focus{outline:none;border-color:#9bb8f5;background:#fff;}
-  .control-help{font-size:11.5px;color:var(--muted);line-height:1.4;margin:-2px 0 10px;}
-  .control-warning{background:var(--amber-bg);border:1px solid #f3d9a3;color:#8a5a00;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.4;margin-bottom:10px;}
-  .control-warning.red{background:var(--red-bg);border-color:#f3b9b9;color:#8a1f1f;}
-  .control-check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);}
-  .ms-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f1f3f6;font-size:13px;}
-  .ms-item:last-child{border-bottom:none;}
-  .ms-dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex-shrink:0;}
-  .ms-dot.done{background:var(--green);} .ms-dot.next{background:var(--blue);} .ms-dot.future{background:#c8ccd4;}
-  .ms-name{font-weight:600;}
-  .ms-date{color:var(--muted);font-size:12px;}
-  .task-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid #f1f3f6;}
-  .task-row:last-child{border-bottom:none;}
-  .edit-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #f1f3f6;}
-  .edit-row:last-child{border-bottom:none;}
-  .edit-row.risk-edit{grid-template-columns:1fr 92px 32px;align-items:start;}
-  .edit-row.milestone-edit{grid-template-columns:1fr 120px 84px 32px;}
-  .edit-row.task-edit{grid-template-columns:minmax(0,1fr) auto auto auto;align-items:start;}
-  .edit-row input,.edit-row select,.edit-row textarea,.add-row input,.add-row select,.add-row textarea{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:6px 7px;color:var(--text);background:#fafbfc;font-family:inherit;min-width:0;}
-  .edit-row textarea,.add-row textarea{resize:vertical;min-height:34px;}
-  .task-textarea{width:100%;line-height:1.35;white-space:pre-wrap;overflow:hidden;resize:none;overflow-wrap:anywhere;}
-  .edit-row .task-textarea,.add-row .task-textarea{min-height:34px;}
-  .source-link,.source-chip{display:inline-flex;align-items:center;justify-content:center;min-height:32px;border:1px solid var(--border);border-radius:6px;padding:0 8px;background:#fff;color:var(--muted);font-size:11px;font-weight:800;text-decoration:none;white-space:nowrap;}
-  .source-link:hover{border-color:#c7cedb;color:var(--text);}
-  .source-link.pulse,.source-chip.pulse{background:var(--blue-bg);border-color:#cbd9fb;color:var(--blue);}
-  .source-link.procore,.source-chip.procore{background:var(--amber-bg);border-color:#efd28f;color:var(--amber);}
-  .source-placeholder{visibility:hidden;}
-  .edit-main{display:flex;flex-direction:column;gap:6px;}
-  .add-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);}
-  .add-row.risk-add{grid-template-columns:1fr 92px auto;}
-  .add-row.milestone-add{grid-template-columns:1fr 120px 84px auto;}
-  .icon-btn{border:1px solid var(--border);background:#fff;color:var(--muted);border-radius:6px;min-width:32px;height:32px;cursor:pointer;font-size:13px;}
-  .icon-btn:hover{border-color:#c7cedb;color:var(--text);}
-  .add-btn{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
-  .tag{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600;}
-  .tag.todo{background:#eceff3;color:var(--muted);}
-  .tag.progress{background:var(--blue-bg);color:var(--blue);}
-  .tag.done{background:var(--green-bg);color:var(--green);}
-  .risk-item{border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px;}
-  .risk-item .rtop{display:flex;justify-content:space-between;font-weight:700;margin-bottom:4px;}
-  .sev{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:700;}
-  .sev.high{background:var(--red-bg);color:var(--red);}
-  .sev.medium{background:var(--amber-bg);color:var(--amber);}
-  .sev.low{background:#eceff3;color:var(--muted);}
-  .risk-item .rowner{color:var(--muted);font-size:12px;margin-top:4px;}
-  .rdue-row{display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);}
-  .rdue-label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
-  .due-input{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);background:#fafbfc;font-family:inherit;}
-  .rdue-row.overdue .due-input{border-color:var(--red);color:var(--red);background:var(--red-bg);}
-  .rdue-row.overdue .rdue-label{color:var(--red);}
-  .due-clear{border:none;background:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 6px;border-radius:4px;line-height:1;}
-  .due-clear:hover{background:#eceff3;color:var(--text);}
-  .empty{color:var(--muted);font-size:13px;font-style:italic;}
-
-  /* Portfolio Gantt strip */
-  .gantt-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px 14px;box-shadow:var(--shadow);margin-bottom:26px;overflow-x:auto;}
-  .gantt-grid-row{display:grid;grid-template-columns:190px 1fr;align-items:center;column-gap:12px;min-width:640px;}
-  .gantt-grid-row.header-row{margin-bottom:4px;}
-  .gantt-label{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;padding:5px 0;}
-  .gantt-label:hover{color:var(--blue);}
-  .gantt-months-track{position:relative;height:20px;}
-  .gantt-tick{position:absolute;top:0;font-size:11px;color:var(--muted);font-weight:600;transform:translateX(-2px);}
-  .gantt-track{position:relative;height:16px;background:#f4f6f9;border-radius:4px;margin:4px 0;}
-  .gantt-bar{position:absolute;top:0;height:16px;border-radius:4px;cursor:pointer;min-width:6px;}
-  .gantt-bar.green{background:var(--green);} .gantt-bar.amber{background:var(--amber);} .gantt-bar.red{background:var(--red);} .gantt-bar.pending{background:#9aa2b1;}
-  .gantt-today{position:absolute;top:-6px;bottom:-6px;width:2px;background:#111827;opacity:.35;}
-  .gantt-legend{display:flex;gap:16px;margin-top:10px;padding-left:190px;font-size:11.5px;color:var(--muted);flex-wrap:wrap;}
-  .gantt-legend .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle;}
-  .gantt-legend .dot.green{background:var(--green);} .gantt-legend .dot.amber{background:var(--amber);} .gantt-legend .dot.red{background:var(--red);}
-  .gantt-legend .today-dot{display:inline-block;width:2px;height:10px;background:#111827;opacity:.5;margin-right:6px;vertical-align:middle;}
-  .phase-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
-  .phase-chips .chip{display:inline-flex;align-items:center;gap:6px;}
-  .portfolio-filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px;}
-  .portfolio-filters .chip{border-radius:8px;}
-  .gantt-tracks{display:flex;flex-direction:column;gap:3px;}
-  .gantt-track.phase{height:7px;background:#f4f6f9;border-radius:3px;}
-  .gantt-track.single{height:16px;}
-  .gantt-bar.seg{height:7px;border-radius:3px;}
-  .gantt-empty-note{position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:10.5px;color:var(--muted);font-style:italic;white-space:nowrap;}
-
-  /* Per-project WPR timeline phases (detail panel) */
-  .tp-item{margin-bottom:14px;}
-  .tp-item:last-child{margin-bottom:0;}
-  .tp-head{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;margin-bottom:5px;}
-  .tp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-  .tp-dot.handover{background:#7c5cff;} .tp-bar.handover{background:#7c5cff;}
-  .tp-dot.prewire{background:#14b8a6;} .tp-bar.prewire{background:#14b8a6;}
-  .tp-dot.trim{background:#fb923c;} .tp-bar.trim{background:#fb923c;}
-  .tp-dot.install{background:var(--blue);} .tp-bar.install{background:var(--blue);}
-  .tp-note{font-weight:500;color:var(--muted);font-size:11px;}
-  .tp-dates{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
-  .tp-input{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);background:#fafbfc;font-family:inherit;}
-  .tp-status{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);margin:-1px 0 7px;}
-  .tp-status input{margin:0;}
-  .tp-sep{color:var(--muted);font-size:12px;}
-  .tp-track{position:relative;height:8px;background:#f4f6f9;border-radius:4px;}
-  .tp-bar{position:absolute;top:0;height:8px;border-radius:4px;}
-
-  /* Per-project visual timeline (detail panel) */
-  .pt-track{position:relative;height:14px;margin:10px 4px 4px;}
-  .pt-line{position:absolute;top:6px;left:0;right:0;height:2px;background:var(--border);}
-  .pt-dot{position:absolute;top:2px;width:10px;height:10px;border-radius:50%;transform:translateX(-50%);border:2px solid #fff;box-shadow:0 0 0 1px var(--border);}
-  .pt-dot.done{background:var(--green);} .pt-dot.next{background:var(--blue);} .pt-dot.future{background:#c8ccd4;}
-  .pt-today{position:absolute;top:-4px;width:2px;height:18px;background:#111827;opacity:.4;transform:translateX(-50%);}
-  .pt-range{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:2px 4px 14px;}
-
-  @media (max-width:1100px){
-    .card{grid-template-columns:1fr;gap:8px;}
-    .gantt-legend{padding-left:0;}
+  :root {
+    --bg: #f5f6f8;
+    --panel: #ffffff;
+    --text: #202936;
+    --muted: #657184;
+    --border: #dfe4eb;
+    --green: #18794e;
+    --green-bg: #e9f7ef;
+    --amber: #9b6500;
+    --amber-bg: #fff4d8;
+    --red: #bf2f2f;
+    --red-bg: #fde9e9;
+    --blue: #245fc8;
+    --blue-bg: #e9f0ff;
+    --shadow: 0 1px 2px rgba(17, 24, 39, .06), 0 8px 24px rgba(17, 24, 39, .06);
   }
 
-  /* New Project modal */
-  .np-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);background:var(--panel);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.22);padding:24px;width:380px;max-width:90vw;z-index:31;display:none;opacity:0;transition:opacity .15s, transform .15s;}
-  .np-modal.open{display:block;opacity:1;transform:translate(-50%,-50%) scale(1);}
-  .np-modal h3{margin:0 0 4px;font-size:16px;}
-  .np-sub{font-size:12.5px;color:var(--muted);margin-bottom:14px;}
-  .np-modal input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;box-sizing:border-box;}
-  .np-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;}
-  .np-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;}
-  .np-btn.np-cancel{background:#fff;border-color:var(--border);color:var(--text);}
-  .np-btn.np-create{background:var(--blue);color:#fff;}
-  .np-btn:disabled{opacity:.6;cursor:default;}
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(255, 255, 255, .96);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(220px, 360px);
+    gap: 16px;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px 22px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .search {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--text);
+    background: #fbfcfd;
+  }
+
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px 22px 48px;
+  }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .updated {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .sync-banner {
+    border: 1px solid #f3d9a3;
+    border-radius: 8px;
+    background: var(--amber-bg);
+    color: var(--amber);
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 650;
+    margin-bottom: 14px;
+  }
+
+  .sync-banner.error {
+    border-color: #f0b8b8;
+    background: var(--red-bg);
+    color: var(--red);
+  }
+
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 7px 11px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .chip.active {
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+  }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(130px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .kpi {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .kpi strong {
+    display: block;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .kpi span {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 650;
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin: 22px 0 10px;
+  }
+
+  .section-head h2 {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .count {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .attention-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .section-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .text-button {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    border-radius: 7px;
+    padding: 6px 9px;
+    font-size: 12px;
+    font-weight: 750;
+    cursor: pointer;
+  }
+
+  .text-button:hover {
+    border-color: #c9d1dc;
+  }
+
+  .attention-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--amber);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  .attention-card.red { border-left-color: var(--red); }
+  .attention-card.green { border-left-color: var(--green); }
+
+  .attention-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+
+  .attention-title {
+    margin-top: 7px;
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1.3;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .attention-meta {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .project-list {
+    display: grid;
+    gap: 7px;
+  }
+
+  .timeline-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+
+  .timeline-grid {
+    min-width: 680px;
+  }
+
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  .timeline-row:last-child {
+    border-bottom: 0;
+  }
+
+  .timeline-months {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 10px;
+    margin-bottom: 3px;
+  }
+
+  .month-track {
+    position: relative;
+    height: 18px;
+  }
+
+  .month-label {
+    position: absolute;
+    top: 0;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 750;
+  }
+
+  .timeline-name {
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .timeline-track {
+    position: relative;
+    height: 20px;
+    border-radius: 5px;
+    background: #f1f4f7;
+  }
+
+  .timeline-bar {
+    position: absolute;
+    top: 4px;
+    height: 12px;
+    min-width: 5px;
+    border-radius: 4px;
+  }
+
+  .timeline-bar.prewire { background: #14b8a6; }
+  .timeline-bar.trim { background: #fb923c; }
+  .timeline-bar.handover { background: #7c5cff; }
+  .timeline-bar.install { background: var(--blue); }
+  .timeline-today {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 2px;
+    background: #111827;
+    opacity: .38;
+  }
+
+  .timeline-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+
+  .legend-dot.prewire { background: #14b8a6; }
+  .legend-dot.trim { background: #fb923c; }
+  .legend-dot.handover { background: #7c5cff; }
+  .legend-dot.install { background: var(--blue); }
+
+  .project-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .project-card.has-signal {
+    border-left: 3px solid var(--amber);
+  }
+
+  .project-card.has-signal.red {
+    border-left-color: var(--red);
+  }
+
+  .project-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .project-summary:hover {
+    background: #fbfcfd;
+  }
+
+  .project-title {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .project-sub {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .health {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: max-content;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .health.compact {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .health::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .health.green { background: var(--green-bg); color: var(--green); }
+  .health.amber { background: var(--amber-bg); color: var(--amber); }
+  .health.red { background: var(--red-bg); color: var(--red); }
+  .health.pending { background: #eef1f5; color: var(--muted); }
+
+  .metric {
+    min-width: 0;
+  }
+
+  .metric strong {
+    display: block;
+    font-size: 18px;
+  }
+
+  .metric span {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .metric-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(44px, 1fr));
+    gap: 6px;
+  }
+
+  .metric-strip .metric {
+    border: 1px solid #edf0f4;
+    border-radius: 7px;
+    padding: 7px 8px;
+    background: #fbfcfd;
+  }
+
+  .expand-button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--muted);
+    border-radius: 7px;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .expand-button[aria-expanded="true"] {
+    color: var(--blue);
+    border-color: #cbd9fb;
+    background: var(--blue-bg);
+  }
+
+  .project-file {
+    border-top: 1px solid #edf0f4;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: minmax(160px, .65fr) minmax(220px, 1fr);
+    gap: 12px;
+    background: #fff;
+  }
+
+  .project-file[hidden] {
+    display: none;
+  }
+
+  .file-panel {
+    border: 1px solid #edf0f4;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fbfcfd;
+  }
+
+  .approval-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .approval-metric {
+    border: 1px solid #edf0f4;
+    border-radius: 7px;
+    padding: 7px 8px;
+    background: #fff;
+    min-width: 0;
+  }
+
+  .approval-metric strong {
+    display: block;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .approval-metric span {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--muted);
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .approval-metric.good strong { color: var(--green); }
+  .approval-metric.watch strong { color: var(--amber); }
+  .approval-metric.bad strong { color: var(--red); }
+
+  .file-label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .links {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 9px;
+  }
+
+  .links a {
+    color: var(--blue);
+    background: var(--blue-bg);
+    border: 1px solid #cbd9fb;
+    border-radius: 6px;
+    padding: 4px 7px;
+    font-size: 11px;
+    font-weight: 750;
+    text-decoration: none;
+  }
+
+  .compact-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .compact-field label {
+    color: var(--muted);
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .compact-field input,
+  .compact-field select,
+  .compact-field textarea,
+  .task-input,
+  .add-task-row textarea {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    font-size: 12px;
+    padding: 7px 8px;
+  }
+
+  .compact-field textarea,
+  .add-task-row textarea {
+    min-height: 44px;
+    resize: vertical;
+  }
+
+  .control-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .control-grid .full {
+    grid-column: 1 / -1;
+  }
+
+  .task-list {
+    display: grid;
+    gap: 7px;
+  }
+
+  .task-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 116px;
+    gap: 8px;
+    align-items: start;
+    border: 1px solid #edf0f4;
+    border-radius: 8px;
+    background: #fff;
+    padding: 8px;
+  }
+
+  .task-title {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .task-meta {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .source-link {
+    color: var(--blue);
+    text-decoration: none;
+  }
+
+  .add-task-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    margin-top: 9px;
+    padding-top: 9px;
+    border-top: 1px dashed var(--border);
+  }
+
+  .primary-button {
+    border: 0;
+    border-radius: 7px;
+    background: var(--blue);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  .primary-button:disabled,
+  .task-input:disabled,
+  .control-input:disabled {
+    opacity: .65;
+    cursor: default;
+  }
+
+  .project-signal {
+    display: block;
+  }
+
+  .project-file .project-signal {
+    grid-column: 1 / -1;
+  }
+
+  .signal-label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .signal-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .signal-pill {
+    display: grid;
+    grid-template-columns: 7px minmax(0, 1fr);
+    align-items: start;
+    gap: 6px;
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #fff;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .signal-pill.more {
+    background: #f5f7fa;
+    color: var(--muted);
+    grid-template-columns: 1fr;
+  }
+
+  .signal-pill.more::before {
+    display: none;
+  }
+
+  .signal-pill::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    flex: 0 0 auto;
+  }
+
+  .signal-pill.red {
+    background: var(--red-bg);
+    border-color: #f3c5c5;
+    color: var(--red);
+  }
+
+  .signal-pill.red::before {
+    background: var(--red);
+  }
+
+  .signal-pill.amber {
+    background: var(--amber-bg);
+    border-color: #efd28f;
+    color: var(--amber);
+  }
+
+  .empty {
+    border: 1px dashed var(--border);
+    background: #fff;
+    border-radius: 8px;
+    padding: 18px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  @media (max-width: 980px) {
+    .topbar {
+      grid-template-columns: 1fr;
+    }
+
+    .metric-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .project-file {
+      grid-template-columns: 1fr;
+    }
+
+    .kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attention-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .topbar,
+    main {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .kpi {
+      padding: 10px;
+    }
+
+    .kpi strong {
+      font-size: 20px;
+    }
+
+    .status-row {
+      margin-bottom: 10px;
+    }
+
+    .filters {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      width: 100%;
+      padding-bottom: 3px;
+    }
+
+    .chip {
+      white-space: nowrap;
+    }
+
+    .metric-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .project-signal {
+      gap: 7px;
+    }
+
+    .signal-list {
+      flex-direction: column;
+    }
+
+    .signal-pill {
+      border-radius: 7px;
+      align-items: flex-start;
+    }
+  }
 </style>
 </head>
 <body>
-
 <header>
-  <div class="titleblock">
-    <h1>Project Command Center</h1>
-    <div class="sub">Portfolio overview</div>
+  <div class="topbar">
+    <div>
+      <h1>WPR Command Center</h1>
+      <div class="subtitle">Shared project signal view for field teams</div>
+    </div>
+    <input class="search" id="searchInput" type="search" placeholder="Search project, area, team, phase">
   </div>
-  <div class="search">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input id="searchInput" placeholder="Search projects, groups, or teams…">
-  </div>
-  <div class="chips" id="filterChips">
-    <div class="chip active" data-filter="all">All</div>
-    <div class="chip" data-filter="green">On Track</div>
-    <div class="chip" data-filter="amber">At Risk</div>
-    <div class="chip" data-filter="red">Off Track</div>
-    <div class="chip" data-filter="pending">Not Started</div>
-  </div>
-  <button class="newbtn" id="refreshBtn" title="Reload from Google Sheet">↻ Refresh</button>
-  <button class="newbtn" id="newProjectBtn">+ New Project</button>
 </header>
-
-<div class="overlay" id="npOverlay"></div>
-<div class="np-modal" id="npModal">
-  <h3>New Project</h3>
-  <div class="np-sub">Adds a project with timeline phases ready for dates.</div>
-  <input type="text" id="npNameInput" placeholder="e.g. WPR Unit 13 or Aspen AV Install" maxlength="80">
-  <div class="np-actions">
-    <button class="np-btn np-cancel" id="npCancel">Cancel</button>
-    <button class="np-btn np-create" id="npCreate">Create</button>
-  </div>
-</div>
 
 <main>
   <div class="sync-banner" id="syncBanner" style="display:none;"></div>
-  <div class="kpis" id="kpis"></div>
-  <div class="portfolio-filters" id="groupChips"></div>
-  <div class="portfolio-filters" id="segmentChips"></div>
-
-  <div class="sectionhead">
-    <h2>Daily Direction</h2>
-    <div class="count" id="dailyCount"></div>
+  <div class="status-row">
+    <div class="updated" id="updatedText">Loading project data...</div>
+    <div class="filters" id="filters"></div>
   </div>
-  <div class="daily-list" id="dailyList"></div>
 
-  <div class="attention-wrap">
-    <div class="sectionhead">
+  <section class="kpis" id="kpis"></section>
+
+  <section>
+    <div class="section-head">
       <h2>Attention Needed</h2>
       <div class="count" id="attentionCount"></div>
     </div>
     <div class="attention-list" id="attentionList"></div>
-  </div>
+  </section>
 
-  <div class="sectionhead">
-    <h2>Weekly Portfolio Control</h2>
-    <div class="count" id="weeklyCount"></div>
-  </div>
-  <div class="weekly-wrap">
-    <table class="weekly-table">
-      <thead>
-        <tr>
-          <th>Project</th>
-          <th>State</th>
-          <th>Next Outcome</th>
-          <th>Owner</th>
-          <th>Review</th>
-          <th>Flags</th>
-        </tr>
-      </thead>
-      <tbody id="weeklyBody"></tbody>
-    </table>
-  </div>
-
-  <div class="sectionhead">
-    <h2>Schedule Timeline</h2>
-    <div class="count">Next 3 months, plotted by schedule dates — click a row to open it</div>
-  </div>
-  <div class="phase-chips" id="phaseChips">
-    <div class="chip active" data-phase="all">All Phases</div>
-    <div class="chip" data-phase="prewire"><span class="tp-dot prewire"></span>Pre-Wire</div>
-    <div class="chip" data-phase="trim"><span class="tp-dot trim"></span>Trim</div>
-    <div class="chip" data-phase="handover"><span class="tp-dot handover"></span>WPR Handover</div>
-    <div class="chip" data-phase="install"><span class="tp-dot install"></span>Install</div>
-  </div>
-  <div class="gantt-wrap">
-    <div class="gantt-grid-row header-row">
-      <div class="gantt-label"></div>
-      <div class="gantt-months-track" id="ganttMonths"></div>
+  <section>
+    <div class="section-head">
+      <h2>Schedule Timeline</h2>
+      <div class="count" id="timelineCount"></div>
     </div>
-    <div id="ganttBody"></div>
-    <div class="gantt-legend">
-      <span><span class="dot green"></span>On Track</span>
-      <span><span class="dot amber"></span>At Risk</span>
-      <span><span class="dot red"></span>Off Track</span>
-      <span><span class="today-dot"></span>Today</span>
+    <div class="timeline-wrap">
+      <div class="timeline-grid">
+        <div class="timeline-months">
+          <div></div>
+          <div class="month-track" id="timelineMonths"></div>
+        </div>
+        <div id="timelineRows"></div>
+      </div>
+      <div class="timeline-legend">
+        <span><span class="legend-dot prewire"></span>Pre-Wire</span>
+        <span><span class="legend-dot trim"></span>Trim</span>
+        <span><span class="legend-dot handover"></span>WPR Handover</span>
+        <span><span class="legend-dot install"></span>Install</span>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="sectionhead">
-    <h2>Projects</h2>
-    <div class="count" id="resultCount"></div>
-  </div>
-  <div class="board" id="board"></div>
+  <section>
+    <div class="section-head">
+      <h2>Projects</h2>
+      <div class="count" id="projectCount"></div>
+    </div>
+    <div class="project-list" id="projectList"></div>
+  </section>
 </main>
 
-<div class="overlay" id="overlay"></div>
-<div class="panel" id="panel"></div>
-
 <script>
-// Paste the URL from your Apps Script "Deploy > Web app" step here.
-// Until you do, the app runs on blank local data — nothing is saved between visits.
+const state = {
+  projects: [],
+  filter: "all",
+  query: "",
+  attentionExpanded: false,
+  expandedProjects: new Set(),
+  saving: false,
+  live: false
+};
+
 const API_URL = "https://script.google.com/macros/s/AKfycbwpmgVlqQUBd-T2tIwl-QynxBuPx8lut7LhRqZRnO6OO9JPEsi40E9AxOeZaMTGhVBSKw/exec";
 const SYNC_ENABLED = API_URL.indexOf("http") === 0;
+const COLLAPSED_ATTENTION_LIMIT = 6;
 
-function defaultProjects(){
-  return [
-    "WPR Unit 1","WPR Unit 2","WPR Unit 3","WPR Unit 4","WPR Unit 5","WPR Unit 6",
-    "WPR Unit 7","WPR Unit 8","WPR Unit 9","WPR Unit 10","WPR Unit 11","WPR Unit 12",
-    "WPR Condo 101","WPR Condo 102","WPR Condo 201","WPR Condo 202","WPR Condo Penthouse",
-  ].map((name,i)=>{
-    const meta = defaultProjectMeta(name);
-    return {
-    id:i+1, name, ...meta,
-    rag:"pending", percent:0, startsAt:null, endsAt:null,
-    milestones:[],
-    tasks:{todo:0, progress:0, done:0},
-    taskList:[],
-    timelines:blankTimelines(meta.projectGroup),
-    risks:[],
-    control:blankControl(i+1)
-  };
-  });
-}
+const healthLabels = {
+  green: "On Track",
+  amber: "At Risk",
+  red: "Needs Help",
+  pending: "Not Started"
+};
 
-let PROJECTS = [];
+const fallbackData = {
+  lastUpdated: "2026-07-27T09:00:00-06:00",
+  source: "fallback",
+  projects: []
+};
 
-function showSyncBanner(kind, message){
-  const el = document.getElementById("syncBanner");
-  if(kind==="none"){ el.style.display="none"; return; }
-  el.style.display="block";
-  el.classList.toggle("error", kind==="error");
-  if(kind==="unconfigured"){
-    el.innerHTML = `Working on local, unsaved data. Connect this to your Google Sheet by pasting your Apps Script URL into <code>API_URL</code> in the HTML file to save changes across devices.`;
-  } else if(kind==="error"){
-    el.textContent = message || `Couldn't reach the Google Sheet - showing local data instead. Changes won't be saved until the connection is back. Try Refresh in a moment.`;
-  }
-}
-
-async function postUpdate(action, payload){
-  if(!SYNC_ENABLED) return null;
-  const res = await fetch(API_URL, {
-    method:"POST",
-    headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body: JSON.stringify({action, ...payload})
-  });
-  if(!res.ok) throw new Error(`Save failed (${res.status})`);
-  const json = await res.json();
-  if(json && json.ok === false) throw new Error(json.error || "Save failed");
-  const data = Array.isArray(json) ? json : json.data;
-  if(Array.isArray(data)) PROJECTS = normalizeProjects(data);
-  showSyncBanner("none");
-  return data;
-}
-
-async function loadProjects(){
-  if(!SYNC_ENABLED){
-    PROJECTS = normalizeProjects(defaultProjects());
-    showSyncBanner("unconfigured");
-  } else {
-    try{
-      const res = await fetch(API_URL);
-      if(!res.ok) throw new Error(`Load failed (${res.status})`);
-      const json = await res.json();
-      PROJECTS = normalizeProjects(Array.isArray(json) ? json : json.data);
+async function loadData() {
+  if (SYNC_ENABLED) {
+    try {
+      const response = await fetch(API_URL, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Live API unavailable (${response.status})`);
+      const data = await response.json();
+      const projects = Array.isArray(data) ? data : data.data;
+      if (!Array.isArray(projects)) throw new Error("Live API returned no project list");
+      state.projects = normalizeProjects(projects);
+      state.live = true;
+      document.getElementById("updatedText").textContent = "Live Command Center data";
       showSyncBanner("none");
-    } catch(err){
-      console.error("Failed to load from Google Sheet:", err);
-      PROJECTS = normalizeProjects(defaultProjects());
-      showSyncBanner("error");
+      render();
+      return;
+    } catch (error) {
+      console.error("Live API load failed:", error);
+      state.live = false;
+      showSyncBanner("error", "Live editing is unavailable right now. Showing the latest hosted snapshot.");
     }
   }
-  refreshAll();
+
+  try {
+    const response = await fetch("data/projects.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Data file unavailable");
+    const data = await response.json();
+    state.projects = normalizeProjects(data.projects);
+    document.getElementById("updatedText").textContent = `Last updated ${formatDateTime(data.lastUpdated)} from ${data.source || "Command Center"}`;
+  } catch (error) {
+    state.projects = normalizeProjects(fallbackData.projects);
+    document.getElementById("updatedText").textContent = "Project data could not be loaded.";
+  }
+  render();
 }
 
-const state = { filter:"all", group:"all", segment:"all", search:"", ganttPhase:"all" };
+function showSyncBanner(kind, message = "") {
+  const banner = document.getElementById("syncBanner");
+  if (kind === "none") {
+    banner.style.display = "none";
+    banner.textContent = "";
+    return;
+  }
+  banner.style.display = "block";
+  banner.classList.toggle("error", kind === "error");
+  banner.textContent = message;
+}
 
-const PHASES = [
-  {key:"prewire", label:"Pre-Wire"},
-  {key:"trim", label:"Trim"},
-  {key:"handover", label:"WPR Handover (Big-D → WPR)"},
-  {key:"install", label:"Install"},
-];
-function phaseTemplateFor(project){
-  return project && project.projectGroup==="WPR" ? PHASES : PHASES.filter(p=>p.key!=="handover");
-}
-const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-function escapeHTML(value){
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
-}
-function clampPercent(value){
-  const n = Number(value);
-  return Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : 0;
-}
-function normalizeDateString(value, allowDateTime=false){
-  if(!value) return null;
-  const text = String(value).trim();
-  if(/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
-  if(allowDateTime && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(text)) return text.slice(0,16);
-  const d = parseDateValue(text);
-  if(!d) return null;
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth()+1).padStart(2,"0");
-  const dd = String(d.getDate()).padStart(2,"0");
-  return `${yyyy}-${mm}-${dd}`;
-}
-function normalizeProjects(projects){
-  return (Array.isArray(projects) ? projects : []).filter(isDashboardProject).map(p=>{
-    const meta = defaultProjectMeta(p.name);
-    const projectGroup = p.projectGroup || meta.projectGroup;
-    const timelines = phaseTemplateFor({projectGroup}).map(def=>{
-      const found = (p.timelines || []).find(t=>t.key===def.key) || {};
-      return {key:def.key, label:found.label || def.label, start:normalizeDateString(found.start), end:normalizeDateString(found.end), status:found.status==="complete" ? "complete" : ""};
+async function postUpdate(action, payload) {
+  if (!state.live || !SYNC_ENABLED) throw new Error("Live editing is not connected.");
+  state.saving = true;
+  renderProjects();
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action, ...payload })
     });
-    return {
-      id:Number(p.id),
-      name:p.name || "Untitled project",
-      projectGroup,
-      segment:p.segment || meta.segment,
-      externalTeam:p.externalTeam || meta.externalTeam,
-      rag:p.rag || "pending",
-      percent:clampPercent(p.percent),
-      startsAt:normalizeDateString(p.startsAt),
-      endsAt:normalizeDateString(p.endsAt),
-      milestones:(p.milestones || []).map(m=>({id:m.id, name:m.name || "", date:normalizeDateString(m.date) || m.date || "", state:m.state || "future"})),
-      tasks:{
-        todo:Number(p.tasks && p.tasks.todo) || 0,
-        progress:Number(p.tasks && p.tasks.progress) || 0,
-        done:Number(p.tasks && p.tasks.done) || 0,
-      },
-      taskList:(p.taskList || []).map(t=>({
-        id:t.id,
-        name:t.name || "",
-        status:["todo","progress","done"].includes(t.status) ? t.status : "todo",
-        source:normalizeTaskSource(t.source),
-        externalUrl:normalizeUrl(t.externalUrl || t.url || t.link)
-      })),
-      timelines,
-      risks:(p.risks || []).map(r=>({id:r.id, title:r.title || "", severity:["high","medium","low"].includes(r.severity) ? r.severity : "low", owner:r.owner || "Unassigned", note:r.note || "", due:normalizeDateString(r.due, true)})),
-      control:normalizeControl(p.control, Number(p.id)),
-    };
-  }).filter(p=>Number.isFinite(p.id));
+    if (!response.ok) throw new Error(`Save failed (${response.status})`);
+    const data = await response.json();
+    if (data && data.ok === false) throw new Error(data.error || "Save failed");
+    const projects = Array.isArray(data) ? data : data.data;
+    if (Array.isArray(projects)) state.projects = normalizeProjects(projects);
+    showSyncBanner("none");
+  } finally {
+    state.saving = false;
+    render();
+  }
 }
 
-function blankControl(projectId){
+function normalizeProjects(projects) {
+  return Array.isArray(projects) ? projects.filter(isDashboardProject).map(project => ({
+    id: project.id || project.name,
+    name: project.name || "Untitled project",
+    area: project.area || project.segment || project.projectGroup || "Unassigned",
+    team: project.team || project.externalTeam || "No team listed",
+    health: normalizeHealth(project.health || project.rag),
+    phase: project.phase || currentProjectPhase(project.timelines) || "Not scheduled",
+    startDate: project.startDate || project.startsAt || null,
+    endDate: project.endDate || project.endsAt || null,
+    openTasks: Number(project.openTasks) || openTaskCount(project),
+    overdueTasks: Number(project.overdueTasks) || 0,
+    highPriorityTasks: Number(project.highPriorityTasks) || 0,
+    risks: Number(project.risks) || (Array.isArray(project.risks) ? project.risks.length : 0),
+    nextHandoff: project.nextHandoff || null,
+    approvalsPayments: normalizeApprovalsPayments(project.approvalsPayments, project.control),
+    control: normalizeControl(project.control, project.id),
+    taskList: normalizeTaskList(project.taskList),
+    attention: Array.isArray(project.attention) ? project.attention : [],
+    links: Array.isArray(project.links) ? project.links : [],
+    timelines: Array.isArray(project.timelines) ? project.timelines.map(item => ({
+      key: item.key || "",
+      label: item.label || "",
+      start: item.start || null,
+      end: item.end || null,
+      status: item.status || ""
+    })) : []
+  })) : [];
+}
+
+function normalizeHealth(value) {
+  return ["green", "amber", "red", "pending"].includes(value) ? value : "pending";
+}
+
+function normalizeApprovalsPayments(value, control = {}) {
+  const incoming = value && typeof value === "object" ? value : {};
+  const source = control && typeof control === "object" ? control : {};
   return {
-    projectId,
-    nextOutcome:"",
-    nextMoveOwner:"",
-    operatingState:"Stable",
-    blocked:false,
-    blockerReason:"",
-    delayConsequence:"",
-    nextAction:"",
-    responseDate:"",
-    reviewDate:"",
-    escalationDate:"",
-    lastMovementDate:"",
-    evidence:"",
-    controlNotes:"",
-    escalationLevel:"",
-    lastEscalationAction:"",
-    eventTrigger:"",
-    overrideDaily:false,
-    contractStatus:"",
-    depositStatus:"",
-    changeOrderStatus:"",
-    updatedAt:""
+    contract: String(incoming.contract || source.contractStatus || "").trim(),
+    deposit: String(incoming.deposit || source.depositStatus || "").trim(),
+    changeOrders: String(incoming.changeOrders || source.changeOrderStatus || "").trim()
   };
 }
 
-function normalizeControl(control, projectId){
-  const incoming = control && typeof control==="object" ? control : {};
-  const stateValue = ["Action Needed","Follow-Up Needed","Monitor","Stable"].includes(incoming.operatingState) ? incoming.operatingState : "Stable";
+function normalizeControl(value, projectId) {
+  const incoming = value && typeof value === "object" ? value : {};
   return {
-    ...blankControl(projectId),
-    ...incoming,
     projectId,
-    operatingState:stateValue,
-    blocked:incoming.blocked===true || incoming.blocked==="true" || incoming.blocked==="TRUE",
-    overrideDaily:incoming.overrideDaily===true || incoming.overrideDaily==="true" || incoming.overrideDaily==="TRUE",
-    contractStatus:normalizeApprovalStatus(incoming.contractStatus, ["", "Not Sent", "Sent", "Accepted", "Needs Review"]),
-    depositStatus:normalizeApprovalStatus(incoming.depositStatus, ["", "Not Required", "Pending", "Paid", "Overdue"]),
-    changeOrderStatus:normalizeApprovalStatus(incoming.changeOrderStatus, ["", "None", "Pending", "Approved", "Needs Review"]),
-    responseDate:normalizeDateString(incoming.responseDate) || "",
-    reviewDate:normalizeDateString(incoming.reviewDate) || "",
-    escalationDate:normalizeDateString(incoming.escalationDate) || "",
-    lastMovementDate:normalizeDateString(incoming.lastMovementDate) || "",
+    operatingState: ["Action Needed", "Follow-Up Needed", "Monitor", "Stable"].includes(incoming.operatingState) ? incoming.operatingState : "Stable",
+    nextOutcome: String(incoming.nextOutcome || "").trim(),
+    nextMoveOwner: String(incoming.nextMoveOwner || "").trim(),
+    nextAction: String(incoming.nextAction || "").trim(),
+    reviewDate: dateOnly(incoming.reviewDate) || "",
+    responseDate: dateOnly(incoming.responseDate) || "",
+    blocked: incoming.blocked === true || incoming.blocked === "true" || incoming.blocked === "TRUE",
+    blockerReason: String(incoming.blockerReason || "").trim(),
+    contractStatus: String(incoming.contractStatus || "").trim(),
+    depositStatus: String(incoming.depositStatus || "").trim(),
+    changeOrderStatus: String(incoming.changeOrderStatus || "").trim()
   };
 }
-function normalizeApprovalStatus(value, allowed){
-  const text = String(value || "").trim();
-  return allowed.includes(text) ? text : "";
+
+function normalizeTaskList(tasks) {
+  return Array.isArray(tasks) ? tasks.map(task => ({
+    id: task.id,
+    name: String(task.name || "").trim(),
+    status: ["todo", "progress", "done"].includes(task.status) ? task.status : "todo",
+    source: String(task.source || "").trim(),
+    externalUrl: String(task.externalUrl || task.url || task.link || "").trim()
+  })).filter(task => task.name) : [];
 }
-function isDashboardProject(project){
+
+function openTaskCount(project) {
+  if (project.tasks && typeof project.tasks === "object") {
+    return (Number(project.tasks.todo) || 0) + (Number(project.tasks.progress) || 0);
+  }
+  return normalizeTaskList(project.taskList).filter(task => task.status !== "done").length;
+}
+
+function currentProjectPhase(timelines = []) {
+  const open = (Array.isArray(timelines) ? timelines : []).find(item => item && item.status !== "complete");
+  return open ? open.label : "";
+}
+
+function isDashboardProject(project) {
   const name = String(project && project.name || "").trim();
-  const group = String(project && project.projectGroup || "").trim();
-  const segment = String(project && project.segment || "").trim();
-  const team = String(project && project.externalTeam || "").trim();
+  const area = String(project && (project.area || project.segment || project.projectGroup) || "").trim();
+  const team = String(project && (project.team || project.externalTeam) || "").trim();
   return !(
     name === "Procore Observation Review" ||
-    group === "Unmapped Procore" ||
-    segment === "Unmapped Procore" ||
-    (team === "Procore" && (group === "Unmapped Procore" || segment === "Unmapped Procore"))
+    area === "Unmapped Procore" ||
+    (team === "Procore" && area === "Unmapped Procore")
   );
 }
-function defaultProjectMeta(name){
-  const text = String(name || "");
-  const unitMatch = text.match(/WPR Unit\s+(\d+)/i);
-  if(unitMatch){
-    const unit = Number(unitMatch[1]);
-    if(unit>=1 && unit<=6) return {projectGroup:"WPR", segment:"Units 1-6", externalTeam:"Big-D Units 1-6"};
-    if(unit>=7 && unit<=12) return {projectGroup:"WPR", segment:"Units 7-12", externalTeam:"Big-D Units 7-12"};
-  }
-  if(/WPR Condo|Penthouse/i.test(text)) return {projectGroup:"WPR", segment:"Condos/Penthouse", externalTeam:"Big-D Condos/Penthouse"};
-  if(/Skier Services|WPR.*Skier|Skier.*WPR/i.test(text)) return {projectGroup:"WPR", segment:"Skier Services", externalTeam:"Big-D Skier Services"};
-  if(/^WPR\b/i.test(text)) return {projectGroup:"WPR", segment:"General", externalTeam:""};
-  return {projectGroup:"Other Projects", segment:"", externalTeam:""};
-}
-function parseDateValue(value){
-  if(!value) return null;
-  const text = String(value).trim();
-  let match = text.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/);
-  if(match) return new Date(Number(match[1]), Number(match[2])-1, Number(match[3]), Number(match[4]||0), Number(match[5]||0));
-  match = text.replace(".","").match(/^([A-Za-z]{3})\s+(\d{1,2})(?:,\s*(\d{4}))?$/);
-  if(match && MONTHS[match[1]] !== undefined){
-    return new Date(Number(match[3]) || new Date().getFullYear(), MONTHS[match[1]], Number(match[2]));
-  }
-  const d = new Date(text);
-  return Number.isNaN(d.getTime()) ? null : d;
-}
-function formatDate(value){
-  const d = parseDateValue(value);
-  return d ? d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "";
-}
-function formatDateRange(start, end){
-  return start && end ? `${formatDate(start)} - ${formatDate(end)}` : "Not scheduled yet";
-}
-function normalizeTaskSource(value){
-  const text = String(value || "").trim().toLowerCase();
-  if(text==="pulse") return "pulse";
-  if(text==="procore" || text==="procore-review" || text==="procore-pdf") return "procore";
-  return text ? "command-center" : "";
-}
-function taskSourceLabel(source){
-  if(source==="pulse") return "Pulse";
-  if(source==="procore") return "Procore";
-  if(source==="command-center") return "Command Center";
-  return "";
-}
-function normalizeUrl(value){
-  const text = String(value || "").trim();
-  if(!/^https?:\/\//i.test(text)) return "";
-  try{ return new URL(text).href; } catch { return ""; }
-}
-function isPhaseComplete(t){
-  return t && t.status==="complete";
-}
-function daysFromNow(date){
-  const start = new Date();
-  start.setHours(0,0,0,0);
-  const target = new Date(date);
-  target.setHours(0,0,0,0);
-  return Math.round((target-start)/86400000);
-}
-function groupFilteredProjects(){
-  return PROJECTS.filter(p=>{
-    if(state.group!=="all" && p.projectGroup!==state.group) return false;
-    if(state.segment!=="all" && p.segment!==state.segment) return false;
-    return true;
-  });
-}
-function getPortfolioRange(){
-  const now = new Date();
-  const min = new Date(now.getFullYear(), now.getMonth(), 1);
-  const max = new Date(now.getFullYear(), now.getMonth()+3, 0);
-  return {min,max};
-}
 
-function computeRag(p){
-  const timelines = phaseTemplateFor(p).map(def=>p.timelines.find(t=>t.key===def.key)).filter(Boolean);
-  const activeTimelines = timelines.filter(t=>!isPhaseComplete(t));
-  const defined = activeTimelines.filter(t=>t.start && t.end);
-  if(defined.length===0) return "pending";
-
-  const now = new Date();
-  const overdueHigh = p.risks.some(r=>r.severity==="high" && r.due && parseDateValue(r.due) < now);
-  const overdueMedium = p.risks.some(r=>r.severity==="medium" && r.due && parseDateValue(r.due) < now);
-
-  const install = timelines.find(t=>t.key==="install");
-  const openTasks = p.tasks.todo + p.tasks.progress;
-  const installEnd = install && parseDateValue(install.end);
-  const installOverdue = install && !isPhaseComplete(install) && installEnd && now > installEnd && openTasks>0;
-
-  if(overdueHigh || installOverdue) return "red";
-
-  const seqKeys = ["prewire","trim","handover","install"];
-  const seq = seqKeys.map(k=>timelines.find(t=>t.key===k)).filter(Boolean);
-  let gapFound = false;
-  for(let i=0;i<seq.length-1;i++){
-    const cur = seq[i], next = seq[i+1];
-    const curEnd = cur && parseDateValue(cur.end);
-    if(cur && !isPhaseComplete(cur) && cur.start && curEnd && now > curEnd && next && !isPhaseComplete(next) && !next.start){
-      gapFound = true;
-      break;
-    }
-  }
-
-  if(overdueMedium || gapFound) return "amber";
-  return "green";
-}
-
-function refreshRagStatuses(){
-  PROJECTS.forEach(p=>{ p.rag = computeRag(p); });
-}
-
-function refreshAll(){
-  refreshRagStatuses();
-  renderKPIs();
-  renderGroupFilters();
-  renderSegmentFilters();
-  renderPhaseFilters();
-  renderDailyDirection();
+function render() {
+  renderFilters();
+  renderKpis();
   renderAttention();
-  renderWeeklyControl();
-  renderGantt();
-  renderBoard();
+  renderTimeline();
+  renderProjects();
 }
 
-function ragLabel(r){ return r==="green" ? "On Track" : r==="amber" ? "At Risk" : r==="red" ? "Off Track" : "Not Started"; }
-function barColor(r){ return r==="green" ? "var(--green)" : r==="amber" ? "var(--amber)" : r==="red" ? "var(--red)" : "#9aa2b1"; }
+function visibleProjects() {
+  const query = state.query.trim().toLowerCase();
+  return state.projects.filter(project => {
+    if (state.filter !== "all" && project.health !== state.filter) return false;
+    if (!query) return true;
+    return [
+      project.name,
+      project.area,
+      project.team,
+      project.phase,
+      project.approvalsPayments.contract,
+      project.approvalsPayments.deposit,
+      project.approvalsPayments.changeOrders,
+      project.control.nextOutcome,
+      project.control.nextMoveOwner,
+      project.taskList.map(task => task.name).join(" ")
+    ].join(" ").toLowerCase().includes(query);
+  });
+}
 
-function renderKPIs(){
-  const scoped = groupFilteredProjects();
-  const total = scoped.length;
-  const green = scoped.filter(p=>p.rag==="green").length;
-  const amber = scoped.filter(p=>p.rag==="amber").length;
-  const red = scoped.filter(p=>p.rag==="red").length;
-  const pending = scoped.filter(p=>p.rag==="pending").length;
-  const risks = scoped.reduce((a,p)=>a+p.risks.length,0);
-  const highRisks = scoped.reduce((a,p)=>a+p.risks.filter(r=>r.severity==="high").length,0);
-  const acceptedContracts = scoped.filter(p=>approvalControl(p).contractStatus==="Accepted").length;
-  const depositsOpen = scoped.filter(p=>["Pending","Overdue"].includes(approvalControl(p).depositStatus)).length;
-  const coNeedsReview = scoped.filter(p=>["Pending","Needs Review"].includes(approvalControl(p).changeOrderStatus)).length;
-  const kpis = [
-    {n:total, l:"Total Projects", cls:""},
-    {n:green, l:"On Track", cls:"green"},
-    {n:amber, l:"At Risk", cls:"amber"},
-    {n:red, l:"Off Track", cls:"red"},
-    {n:pending, l:"Not Started", cls:""},
-    {n:acceptedContracts, l:"Contracts Accepted", cls:"green"},
-    {n:depositsOpen, l:"Deposits Open", cls:depositsOpen ? "amber" : ""},
-    {n:coNeedsReview, l:"Change Orders Need Review", cls:coNeedsReview ? "amber" : ""},
-    {n:risks, l:"Open Risks/Issues", cls:""},
-    {n:highRisks, l:"High-Severity Risks", cls:"red"},
+function renderFilters() {
+  const options = [
+    ["all", "All"],
+    ["red", "Needs Help"],
+    ["amber", "At Risk"],
+    ["green", "On Track"],
+    ["pending", "Not Started"]
   ];
-  document.getElementById("kpis").innerHTML = kpis.map(k=>`
-    <div class="kpi ${k.cls}"><div class="n">${k.n}</div><div class="l">${k.l}</div></div>
-  `).join("");
+  document.getElementById("filters").innerHTML = options.map(([value, label]) => (
+    `<button class="chip ${state.filter === value ? "active" : ""}" data-filter="${value}" type="button">${label}</button>`
+  )).join("");
 }
 
-function renderGroupFilters(){
-  const groups = [...new Set(PROJECTS.map(p=>p.projectGroup).filter(Boolean))].sort();
-  const el = document.getElementById("groupChips");
-  el.innerHTML = [
-    `<div class="chip ${state.group==="all"?"active":""}" data-group="all">All Groups</div>`,
-    ...groups.map(group=>`<div class="chip ${state.group===group?"active":""}" data-group="${escapeHTML(group)}">${escapeHTML(group)}</div>`)
-  ].join("");
-}
-
-function renderSegmentFilters(){
-  const source = state.group==="all" ? PROJECTS : PROJECTS.filter(p=>p.projectGroup===state.group);
-  const segments = [...new Set(source.map(p=>p.segment).filter(Boolean))].sort();
-  const el = document.getElementById("segmentChips");
-  if(!segments.length){
-    el.innerHTML = "";
-    state.segment = "all";
-    return;
-  }
-  if(state.segment!=="all" && !segments.includes(state.segment)) state.segment = "all";
-  el.innerHTML = [
-    `<div class="chip ${state.segment==="all"?"active":""}" data-segment="all">All Segments</div>`,
-    ...segments.map(segment=>`<div class="chip ${state.segment===segment?"active":""}" data-segment="${escapeHTML(segment)}">${escapeHTML(segment)}</div>`)
-  ].join("");
-}
-
-function renderPhaseFilters(){
-  const visibleProjects = groupFilteredProjects();
-  const phaseOptions = PHASES.filter(phase=>phase.key!=="handover" || visibleProjects.some(p=>p.projectGroup==="WPR"));
-  if(!phaseOptions.some(p=>p.key===state.ganttPhase)) state.ganttPhase = "all";
-  const el = document.getElementById("phaseChips");
-  el.innerHTML = [
-    `<div class="chip ${state.ganttPhase==="all"?"active":""}" data-phase="all">All Phases</div>`,
-    ...phaseOptions.map(phase=>`<div class="chip ${state.ganttPhase===phase.key?"active":""}" data-phase="${phase.key}"><span class="tp-dot ${phase.key}"></span>${escapeHTML(phase.label)}</div>`)
-  ].join("");
-}
-
-function buildAttentionItems(){
-  const items = [];
-  const now = new Date();
-  groupFilteredProjects().forEach(p=>{
-    p.risks.forEach(r=>{
-      const due = parseDateValue(r.due);
-      if(r.severity==="high"){
-        items.push({
-          projectId:p.id, severity:due && due < now ? "red" : "amber", kind:"High risk",
-          title:r.title || "High-severity risk",
-          project:p.name,
-          detail:due ? `Due ${formatDate(r.due)}` : "No due date assigned",
-          score:due && due < now ? 100 : 80
-        });
-      } else if(due && due < now){
-        items.push({
-          projectId:p.id, severity:r.severity==="medium" ? "amber" : "pending", kind:"Overdue risk",
-          title:r.title || "Risk due date is overdue",
-          project:p.name,
-          detail:`Was due ${formatDate(r.due)}`,
-          score:r.severity==="medium" ? 75 : 55
-        });
-      }
-    });
-
-    const timelines = phaseTemplateFor(p).map(def=>p.timelines.find(t=>t.key===def.key)).filter(Boolean);
-    const activeTimelines = timelines.filter(t=>!isPhaseComplete(t));
-    const missing = activeTimelines.filter(t=>!t.start || !t.end);
-    if(activeTimelines.length && missing.length===activeTimelines.length){
-      items.push({
-        projectId:p.id, severity:"pending", kind:"Missing dates",
-        title:"No phase dates scheduled",
-        project:p.name,
-        detail:"Add WPR phase dates when available.",
-        score:35
-      });
-    } else if(missing.length){
-      items.push({
-        projectId:p.id, severity:"amber", kind:"Missing dates",
-        title:`${missing.length} phase ${missing.length===1 ? "date range is" : "date ranges are"} incomplete`,
-        project:p.name,
-        detail:missing.slice(0,2).map(t=>t.label).join(", ") + (missing.length>2 ? "..." : ""),
-        score:45
-      });
-    }
-
-    const seqKeys = ["prewire","trim","handover","install"];
-    for(let i=0;i<seqKeys.length-1;i++){
-      const cur = timelines.find(t=>t.key===seqKeys[i]);
-      const next = timelines.find(t=>t.key===seqKeys[i+1]);
-      const curEnd = cur && parseDateValue(cur.end);
-      if(cur && !isPhaseComplete(cur) && curEnd && curEnd < now && next && !isPhaseComplete(next) && !next.start){
-        items.push({
-          projectId:p.id, severity:"amber", kind:"Phase handoff",
-          title:`${cur.label} ended with no next phase start`,
-          project:p.name,
-          detail:`Ended ${formatDate(cur.end)}. Add ${next.label} start date.`,
-          score:70
-        });
-        break;
-      }
-    }
-
-    activeTimelines.forEach(t=>{
-      const start = parseDateValue(t.start);
-      if(!start) return;
-      const days = daysFromNow(start);
-      if(days >= 0 && days <= 14){
-        items.push({
-          projectId:p.id, severity:"blue", kind:"Upcoming phase",
-          title:t.label,
-          project:p.name,
-          detail:`Starts ${formatDate(t.start)}${days===0 ? " (today)" : ` (${days} days)`}`,
-          score:30 - days
-        });
-      }
-    });
-  });
-  return items.sort((a,b)=>b.score-a.score || a.project.localeCompare(b.project));
-}
-
-function buildDailyRecommendations(){
-  const projects = groupFilteredProjects();
-  const picked = [];
-  const categories = [
-    {key:"field", label:"Field / Schedule", match:p=>/(field|schedule|access|install|turnover|handoff|rework)/i.test(controlText(p)) || p.rag==="red"},
-    {key:"approval", label:"Approval / Money", match:p=>/(approval|approve|contract|procure|payment|invoice|lead.?time|financial|cost|change order)/i.test(controlText(p))},
-    {key:"quiet", label:"Quiet Project", match:p=>true}
+function renderKpis() {
+  const projects = visibleProjects();
+  const totals = {
+    projects: projects.length,
+    openTasks: sum(projects, "openTasks"),
+    overdueTasks: sum(projects, "overdueTasks"),
+    highPriorityTasks: sum(projects, "highPriorityTasks"),
+    risks: sum(projects, "risks"),
+    contractsAccepted: projects.filter(project => project.approvalsPayments.contract === "Accepted").length,
+    depositsOpen: projects.filter(project => ["Pending", "Overdue"].includes(project.approvalsPayments.deposit)).length,
+    changeOrdersReview: projects.filter(project => ["Pending", "Needs Review"].includes(project.approvalsPayments.changeOrders)).length
+  };
+  const cards = [
+    [totals.projects, "Visible Projects"],
+    [totals.openTasks, "Open Tasks"],
+    [totals.overdueTasks, "Overdue Tasks"],
+    [totals.highPriorityTasks, "High Priority"],
+    [totals.risks, "Open Risks"],
+    [totals.contractsAccepted, "Contracts Accepted"],
+    [totals.depositsOpen, "Deposits Open"],
+    [totals.changeOrdersReview, "Change Orders Need Review"]
   ];
-  categories.forEach(category=>{
-    const candidate = projects
-      .filter(p=>!picked.some(item=>item.project.id===p.id))
-      .filter(p=>category.match(p))
-      .map(p=>({project:p, category:category.label, score:dailyScore(p), reasons:dailyReasons(p)}))
-      .sort((a,b)=>b.score-a.score || a.project.name.localeCompare(b.project.name))[0];
-    if(candidate && (candidate.score>0 || category.key==="quiet")) picked.push(candidate);
-  });
-  return picked.slice(0,3);
+  document.getElementById("kpis").innerHTML = cards.map(([value, label]) => (
+    `<div class="kpi"><strong>${value}</strong><span>${label}</span></div>`
+  )).join("");
 }
 
-function controlText(p){
-  const c = p.control || blankControl(p.id);
-  return [c.nextOutcome, c.delayConsequence, c.nextAction, c.blockerReason, c.controlNotes, c.lastEscalationAction, c.contractStatus, c.depositStatus, c.changeOrderStatus].join(" ");
-}
+function renderAttention() {
+  const items = visibleProjects()
+    .flatMap(project => project.attention.map(item => ({ ...item, projectName: project.name })))
+    .sort((a, b) => severityScore(b.severity) - severityScore(a.severity));
 
-function dailyScore(p){
-  const c = p.control || blankControl(p.id);
-  let score = 0;
-  if(c.overrideDaily) score += 120;
-  if(c.blocked) score += 90;
-  if(c.operatingState==="Action Needed") score += 75;
-  if(c.operatingState==="Follow-Up Needed") score += 65;
-  if(c.operatingState==="Monitor") score += 15;
-  if(p.rag==="red") score += 45;
-  if(p.rag==="amber") score += 25;
-  if(isOverdue(c.escalationDate) || isOverdue(c.responseDate) || isOverdue(c.reviewDate)) score += 50;
-  const soonDate = [c.escalationDate, c.responseDate, c.reviewDate, p.startsAt, p.endsAt].filter(Boolean).map(daysFromNow).sort((a,b)=>a-b)[0];
-  if(Number.isFinite(soonDate) && soonDate>=0 && soonDate<=7) score += 25 - soonDate;
-  const quietDays = daysSince(c.lastMovementDate);
-  if(quietDays !== null && quietDays >= 14) score += Math.min(35, quietDays);
-  score += controlIssues(p).length * 8;
-  return score;
-}
-
-function dailyReasons(p){
-  const c = p.control || blankControl(p.id);
-  const reasons = [];
-  if(c.overrideDaily) reasons.push("You marked this for today.");
-  if(c.blocked) reasons.push(`Blocked${c.blockerReason ? `: ${c.blockerReason}` : ""}.`);
-  if(isOverdue(c.escalationDate)) reasons.push(`Escalation date passed ${formatDate(c.escalationDate)}.`);
-  else if(isOverdue(c.responseDate)) reasons.push(`Response date passed ${formatDate(c.responseDate)}.`);
-  else if(isOverdue(c.reviewDate)) reasons.push(`Review date passed ${formatDate(c.reviewDate)}.`);
-  if(c.delayConsequence) reasons.push(c.delayConsequence);
-  const quietDays = daysSince(c.lastMovementDate);
-  if(quietDays !== null && quietDays >= 14) reasons.push(`${quietDays} days since meaningful movement.`);
-  if(!reasons.length && p.rag==="red") reasons.push("Schedule or risk signals are off track.");
-  if(!reasons.length && p.rag==="amber") reasons.push("At-risk schedule or issue signals need a look.");
-  if(!reasons.length) reasons.push("Quiet enough to review deliberately.");
-  return reasons;
-}
-
-function renderDailyDirection(){
-  const items = buildDailyRecommendations();
-  const list = document.getElementById("dailyList");
-  document.getElementById("dailyCount").textContent = items.length ? `${items.length} outcome${items.length===1?"":"s"}` : "No direction yet";
-  if(!items.length){
-    list.innerHTML = `<div class="attention-empty">Add next outcomes, owners, and review dates to start getting daily recommendations.</div>`;
-    return;
-  }
-  list.innerHTML = items.map(item=>{
-    const p = item.project;
-    const c = p.control || blankControl(p.id);
-    return `
-      <article class="daily-card ${controlSeverity(p)}" data-id="${p.id}">
-        <div class="daily-type">${escapeHTML(item.category)}</div>
-        <div class="daily-project">${escapeHTML(p.name)}</div>
-        <div class="daily-outcome">${escapeHTML(c.nextOutcome || "No next outcome recorded")}</div>
-        <div class="daily-meta">${statePill(c.operatingState)} &nbsp; Owner: ${escapeHTML(c.nextMoveOwner || "Missing")}</div>
-        <div class="daily-meta">${escapeHTML(item.reasons.slice(0,2).join(" "))}</div>
-        <div class="daily-action">${escapeHTML(c.nextAction || "Record the exact next action.")}</div>
-        <div class="daily-meta">${reviewLabel(c)}</div>
-      </article>
-    `;
-  }).join("");
-  list.querySelectorAll(".daily-card").forEach(item=>{
-    item.addEventListener("click", ()=> openPanel(Number(item.dataset.id)));
-  });
-}
-
-function renderWeeklyControl(){
-  const projects = groupFilteredProjects()
-    .map(p=>({project:p, issues:controlIssues(p), score:dailyScore(p)}))
-    .sort((a,b)=>b.issues.length-a.issues.length || b.score-a.score || a.project.name.localeCompare(b.project.name));
-  document.getElementById("weeklyCount").textContent = `${projects.length} active project${projects.length===1?"":"s"}`;
-  document.getElementById("weeklyBody").innerHTML = projects.length ? projects.map(({project:p, issues})=>{
-    const c = p.control || blankControl(p.id);
-    return `
-      <tr data-id="${p.id}" class="weekly-row">
-        <td><div class="weekly-project">${escapeHTML(p.name)}</div><div class="daily-meta">${escapeHTML([p.projectGroup,p.segment].filter(Boolean).join(" / "))}</div></td>
-        <td>${statePill(c.operatingState)}${c.blocked ? `<div class="control-flags"><span class="flag red">Blocked</span></div>` : ""}</td>
-        <td>${escapeHTML(c.nextOutcome || "Missing")}</td>
-        <td>${escapeHTML(c.nextMoveOwner || "Missing")}</td>
-        <td>${escapeHTML(reviewLabel(c))}</td>
-        <td><div class="control-flags">${issues.length ? issues.map(issue=>`<span class="flag ${issue.kind}">${escapeHTML(issue.label)}</span>`).join("") : `<span class="flag green">Controlled</span>`}</div></td>
-      </tr>
-    `;
-  }).join("") : `<tr><td colspan="6" class="empty">No projects match your filters.</td></tr>`;
-  document.querySelectorAll(".weekly-row").forEach(row=>{
-    row.addEventListener("click", ()=> openPanel(Number(row.dataset.id)));
-  });
-}
-
-function controlIssues(p){
-  const c = p.control || blankControl(p.id);
-  const issues = [];
-  if(!c.nextOutcome && c.operatingState!=="Stable") issues.push({kind:"red", label:"No outcome"});
-  if(c.nextOutcome && isVagueOutcome(c.nextOutcome)) issues.push({kind:"red", label:"Vague outcome"});
-  if(!c.nextMoveOwner && c.operatingState!=="Stable") issues.push({kind:"red", label:"No owner"});
-  if(c.operatingState==="Monitor" && !c.reviewDate && !c.eventTrigger) issues.push({kind:"red", label:"Monitor needs review"});
-  if(c.reviewDate && isOverdue(c.reviewDate)) issues.push({kind:"amber", label:"Review overdue"});
-  if(c.responseDate && isOverdue(c.responseDate)) issues.push({kind:"amber", label:"Response overdue"});
-  if(c.escalationDate && isOverdue(c.escalationDate)) issues.push({kind:"amber", label:"Escalation overdue"});
-  if(c.blocked && !c.blockerReason) issues.push({kind:"red", label:"No blocker reason"});
-  if(!c.delayConsequence && c.operatingState!=="Stable") issues.push({kind:"blue", label:"No consequence"});
-  if(!c.nextAction && c.operatingState!=="Stable") issues.push({kind:"blue", label:"No action"});
-  const quietDays = daysSince(c.lastMovementDate);
-  if(quietDays !== null && quietDays >= 14) issues.push({kind:"amber", label:"Quiet"});
-  return issues;
-}
-
-function controlSeverity(p){
-  const c = p.control || blankControl(p.id);
-  if(c.blocked || p.rag==="red" || isOverdue(c.escalationDate) || isOverdue(c.responseDate)) return "red";
-  if(p.rag==="amber" || isOverdue(c.reviewDate) || controlIssues(p).some(i=>i.kind==="amber")) return "amber";
-  if(c.operatingState==="Monitor" || c.operatingState==="Stable") return "green";
-  return "";
-}
-
-function statePill(value){
-  const cls = value==="Action Needed" ? "action" : value==="Follow-Up Needed" ? "follow" : value==="Monitor" ? "monitor" : "stable";
-  return `<span class="state-pill ${cls}">${escapeHTML(value || "Stable")}</span>`;
-}
-
-function reviewLabel(c){
-  if(c.escalationDate) return `Escalate ${formatDate(c.escalationDate)}`;
-  if(c.responseDate) return `Response ${formatDate(c.responseDate)}`;
-  if(c.reviewDate) return `Review ${formatDate(c.reviewDate)}`;
-  if(c.eventTrigger) return `Trigger: ${c.eventTrigger}`;
-  return "No review date";
-}
-
-function isOverdue(value){
-  const d = parseDateValue(value);
-  if(!d) return false;
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  d.setHours(0,0,0,0);
-  return d < today;
-}
-
-function daysSince(value){
-  const d = parseDateValue(value);
-  if(!d) return null;
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  d.setHours(0,0,0,0);
-  return Math.floor((today-d)/(1000*60*60*24));
-}
-
-function isVagueOutcome(value){
-  return /^(follow up|check status|review email|touch base|circle back|send email|call|email|review)$/i.test(String(value || "").trim());
-}
-
-function renderAttention(){
-  const allItems = buildAttentionItems();
-  const items = allItems.slice(0,8);
-  const list = document.getElementById("attentionList");
-  const count = document.getElementById("attentionCount");
-  count.textContent = allItems.length ? `Top ${items.length} of ${allItems.length}` : "Nothing urgent";
-  if(!items.length){
-    list.innerHTML = `<div class="attention-empty">No urgent project items found. Keep phase dates and risk due dates current, and this area will surface what needs your attention.</div>`;
-    return;
-  }
-  list.innerHTML = items.map(item=>`
-    <div class="attention-item ${item.severity}" data-id="${item.projectId}">
-      <div class="attention-top">
-        <div class="attention-title">${escapeHTML(item.title)}</div>
-        <div class="attention-kind">${escapeHTML(item.kind)}</div>
+  const visibleItems = state.attentionExpanded ? items : items.slice(0, COLLAPSED_ATTENTION_LIMIT);
+  const remaining = Math.max(0, items.length - visibleItems.length);
+  document.getElementById("attentionCount").innerHTML = `
+    <span>${items.length} item${items.length === 1 ? "" : "s"}</span>
+    ${items.length > COLLAPSED_ATTENTION_LIMIT ? `<button class="text-button" id="attentionToggle" type="button">${state.attentionExpanded ? "Show Less" : `Show All ${items.length}`}</button>` : ""}
+  `;
+  document.getElementById("attentionList").innerHTML = visibleItems.length ? visibleItems.map(item => `
+    <article class="attention-card ${escapeHtml(item.severity || "amber")}">
+      <div class="attention-label">
+        <span>${escapeHtml(item.label || "Attention")}</span>
+        <span>${escapeHtml(item.source || "Command Center")}</span>
       </div>
-      <div class="attention-project">${escapeHTML(item.project)}</div>
-      <div class="attention-detail">${escapeHTML(item.detail)}</div>
-    </div>
-  `).join("");
-  list.querySelectorAll(".attention-item").forEach(item=>{
-    item.addEventListener("click", ()=> openPanel(Number(item.dataset.id)));
-  });
+      <div class="attention-title">${escapeHtml(item.detail || "Review needed")}</div>
+      <div class="attention-meta">${escapeHtml(item.projectName)}${item.dueDate ? ` · Due ${formatDate(item.dueDate)}` : ""}</div>
+    </article>
+  `).join("") + (remaining ? `<div class="empty">${remaining} more attention items hidden. Use Show All to review the full list.</div>` : "") : `<div class="empty">No attention items match the current view.</div>`;
 }
 
-function riskBadge(p){
-  const n = p.risks.length;
-  if(n===0) return `<span class="risk-badge none">No open risks</span>`;
-  const high = p.risks.filter(r=>r.severity==="high").length;
-  const cls = high>0 ? "many" : "some";
-  return `<span class="risk-badge ${cls}">${n} open ${n===1?"risk":"risks"}${high>0?` · ${high} high`:""}</span>`;
+function renderTimeline() {
+  const projects = visibleProjects();
+  const range = getTimelineRange();
+  const rows = projects.map(project => renderTimelineRow(project, range)).join("");
+  document.getElementById("timelineCount").textContent = `${projects.length} project${projects.length === 1 ? "" : "s"}`;
+  document.getElementById("timelineMonths").innerHTML = renderMonthLabels(range);
+  document.getElementById("timelineRows").innerHTML = rows || `<div class="empty">No projects match the current view.</div>`;
 }
 
-function approvalControl(p){
-  return p.control || blankControl(p.id);
-}
-
-function approvalDisplay(value){
-  return value || "Not set";
-}
-
-function approvalValueClass(type, value){
-  if((type==="contract" && value==="Accepted") || (type==="deposit" && ["Paid","Not Required"].includes(value)) || (type==="changeOrder" && ["None","Approved"].includes(value))) return "good";
-  if((type==="deposit" && value==="Overdue") || value==="Needs Review") return "bad";
-  if(value) return "watch";
-  return "";
-}
-
-function approvalsSnapshotHTML(p){
-  const c = approvalControl(p);
+function renderTimelineRow(project, range) {
+  const bars = project.timelines
+    .map(item => {
+      const seg = timelineSegment(item.start, item.end, range.min, range.max);
+      if (!seg) return "";
+      return `<div class="timeline-bar ${escapeHtml(item.key)}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeAttribute(project.name)} - ${escapeAttribute(item.label)}: ${escapeAttribute(formatDateRange(item.start, item.end))}"></div>`;
+    })
+    .join("");
+  const today = timelineToday(range);
   return `
-    <div class="approval-snapshot">
-      <div class="approval-title">Approvals &amp; Payments</div>
-      <div class="approval-line"><span class="approval-label">Contract</span><span class="approval-value ${approvalValueClass("contract", c.contractStatus)}">${escapeHTML(approvalDisplay(c.contractStatus))}</span></div>
-      <div class="approval-line"><span class="approval-label">Deposit</span><span class="approval-value ${approvalValueClass("deposit", c.depositStatus)}">${escapeHTML(approvalDisplay(c.depositStatus))}</span></div>
-      <div class="approval-line"><span class="approval-label">Change Orders</span><span class="approval-value ${approvalValueClass("changeOrder", c.changeOrderStatus)}">${escapeHTML(approvalDisplay(c.changeOrderStatus))}</span></div>
+    <div class="timeline-row">
+      <div class="timeline-name">${escapeHtml(project.name)}</div>
+      <div class="timeline-track">
+        ${today === null ? "" : `<div class="timeline-today" style="left:${today}%"></div>`}
+        ${bars || `<span class="project-sub" style="position:absolute;left:7px;top:3px;">Not scheduled</span>`}
+      </div>
     </div>
   `;
 }
 
-function nextMilestone(p){
-  if(!p.milestones.length) return null;
-  const m = p.milestones.find(m=>m.state==="next") || p.milestones[p.milestones.length-1];
-  return m;
-}
-
-function renderBoard(){
-  const q = state.search.trim().toLowerCase();
-  const scoped = groupFilteredProjects();
-  const filtered = scoped.filter(p=>{
-    if(state.filter!=="all" && p.rag!==state.filter) return false;
-    const c = approvalControl(p);
-    const haystack = [p.name, p.projectGroup, p.segment, p.externalTeam, c.contractStatus, c.depositStatus, c.changeOrderStatus].join(" ").toLowerCase();
-    if(q && !haystack.includes(q)) return false;
-    return true;
-  });
-  document.getElementById("resultCount").textContent = `${filtered.length} of ${scoped.length}`;
-  const board = document.getElementById("board");
-  if(filtered.length===0){
-    board.innerHTML = `<div class="empty">No projects match your filters.</div>`;
-    return;
+function renderMonthLabels(range) {
+  const labels = [];
+  const start = new Date(range.min.getFullYear(), range.min.getMonth(), 1);
+  for (let cursor = start; cursor <= range.max; cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)) {
+    labels.push(`<span class="month-label" style="left:${((cursor - range.min) / (range.max - range.min)) * 100}%">${cursor.toLocaleDateString("en-US", { month: "short" })}</span>`);
   }
-  board.innerHTML = filtered.map(p=>{
-    const m = nextMilestone(p);
-    const totalTasks = p.tasks.todo + p.tasks.progress + p.tasks.done;
-    const donePct = totalTasks? Math.round(p.tasks.done/totalTasks*100):0;
-    const progPct = totalTasks? Math.round(p.tasks.progress/totalTasks*100):0;
-    return `
-    <div class="card" data-id="${p.id}">
-      <div>
-        <div class="pname">${escapeHTML(p.name)}</div>
-        <div class="powner">${escapeHTML([p.projectGroup, p.segment].filter(Boolean).join(" / ") || "Ungrouped")}</div>
-      </div>
-      <div class="rag ${p.rag}"><span class="dot"></span>${ragLabel(p.rag)}</div>
-      <div class="timeline">
-        <div class="tl-top"><span>${p.percent}% complete</span><span>${formatDateRange(p.startsAt, p.endsAt)}</span></div>
-        <div class="bar"><div style="width:${p.percent}%;background:${barColor(p.rag)}"></div></div>
-        <div class="milestone">${m ? `Next: <strong>${escapeHTML(m.name)}</strong> <span class="due">(${escapeHTML(formatDate(m.date) || m.date)})</span>` : "No milestones added yet"}</div>
-      </div>
-      <div class="taskstatus">
-        <div class="tstack">
-          <div style="width:${donePct}%;background:var(--green)"></div>
-          <div style="width:${progPct}%;background:var(--blue)"></div>
-        </div>
-        <div class="tlegend">${totalTasks ? `${p.tasks.done} done · ${p.tasks.progress} in progress · ${p.tasks.todo} to do` : "No tasks added yet"}</div>
-      </div>
-      <div class="risks">${riskBadge(p)}</div>
-      ${approvalsSnapshotHTML(p)}
-      <div class="teamline">${escapeHTML(p.externalTeam || "No external team")}</div>
-    </div>`;
-  }).join("");
-
-  board.querySelectorAll(".card").forEach(card=>{
-    card.addEventListener("click", ()=> openPanel(Number(card.dataset.id)));
-  });
+  return labels.join("");
 }
 
-function monthLabel(d){ return d.toLocaleString("en-US",{month:"short"}); }
-
-function clippedBar(start, end, min, max, minimumWidth=1.5){
-  const s = parseDateValue(start), e = parseDateValue(end);
-  if(!s || !e || e < min || s > max) return null;
-  const totalMs = max-min;
-  const clippedStart = s < min ? min : s;
-  const clippedEnd = e > max ? max : e;
+function getTimelineRange() {
+  const now = new Date();
   return {
-    left:(clippedStart-min)/totalMs*100,
-    width:Math.max(minimumWidth, (clippedEnd-clippedStart)/totalMs*100)
+    min: new Date(now.getFullYear(), now.getMonth(), 1),
+    max: new Date(now.getFullYear(), now.getMonth() + 3, 0)
   };
 }
 
-function renderGantt(){
-  const visibleProjects = groupFilteredProjects();
-  const {min,max} = getPortfolioRange(visibleProjects);
-  const totalMs = max-min;
-  const todayPct = Math.min(100, Math.max(0, (new Date()-min)/totalMs*100));
-
-  const ticks=[];
-  let cur = new Date(min.getFullYear(), min.getMonth(), 1);
-  while(cur<=max){
-    const pct = (cur-min)/totalMs*100;
-    ticks.push(`<div class="gantt-tick" style="left:${pct}%">${monthLabel(cur)}</div>`);
-    cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1);
-  }
-  document.getElementById("ganttMonths").innerHTML = ticks.join("");
-
-  const phase = state.ganttPhase;
-
-  const rows = visibleProjects.map(p=>{
-    let trackHTML;
-    if(phase==="all"){
-      let mainBar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
-      if(p.startsAt && p.endsAt){
-        const seg = clippedBar(p.startsAt, p.endsAt, min, max, 1.5);
-        mainBar = seg
-          ? `<div class="gantt-bar ${p.rag}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeHTML(p.name)}: ${escapeHTML(formatDateRange(p.startsAt, p.endsAt))}"></div>`
-          : `<div class="gantt-empty-note">Outside 3-month window</div>`;
-      }
-      const segs = phaseTemplateFor(p).map(def=>p.timelines.find(t=>t.key===def.key)).filter(t=>t && t.start && t.end).map(t=>{
-        const seg = clippedBar(t.start, t.end, min, max, 1);
-        if(!seg) return "";
-        return `<div class="gantt-bar seg ${t.key}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeHTML(t.label)}: ${escapeHTML(formatDateRange(t.start, t.end))}"></div>`;
-      }).join("");
-      trackHTML = `
-      <div class="gantt-tracks">
-        <div class="gantt-track main">
-          ${mainBar}
-          <div class="gantt-today" style="left:${todayPct}%"></div>
-        </div>
-        <div class="gantt-track phase">
-          ${segs}
-          <div class="gantt-today" style="left:${todayPct}%"></div>
-        </div>
-      </div>`;
-    } else {
-      const t = phaseTemplateFor(p).some(def=>def.key===phase) ? p.timelines.find(x=>x.key===phase) : null;
-      let bar = `<div class="gantt-empty-note">Not scheduled yet</div>`;
-      if(t && t.start && t.end){
-        const seg = clippedBar(t.start, t.end, min, max, 1.5);
-        bar = seg
-          ? `<div class="gantt-bar ${t.key}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeHTML(t.label)}: ${escapeHTML(formatDateRange(t.start, t.end))}"></div>`
-          : `<div class="gantt-empty-note">Outside 3-month window</div>`;
-      }
-      trackHTML = `
-      <div class="gantt-track single">
-        ${bar}
-        <div class="gantt-today" style="left:${todayPct}%"></div>
-      </div>`;
-    }
-    return `
-    <div class="gantt-grid-row" data-id="${p.id}">
-      <div class="gantt-label">${escapeHTML(p.name)}</div>
-      ${trackHTML}
-    </div>`;
-  }).join("");
-  const body = document.getElementById("ganttBody");
-  body.innerHTML = rows;
-  body.querySelectorAll(".gantt-grid-row").forEach(row=>{
-    row.addEventListener("click", ()=> openPanel(Number(row.dataset.id)));
-  });
+function timelineSegment(start, end, min, max) {
+  const startDate = parseDate(start);
+  const endDate = parseDate(end);
+  if (!startDate || !endDate || endDate < min || startDate > max) return null;
+  const total = max - min;
+  const clippedStart = startDate < min ? min : startDate;
+  const clippedEnd = endDate > max ? max : endDate;
+  return {
+    left: Math.max(0, ((clippedStart - min) / total) * 100),
+    width: Math.max(1.5, ((clippedEnd - clippedStart) / total) * 100)
+  };
 }
 
-function renderTimelinePhases(p){
-  const timelines = phaseTemplateFor(p).map(def=>p.timelines.find(t=>t.key===def.key)).filter(Boolean);
-  const defined = timelines.filter(t=>t.start && t.end);
-  let min=null, max=null;
-  defined.forEach(t=>{
-    const s=parseDateValue(t.start), e=parseDateValue(t.end);
-    if(!s || !e) return;
-    if(!min||s<min) min=s;
-    if(!max||e>max) max=e;
-  });
-  const hasRange = min && max && max>min;
-  return timelines.map(t=>{
-    const i = p.timelines.findIndex(x=>x.key===t.key);
-    let track = `<div class="tp-track"></div>`;
-    if(hasRange && t.start && t.end){
-      const s=parseDateValue(t.start), e=parseDateValue(t.end);
-      if(!s || !e) return "";
-      const totalMs = max-min;
-      const leftPct = (s-min)/totalMs*100;
-      const widthPct = Math.max(2,(e-s)/totalMs*100);
-      track = `<div class="tp-track"><div class="tp-bar ${t.key}" style="left:${leftPct}%;width:${widthPct}%"></div></div>`;
-    }
-    return `
-    <div class="tp-item">
-      <div class="tp-head"><span class="tp-dot ${t.key}"></span>${escapeHTML(t.label)}</div>
-      <div class="tp-dates">
-        <input type="date" class="tp-input" data-pid="${p.id}" data-idx="${i}" data-field="start" value="${t.start||""}">
-        <span class="tp-sep">→</span>
-        <input type="date" class="tp-input" data-pid="${p.id}" data-idx="${i}" data-field="end" value="${t.end||""}">
-      </div>
-      <label class="tp-status">
-        <input type="checkbox" class="tp-input" data-pid="${p.id}" data-idx="${i}" data-field="status" ${isPhaseComplete(t)?"checked":""}>
-        Complete / not needed
-      </label>
-      ${track}
-    </div>`;
-  }).join("");
+function timelineToday(range) {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  if (now < range.min || now > range.max) return null;
+  return ((now - range.min) / (range.max - range.min)) * 100;
 }
 
-function milestoneTimelineHTML(p){
-  if(!p.startsAt || !p.endsAt || !p.milestones.length){
-    return `<div class="empty">No milestones added yet.</div>`;
-  }
-  const s = parseDateValue(p.startsAt), e = parseDateValue(p.endsAt);
-  if(!s || !e) return `<div class="empty">Project date range is incomplete.</div>`;
-  const totalMs = e-s;
-  const dots = p.milestones.map(m=>{
-    const d = parseDateValue(m.date);
-    if(!d) return "";
-    const pct = totalMs ? Math.min(100, Math.max(0, (d-s)/totalMs*100)) : 0;
-    return `<div class="pt-dot ${m.state}" style="left:${pct}%" title="${escapeHTML(m.name)} - ${escapeHTML(formatDate(m.date) || m.date)}"></div>`;
-  }).join("");
-  const todayPct = totalMs ? (new Date()-s)/totalMs*100 : -1;
-  const showToday = todayPct>=0 && todayPct<=100;
+function renderProjects() {
+  const projects = visibleProjects();
+  document.getElementById("projectCount").textContent = `${projects.length} project${projects.length === 1 ? "" : "s"}`;
+  document.getElementById("projectList").innerHTML = projects.length ? projects.map(project => {
+    const expanded = state.expandedProjects.has(project.id);
+    return `
+    <article class="project-card ${project.attention.length ? `has-signal ${topSeverity(project.attention)}` : ""}">
+      <button class="project-summary" type="button" data-project-toggle="${escapeAttribute(project.id)}" aria-expanded="${expanded}" aria-label="${expanded ? "Close" : "Open"} ${escapeAttribute(project.name)} project file">
+        <div>
+          <div class="project-title">${escapeHtml(project.name)}</div>
+          <div class="project-sub">${escapeHtml(project.area)}</div>
+        </div>
+        <span class="health compact ${project.health}">${healthLabels[project.health]}</span>
+        <span class="expand-button" aria-hidden="true">${expanded ? "−" : "+"}</span>
+      </button>
+      ${renderProjectFile(project, expanded)}
+    </article>
+  `;
+  }).join("") : `<div class="empty">No projects match the current view.</div>`;
+}
+
+function renderProjectFile(project, expanded) {
+  const items = project.attention.slice(0, 6);
+  const remaining = Math.max(0, project.attention.length - items.length);
   return `
-    <div class="pt-track">
-      <div class="pt-line"></div>
-      ${dots}
-      ${showToday?`<div class="pt-today" style="left:${todayPct}%" title="Today"></div>`:""}
-    </div>
-    <div class="pt-range"><span>${escapeHTML(formatDate(p.startsAt))}</span><span>${escapeHTML(formatDate(p.endsAt))}</span></div>`;
-}
-
-function openPanel(id){
-  const p = PROJECTS.find(x=>x.id===id);
-  if(!p) return;
-  const panel = document.getElementById("panel");
-  const overlay = document.getElementById("overlay");
-  const msHTML = p.milestones.map(m=>`
-    <div class="edit-row milestone-edit">
-      <input class="milestone-input" data-pid="${p.id}" data-mid="${escapeHTML(m.id)}" data-field="name" value="${escapeHTML(m.name)}" placeholder="Milestone">
-      <input type="date" class="milestone-input" data-pid="${p.id}" data-mid="${escapeHTML(m.id)}" data-field="date" value="${m.date||""}">
-      <select class="milestone-input" data-pid="${p.id}" data-mid="${escapeHTML(m.id)}" data-field="state">
-        <option value="future" ${m.state==="future"?"selected":""}>Future</option>
-        <option value="next" ${m.state==="next"?"selected":""}>Next</option>
-        <option value="done" ${m.state==="done"?"selected":""}>Done</option>
-      </select>
-      <button class="icon-btn milestone-delete" data-pid="${p.id}" data-mid="${escapeHTML(m.id)}" title="Remove milestone">✕</button>
-    </div>`).join("") || `<div class="empty">No milestones added yet.</div>`;
-  const milestoneAddHTML = `
-    <div class="add-row milestone-add">
-      <input id="newMilestoneName" placeholder="Add milestone">
-      <input type="date" id="newMilestoneDate">
-      <select id="newMilestoneState"><option value="future">Future</option><option value="next">Next</option><option value="done">Done</option></select>
-      <button class="add-btn" id="addMilestoneBtn" data-pid="${p.id}">Add</button>
-    </div>`;
-  const taskHTML = p.taskList.map(t=>`
-    <div class="edit-row task-edit">
-      <textarea class="task-input task-textarea" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" data-field="name" placeholder="Task">${escapeHTML(t.name)}</textarea>
-      ${renderTaskSource(t)}
-      <select class="task-input" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" data-field="status">
-        <option value="todo" ${t.status==="todo"?"selected":""}>To do</option>
-        <option value="progress" ${t.status==="progress"?"selected":""}>In progress</option>
-        <option value="done" ${t.status==="done"?"selected":""}>Done</option>
-      </select>
-      <button class="icon-btn task-delete" data-pid="${p.id}" data-taskid="${escapeHTML(t.id)}" title="Remove task">✕</button>
-    </div>
-  `).join("") || `<div class="empty">No tasks listed.</div>`;
-  const taskAddHTML = `
-    <div class="add-row">
-      <textarea id="newTaskName" class="task-textarea" placeholder="Add task"></textarea>
-      <button class="add-btn" id="addTaskBtn" data-pid="${p.id}">Add</button>
-    </div>`;
-  const riskHTML = p.risks.map(r=>{
-    const due = parseDateValue(r.due);
-    const overdue = due && due < new Date();
-    return `
-    <div class="risk-item ${overdue?"rdue-row overdue":""}">
-      <div class="edit-row risk-edit">
-        <div class="edit-main">
-          <input class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="title" value="${escapeHTML(r.title)}" placeholder="Risk or issue">
-          <input class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="owner" value="${escapeHTML(r.owner)}" placeholder="Owner/contact">
-          <textarea class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="note" placeholder="Notes">${escapeHTML(r.note)}</textarea>
-          <input type="datetime-local" class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="due" value="${r.due||""}">
-        </div>
-        <select class="risk-input" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" data-field="severity">
-          <option value="low" ${r.severity==="low"?"selected":""}>Low</option>
-          <option value="medium" ${r.severity==="medium"?"selected":""}>Medium</option>
-          <option value="high" ${r.severity==="high"?"selected":""}>High</option>
-        </select>
-        <button class="icon-btn risk-delete" data-pid="${p.id}" data-riskid="${escapeHTML(r.id)}" title="Remove risk">✕</button>
+    <div class="project-file" ${expanded ? "" : "hidden"}>
+      <div class="file-panel">
+        <div class="file-label">Project File</div>
+        <div class="metric"><strong>${escapeHtml(project.phase)}</strong><span>${formatDateRange(project.startDate, project.endDate)}</span></div>
+        <div class="project-sub">${escapeHtml(project.team)}</div>
+        ${renderLinks(project.links)}
       </div>
-    </div>`;
-  }).join("") || `<div class="empty">No open tasks or issues.</div>`;
-  const riskAddHTML = `
-    <div class="add-row risk-add">
-      <input id="newRiskTitle" placeholder="Add risk or issue">
-      <select id="newRiskSeverity"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select>
-      <button class="add-btn" id="addRiskBtn" data-pid="${p.id}">Add</button>
-    </div>`;
-  const c = p.control || blankControl(p.id);
-  const controlWarnings = controlIssues(p).map(issue=>issue.label).slice(0,4);
-
-  panel.innerHTML = `
-    <div class="panel-head">
-      <button class="close" id="closeBtn">✕</button>
-      <h2>${escapeHTML(p.name)}</h2>
-      <div class="meta">${escapeHTML([p.projectGroup, p.segment].filter(Boolean).join(" / ") || "Ungrouped")} · ${escapeHTML(p.externalTeam || "No external team")} · ${escapeHTML(formatDateRange(p.startsAt, p.endsAt))}</div>
-      <div style="margin-top:8px;" class="rag ${p.rag}"><span class="dot"></span>${ragLabel(p.rag)} · ${p.percent}% complete</div>
-    </div>
-    <div class="panel-body">
-      <div class="pb-section">
-        <h3>Outcome Control</h3>
-        <div class="control-help">Use this to decide what moves next. The next outcome should name the answer, approval, decision, date, or changed condition you need.</div>
-        ${controlWarnings.length ? `<div class="control-warning ${controlWarnings.some(w=>/No outcome|No owner|Monitor|Vague|blocker/i.test(w)) ? "red" : ""}">${escapeHTML(controlWarnings.join(" · "))}</div>` : ""}
-        <div class="summary-grid">
-          <div class="summary-field full">
-            <label for="controlNextOutcome">Next Outcome</label>
-            <textarea id="controlNextOutcome" class="control-input" data-pid="${p.id}" data-field="nextOutcome" placeholder="Decision, approval, date, or changed condition needed">${escapeHTML(c.nextOutcome)}</textarea>
-          </div>
-          <div class="summary-field">
-            <label for="controlOwner">Owner Of Next Move</label>
-            <input id="controlOwner" class="control-input" data-pid="${p.id}" data-field="nextMoveOwner" value="${escapeHTML(c.nextMoveOwner)}" placeholder="Person, company, or ATI role">
-          </div>
-          <div class="summary-field">
-            <label for="controlState">Operating State</label>
-            <select id="controlState" class="control-input" data-pid="${p.id}" data-field="operatingState">
-              <option value="Action Needed" ${c.operatingState==="Action Needed"?"selected":""}>Action Needed</option>
-              <option value="Follow-Up Needed" ${c.operatingState==="Follow-Up Needed"?"selected":""}>Follow-Up Needed</option>
-              <option value="Monitor" ${c.operatingState==="Monitor"?"selected":""}>Monitor</option>
-              <option value="Stable" ${c.operatingState==="Stable"?"selected":""}>Stable</option>
-            </select>
-          </div>
-          <div class="summary-field full">
-            <label for="controlConsequence">Consequence Of Delay</label>
-            <input id="controlConsequence" class="control-input" data-pid="${p.id}" data-field="delayConsequence" value="${escapeHTML(c.delayConsequence)}" placeholder="Schedule, field work, rework, access, procurement, approval, payment, client impact">
-          </div>
-          <div class="summary-field full">
-            <label for="controlAction">Exact Next Action</label>
-            <textarea id="controlAction" class="control-input" data-pid="${p.id}" data-field="nextAction" placeholder="Specific action to take next">${escapeHTML(c.nextAction)}</textarea>
-          </div>
-          <div class="summary-field">
-            <label for="controlResponse">Response Date</label>
-            <input id="controlResponse" type="date" class="control-input" data-pid="${p.id}" data-field="responseDate" value="${c.responseDate}">
-          </div>
-          <div class="summary-field">
-            <label for="controlReview">Review Date</label>
-            <input id="controlReview" type="date" class="control-input" data-pid="${p.id}" data-field="reviewDate" value="${c.reviewDate}">
-          </div>
-          <div class="summary-field">
-            <label for="controlEscalationDate">Escalation Date</label>
-            <input id="controlEscalationDate" type="date" class="control-input" data-pid="${p.id}" data-field="escalationDate" value="${c.escalationDate}">
-          </div>
-          <div class="summary-field">
-            <label for="controlMovement">Last Movement</label>
-            <input id="controlMovement" type="date" class="control-input" data-pid="${p.id}" data-field="lastMovementDate" value="${c.lastMovementDate}">
-          </div>
-          <div class="summary-field">
-            <label for="controlEscalationLevel">Escalation Level</label>
-            <select id="controlEscalationLevel" class="control-input" data-pid="${p.id}" data-field="escalationLevel">
-              <option value="" ${!c.escalationLevel?"selected":""}>None</option>
-              <option value="1" ${String(c.escalationLevel)==="1"?"selected":""}>1 Initial request</option>
-              <option value="2" ${String(c.escalationLevel)==="2"?"selected":""}>2 Follow-up date</option>
-              <option value="3" ${String(c.escalationLevel)==="3"?"selected":""}>3 Call or text</option>
-              <option value="4" ${String(c.escalationLevel)==="4"?"selected":""}>4 Decision authority</option>
-              <option value="5" ${String(c.escalationLevel)==="5"?"selected":""}>5 Consequence stated</option>
-              <option value="6" ${String(c.escalationLevel)==="6"?"selected":""}>6 ATI blocked</option>
-            </select>
-          </div>
-          <div class="summary-field">
-            <label for="controlTrigger">Event Trigger</label>
-            <input id="controlTrigger" class="control-input" data-pid="${p.id}" data-field="eventTrigger" value="${escapeHTML(c.eventTrigger)}" placeholder="Inspection passed, reply received">
-          </div>
-          <div class="summary-field full">
-            <label for="controlEscalationAction">Last Escalation Action</label>
-            <input id="controlEscalationAction" class="control-input" data-pid="${p.id}" data-field="lastEscalationAction" value="${escapeHTML(c.lastEscalationAction)}" placeholder="What was last done to move this">
-          </div>
-          <div class="summary-field full">
-            <label for="controlEvidence">Evidence / Source</label>
-            <input id="controlEvidence" class="control-input" data-pid="${p.id}" data-field="evidence" value="${escapeHTML(c.evidence)}" placeholder="Pulse, Procore, email, call note, or source reference">
-          </div>
-          <div class="summary-field full">
-            <label for="controlNotes">Notes</label>
-            <textarea id="controlNotes" class="control-input" data-pid="${p.id}" data-field="controlNotes" placeholder="Optional context">${escapeHTML(c.controlNotes)}</textarea>
-          </div>
-          <label class="control-check">
-            <input type="checkbox" class="control-input" data-pid="${p.id}" data-field="blocked" ${c.blocked ? "checked" : ""}>
-            Blocked
-          </label>
-          <label class="control-check">
-            <input type="checkbox" class="control-input" data-pid="${p.id}" data-field="overrideDaily" ${c.overrideDaily ? "checked" : ""}>
-            Include in Daily Direction
-          </label>
-          <div class="summary-field full">
-            <label for="controlBlocker">Blocker Reason</label>
-            <input id="controlBlocker" class="control-input" data-pid="${p.id}" data-field="blockerReason" value="${escapeHTML(c.blockerReason)}" placeholder="Named decision or action holding ATI">
-          </div>
+      <div class="file-panel">
+        <div class="file-label">Counts</div>
+        <div class="metric-strip">
+          <div class="metric"><strong>${project.openTasks}</strong><span>Open</span></div>
+          <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
+          <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
+          <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
         </div>
       </div>
-      <div class="pb-section">
-        <h3>Approvals &amp; Payments</h3>
-        <div class="summary-grid">
-          <div class="summary-field">
-            <label for="contractStatus">Contract</label>
-            <select id="contractStatus" class="control-input" data-pid="${p.id}" data-field="contractStatus">
-              <option value="" ${!c.contractStatus?"selected":""}>Not set</option>
-              <option value="Not Sent" ${c.contractStatus==="Not Sent"?"selected":""}>Not Sent</option>
-              <option value="Sent" ${c.contractStatus==="Sent"?"selected":""}>Sent</option>
-              <option value="Accepted" ${c.contractStatus==="Accepted"?"selected":""}>Accepted</option>
-              <option value="Needs Review" ${c.contractStatus==="Needs Review"?"selected":""}>Needs Review</option>
-            </select>
-          </div>
-          <div class="summary-field">
-            <label for="depositStatus">Deposit</label>
-            <select id="depositStatus" class="control-input" data-pid="${p.id}" data-field="depositStatus">
-              <option value="" ${!c.depositStatus?"selected":""}>Not set</option>
-              <option value="Not Required" ${c.depositStatus==="Not Required"?"selected":""}>Not Required</option>
-              <option value="Pending" ${c.depositStatus==="Pending"?"selected":""}>Pending</option>
-              <option value="Paid" ${c.depositStatus==="Paid"?"selected":""}>Paid</option>
-              <option value="Overdue" ${c.depositStatus==="Overdue"?"selected":""}>Overdue</option>
-            </select>
-          </div>
-          <div class="summary-field full">
-            <label for="changeOrderStatus">Change Orders</label>
-            <select id="changeOrderStatus" class="control-input" data-pid="${p.id}" data-field="changeOrderStatus">
-              <option value="" ${!c.changeOrderStatus?"selected":""}>Not set</option>
-              <option value="None" ${c.changeOrderStatus==="None"?"selected":""}>None</option>
-              <option value="Pending" ${c.changeOrderStatus==="Pending"?"selected":""}>Pending</option>
-              <option value="Approved" ${c.changeOrderStatus==="Approved"?"selected":""}>Approved</option>
-              <option value="Needs Review" ${c.changeOrderStatus==="Needs Review"?"selected":""}>Needs Review</option>
-            </select>
-          </div>
+      <div class="file-panel">
+        <div class="file-label">Approvals &amp; Payments</div>
+        ${renderApprovalsPayments(project)}
+      </div>
+      <div class="file-panel">
+        <div class="file-label">Project Control</div>
+        ${renderProjectControl(project)}
+      </div>
+      <div class="file-panel project-signal">
+        <div class="file-label">Top Signals</div>
+        <div class="signal-list">
+          ${items.length ? items.map(item => `<span class="signal-pill ${escapeHtml(item.severity || "amber")}">${escapeHtml(item.detail || item.label || "Review needed")}${item.dueDate ? ` · ${formatDate(item.dueDate)}` : ""}</span>`).join("") : `<span class="project-sub">No current signals.</span>`}
+          ${remaining ? `<span class="signal-pill more">${remaining} more</span>` : ""}
         </div>
       </div>
-      <div class="pb-section">
-        <h3>Project Summary</h3>
-        <div class="summary-grid">
-          <div class="summary-field">
-            <label for="projectGroup">Project Group</label>
-            <input id="projectGroup" class="project-input" data-pid="${p.id}" data-field="projectGroup" value="${escapeHTML(p.projectGroup)}">
-          </div>
-          <div class="summary-field">
-            <label for="projectSegment">Segment / Area</label>
-            <input id="projectSegment" class="project-input" data-pid="${p.id}" data-field="segment" value="${escapeHTML(p.segment)}">
-          </div>
-          <div class="summary-field full">
-            <label for="projectExternalTeam">External Team</label>
-            <input id="projectExternalTeam" class="project-input" data-pid="${p.id}" data-field="externalTeam" value="${escapeHTML(p.externalTeam)}" placeholder="Big-D team, vendor, or key contact">
-          </div>
-          <div class="summary-field">
-            <label for="projectStart">Project Start</label>
-            <input id="projectStart" type="date" class="project-input" data-pid="${p.id}" data-field="startsAt" value="${p.startsAt||""}">
-          </div>
-          <div class="summary-field">
-            <label for="projectEnd">Project End</label>
-            <input id="projectEnd" type="date" class="project-input" data-pid="${p.id}" data-field="endsAt" value="${p.endsAt||""}">
-          </div>
-        </div>
-      </div>
-      <div class="pb-section">
-        <h3>Project Timelines</h3>
-        ${renderTimelinePhases(p)}
-      </div>
-      <div class="pb-section">
-        <h3>Milestones</h3>
-        ${milestoneTimelineHTML(p)}
-        ${msHTML}
-        ${milestoneAddHTML}
-      </div>
-      <div class="pb-section">
-        <h3>Task Status (${p.tasks.done + p.tasks.progress + p.tasks.todo} total)</h3>
-        ${taskHTML}
-        ${taskAddHTML}
-      </div>
-      <div class="pb-section">
-        <h3>Tasks &amp; Issues</h3>
-        ${riskHTML}
-        ${riskAddHTML}
+      <div class="file-panel project-signal">
+        <div class="file-label">Open Tasks</div>
+        ${renderOpenTasks(project)}
       </div>
     </div>
   `;
-  panel.classList.add("open");
-  overlay.classList.add("open");
-  autosizeTaskTextareas(panel);
-  document.getElementById("closeBtn").addEventListener("click", closePanel);
-}
-function autosizeTaskTextareas(root=document){
-  root.querySelectorAll(".task-textarea").forEach(el=>{
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight + 4}px`;
-  });
-}
-function renderTaskSource(task){
-  const source = normalizeTaskSource(task && task.source);
-  const label = taskSourceLabel(source);
-  if(!label) return `<span class="source-chip source-placeholder" aria-hidden="true">Source</span>`;
-  const className = escapeHTML(source);
-  if(task.externalUrl){
-    return `<a class="source-link ${className}" href="${escapeHTML(task.externalUrl)}" target="_blank" rel="noopener" title="Open ${escapeHTML(label)}">${escapeHTML(label)}</a>`;
-  }
-  return `<span class="source-chip ${className}" title="${escapeHTML(label)}">${escapeHTML(label)}</span>`;
-}
-function closePanel(){
-  document.getElementById("panel").classList.remove("open");
-  document.getElementById("overlay").classList.remove("open");
-}
-document.getElementById("overlay").addEventListener("click", closePanel);
-
-document.getElementById("panel").addEventListener("change", async e=>{
-  const controlInp = e.target.closest(".control-input");
-  if(controlInp){
-    const proj = PROJECTS.find(x=>x.id===Number(controlInp.dataset.pid));
-    const field = controlInp.dataset.field;
-    const allowed = ["nextOutcome","nextMoveOwner","operatingState","blocked","blockerReason","delayConsequence","nextAction","responseDate","reviewDate","escalationDate","lastMovementDate","evidence","controlNotes","escalationLevel","lastEscalationAction","eventTrigger","overrideDaily","contractStatus","depositStatus","changeOrderStatus"];
-    if(!proj || !allowed.includes(field)) return;
-    const previous = proj.control[field];
-    const value = controlInp.type==="checkbox" ? controlInp.checked : controlInp.value.trim();
-    try{
-      proj.control[field] = value;
-      await postUpdate("updateProjectControl", {projectId: proj.id, field, value});
-    } catch(err){
-      console.error("Failed to save control field:", err);
-      proj.control[field] = previous;
-      showSyncBanner("error", err.message || "That control detail could not be saved. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const taskInp = e.target.closest(".task-input");
-  if(taskInp){
-    const proj = PROJECTS.find(x=>x.id===Number(taskInp.dataset.pid));
-    const field = taskInp.dataset.field;
-    if(!proj || !["name","status"].includes(field)) return;
-    try{
-      await postUpdate("updateTask", {taskId: taskInp.dataset.taskid, field, value: taskInp.value});
-    } catch(err){
-      console.error("Failed to save task:", err);
-      showSyncBanner("error", "That task could not be saved. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const milestoneInp = e.target.closest(".milestone-input");
-  if(milestoneInp){
-    const proj = PROJECTS.find(x=>x.id===Number(milestoneInp.dataset.pid));
-    const field = milestoneInp.dataset.field;
-    if(!proj || !["name","date","state"].includes(field)) return;
-    try{
-      await postUpdate("updateMilestone", {milestoneId: milestoneInp.dataset.mid, field, value: milestoneInp.value});
-    } catch(err){
-      console.error("Failed to save milestone:", err);
-      showSyncBanner("error", "That milestone could not be saved. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const riskInp = e.target.closest(".risk-input");
-  if(riskInp){
-    const proj = PROJECTS.find(x=>x.id===Number(riskInp.dataset.pid));
-    const field = riskInp.dataset.field;
-    if(!proj || !["title","severity","owner","note","due"].includes(field)) return;
-    try{
-      await postUpdate("updateRisk", {riskId: riskInp.dataset.riskid, field, value: riskInp.value || null});
-    } catch(err){
-      console.error("Failed to save risk:", err);
-      showSyncBanner("error", "That risk or issue could not be saved. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const projectInp = e.target.closest(".project-input");
-  if(projectInp){
-    const proj = PROJECTS.find(x=>x.id===Number(projectInp.dataset.pid));
-    const field = projectInp.dataset.field;
-    if(!proj || !["projectGroup","segment","externalTeam","startsAt","endsAt"].includes(field)) return;
-    const previous = proj[field];
-    const nextValue = projectInp.value.trim();
-    try{
-      proj[field] = nextValue || null;
-      await postUpdate("updateProjectField", {projectId: proj.id, field, value: nextValue || null});
-    } catch(err){
-      console.error("Failed to save project field:", err);
-      proj[field] = previous;
-      showSyncBanner("error", "That project detail could not be saved. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const inp = e.target.closest(".due-input");
-  if(inp){
-    const proj = PROJECTS.find(x=>x.id===Number(inp.dataset.pid));
-    const risk = proj && proj.risks.find(r=>String(r.id)===inp.dataset.riskid);
-    if(!proj || !risk) return;
-    const previous = risk.due;
-    try{
-      risk.due = inp.value || null;
-      await postUpdate("updateRiskDue", {riskId: risk.id, value: risk.due});
-    } catch(err){
-      console.error("Failed to save risk due date:", err);
-      risk.due = previous;
-      showSyncBanner("error", "That due date could not be saved. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const tpInp = e.target.closest(".tp-input");
-  if(tpInp){
-    const proj = PROJECTS.find(x=>x.id===Number(tpInp.dataset.pid));
-    const idx = Number(tpInp.dataset.idx);
-    const field = tpInp.dataset.field;
-    if(!proj || !proj.timelines[idx] || !["start","end","status"].includes(field)) return;
-    const previous = proj.timelines[idx][field];
-    const value = field==="status" ? (tpInp.checked ? "complete" : null) : (tpInp.value || null);
-    try{
-      proj.timelines[idx][field] = value;
-      await postUpdate("updateTimeline", {projectId: proj.id, key: proj.timelines[idx].key, field, value});
-    } catch(err){
-      console.error("Failed to save timeline:", err);
-      proj.timelines[idx][field] = previous;
-      showSyncBanner("error", "That timeline date could not be saved. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-  }
-});
-document.getElementById("panel").addEventListener("input", e=>{
-  const taskText = e.target.closest(".task-textarea");
-  if(taskText) autosizeTaskTextareas(taskText.parentElement || document);
-});
-document.getElementById("panel").addEventListener("click", async e=>{
-  const addTask = e.target.closest("#addTaskBtn");
-  if(addTask){
-    const proj = PROJECTS.find(x=>x.id===Number(addTask.dataset.pid));
-    const name = document.getElementById("newTaskName").value.trim();
-    if(!proj || !name) return;
-    try{
-      await postUpdate("addTask", {projectId: proj.id, name, status:"todo"});
-    } catch(err){
-      console.error("Failed to add task:", err);
-      showSyncBanner("error", "That task could not be added. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const addMilestone = e.target.closest("#addMilestoneBtn");
-  if(addMilestone){
-    const proj = PROJECTS.find(x=>x.id===Number(addMilestone.dataset.pid));
-    const name = document.getElementById("newMilestoneName").value.trim();
-    const date = document.getElementById("newMilestoneDate").value;
-    const stateValue = document.getElementById("newMilestoneState").value;
-    if(!proj || !name || !date) return;
-    try{
-      await postUpdate("addMilestone", {projectId: proj.id, name, date, state:stateValue});
-    } catch(err){
-      console.error("Failed to add milestone:", err);
-      showSyncBanner("error", "That milestone could not be added. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const addRisk = e.target.closest("#addRiskBtn");
-  if(addRisk){
-    const proj = PROJECTS.find(x=>x.id===Number(addRisk.dataset.pid));
-    const title = document.getElementById("newRiskTitle").value.trim();
-    const severity = document.getElementById("newRiskSeverity").value;
-    if(!proj || !title) return;
-    try{
-      await postUpdate("addRisk", {projectId: proj.id, title, severity, owner:"", note:"", due:null});
-    } catch(err){
-      console.error("Failed to add risk:", err);
-      showSyncBanner("error", "That risk or issue could not be added. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const taskDelete = e.target.closest(".task-delete");
-  if(taskDelete){
-    const proj = PROJECTS.find(x=>x.id===Number(taskDelete.dataset.pid));
-    if(!proj) return;
-    try{
-      await postUpdate("deleteTask", {taskId: taskDelete.dataset.taskid});
-    } catch(err){
-      console.error("Failed to remove task:", err);
-      showSyncBanner("error", "That task could not be removed. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const milestoneDelete = e.target.closest(".milestone-delete");
-  if(milestoneDelete){
-    const proj = PROJECTS.find(x=>x.id===Number(milestoneDelete.dataset.pid));
-    if(!proj) return;
-    try{
-      await postUpdate("deleteMilestone", {milestoneId: milestoneDelete.dataset.mid});
-    } catch(err){
-      console.error("Failed to remove milestone:", err);
-      showSyncBanner("error", "That milestone could not be removed. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const riskDelete = e.target.closest(".risk-delete");
-  if(riskDelete){
-    const proj = PROJECTS.find(x=>x.id===Number(riskDelete.dataset.pid));
-    if(!proj) return;
-    try{
-      await postUpdate("deleteRisk", {riskId: riskDelete.dataset.riskid});
-    } catch(err){
-      console.error("Failed to remove risk:", err);
-      showSyncBanner("error", "That risk or issue could not be removed. Refresh or try again in a moment.");
-    }
-    refreshAll();
-    openPanel(proj.id);
-    return;
-  }
-  const btn = e.target.closest(".due-clear");
-  if(!btn) return;
-  const proj = PROJECTS.find(x=>x.id===Number(btn.dataset.pid));
-  const risk = proj && proj.risks.find(r=>String(r.id)===btn.dataset.riskid);
-  if(!proj || !risk) return;
-  const previous = risk.due;
-  try{
-    risk.due = null;
-    await postUpdate("updateRiskDue", {riskId: risk.id, value: null});
-  } catch(err){
-    console.error("Failed to clear risk due date:", err);
-    risk.due = previous;
-    showSyncBanner("error", "That due date could not be cleared. Refresh or try again in a moment.");
-  }
-  refreshAll();
-  openPanel(proj.id);
-});
-
-document.getElementById("phaseChips").addEventListener("click", e=>{
-  const chip = e.target.closest(".chip");
-  if(!chip) return;
-  document.querySelectorAll("#phaseChips .chip").forEach(c=>c.classList.remove("active"));
-  chip.classList.add("active");
-  state.ganttPhase = chip.dataset.phase;
-  renderGantt();
-});
-document.getElementById("filterChips").addEventListener("click", e=>{
-  const chip = e.target.closest(".chip");
-  if(!chip) return;
-  document.querySelectorAll("#filterChips .chip").forEach(c=>c.classList.remove("active"));
-  chip.classList.add("active");
-  state.filter = chip.dataset.filter;
-  renderBoard();
-});
-document.getElementById("groupChips").addEventListener("click", e=>{
-  const chip = e.target.closest(".chip");
-  if(!chip) return;
-  state.group = chip.dataset.group;
-  state.segment = "all";
-  renderGroupFilters();
-  renderSegmentFilters();
-  renderPhaseFilters();
-  renderKPIs();
-  renderDailyDirection();
-  renderAttention();
-  renderWeeklyControl();
-  renderGantt();
-  renderBoard();
-});
-document.getElementById("segmentChips").addEventListener("click", e=>{
-  const chip = e.target.closest(".chip");
-  if(!chip) return;
-  state.segment = chip.dataset.segment;
-  renderSegmentFilters();
-  renderPhaseFilters();
-  renderKPIs();
-  renderDailyDirection();
-  renderAttention();
-  renderWeeklyControl();
-  renderGantt();
-  renderBoard();
-});
-document.getElementById("searchInput").addEventListener("input", e=>{
-  state.search = e.target.value;
-  renderBoard();
-});
-
-document.getElementById("refreshBtn").addEventListener("click", loadProjects);
-
-// ---------- New Project modal ----------
-
-function openNewProjectModal(){
-  document.getElementById("npNameInput").value = "";
-  document.getElementById("npOverlay").classList.add("open");
-  document.getElementById("npModal").classList.add("open");
-  document.getElementById("npNameInput").focus();
-}
-function closeNewProjectModal(){
-  document.getElementById("npOverlay").classList.remove("open");
-  document.getElementById("npModal").classList.remove("open");
 }
 
-function blankTimelines(projectGroup="WPR"){
-  return phaseTemplateFor({projectGroup}).map(p=>({...p, start:null, end:null, status:""}));
+function renderApprovalsPayments(project) {
+  const statuses = project.approvalsPayments;
+  if (state.live) {
+    return `
+      <div class="control-grid">
+        ${selectField(project.id, "contractStatus", "Contract", project.control.contractStatus, ["", "Not Sent", "Sent", "Accepted", "Needs Review"])}
+        ${selectField(project.id, "depositStatus", "Deposit", project.control.depositStatus, ["", "Not Required", "Pending", "Paid", "Overdue"])}
+        ${selectField(project.id, "changeOrderStatus", "Change Orders", project.control.changeOrderStatus, ["", "None", "Pending", "Approved", "Needs Review"], "full")}
+      </div>
+    `;
+  }
+  const items = [
+    ["Contract", statuses.contract, approvalClass("contract", statuses.contract)],
+    ["Deposit", statuses.deposit, approvalClass("deposit", statuses.deposit)],
+    ["Change Orders", statuses.changeOrders, approvalClass("changeOrders", statuses.changeOrders)]
+  ];
+  return `<div class="approval-grid">${items.map(([label, value, cls]) => `
+    <div class="approval-metric ${cls}">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value || "Not set")}</strong>
+    </div>
+  `).join("")}</div>`;
 }
 
-async function createNewProject(){
-  const input = document.getElementById("npNameInput");
-  const name = input.value.trim();
-  if(!name){ input.focus(); return; }
+function approvalClass(type, value) {
+  if ((type === "contract" && value === "Accepted") || (type === "deposit" && ["Paid", "Not Required"].includes(value)) || (type === "changeOrders" && ["None", "Approved"].includes(value))) return "good";
+  if ((type === "deposit" && value === "Overdue") || value === "Needs Review") return "bad";
+  if (value) return "watch";
+  return "";
+}
 
-  const btn = document.getElementById("npCreate");
-  btn.disabled = true;
-  btn.textContent = "Creating…";
+function renderProjectControl(project) {
+  const control = project.control;
+  if (!state.live) {
+    return control.nextOutcome
+      ? `<div class="metric"><strong>${escapeHtml(control.nextOutcome)}</strong><span>Owner: ${escapeHtml(control.nextMoveOwner || "Not set")}</span></div>`
+      : `<span class="project-sub">No control status in hosted snapshot.</span>`;
+  }
+  return `
+    <div class="control-grid">
+      ${selectField(project.id, "operatingState", "State", control.operatingState, ["Action Needed", "Follow-Up Needed", "Monitor", "Stable"])}
+      ${textField(project.id, "nextMoveOwner", "Owner", control.nextMoveOwner)}
+      ${textareaField(project.id, "nextOutcome", "Next Outcome", control.nextOutcome, "full")}
+      ${textareaField(project.id, "nextAction", "Next Action", control.nextAction, "full")}
+      ${dateField(project.id, "reviewDate", "Review Date", control.reviewDate)}
+      ${dateField(project.id, "responseDate", "Response Date", control.responseDate)}
+    </div>
+  `;
+}
 
-  if(SYNC_ENABLED){
-    try{
-      await postUpdate("addProject", {name});
-    } catch(err){
-      console.error("Failed to add project:", err);
-      btn.disabled = false;
-      btn.textContent = "Create";
-      showSyncBanner("error", "That project could not be created. Refresh or try again in a moment.");
-      return;
-    }
-  } else {
-    const maxId = PROJECTS.reduce((m,p)=>Math.max(m,p.id),0);
-    const meta = defaultProjectMeta(name);
-    PROJECTS.push({
-      id:maxId+1, name, ...meta,
-      rag:"pending", percent:0, startsAt:null, endsAt:null,
-      milestones:[], tasks:{todo:0, progress:0, done:0}, taskList:[],
-      timelines: blankTimelines(meta.projectGroup),
-      risks:[],
-      control:blankControl(maxId+1)
+function renderOpenTasks(project) {
+  const openTasks = project.taskList.filter(task => task.status !== "done");
+  const taskRows = openTasks.length ? openTasks.map(task => `
+    <div class="task-row">
+      <div>
+        <div class="task-title">${escapeHtml(task.name)}</div>
+        <div class="task-meta">${task.source ? renderTaskSource(task) : "Command Center"}</div>
+      </div>
+      ${state.live ? `
+        <select class="task-input" data-task-id="${escapeAttribute(task.id)}" data-field="status" ${state.saving ? "disabled" : ""}>
+          <option value="todo" ${task.status === "todo" ? "selected" : ""}>To do</option>
+          <option value="progress" ${task.status === "progress" ? "selected" : ""}>In progress</option>
+          <option value="done" ${task.status === "done" ? "selected" : ""}>Done</option>
+        </select>
+      ` : `<span class="project-sub">${taskStatusLabel(task.status)}</span>`}
+    </div>
+  `).join("") : `<span class="project-sub">No open tasks.</span>`;
+
+  return `
+    <div class="task-list">${taskRows}</div>
+    ${state.live ? `
+      <div class="add-task-row">
+        <textarea id="newTask-${escapeAttribute(project.id)}" placeholder="Add open task"></textarea>
+        <button class="primary-button add-task-button" type="button" data-project-id="${escapeAttribute(project.id)}" ${state.saving ? "disabled" : ""}>Add</button>
+      </div>
+    ` : ""}
+  `;
+}
+
+function renderTaskSource(task) {
+  const label = taskSourceLabel(task.source);
+  if (task.externalUrl) return `<a class="source-link" href="${escapeAttribute(task.externalUrl)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+  return escapeHtml(label);
+}
+
+function taskSourceLabel(source) {
+  if (source === "pulse") return "Pulse";
+  if (source === "procore" || source === "procore-review") return "Procore";
+  return source || "Command Center";
+}
+
+function taskStatusLabel(status) {
+  if (status === "progress") return "In progress";
+  if (status === "done") return "Done";
+  return "To do";
+}
+
+function selectField(projectId, field, label, value, options, className = "") {
+  return `
+    <div class="compact-field ${className}">
+      <label>${escapeHtml(label)}</label>
+      <select class="control-input" data-project-id="${escapeAttribute(projectId)}" data-field="${escapeAttribute(field)}" ${state.saving ? "disabled" : ""}>
+        ${options.map(option => `<option value="${escapeAttribute(option)}" ${String(value || "") === option ? "selected" : ""}>${escapeHtml(option || "Not set")}</option>`).join("")}
+      </select>
+    </div>
+  `;
+}
+
+function textField(projectId, field, label, value, className = "") {
+  return `
+    <div class="compact-field ${className}">
+      <label>${escapeHtml(label)}</label>
+      <input class="control-input" data-project-id="${escapeAttribute(projectId)}" data-field="${escapeAttribute(field)}" value="${escapeAttribute(value || "")}" ${state.saving ? "disabled" : ""}>
+    </div>
+  `;
+}
+
+function dateField(projectId, field, label, value, className = "") {
+  return `
+    <div class="compact-field ${className}">
+      <label>${escapeHtml(label)}</label>
+      <input type="date" class="control-input" data-project-id="${escapeAttribute(projectId)}" data-field="${escapeAttribute(field)}" value="${escapeAttribute(value || "")}" ${state.saving ? "disabled" : ""}>
+    </div>
+  `;
+}
+
+function textareaField(projectId, field, label, value, className = "") {
+  return `
+    <div class="compact-field ${className}">
+      <label>${escapeHtml(label)}</label>
+      <textarea class="control-input" data-project-id="${escapeAttribute(projectId)}" data-field="${escapeAttribute(field)}" ${state.saving ? "disabled" : ""}>${escapeHtml(value || "")}</textarea>
+    </div>
+  `;
+}
+
+function topSeverity(items) {
+  return items.some(item => item.severity === "red") ? "red" : items.some(item => item.severity === "amber") ? "amber" : "green";
+}
+
+function renderLinks(links) {
+  const visibleLinks = links.filter(link => link && link.url);
+  if (!visibleLinks.length) return "";
+  return `<div class="links">${visibleLinks.map(link => `<a href="${escapeAttribute(link.url)}" target="_blank" rel="noopener">${escapeHtml(link.label || "Open Source")}</a>`).join("")}</div>`;
+}
+
+function sum(projects, key) {
+  return projects.reduce((total, project) => total + (Number(project[key]) || 0), 0);
+}
+
+function severityScore(severity) {
+  if (severity === "red") return 3;
+  if (severity === "amber") return 2;
+  if (severity === "green") return 1;
+  return 0;
+}
+
+function formatDate(value) {
+  const date = parseDate(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function parseDate(value) {
+  if (!value) return new Date(NaN);
+  return new Date(`${String(value).slice(0, 10)}T00:00:00`);
+}
+
+function formatDateTime(value) {
+  if (!value) return "unknown";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "unknown" : date.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+
+function formatDateRange(startDate, endDate) {
+  if (!startDate && !endDate) return "No date range";
+  if (startDate && endDate) return `${formatDate(startDate)} to ${formatDate(endDate)}`;
+  return startDate ? `Starts ${formatDate(startDate)}` : `Ends ${formatDate(endDate)}`;
+}
+
+function dateOnly(value) {
+  if (!value) return "";
+  const text = String(value).trim();
+  if (/^\d{4}-\d{2}-\d{2}/.test(text)) return text.slice(0, 10);
+  const date = parseDate(text);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value).replaceAll("`", "&#096;");
+}
+
+document.getElementById("filters").addEventListener("click", event => {
+  const button = event.target.closest("[data-filter]");
+  if (!button) return;
+  state.filter = button.dataset.filter;
+  render();
+});
+
+document.addEventListener("click", event => {
+  if (event.target.closest("#attentionToggle")) {
+    state.attentionExpanded = !state.attentionExpanded;
+    renderAttention();
+    return;
+  }
+
+  const addTaskButton = event.target.closest(".add-task-button");
+  if (addTaskButton) {
+    const projectId = addTaskButton.dataset.projectId;
+    const field = document.getElementById(`newTask-${projectId}`);
+    const name = field ? field.value.trim() : "";
+    if (!name) return;
+    postUpdate("addTask", { projectId, name, status: "todo" }).catch(error => {
+      console.error("Add task failed:", error);
+      showSyncBanner("error", error.message || "Task could not be added.");
+    });
+    return;
+  }
+
+  const projectToggle = event.target.closest("[data-project-toggle]");
+  if (!projectToggle) return;
+  const id = projectToggle.dataset.projectToggle;
+  if (state.expandedProjects.has(id)) state.expandedProjects.delete(id);
+  else state.expandedProjects.add(id);
+  renderProjects();
+});
+
+document.addEventListener("change", event => {
+  const controlInput = event.target.closest(".control-input");
+  if (controlInput) {
+    const projectId = controlInput.dataset.projectId;
+    const field = controlInput.dataset.field;
+    const value = controlInput.type === "checkbox" ? controlInput.checked : controlInput.value.trim();
+    postUpdate("updateProjectControl", { projectId, field, value }).catch(error => {
+      console.error("Control update failed:", error);
+      showSyncBanner("error", error.message || "Project control could not be saved.");
+    });
+    return;
+  }
+
+  const taskInput = event.target.closest(".task-input");
+  if (taskInput) {
+    const taskId = taskInput.dataset.taskId;
+    const field = taskInput.dataset.field;
+    const value = taskInput.value;
+    postUpdate("updateTask", { taskId, field, value }).catch(error => {
+      console.error("Task update failed:", error);
+      showSyncBanner("error", error.message || "Task could not be saved.");
     });
   }
-
-  btn.disabled = false;
-  btn.textContent = "Create";
-  closeNewProjectModal();
-  refreshAll();
-}
-
-document.getElementById("newProjectBtn").addEventListener("click", openNewProjectModal);
-document.getElementById("npCancel").addEventListener("click", closeNewProjectModal);
-document.getElementById("npOverlay").addEventListener("click", closeNewProjectModal);
-document.getElementById("npCreate").addEventListener("click", createNewProject);
-document.getElementById("npNameInput").addEventListener("keydown", e=>{
-  if(e.key==="Enter") createNewProject();
-  if(e.key==="Escape") closeNewProjectModal();
 });
 
-loadProjects();
+document.getElementById("searchInput").addEventListener("input", event => {
+  state.query = event.target.value;
+  render();
+});
+
+loadData();
 </script>
 </body>
 </html>
