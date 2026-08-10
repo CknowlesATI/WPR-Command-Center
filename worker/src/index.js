@@ -5,7 +5,7 @@ const JSON_HEADERS = {
   "access-control-allow-headers": "content-type,x-command-center-token,x-command-center-session,x-command-center-initials"
 };
 
-const SESSION_DAYS = 30;
+const SESSION_DAYS = 183;
 
 const CONTROL_FIELDS = new Map([
   ["nextOutcome", ["next_outcome", normalizeText]],

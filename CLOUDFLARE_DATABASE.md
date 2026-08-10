@@ -41,9 +41,9 @@ Write access is protected by Cloudflare Worker secrets:
 - `SESSION_SECRET`: private signing secret used by the Worker to verify saved
   browser sessions.
 
-The website stores a 30-day edit session in the user's browser after the access
-code is accepted. Future edits send that session token in the background, so the
-user does not need to enter the code every time.
+The website stores a roughly 6-month edit session in the user's browser after
+the access code is accepted. Future edits send that session token in the
+background, so the user does not need to enter the code every time.
 
 The access code is intentionally not stored in this repository. Rotate it from
 Cloudflare/Wrangler when needed:
