@@ -739,6 +739,18 @@
     text-transform: uppercase;
   }
 
+  .closed-task-section {
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid #dfe4eb;
+    border-radius: 8px;
+    background: #f4f6f8;
+  }
+
+  .closed-task-section .task-group-title {
+    color: #6b7280;
+  }
+
   .task-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 116px;
@@ -751,12 +763,17 @@
   }
 
   .task-row.closed {
-    background: #f4f6f8;
+    border-color: #dfe4eb;
+    background: #eef1f5;
     color: var(--muted);
   }
 
   .task-row.closed .task-title {
     color: #6b7280;
+  }
+
+  .task-row.closed .task-meta {
+    color: #8a94a3;
   }
 
   .task-title {
@@ -801,6 +818,12 @@
     background: #fff3e6;
     border-color: #ffc98a;
     color: #c45f00;
+  }
+
+  .source-chip.closed {
+    background: #e8ecf1;
+    border-color: #d1d8e0;
+    color: #7b8492;
   }
 
   .source-chip.command,
@@ -1721,8 +1744,8 @@ function renderOpenTasks(project) {
         <button class="primary-button add-task-button" type="button" data-project-id="${escapeAttribute(project.id)}" ${state.saving ? "disabled" : ""}>Add</button>
       </div>
     ` : ""}
-    <div class="task-group" style="margin-top:12px;">
-      <div class="task-group-title">Closed</div>
+    <div class="closed-task-section">
+      <div class="task-group-title">Closed Items</div>
       <div class="task-list">${closedRows}</div>
     </div>
   `;
@@ -1742,7 +1765,7 @@ function renderTaskRow(task, closed) {
     <div class="task-row ${closed ? "closed" : ""}">
       <div>
         <div class="task-title">${escapeHtml(task.name)}</div>
-        <div class="task-meta">${renderTaskMeta(task)}</div>
+        <div class="task-meta">${renderTaskMeta(task, closed)}</div>
         ${renderEditNote(task)}
       </div>
       ${renderTaskStateControl(task)}
@@ -1750,8 +1773,8 @@ function renderTaskRow(task, closed) {
   `;
 }
 
-function renderTaskMeta(task) {
-  return `${task.source ? renderTaskSource(task) : "Command Center"} ${renderSourceState(task)}`;
+function renderTaskMeta(task, closed) {
+  return `${task.source ? renderTaskSource(task, closed) : "Command Center"} ${renderSourceState(task)}`;
 }
 
 function renderTaskStateControl(task) {
@@ -1797,9 +1820,9 @@ function taskSourceRank(source) {
   return 4;
 }
 
-function renderTaskSource(task) {
+function renderTaskSource(task, closed = false) {
   const label = taskSourceLabel(task.source);
-  const className = taskSourceGroup(task.source);
+  const className = closed ? "closed" : taskSourceGroup(task.source);
   const url = taskSourceUrl(task);
   if (url) return `<a class="source-chip ${escapeAttribute(className)}" href="${escapeAttribute(url)}" target="_blank" rel="noopener" title="${escapeAttribute(sourceLinkTitle(label, task.externalUrl))}">${escapeHtml(label)}</a>`;
   return `<span class="source-chip ${escapeAttribute(className)}">${escapeHtml(label)}</span>`;
