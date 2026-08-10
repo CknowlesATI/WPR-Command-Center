@@ -2,8 +2,10 @@ const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET,POST,OPTIONS",
-  "access-control-allow-headers": "content-type,x-command-center-token"
+  "access-control-allow-headers": "content-type,x-command-center-token,x-command-center-session,x-command-center-initials"
 };
+
+const SESSION_DAYS = 30;
 
 const CONTROL_FIELDS = new Map([
   ["nextOutcome", ["next_outcome", normalizeText]],
@@ -38,9 +40,10 @@ export default {
       }
 
       if (request.method === "POST") {
-        authorizeWrite(request, env);
         const body = await request.json();
-        await applyAction(env.DB, body);
+        if (body.action === "authorize") return json(await createSession(body, env));
+        const actor = await authorizeWrite(request, env);
+        await applyAction(env.DB, body, actor);
         return json({ ok: true, data: await getAllData(env.DB) });
       }
 
@@ -51,12 +54,12 @@ export default {
   }
 };
 
-async function applyAction(db, body) {
+async function applyAction(db, body, actor) {
   if (!body || typeof body !== "object") throw new Error("Missing request body");
 
-  if (body.action === "updateProjectControl") return updateProjectControl(db, body);
-  if (body.action === "addTask") return addTask(db, body);
-  if (body.action === "updateTask") return updateTask(db, body);
+  if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
+  if (body.action === "addTask") return addTask(db, body, actor);
+  if (body.action === "updateTask") return updateTask(db, body, actor);
   if (body.action === "deleteTask") return deleteById(db, "tasks", body.taskId);
 
   throw new Error(`Unknown action: ${body.action}`);
@@ -98,7 +101,9 @@ async function getAllData(db) {
         name: task.name,
         status: task.status,
         source: task.source || "",
-        externalUrl: task.external_url || ""
+        externalUrl: task.external_url || "",
+        updatedBy: task.updated_by || "",
+        updatedAt: task.updated_at || ""
       })),
       timelines: timelines.results
         .filter(item => String(item.project_id) === String(project.id))
@@ -111,7 +116,7 @@ async function getAllData(db) {
   });
 }
 
-async function updateProjectControl(db, body) {
+async function updateProjectControl(db, body, actor) {
   const projectId = required(body.projectId, "projectId");
   const field = required(body.field, "field");
   const config = CONTROL_FIELDS.get(field);
@@ -122,36 +127,37 @@ async function updateProjectControl(db, body) {
   const [column, normalize] = config;
   const value = normalize(body.value);
   const updatedAt = currentIsoMinute();
+  const updatedBy = actor.initials;
 
   validateControlField(field, value);
 
   await db.batch([
-    db.prepare(`UPDATE project_controls SET ${column} = ?, updated_at = ? WHERE project_id = ?`).bind(value, updatedAt, projectId),
-    db.prepare("INSERT INTO project_control_history (project_id, changed_at, field, old_value, new_value) VALUES (?, ?, ?, ?, ?)")
-      .bind(projectId, updatedAt, field, String(existing[column] ?? ""), String(value ?? ""))
+    db.prepare(`UPDATE project_controls SET ${column} = ?, updated_at = ?, updated_by = ? WHERE project_id = ?`).bind(value, updatedAt, updatedBy, projectId),
+    db.prepare("INSERT INTO project_control_history (project_id, changed_at, field, old_value, new_value, changed_by) VALUES (?, ?, ?, ?, ?, ?)")
+      .bind(projectId, updatedAt, field, String(existing[column] ?? ""), String(value ?? ""), updatedBy)
   ]);
 }
 
-async function addTask(db, body) {
+async function addTask(db, body, actor) {
   const projectId = required(body.projectId, "projectId");
   const name = normalizeText(required(body.name, "name"));
   if (!name) throw new Error("Task name is required");
   const status = normalizeTaskStatus(body.status || "todo");
   const source = normalizeText(body.source || "Command Center");
   const next = await db.prepare("SELECT COALESCE(MAX(CAST(id AS INTEGER)), 0) + 1 AS id FROM tasks").first();
-  await db.prepare("INSERT INTO tasks (id, project_id, name, status, source, external_url) VALUES (?, ?, ?, ?, ?, ?)")
-    .bind(String(next.id), projectId, name, status, source, normalizeText(body.externalUrl || ""))
+  await db.prepare("INSERT INTO tasks (id, project_id, name, status, source, external_url, updated_by, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+    .bind(String(next.id), projectId, name, status, source, normalizeText(body.externalUrl || ""), actor.initials, currentIsoMinute())
     .run();
 }
 
-async function updateTask(db, body) {
+async function updateTask(db, body, actor) {
   const taskId = required(body.taskId, "taskId");
   const field = required(body.field, "field");
   if (!["name", "status"].includes(field)) throw new Error(`Invalid task field: ${field}`);
   const column = field === "name" ? "name" : "status";
   const value = field === "status" ? normalizeTaskStatus(body.value) : normalizeText(body.value);
   if (field === "name" && !value) throw new Error("Task name is required");
-  const result = await db.prepare(`UPDATE tasks SET ${column} = ? WHERE id = ?`).bind(value, taskId).run();
+  const result = await db.prepare(`UPDATE tasks SET ${column} = ?, updated_by = ?, updated_at = ? WHERE id = ?`).bind(value, actor.initials, currentIsoMinute(), taskId).run();
   if (!result.meta || result.meta.changes === 0) throw new Error(`Task row not found: ${taskId}`);
 }
 
@@ -189,18 +195,84 @@ function toControl(projectId, row = {}) {
     contractStatus: row.contract_status || "",
     depositStatus: row.deposit_status || "",
     changeOrderStatus: row.change_order_status || "",
-    updatedAt: row.updated_at || ""
+    updatedAt: row.updated_at || "",
+    updatedBy: row.updated_by || ""
   };
 }
 
-function authorizeWrite(request, env) {
-  if (!env.WRITE_TOKEN) return;
-  const token = request.headers.get("x-command-center-token") || "";
-  if (token !== env.WRITE_TOKEN) {
-    const error = new Error("Write access denied");
-    error.status = 401;
-    throw error;
+async function createSession(body, env) {
+  const code = normalizeText(body.accessCode);
+  const expectedCode = normalizeText(env.ACCESS_CODE || env.WRITE_TOKEN || "");
+  if (!expectedCode || code !== expectedCode) throw unauthorized("Access code was not accepted.");
+
+  const initials = normalizeInitials(body.initials);
+  const expiresAt = Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000;
+  const payload = { initials, exp: expiresAt };
+  const token = await signSession(payload, env);
+  return { ok: true, token, initials, expiresAt };
+}
+
+async function authorizeWrite(request, env) {
+  const expectedCode = normalizeText(env.ACCESS_CODE || env.WRITE_TOKEN || "");
+  if (!expectedCode) return { initials: normalizeInitials(request.headers.get("x-command-center-initials") || "CC") };
+
+  const session = request.headers.get("x-command-center-session") || "";
+  const actor = await verifySession(session, env);
+  if (!actor) throw unauthorized("Edit access has expired or is not authorized.");
+  return actor;
+}
+
+async function signSession(payload, env) {
+  const encodedPayload = base64UrlEncode(JSON.stringify(payload));
+  const signature = await hmac(encodedPayload, sessionSecret(env));
+  return `${encodedPayload}.${signature}`;
+}
+
+async function verifySession(token, env) {
+  const [encodedPayload, signature] = String(token || "").split(".");
+  if (!encodedPayload || !signature) return null;
+  const expected = await hmac(encodedPayload, sessionSecret(env));
+  if (signature !== expected) return null;
+
+  try {
+    const payload = JSON.parse(base64UrlDecode(encodedPayload));
+    if (!payload.exp || Number(payload.exp) < Date.now()) return null;
+    return { initials: normalizeInitials(payload.initials) };
+  } catch {
+    return null;
   }
+}
+
+async function hmac(value, secret) {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(value));
+  return base64UrlEncode(String.fromCharCode(...new Uint8Array(signature)));
+}
+
+function sessionSecret(env) {
+  return normalizeText(env.SESSION_SECRET || env.ACCESS_CODE || env.WRITE_TOKEN || "command-center-dev");
+}
+
+function normalizeInitials(value) {
+  const initials = normalizeText(value).toUpperCase().replace(/[^A-Z]/g, "").slice(0, 4);
+  if (!initials) throw new Error("Initials are required");
+  return initials;
+}
+
+function unauthorized(message) {
+  const error = new Error(message);
+  error.status = 401;
+  return error;
+}
+
+function base64UrlEncode(value) {
+  return btoa(value).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+}
+
+function base64UrlDecode(value) {
+  const padded = value.replaceAll("-", "+").replaceAll("_", "/").padEnd(Math.ceil(value.length / 4) * 4, "=");
+  return atob(padded);
 }
 
 function mapBy(rows, key) {

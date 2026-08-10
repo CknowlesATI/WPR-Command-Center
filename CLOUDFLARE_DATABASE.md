@@ -35,7 +35,22 @@ This setup avoids a paid database subscription for normal Command Center usage.
 
 ## Write Access
 
-The Worker supports an optional `WRITE_TOKEN` secret. If that secret is set in
-Cloudflare, write requests must include the matching `x-command-center-token`
-header. The public website does not require that token yet, so the current live
-behavior matches the previous Apps Script setup.
+Write access is protected by Cloudflare Worker secrets:
+
+- `ACCESS_CODE`: shared code that approved users enter once per browser/device.
+- `SESSION_SECRET`: private signing secret used by the Worker to verify saved
+  browser sessions.
+
+The website stores a 30-day edit session in the user's browser after the access
+code is accepted. Future edits send that session token in the background, so the
+user does not need to enter the code every time.
+
+The access code is intentionally not stored in this repository. Rotate it from
+Cloudflare/Wrangler when needed:
+
+```powershell
+pnpm exec wrangler secret put ACCESS_CODE --config worker/wrangler.toml
+```
+
+Task and project-control edits store the editor initials and timestamp so the
+Command Center can show a small "Last edit CK" note.

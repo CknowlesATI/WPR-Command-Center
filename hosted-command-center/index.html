@@ -95,6 +95,30 @@
     font-size: 12px;
   }
 
+  .status-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .auth-button {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    border-radius: 999px;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .auth-button.connected {
+    border-color: #b8dec8;
+    background: var(--green-bg);
+    color: var(--green);
+  }
+
   .sync-banner {
     border: 1px solid #f3d9a3;
     border-radius: 8px;
@@ -110,6 +134,13 @@
     border-color: #f0b8b8;
     background: var(--red-bg);
     color: var(--red);
+  }
+
+  .edit-note {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
   }
 
   .filters {
@@ -900,7 +931,10 @@
   <div class="sync-banner" id="syncBanner" style="display:none;"></div>
   <div class="status-row">
     <div class="updated" id="updatedText">Loading project data...</div>
-    <div class="filters" id="filters"></div>
+    <div class="status-actions">
+      <button class="auth-button" id="authButton" type="button">Edit Access</button>
+      <div class="filters" id="filters"></div>
+    </div>
   </div>
 
   <section class="kpis" id="kpis"></section>
@@ -945,6 +979,8 @@
 </main>
 
 <script>
+const AUTH_STORAGE_KEY = "wprCommandCenterAuth";
+
 const state = {
   projects: [],
   filter: "all",
@@ -952,7 +988,8 @@ const state = {
   attentionExpanded: false,
   expandedProjects: new Set(),
   saving: false,
-  live: false
+  live: false,
+  auth: loadAuthSession()
 };
 
 const API_URL = "https://wpr-command-center-api.wpr-command-center.workers.dev";
@@ -985,6 +1022,7 @@ async function loadData() {
       document.getElementById("updatedText").textContent = "Live Command Center data";
       showSyncBanner("none");
       render();
+      renderAuthStatus();
       return;
     } catch (error) {
       console.error("Live API load failed:", error);
@@ -1020,14 +1058,24 @@ function showSyncBanner(kind, message = "") {
 
 async function postUpdate(action, payload) {
   if (!state.live || !SYNC_ENABLED) throw new Error("Live editing is not connected.");
+  const auth = await ensureEditAccess();
   state.saving = true;
   renderProjects();
   try {
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-command-center-session": auth.token,
+        "x-command-center-initials": auth.initials
+      },
       body: JSON.stringify({ action, ...payload })
     });
+    if (response.status === 401) {
+      clearAuthSession();
+      renderAuthStatus();
+      throw new Error("Edit access expired. Please reconnect edit access.");
+    }
     if (!response.ok) throw new Error(`Save failed (${response.status})`);
     const data = await response.json();
     if (data && data.ok === false) throw new Error(data.error || "Save failed");
@@ -1098,7 +1146,9 @@ function normalizeControl(value, projectId) {
     blockerReason: String(incoming.blockerReason || "").trim(),
     contractStatus: String(incoming.contractStatus || "").trim(),
     depositStatus: String(incoming.depositStatus || "").trim(),
-    changeOrderStatus: String(incoming.changeOrderStatus || "").trim()
+    changeOrderStatus: String(incoming.changeOrderStatus || "").trim(),
+    updatedBy: String(incoming.updatedBy || "").trim(),
+    updatedAt: String(incoming.updatedAt || "").trim()
   };
 }
 
@@ -1108,7 +1158,9 @@ function normalizeTaskList(tasks) {
     name: String(task.name || "").trim(),
     status: ["todo", "progress", "done"].includes(task.status) ? task.status : "todo",
     source: String(task.source || "").trim(),
-    externalUrl: String(task.externalUrl || task.url || task.link || "").trim()
+    externalUrl: String(task.externalUrl || task.url || task.link || "").trim(),
+    updatedBy: String(task.updatedBy || "").trim(),
+    updatedAt: String(task.updatedAt || "").trim()
   }))
     .filter(task => task.name)
     .sort((a, b) => taskSourceRank(a.source) - taskSourceRank(b.source) || a.name.localeCompare(b.name)) : [];
@@ -1368,6 +1420,7 @@ function renderApprovalsPayments(project) {
         ${selectField(project.id, "depositStatus", "Deposit", project.control.depositStatus, ["", "Not Required", "Pending", "Paid", "Overdue"])}
         ${selectField(project.id, "changeOrderStatus", "Change Orders", project.control.changeOrderStatus, ["", "None", "Pending", "Approved", "Needs Review"], "full")}
       </div>
+      ${renderEditNote(project.control)}
     `;
   }
   const items = [
@@ -1406,6 +1459,7 @@ function renderProjectControl(project) {
       ${dateField(project.id, "reviewDate", "Review Date", control.reviewDate)}
       ${dateField(project.id, "responseDate", "Response Date", control.responseDate)}
     </div>
+    ${renderEditNote(control)}
   `;
 }
 
@@ -1419,6 +1473,7 @@ function renderOpenTasks(project) {
       <div>
         <div class="task-title">${escapeHtml(task.name)}</div>
         <div class="task-meta">${task.source ? renderTaskSource(task) : "Command Center"}</div>
+        ${renderEditNote(task)}
       </div>
       ${state.live ? `
         <select class="task-input" data-task-id="${escapeAttribute(task.id)}" data-field="status" ${state.saving ? "disabled" : ""}>
@@ -1478,6 +1533,12 @@ function renderTaskSource(task) {
   const className = taskSourceGroup(task.source);
   if (task.externalUrl) return `<a class="source-chip ${escapeAttribute(className)}" href="${escapeAttribute(task.externalUrl)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
   return `<span class="source-chip ${escapeAttribute(className)}">${escapeHtml(label)}</span>`;
+}
+
+function renderEditNote(item) {
+  if (!item || !item.updatedBy) return "";
+  const when = item.updatedAt ? ` · ${formatDateTime(item.updatedAt)}` : "";
+  return `<div class="edit-note">Last edit ${escapeHtml(item.updatedBy)}${escapeHtml(when)}</div>`;
 }
 
 function taskSourceLabel(source) {
@@ -1659,6 +1720,79 @@ document.getElementById("searchInput").addEventListener("input", event => {
   render();
 });
 
+document.getElementById("authButton").addEventListener("click", async () => {
+  if (authIsValid()) {
+    if (!window.confirm(`Edit access is connected as ${state.auth.initials}. Reset edit access?`)) return;
+    clearAuthSession();
+    renderAuthStatus();
+    return;
+  }
+  try {
+    await requestEditAccess();
+    renderAuthStatus();
+  } catch (error) {
+    showSyncBanner("error", error.message || "Edit access could not be connected.");
+  }
+});
+
+function loadAuthSession() {
+  try {
+    return JSON.parse(window.localStorage.getItem(AUTH_STORAGE_KEY) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function saveAuthSession(auth) {
+  state.auth = auth;
+  window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(auth));
+}
+
+function clearAuthSession() {
+  state.auth = null;
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+}
+
+function authIsValid() {
+  return !!(state.auth && state.auth.token && state.auth.initials && Number(state.auth.expiresAt) > Date.now());
+}
+
+async function ensureEditAccess() {
+  if (authIsValid()) return state.auth;
+  return requestEditAccess();
+}
+
+async function requestEditAccess() {
+  const initials = (window.prompt("Enter your initials for edit tracking") || "").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 4);
+  if (!initials) throw new Error("Initials are required to edit.");
+  const accessCode = window.prompt("Enter the Command Center access code") || "";
+  if (!accessCode.trim()) throw new Error("Access code is required to edit.");
+
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "authorize", initials, accessCode })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || data.ok === false || !data.token) throw new Error(data.error || "Access code was not accepted.");
+  const auth = { token: data.token, initials: data.initials || initials, expiresAt: data.expiresAt };
+  saveAuthSession(auth);
+  return auth;
+}
+
+function renderAuthStatus() {
+  const button = document.getElementById("authButton");
+  if (!button) return;
+  if (authIsValid()) {
+    button.textContent = `Edit Access: ${state.auth.initials}`;
+    button.classList.add("connected");
+  } else {
+    button.textContent = "Edit Access";
+    button.classList.remove("connected");
+  }
+}
+
+renderAuthStatus();
 loadData();
 </script>
 </body>
