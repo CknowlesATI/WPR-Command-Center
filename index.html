@@ -1774,7 +1774,7 @@ function renderTaskRow(task, closed) {
 }
 
 function renderTaskMeta(task, closed) {
-  return `${task.source ? renderTaskSource(task, closed) : "Command Center"} ${renderSourceState(task)}`;
+  return task.source ? renderTaskSource(task, closed) : "Command Center";
 }
 
 function renderTaskStateControl(task) {
