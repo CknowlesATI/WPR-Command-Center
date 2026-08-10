@@ -336,12 +336,18 @@ function buildReplacementSql(tasks) {
 
   for (const task of tasks) {
     lines.push(
-      "INSERT INTO tasks (id, project_id, name, status, source, external_url, updated_by, updated_at) VALUES " +
-      `(${sqlString(task.id)}, ${sqlString(task.projectId)}, ${sqlString(task.name)}, ${sqlString(task.status)}, 'pulse', ${sqlString(task.externalUrl)}, 'SYNC', ${sqlString(now)});`
+      "INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, updated_by, updated_at) VALUES " +
+      `(${sqlString(task.id)}, ${sqlString(task.projectId)}, ${sqlString(task.name)}, ${sqlString(task.status)}, 'pulse', ${sqlString(taskStatusLabel(task.status))}, ${sqlString(task.externalUrl)}, 'SYNC', ${sqlString(now)});`
     );
   }
 
   return `${lines.join("\n")}\n`;
+}
+
+function taskStatusLabel(status) {
+  if (status === "done") return "Closed";
+  if (status === "note") return "Note";
+  return "To-Do";
 }
 
 function writeSqlFile(payload) {

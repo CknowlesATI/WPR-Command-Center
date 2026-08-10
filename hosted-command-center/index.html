@@ -750,6 +750,15 @@
     padding: 8px;
   }
 
+  .task-row.closed {
+    background: #f4f6f8;
+    color: var(--muted);
+  }
+
+  .task-row.closed .task-title {
+    color: #6b7280;
+  }
+
   .task-title {
     font-size: 12px;
     font-weight: 700;
@@ -801,9 +810,44 @@
     color: var(--muted);
   }
 
+  .state-chip {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 7px;
+    background: #fff;
+    color: var(--muted);
+    font-size: 10.5px;
+    font-weight: 850;
+    line-height: 1.2;
+  }
+
+  .state-chip.todo,
+  .state-chip.initiated {
+    border-color: #f0d49a;
+    background: var(--amber-bg);
+    color: var(--amber);
+  }
+
+  .state-chip.note,
+  .state-chip.ready-for-review {
+    border-color: #cbd9fb;
+    background: var(--blue-bg);
+    color: var(--blue);
+  }
+
+  .state-chip.done,
+  .state-chip.closed {
+    border-color: #d5dbe3;
+    background: #eef1f5;
+    color: #6b7280;
+  }
+
   .add-task-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) 118px auto;
     gap: 8px;
     margin-top: 9px;
     padding-top: 9px;
@@ -1275,8 +1319,9 @@ function normalizeTaskList(tasks) {
   return Array.isArray(tasks) ? tasks.map(task => ({
     id: task.id,
     name: String(task.name || "").trim(),
-    status: ["todo", "progress", "done"].includes(task.status) ? task.status : "todo",
+    status: ["todo", "note", "done"].includes(task.status) ? task.status : task.status === "progress" ? "note" : "todo",
     source: String(task.source || "").trim(),
+    sourceState: String(task.sourceState || task.source_state || "").trim(),
     externalUrl: String(task.externalUrl || task.url || task.link || "").trim(),
     updatedBy: String(task.updatedBy || "").trim(),
     updatedAt: String(task.updatedAt || "").trim()
@@ -1286,10 +1331,7 @@ function normalizeTaskList(tasks) {
 }
 
 function openTaskCount(project) {
-  if (project.tasks && typeof project.tasks === "object") {
-    return (Number(project.tasks.todo) || 0) + (Number(project.tasks.progress) || 0);
-  }
-  return normalizeTaskList(project.taskList).filter(task => task.status !== "done").length;
+  return normalizeTaskList(project.taskList).filter(task => task.status === "todo").length;
 }
 
 function currentProjectPhase(timelines = []) {
@@ -1663,37 +1705,66 @@ function renderProjectControl(project) {
 
 function renderOpenTasks(project) {
   const openTasks = project.taskList.filter(task => task.status !== "done");
-  const taskRows = openTasks.length ? groupedTasks(openTasks).map(group => `
-    <div class="task-group">
-      <div class="task-group-title">${escapeHtml(group.label)}</div>
-      ${group.tasks.map(task => `
-    <div class="task-row">
-      <div>
-        <div class="task-title">${escapeHtml(task.name)}</div>
-        <div class="task-meta">${task.source ? renderTaskSource(task) : "Command Center"}</div>
-        ${renderEditNote(task)}
-      </div>
-      ${state.live ? `
-        <select class="task-input" data-task-id="${escapeAttribute(task.id)}" data-field="status" ${state.saving ? "disabled" : ""}>
-          <option value="todo" ${task.status === "todo" ? "selected" : ""}>To do</option>
-          <option value="progress" ${task.status === "progress" ? "selected" : ""}>In progress</option>
-          <option value="done" ${task.status === "done" ? "selected" : ""}>Done</option>
-        </select>
-      ` : `<span class="project-sub">${taskStatusLabel(task.status)}</span>`}
-    </div>
-      `).join("")}
-    </div>
-  `).join("") : `<span class="project-sub">No open tasks.</span>`;
+  const closedTasks = project.taskList.filter(task => task.status === "done");
+  const taskRows = renderTaskGroups(openTasks, false) || `<span class="project-sub">No open tasks.</span>`;
+  const closedRows = renderTaskGroups(closedTasks, true) || `<span class="project-sub">No closed items.</span>`;
 
   return `
     <div class="task-list">${taskRows}</div>
     ${state.live ? `
       <div class="add-task-row">
         <textarea id="newTask-${escapeAttribute(project.id)}" placeholder="Add open task"></textarea>
+        <select id="newTaskStatus-${escapeAttribute(project.id)}" class="task-input" ${state.saving ? "disabled" : ""}>
+          <option value="todo">To-Do</option>
+          <option value="note">Note</option>
+        </select>
         <button class="primary-button add-task-button" type="button" data-project-id="${escapeAttribute(project.id)}" ${state.saving ? "disabled" : ""}>Add</button>
       </div>
     ` : ""}
+    <div class="task-group" style="margin-top:12px;">
+      <div class="task-group-title">Closed</div>
+      <div class="task-list">${closedRows}</div>
+    </div>
   `;
+}
+
+function renderTaskGroups(tasks, closed) {
+  return tasks.length ? groupedTasks(tasks).map(group => `
+    <div class="task-group">
+      <div class="task-group-title">${escapeHtml(group.label)}</div>
+      ${group.tasks.map(task => renderTaskRow(task, closed)).join("")}
+    </div>
+  `).join("") : "";
+}
+
+function renderTaskRow(task, closed) {
+  return `
+    <div class="task-row ${closed ? "closed" : ""}">
+      <div>
+        <div class="task-title">${escapeHtml(task.name)}</div>
+        <div class="task-meta">${renderTaskMeta(task)}</div>
+        ${renderEditNote(task)}
+      </div>
+      ${renderTaskStateControl(task)}
+    </div>
+  `;
+}
+
+function renderTaskMeta(task) {
+  return `${task.source ? renderTaskSource(task) : "Command Center"} ${renderSourceState(task)}`;
+}
+
+function renderTaskStateControl(task) {
+  if (state.live && isManualTask(task)) {
+    return `
+      <select class="task-input" data-task-id="${escapeAttribute(task.id)}" data-field="status" ${state.saving ? "disabled" : ""}>
+        <option value="todo" ${task.status === "todo" ? "selected" : ""}>To-Do</option>
+        <option value="note" ${task.status === "note" ? "selected" : ""}>Note</option>
+        <option value="done" ${task.status === "done" ? "selected" : ""}>Close</option>
+      </select>
+    `;
+  }
+  return renderStateChip(sourceStateLabel(task), sourceStateClass(task));
 }
 
 function groupedTasks(tasks) {
@@ -1734,6 +1805,28 @@ function renderTaskSource(task) {
   return `<span class="source-chip ${escapeAttribute(className)}">${escapeHtml(label)}</span>`;
 }
 
+function renderSourceState(task) {
+  if (isManualTask(task)) return "";
+  return renderStateChip(sourceStateLabel(task), sourceStateClass(task));
+}
+
+function renderStateChip(label, className) {
+  return `<span class="state-chip ${escapeAttribute(className)}">${escapeHtml(label)}</span>`;
+}
+
+function sourceStateLabel(task) {
+  const state = String(task.sourceState || "").trim();
+  return state || taskStatusLabel(task.status);
+}
+
+function sourceStateClass(task) {
+  return sourceStateLabel(task).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "todo";
+}
+
+function isManualTask(task) {
+  return taskSourceGroup(task.source) === "command";
+}
+
 function taskSourceUrl(task) {
   if (task.externalUrl) return task.externalUrl;
   const group = taskSourceGroup(task.source);
@@ -1759,9 +1852,9 @@ function taskSourceLabel(source) {
 }
 
 function taskStatusLabel(status) {
-  if (status === "progress") return "In progress";
-  if (status === "done") return "Done";
-  return "To do";
+  if (status === "note") return "Note";
+  if (status === "done") return "Closed";
+  return "To-Do";
 }
 
 function selectField(projectId, field, label, value, options, className = "") {
@@ -1953,9 +2046,11 @@ document.addEventListener("click", event => {
   if (addTaskButton) {
     const projectId = addTaskButton.dataset.projectId;
     const field = document.getElementById(`newTask-${projectId}`);
+    const statusField = document.getElementById(`newTaskStatus-${projectId}`);
     const name = field ? field.value.trim() : "";
+    const status = statusField ? statusField.value : "todo";
     if (!name) return;
-    postUpdate("addTask", { projectId, name, status: "todo" }).catch(error => {
+    postUpdate("addTask", { projectId, name, status }).catch(error => {
       console.error("Add task failed:", error);
       showSyncBanner("error", error.message || "Task could not be added.");
     });

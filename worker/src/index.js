@@ -71,7 +71,7 @@ async function getAllData(db) {
   const [projects, controls, tasks, timelines, risks, milestones] = await Promise.all([
     db.prepare("SELECT * FROM projects ORDER BY CAST(id AS INTEGER), name").all(),
     db.prepare("SELECT * FROM project_controls").all(),
-    db.prepare("SELECT * FROM tasks ORDER BY CAST(id AS INTEGER), name").all(),
+    db.prepare("SELECT id, project_id, name, status, source, source_state, external_url, updated_by, updated_at FROM tasks ORDER BY CAST(id AS INTEGER), name").all(),
     db.prepare("SELECT * FROM timelines ORDER BY project_id, key").all(),
     db.prepare("SELECT * FROM risks ORDER BY CAST(id AS INTEGER), title").all(),
     db.prepare("SELECT * FROM milestones ORDER BY project_id, date").all()
@@ -103,6 +103,7 @@ async function getAllData(db) {
         name: task.name,
         status: task.status,
         source: task.source || "",
+        sourceState: task.source_state || "",
         externalUrl: task.external_url || "",
         updatedBy: task.updated_by || "",
         updatedAt: task.updated_at || ""
@@ -195,8 +196,8 @@ async function addTask(db, body, actor) {
   const status = normalizeTaskStatus(body.status || "todo");
   const source = normalizeText(body.source || "Command Center");
   const next = await db.prepare("SELECT COALESCE(MAX(CAST(id AS INTEGER)), 0) + 1 AS id FROM tasks").first();
-  await db.prepare("INSERT INTO tasks (id, project_id, name, status, source, external_url, updated_by, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
-    .bind(String(next.id), projectId, name, status, source, normalizeText(body.externalUrl || ""), actor.initials, currentIsoMinute())
+  await db.prepare("INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, updated_by, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    .bind(String(next.id), projectId, name, status, source, normalizeText(body.sourceState || ""), normalizeText(body.externalUrl || ""), actor.initials, currentIsoMinute())
     .run();
 }
 
@@ -204,6 +205,9 @@ async function updateTask(db, body, actor) {
   const taskId = required(body.taskId, "taskId");
   const field = required(body.field, "field");
   if (!["name", "status"].includes(field)) throw new Error(`Invalid task field: ${field}`);
+  const existing = await db.prepare("SELECT source FROM tasks WHERE id = ?").bind(taskId).first();
+  if (!existing) throw new Error(`Task row not found: ${taskId}`);
+  if (!isManualTaskSource(existing.source)) throw new Error("Synced Pulse and Procore items cannot be edited in Command Center.");
   const column = field === "name" ? "name" : "status";
   const value = field === "status" ? normalizeTaskStatus(body.value) : normalizeText(body.value);
   if (field === "name" && !value) throw new Error("Task name is required");
@@ -347,7 +351,12 @@ function validateControlField(field, value) {
 
 function normalizeTaskStatus(value) {
   const status = normalizeText(value);
-  return ["todo", "progress", "done"].includes(status) ? status : "todo";
+  return ["todo", "note", "done"].includes(status) ? status : "todo";
+}
+
+function isManualTaskSource(source) {
+  const text = normalizeText(source);
+  return !text || text === "Command Center";
 }
 
 function normalizeOperatingState(value) {
