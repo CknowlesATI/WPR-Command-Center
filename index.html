@@ -677,13 +677,29 @@
   }
 
   .close-project-panel {
-    border-color: #f0b8b8;
-    background: var(--red-bg);
+    display: flex;
+    justify-content: flex-end;
+    background: #fbfcfd;
   }
 
   .close-project-actions {
     display: grid;
     gap: 9px;
+  }
+
+  .close-project-warning {
+    border-color: #f0b8b8;
+    background: var(--red-bg);
+  }
+
+  .close-project-warning .close-project-actions {
+    justify-items: start;
+  }
+
+  .close-confirm-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .confirm-close {
@@ -1086,6 +1102,7 @@ const state = {
   attentionExpanded: false,
   addProjectOpen: false,
   expandedProjects: new Set(),
+  closingProjects: new Set(),
   saving: false,
   live: false,
   auth: loadAuthSession()
@@ -1564,16 +1581,29 @@ function renderProjectFile(project, expanded) {
 }
 
 function renderCloseProject(project) {
+  const projectKey = String(project.id);
+  const confirming = state.closingProjects.has(projectKey);
   const checkboxId = `closeProject-${project.id}`;
+  if (!confirming) {
+    return `
+      <div class="file-panel project-signal close-project-panel">
+        <button class="danger-button close-project-start" type="button" data-project-id="${escapeAttribute(project.id)}" ${state.saving ? "disabled" : ""}>Close Project</button>
+      </div>
+    `;
+  }
+
   return `
-    <div class="file-panel project-signal close-project-panel">
+    <div class="file-panel project-signal close-project-warning">
       <div class="file-label">Close Project</div>
       <div class="close-project-actions">
         <label class="confirm-close" for="${escapeAttribute(checkboxId)}">
           <input id="${escapeAttribute(checkboxId)}" type="checkbox" data-close-confirm="${escapeAttribute(project.id)}" ${state.saving ? "disabled" : ""}>
           <span>Are you sure you want to close this project? After this action you will no longer be able to access any data stored within the Command Center</span>
         </label>
-        <button class="danger-button close-project-button" type="button" data-project-id="${escapeAttribute(project.id)}" disabled>Close Project</button>
+        <div class="close-confirm-buttons">
+          <button class="secondary-button close-project-cancel" type="button" data-project-id="${escapeAttribute(project.id)}" ${state.saving ? "disabled" : ""}>Cancel</button>
+          <button class="danger-button close-project-button" type="button" data-project-id="${escapeAttribute(project.id)}" disabled>Close Project</button>
+        </div>
       </div>
     </div>
   `;
@@ -1887,6 +1917,20 @@ document.addEventListener("click", event => {
     return;
   }
 
+  const closeProjectStart = event.target.closest(".close-project-start");
+  if (closeProjectStart) {
+    state.closingProjects.add(String(closeProjectStart.dataset.projectId));
+    renderProjects();
+    return;
+  }
+
+  const closeProjectCancel = event.target.closest(".close-project-cancel");
+  if (closeProjectCancel) {
+    state.closingProjects.delete(String(closeProjectCancel.dataset.projectId));
+    renderProjects();
+    return;
+  }
+
   const closeProjectButton = event.target.closest(".close-project-button");
   if (closeProjectButton) {
     const projectId = closeProjectButton.dataset.projectId;
@@ -1896,6 +1940,7 @@ document.addEventListener("click", event => {
     if (!window.confirm(CLOSE_PROJECT_CONFIRMATION)) return;
     postUpdate("closeProject", { projectId, confirmed: true, confirmationMessage: CLOSE_PROJECT_CONFIRMATION }).then(() => {
       state.expandedProjects.delete(String(projectId));
+      state.closingProjects.delete(String(projectId));
       showSyncBanner("none");
     }).catch(error => {
       console.error("Close project failed:", error);
