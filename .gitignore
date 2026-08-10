@@ -1,3 +1,6 @@
 .clasp.json
 .clasprc.json
 node_modules/
+pulse-sync/.env
+pulse-sync/logs/
+tmp/
