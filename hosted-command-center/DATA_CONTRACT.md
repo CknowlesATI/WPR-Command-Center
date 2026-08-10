@@ -24,9 +24,26 @@ smaller and safer than the current internal Command Center data.
 - `highPriorityTasks`: count only.
 - `risks`: count only.
 - `nextHandoff`: next handoff date, `YYYY-MM-DD` or `null`.
+- `approvalsPayments`: optional birdseye status object for contract,
+  deposit, and change order status.
+- `taskList`: optional sanitized open task rows for field review.
 - `timelines`: sanitized phase schedule rows.
 - `attention`: short list of sanitized attention signals.
 - `links`: optional reviewed source links.
+
+## Approvals & Payments Fields
+
+- `contract`: short status label, or empty string if not set.
+- `deposit`: short status label, or empty string if not set.
+- `changeOrders`: short status label, or empty string if not set.
+
+## Task Fields
+
+- `name`: short visible task title.
+- `status`: `todo`, `progress`, or `done`.
+- `source`: visible source label such as `Pulse`, `Procore`, or
+  `Command Center`.
+- `externalUrl`: optional reviewed source URL, or empty string.
 
 ## Timeline Fields
 

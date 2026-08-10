@@ -89,7 +89,7 @@
   .count{font-size:12px;color:var(--muted);}
 
   .board{display:flex;flex-direction:column;gap:10px;}
-  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 18px;box-shadow:var(--shadow);cursor:pointer;display:grid;grid-template-columns:210px 90px 1fr 170px 190px 120px;gap:18px;align-items:center;transition:border-color .1s;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 18px;box-shadow:var(--shadow);cursor:pointer;display:grid;grid-template-columns:190px 90px 1fr 160px 170px 180px 110px;gap:16px;align-items:center;transition:border-color .1s;}
   .card:hover{border-color:#c7cedb;}
   .pname{font-weight:700;font-size:14px;line-height:1.3;}
   .powner{font-size:12px;color:var(--muted);margin-top:2px;}
@@ -117,6 +117,14 @@
   .risk-badge.none{color:var(--muted);font-weight:500;}
   .risk-badge.some{color:var(--amber);}
   .risk-badge.many{color:var(--red);}
+  .approval-snapshot{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--muted);line-height:1.25;}
+  .approval-title{font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;font-weight:800;color:var(--muted);}
+  .approval-line{display:flex;justify-content:space-between;gap:8px;}
+  .approval-label{color:var(--muted);}
+  .approval-value{font-weight:700;color:var(--text);text-align:right;}
+  .approval-value.good{color:var(--green);}
+  .approval-value.watch{color:var(--amber);}
+  .approval-value.bad{color:var(--red);}
 
   /* Slideover */
   .overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;z-index:20;}
@@ -532,6 +540,9 @@ function blankControl(projectId){
     lastEscalationAction:"",
     eventTrigger:"",
     overrideDaily:false,
+    contractStatus:"",
+    depositStatus:"",
+    changeOrderStatus:"",
     updatedAt:""
   };
 }
@@ -546,11 +557,18 @@ function normalizeControl(control, projectId){
     operatingState:stateValue,
     blocked:incoming.blocked===true || incoming.blocked==="true" || incoming.blocked==="TRUE",
     overrideDaily:incoming.overrideDaily===true || incoming.overrideDaily==="true" || incoming.overrideDaily==="TRUE",
+    contractStatus:normalizeApprovalStatus(incoming.contractStatus, ["", "Not Sent", "Sent", "Accepted", "Needs Review"]),
+    depositStatus:normalizeApprovalStatus(incoming.depositStatus, ["", "Not Required", "Pending", "Paid", "Overdue"]),
+    changeOrderStatus:normalizeApprovalStatus(incoming.changeOrderStatus, ["", "None", "Pending", "Approved", "Needs Review"]),
     responseDate:normalizeDateString(incoming.responseDate) || "",
     reviewDate:normalizeDateString(incoming.reviewDate) || "",
     escalationDate:normalizeDateString(incoming.escalationDate) || "",
     lastMovementDate:normalizeDateString(incoming.lastMovementDate) || "",
   };
+}
+function normalizeApprovalStatus(value, allowed){
+  const text = String(value || "").trim();
+  return allowed.includes(text) ? text : "";
 }
 function isDashboardProject(project){
   const name = String(project && project.name || "").trim();
@@ -699,12 +717,18 @@ function renderKPIs(){
   const pending = scoped.filter(p=>p.rag==="pending").length;
   const risks = scoped.reduce((a,p)=>a+p.risks.length,0);
   const highRisks = scoped.reduce((a,p)=>a+p.risks.filter(r=>r.severity==="high").length,0);
+  const acceptedContracts = scoped.filter(p=>approvalControl(p).contractStatus==="Accepted").length;
+  const depositsOpen = scoped.filter(p=>["Pending","Overdue"].includes(approvalControl(p).depositStatus)).length;
+  const coNeedsReview = scoped.filter(p=>["Pending","Needs Review"].includes(approvalControl(p).changeOrderStatus)).length;
   const kpis = [
     {n:total, l:"Total Projects", cls:""},
     {n:green, l:"On Track", cls:"green"},
     {n:amber, l:"At Risk", cls:"amber"},
     {n:red, l:"Off Track", cls:"red"},
     {n:pending, l:"Not Started", cls:""},
+    {n:acceptedContracts, l:"Contracts Accepted", cls:"green"},
+    {n:depositsOpen, l:"Deposits Open", cls:depositsOpen ? "amber" : ""},
+    {n:coNeedsReview, l:"Change Orders Need Review", cls:coNeedsReview ? "amber" : ""},
     {n:risks, l:"Open Risks/Issues", cls:""},
     {n:highRisks, l:"High-Severity Risks", cls:"red"},
   ];
@@ -851,7 +875,7 @@ function buildDailyRecommendations(){
 
 function controlText(p){
   const c = p.control || blankControl(p.id);
-  return [c.nextOutcome, c.delayConsequence, c.nextAction, c.blockerReason, c.controlNotes, c.lastEscalationAction].join(" ");
+  return [c.nextOutcome, c.delayConsequence, c.nextAction, c.blockerReason, c.controlNotes, c.lastEscalationAction, c.contractStatus, c.depositStatus, c.changeOrderStatus].join(" ");
 }
 
 function dailyScore(p){
@@ -1035,6 +1059,33 @@ function riskBadge(p){
   return `<span class="risk-badge ${cls}">${n} open ${n===1?"risk":"risks"}${high>0?` · ${high} high`:""}</span>`;
 }
 
+function approvalControl(p){
+  return p.control || blankControl(p.id);
+}
+
+function approvalDisplay(value){
+  return value || "Not set";
+}
+
+function approvalValueClass(type, value){
+  if((type==="contract" && value==="Accepted") || (type==="deposit" && ["Paid","Not Required"].includes(value)) || (type==="changeOrder" && ["None","Approved"].includes(value))) return "good";
+  if((type==="deposit" && value==="Overdue") || value==="Needs Review") return "bad";
+  if(value) return "watch";
+  return "";
+}
+
+function approvalsSnapshotHTML(p){
+  const c = approvalControl(p);
+  return `
+    <div class="approval-snapshot">
+      <div class="approval-title">Approvals &amp; Payments</div>
+      <div class="approval-line"><span class="approval-label">Contract</span><span class="approval-value ${approvalValueClass("contract", c.contractStatus)}">${escapeHTML(approvalDisplay(c.contractStatus))}</span></div>
+      <div class="approval-line"><span class="approval-label">Deposit</span><span class="approval-value ${approvalValueClass("deposit", c.depositStatus)}">${escapeHTML(approvalDisplay(c.depositStatus))}</span></div>
+      <div class="approval-line"><span class="approval-label">Change Orders</span><span class="approval-value ${approvalValueClass("changeOrder", c.changeOrderStatus)}">${escapeHTML(approvalDisplay(c.changeOrderStatus))}</span></div>
+    </div>
+  `;
+}
+
 function nextMilestone(p){
   if(!p.milestones.length) return null;
   const m = p.milestones.find(m=>m.state==="next") || p.milestones[p.milestones.length-1];
@@ -1046,7 +1097,8 @@ function renderBoard(){
   const scoped = groupFilteredProjects();
   const filtered = scoped.filter(p=>{
     if(state.filter!=="all" && p.rag!==state.filter) return false;
-    const haystack = [p.name, p.projectGroup, p.segment, p.externalTeam].join(" ").toLowerCase();
+    const c = approvalControl(p);
+    const haystack = [p.name, p.projectGroup, p.segment, p.externalTeam, c.contractStatus, c.depositStatus, c.changeOrderStatus].join(" ").toLowerCase();
     if(q && !haystack.includes(q)) return false;
     return true;
   });
@@ -1081,6 +1133,7 @@ function renderBoard(){
         <div class="tlegend">${totalTasks ? `${p.tasks.done} done · ${p.tasks.progress} in progress · ${p.tasks.todo} to do` : "No tasks added yet"}</div>
       </div>
       <div class="risks">${riskBadge(p)}</div>
+      ${approvalsSnapshotHTML(p)}
       <div class="teamline">${escapeHTML(p.externalTeam || "No external team")}</div>
     </div>`;
   }).join("");
@@ -1405,6 +1458,41 @@ function openPanel(id){
         </div>
       </div>
       <div class="pb-section">
+        <h3>Approvals &amp; Payments</h3>
+        <div class="summary-grid">
+          <div class="summary-field">
+            <label for="contractStatus">Contract</label>
+            <select id="contractStatus" class="control-input" data-pid="${p.id}" data-field="contractStatus">
+              <option value="" ${!c.contractStatus?"selected":""}>Not set</option>
+              <option value="Not Sent" ${c.contractStatus==="Not Sent"?"selected":""}>Not Sent</option>
+              <option value="Sent" ${c.contractStatus==="Sent"?"selected":""}>Sent</option>
+              <option value="Accepted" ${c.contractStatus==="Accepted"?"selected":""}>Accepted</option>
+              <option value="Needs Review" ${c.contractStatus==="Needs Review"?"selected":""}>Needs Review</option>
+            </select>
+          </div>
+          <div class="summary-field">
+            <label for="depositStatus">Deposit</label>
+            <select id="depositStatus" class="control-input" data-pid="${p.id}" data-field="depositStatus">
+              <option value="" ${!c.depositStatus?"selected":""}>Not set</option>
+              <option value="Not Required" ${c.depositStatus==="Not Required"?"selected":""}>Not Required</option>
+              <option value="Pending" ${c.depositStatus==="Pending"?"selected":""}>Pending</option>
+              <option value="Paid" ${c.depositStatus==="Paid"?"selected":""}>Paid</option>
+              <option value="Overdue" ${c.depositStatus==="Overdue"?"selected":""}>Overdue</option>
+            </select>
+          </div>
+          <div class="summary-field full">
+            <label for="changeOrderStatus">Change Orders</label>
+            <select id="changeOrderStatus" class="control-input" data-pid="${p.id}" data-field="changeOrderStatus">
+              <option value="" ${!c.changeOrderStatus?"selected":""}>Not set</option>
+              <option value="None" ${c.changeOrderStatus==="None"?"selected":""}>None</option>
+              <option value="Pending" ${c.changeOrderStatus==="Pending"?"selected":""}>Pending</option>
+              <option value="Approved" ${c.changeOrderStatus==="Approved"?"selected":""}>Approved</option>
+              <option value="Needs Review" ${c.changeOrderStatus==="Needs Review"?"selected":""}>Needs Review</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="pb-section">
         <h3>Project Summary</h3>
         <div class="summary-grid">
           <div class="summary-field">
@@ -1483,7 +1571,7 @@ document.getElementById("panel").addEventListener("change", async e=>{
   if(controlInp){
     const proj = PROJECTS.find(x=>x.id===Number(controlInp.dataset.pid));
     const field = controlInp.dataset.field;
-    const allowed = ["nextOutcome","nextMoveOwner","operatingState","blocked","blockerReason","delayConsequence","nextAction","responseDate","reviewDate","escalationDate","lastMovementDate","evidence","controlNotes","escalationLevel","lastEscalationAction","eventTrigger","overrideDaily"];
+    const allowed = ["nextOutcome","nextMoveOwner","operatingState","blocked","blockerReason","delayConsequence","nextAction","responseDate","reviewDate","escalationDate","lastMovementDate","evidence","controlNotes","escalationLevel","lastEscalationAction","eventTrigger","overrideDaily","contractStatus","depositStatus","changeOrderStatus"];
     if(!proj || !allowed.includes(field)) return;
     const previous = proj.control[field];
     const value = controlInp.type==="checkbox" ? controlInp.checked : controlInp.value.trim();

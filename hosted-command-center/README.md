@@ -1,42 +1,43 @@
 # Hosted Command Center
 
-This folder is the separate online/shared version of Project Command Center.
-It is intentionally kept apart from the current Google Apps Script operating
-baseline at the repository root.
+This folder is the online version of Project Command Center. It is the intended
+field-facing Command Center experience.
 
-Unless Christen explicitly specifies the original/internal command center, this
-online/shared version is the default target for Command Center work. See
-`../OPERATING_PROCEDURES.md` before making changes that might cross versions.
+Unless Christen explicitly specifies otherwise, this online version is the
+default target for Command Center work. See `../OPERATING_PROCEDURES.md` before
+changing legacy/root app behavior.
 
 ## Purpose
 
-The hosted version is for WPR techs and project participants who need a quick,
-read-focused view of what needs attention across WPR projects without opening
-Pulse and Procore one project at a time.
+The hosted version is for WPR techs and project participants who need a quick
+online view of what needs attention across WPR projects without opening Pulse
+and Procore one project at a time.
 
 This version should stay:
 
-- Read-focused by default.
 - Mobile and tablet friendly.
-- Sanitized for broader access.
+- Clear enough for field use.
+- Careful about what it exposes to broader access.
 - Lightweight enough to host on free static hosting.
-- Separate from the current personal/internal Command Center workflow.
+- Focused on one coherent Command Center experience.
 
 ## Current Shape
 
-- `index.html` is the first read-only hosted dashboard shell.
-- `data/projects.json` is the data file the hosted dashboard loads.
+- `index.html` is the online dashboard shell.
+- It loads live data from the Apps Script API when available.
+- `data/projects.json` is the fallback data file the hosted dashboard loads
+  when live data is unavailable.
 - `data/projects.sample.json` is the example data contract for future sync work.
 - `tools/export-hosted-data.mjs` converts current Command Center API data into
-  the safer hosted data shape.
+  the safer hosted fallback data shape.
 - `tools/validate-hosted-data.mjs` checks that hosted data follows the shared
-  read-only contract.
+  fallback contract.
 - `run-preview.ps1` starts a local preview for this hosted folder.
 - `DATA_CONTRACT.md` documents the safe shared data shape.
 
-The current dashboard uses static JSON so it can be hosted without a paid
-database or backend. Later phases can add a cloud sync job or database only if
-the static data file becomes too limiting.
+The current dashboard uses the existing Apps Script API for live data and
+editing. Static JSON remains as a no-backend fallback so the page can still be
+hosted without a paid database.
 
 ## No-Subscription Hosting Path
 
@@ -47,7 +48,7 @@ The lowest-complexity option is:
 
 1. Publish this folder as a static site.
 2. Generate or update `data/projects.json` from sanitized Command Center data.
-3. Keep the dashboard read-only for viewers.
+3. Use the live Apps Script API for field editing where appropriate.
 
 The included GitHub Pages workflow publishes this folder and can refresh the
 hosted data automatically when the repository has a private secret named
@@ -85,5 +86,6 @@ Before using real data online, remove or avoid exposing:
 - Credentials, internal IDs, and sync details.
 - Financial, contractual, personnel, or access-sensitive details.
 
-The public/shared view should show enough signal to guide action, then send the
-tech back to Pulse or Procore only when deeper work is needed.
+The online view should show enough signal to guide action and allow lightweight
+field updates. Deeper detail can still live in Pulse, Procore, or the source
+Google Sheet where appropriate.

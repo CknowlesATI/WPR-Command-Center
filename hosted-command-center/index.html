@@ -92,6 +92,23 @@
     font-size: 12px;
   }
 
+  .sync-banner {
+    border: 1px solid #f3d9a3;
+    border-radius: 8px;
+    background: var(--amber-bg);
+    color: var(--amber);
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 650;
+    margin-bottom: 14px;
+  }
+
+  .sync-banner.error {
+    border-color: #f0b8b8;
+    background: var(--red-bg);
+    color: var(--red);
+  }
+
   .filters {
     display: flex;
     gap: 8px;
@@ -485,6 +502,39 @@
     background: #fbfcfd;
   }
 
+  .approval-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .approval-metric {
+    border: 1px solid #edf0f4;
+    border-radius: 7px;
+    padding: 7px 8px;
+    background: #fff;
+    min-width: 0;
+  }
+
+  .approval-metric strong {
+    display: block;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .approval-metric span {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--muted);
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .approval-metric.good strong { color: var(--green); }
+  .approval-metric.watch strong { color: var(--amber); }
+  .approval-metric.bad strong { color: var(--red); }
+
   .file-label {
     color: var(--muted);
     font-size: 11px;
@@ -510,6 +560,114 @@
     font-size: 11px;
     font-weight: 750;
     text-decoration: none;
+  }
+
+  .compact-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .compact-field label {
+    color: var(--muted);
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .compact-field input,
+  .compact-field select,
+  .compact-field textarea,
+  .task-input,
+  .add-task-row textarea {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    font-size: 12px;
+    padding: 7px 8px;
+  }
+
+  .compact-field textarea,
+  .add-task-row textarea {
+    min-height: 44px;
+    resize: vertical;
+  }
+
+  .control-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .control-grid .full {
+    grid-column: 1 / -1;
+  }
+
+  .task-list {
+    display: grid;
+    gap: 7px;
+  }
+
+  .task-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 116px;
+    gap: 8px;
+    align-items: start;
+    border: 1px solid #edf0f4;
+    border-radius: 8px;
+    background: #fff;
+    padding: 8px;
+  }
+
+  .task-title {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .task-meta {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .source-link {
+    color: var(--blue);
+    text-decoration: none;
+  }
+
+  .add-task-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    margin-top: 9px;
+    padding-top: 9px;
+    border-top: 1px dashed var(--border);
+  }
+
+  .primary-button {
+    border: 0;
+    border-radius: 7px;
+    background: var(--blue);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  .primary-button:disabled,
+  .task-input:disabled,
+  .control-input:disabled {
+    opacity: .65;
+    cursor: default;
   }
 
   .project-signal {
@@ -684,6 +842,7 @@
 </header>
 
 <main>
+  <div class="sync-banner" id="syncBanner" style="display:none;"></div>
   <div class="status-row">
     <div class="updated" id="updatedText">Loading project data...</div>
     <div class="filters" id="filters"></div>
@@ -736,9 +895,13 @@ const state = {
   filter: "all",
   query: "",
   attentionExpanded: false,
-  expandedProjects: new Set()
+  expandedProjects: new Set(),
+  saving: false,
+  live: false
 };
 
+const API_URL = "https://script.google.com/macros/s/AKfycbwpmgVlqQUBd-T2tIwl-QynxBuPx8lut7LhRqZRnO6OO9JPEsi40E9AxOeZaMTGhVBSKw/exec";
+const SYNC_ENABLED = API_URL.indexOf("http") === 0;
 const COLLAPSED_ATTENTION_LIMIT = 6;
 
 const healthLabels = {
@@ -755,6 +918,26 @@ const fallbackData = {
 };
 
 async function loadData() {
+  if (SYNC_ENABLED) {
+    try {
+      const response = await fetch(API_URL, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Live API unavailable (${response.status})`);
+      const data = await response.json();
+      const projects = Array.isArray(data) ? data : data.data;
+      if (!Array.isArray(projects)) throw new Error("Live API returned no project list");
+      state.projects = normalizeProjects(projects);
+      state.live = true;
+      document.getElementById("updatedText").textContent = "Live Command Center data";
+      showSyncBanner("none");
+      render();
+      return;
+    } catch (error) {
+      console.error("Live API load failed:", error);
+      state.live = false;
+      showSyncBanner("error", "Live editing is unavailable right now. Showing the latest hosted snapshot.");
+    }
+  }
+
   try {
     const response = await fetch("data/projects.json", { cache: "no-store" });
     if (!response.ok) throw new Error("Data file unavailable");
@@ -768,21 +951,58 @@ async function loadData() {
   render();
 }
 
+function showSyncBanner(kind, message = "") {
+  const banner = document.getElementById("syncBanner");
+  if (kind === "none") {
+    banner.style.display = "none";
+    banner.textContent = "";
+    return;
+  }
+  banner.style.display = "block";
+  banner.classList.toggle("error", kind === "error");
+  banner.textContent = message;
+}
+
+async function postUpdate(action, payload) {
+  if (!state.live || !SYNC_ENABLED) throw new Error("Live editing is not connected.");
+  state.saving = true;
+  renderProjects();
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action, ...payload })
+    });
+    if (!response.ok) throw new Error(`Save failed (${response.status})`);
+    const data = await response.json();
+    if (data && data.ok === false) throw new Error(data.error || "Save failed");
+    const projects = Array.isArray(data) ? data : data.data;
+    if (Array.isArray(projects)) state.projects = normalizeProjects(projects);
+    showSyncBanner("none");
+  } finally {
+    state.saving = false;
+    render();
+  }
+}
+
 function normalizeProjects(projects) {
   return Array.isArray(projects) ? projects.filter(isDashboardProject).map(project => ({
     id: project.id || project.name,
     name: project.name || "Untitled project",
-    area: project.area || "Unassigned",
-    team: project.team || "No team listed",
-    health: ["green", "amber", "red", "pending"].includes(project.health) ? project.health : "pending",
-    phase: project.phase || "Not scheduled",
-    startDate: project.startDate || null,
-    endDate: project.endDate || null,
-    openTasks: Number(project.openTasks) || 0,
+    area: project.area || project.segment || project.projectGroup || "Unassigned",
+    team: project.team || project.externalTeam || "No team listed",
+    health: normalizeHealth(project.health || project.rag),
+    phase: project.phase || currentProjectPhase(project.timelines) || "Not scheduled",
+    startDate: project.startDate || project.startsAt || null,
+    endDate: project.endDate || project.endsAt || null,
+    openTasks: Number(project.openTasks) || openTaskCount(project),
     overdueTasks: Number(project.overdueTasks) || 0,
     highPriorityTasks: Number(project.highPriorityTasks) || 0,
-    risks: Number(project.risks) || 0,
+    risks: Number(project.risks) || (Array.isArray(project.risks) ? project.risks.length : 0),
     nextHandoff: project.nextHandoff || null,
+    approvalsPayments: normalizeApprovalsPayments(project.approvalsPayments, project.control),
+    control: normalizeControl(project.control, project.id),
+    taskList: normalizeTaskList(project.taskList),
     attention: Array.isArray(project.attention) ? project.attention : [],
     links: Array.isArray(project.links) ? project.links : [],
     timelines: Array.isArray(project.timelines) ? project.timelines.map(item => ({
@@ -795,10 +1015,64 @@ function normalizeProjects(projects) {
   })) : [];
 }
 
+function normalizeHealth(value) {
+  return ["green", "amber", "red", "pending"].includes(value) ? value : "pending";
+}
+
+function normalizeApprovalsPayments(value, control = {}) {
+  const incoming = value && typeof value === "object" ? value : {};
+  const source = control && typeof control === "object" ? control : {};
+  return {
+    contract: String(incoming.contract || source.contractStatus || "").trim(),
+    deposit: String(incoming.deposit || source.depositStatus || "").trim(),
+    changeOrders: String(incoming.changeOrders || source.changeOrderStatus || "").trim()
+  };
+}
+
+function normalizeControl(value, projectId) {
+  const incoming = value && typeof value === "object" ? value : {};
+  return {
+    projectId,
+    operatingState: ["Action Needed", "Follow-Up Needed", "Monitor", "Stable"].includes(incoming.operatingState) ? incoming.operatingState : "Stable",
+    nextOutcome: String(incoming.nextOutcome || "").trim(),
+    nextMoveOwner: String(incoming.nextMoveOwner || "").trim(),
+    nextAction: String(incoming.nextAction || "").trim(),
+    reviewDate: dateOnly(incoming.reviewDate) || "",
+    responseDate: dateOnly(incoming.responseDate) || "",
+    blocked: incoming.blocked === true || incoming.blocked === "true" || incoming.blocked === "TRUE",
+    blockerReason: String(incoming.blockerReason || "").trim(),
+    contractStatus: String(incoming.contractStatus || "").trim(),
+    depositStatus: String(incoming.depositStatus || "").trim(),
+    changeOrderStatus: String(incoming.changeOrderStatus || "").trim()
+  };
+}
+
+function normalizeTaskList(tasks) {
+  return Array.isArray(tasks) ? tasks.map(task => ({
+    id: task.id,
+    name: String(task.name || "").trim(),
+    status: ["todo", "progress", "done"].includes(task.status) ? task.status : "todo",
+    source: String(task.source || "").trim(),
+    externalUrl: String(task.externalUrl || task.url || task.link || "").trim()
+  })).filter(task => task.name) : [];
+}
+
+function openTaskCount(project) {
+  if (project.tasks && typeof project.tasks === "object") {
+    return (Number(project.tasks.todo) || 0) + (Number(project.tasks.progress) || 0);
+  }
+  return normalizeTaskList(project.taskList).filter(task => task.status !== "done").length;
+}
+
+function currentProjectPhase(timelines = []) {
+  const open = (Array.isArray(timelines) ? timelines : []).find(item => item && item.status !== "complete");
+  return open ? open.label : "";
+}
+
 function isDashboardProject(project) {
   const name = String(project && project.name || "").trim();
-  const area = String(project && project.area || "").trim();
-  const team = String(project && project.team || "").trim();
+  const area = String(project && (project.area || project.segment || project.projectGroup) || "").trim();
+  const team = String(project && (project.team || project.externalTeam) || "").trim();
   return !(
     name === "Procore Observation Review" ||
     area === "Unmapped Procore" ||
@@ -819,7 +1093,18 @@ function visibleProjects() {
   return state.projects.filter(project => {
     if (state.filter !== "all" && project.health !== state.filter) return false;
     if (!query) return true;
-    return [project.name, project.area, project.team, project.phase].join(" ").toLowerCase().includes(query);
+    return [
+      project.name,
+      project.area,
+      project.team,
+      project.phase,
+      project.approvalsPayments.contract,
+      project.approvalsPayments.deposit,
+      project.approvalsPayments.changeOrders,
+      project.control.nextOutcome,
+      project.control.nextMoveOwner,
+      project.taskList.map(task => task.name).join(" ")
+    ].join(" ").toLowerCase().includes(query);
   });
 }
 
@@ -843,14 +1128,20 @@ function renderKpis() {
     openTasks: sum(projects, "openTasks"),
     overdueTasks: sum(projects, "overdueTasks"),
     highPriorityTasks: sum(projects, "highPriorityTasks"),
-    risks: sum(projects, "risks")
+    risks: sum(projects, "risks"),
+    contractsAccepted: projects.filter(project => project.approvalsPayments.contract === "Accepted").length,
+    depositsOpen: projects.filter(project => ["Pending", "Overdue"].includes(project.approvalsPayments.deposit)).length,
+    changeOrdersReview: projects.filter(project => ["Pending", "Needs Review"].includes(project.approvalsPayments.changeOrders)).length
   };
   const cards = [
     [totals.projects, "Visible Projects"],
     [totals.openTasks, "Open Tasks"],
     [totals.overdueTasks, "Overdue Tasks"],
     [totals.highPriorityTasks, "High Priority"],
-    [totals.risks, "Open Risks"]
+    [totals.risks, "Open Risks"],
+    [totals.contractsAccepted, "Contracts Accepted"],
+    [totals.depositsOpen, "Deposits Open"],
+    [totals.changeOrdersReview, "Change Orders Need Review"]
   ];
   document.getElementById("kpis").innerHTML = cards.map(([value, label]) => (
     `<div class="kpi"><strong>${value}</strong><span>${label}</span></div>`
@@ -987,6 +1278,14 @@ function renderProjectFile(project, expanded) {
           <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
         </div>
       </div>
+      <div class="file-panel">
+        <div class="file-label">Approvals &amp; Payments</div>
+        ${renderApprovalsPayments(project)}
+      </div>
+      <div class="file-panel">
+        <div class="file-label">Project Control</div>
+        ${renderProjectControl(project)}
+      </div>
       <div class="file-panel project-signal">
         <div class="file-label">Top Signals</div>
         <div class="signal-list">
@@ -994,6 +1293,145 @@ function renderProjectFile(project, expanded) {
           ${remaining ? `<span class="signal-pill more">${remaining} more</span>` : ""}
         </div>
       </div>
+      <div class="file-panel project-signal">
+        <div class="file-label">Open Tasks</div>
+        ${renderOpenTasks(project)}
+      </div>
+    </div>
+  `;
+}
+
+function renderApprovalsPayments(project) {
+  const statuses = project.approvalsPayments;
+  if (state.live) {
+    return `
+      <div class="control-grid">
+        ${selectField(project.id, "contractStatus", "Contract", project.control.contractStatus, ["", "Not Sent", "Sent", "Accepted", "Needs Review"])}
+        ${selectField(project.id, "depositStatus", "Deposit", project.control.depositStatus, ["", "Not Required", "Pending", "Paid", "Overdue"])}
+        ${selectField(project.id, "changeOrderStatus", "Change Orders", project.control.changeOrderStatus, ["", "None", "Pending", "Approved", "Needs Review"], "full")}
+      </div>
+    `;
+  }
+  const items = [
+    ["Contract", statuses.contract, approvalClass("contract", statuses.contract)],
+    ["Deposit", statuses.deposit, approvalClass("deposit", statuses.deposit)],
+    ["Change Orders", statuses.changeOrders, approvalClass("changeOrders", statuses.changeOrders)]
+  ];
+  return `<div class="approval-grid">${items.map(([label, value, cls]) => `
+    <div class="approval-metric ${cls}">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value || "Not set")}</strong>
+    </div>
+  `).join("")}</div>`;
+}
+
+function approvalClass(type, value) {
+  if ((type === "contract" && value === "Accepted") || (type === "deposit" && ["Paid", "Not Required"].includes(value)) || (type === "changeOrders" && ["None", "Approved"].includes(value))) return "good";
+  if ((type === "deposit" && value === "Overdue") || value === "Needs Review") return "bad";
+  if (value) return "watch";
+  return "";
+}
+
+function renderProjectControl(project) {
+  const control = project.control;
+  if (!state.live) {
+    return control.nextOutcome
+      ? `<div class="metric"><strong>${escapeHtml(control.nextOutcome)}</strong><span>Owner: ${escapeHtml(control.nextMoveOwner || "Not set")}</span></div>`
+      : `<span class="project-sub">No control status in hosted snapshot.</span>`;
+  }
+  return `
+    <div class="control-grid">
+      ${selectField(project.id, "operatingState", "State", control.operatingState, ["Action Needed", "Follow-Up Needed", "Monitor", "Stable"])}
+      ${textField(project.id, "nextMoveOwner", "Owner", control.nextMoveOwner)}
+      ${textareaField(project.id, "nextOutcome", "Next Outcome", control.nextOutcome, "full")}
+      ${textareaField(project.id, "nextAction", "Next Action", control.nextAction, "full")}
+      ${dateField(project.id, "reviewDate", "Review Date", control.reviewDate)}
+      ${dateField(project.id, "responseDate", "Response Date", control.responseDate)}
+    </div>
+  `;
+}
+
+function renderOpenTasks(project) {
+  const openTasks = project.taskList.filter(task => task.status !== "done");
+  const taskRows = openTasks.length ? openTasks.map(task => `
+    <div class="task-row">
+      <div>
+        <div class="task-title">${escapeHtml(task.name)}</div>
+        <div class="task-meta">${task.source ? renderTaskSource(task) : "Command Center"}</div>
+      </div>
+      ${state.live ? `
+        <select class="task-input" data-task-id="${escapeAttribute(task.id)}" data-field="status" ${state.saving ? "disabled" : ""}>
+          <option value="todo" ${task.status === "todo" ? "selected" : ""}>To do</option>
+          <option value="progress" ${task.status === "progress" ? "selected" : ""}>In progress</option>
+          <option value="done" ${task.status === "done" ? "selected" : ""}>Done</option>
+        </select>
+      ` : `<span class="project-sub">${taskStatusLabel(task.status)}</span>`}
+    </div>
+  `).join("") : `<span class="project-sub">No open tasks.</span>`;
+
+  return `
+    <div class="task-list">${taskRows}</div>
+    ${state.live ? `
+      <div class="add-task-row">
+        <textarea id="newTask-${escapeAttribute(project.id)}" placeholder="Add open task"></textarea>
+        <button class="primary-button add-task-button" type="button" data-project-id="${escapeAttribute(project.id)}" ${state.saving ? "disabled" : ""}>Add</button>
+      </div>
+    ` : ""}
+  `;
+}
+
+function renderTaskSource(task) {
+  const label = taskSourceLabel(task.source);
+  if (task.externalUrl) return `<a class="source-link" href="${escapeAttribute(task.externalUrl)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+  return escapeHtml(label);
+}
+
+function taskSourceLabel(source) {
+  if (source === "pulse") return "Pulse";
+  if (source === "procore" || source === "procore-review") return "Procore";
+  return source || "Command Center";
+}
+
+function taskStatusLabel(status) {
+  if (status === "progress") return "In progress";
+  if (status === "done") return "Done";
+  return "To do";
+}
+
+function selectField(projectId, field, label, value, options, className = "") {
+  return `
+    <div class="compact-field ${className}">
+      <label>${escapeHtml(label)}</label>
+      <select class="control-input" data-project-id="${escapeAttribute(projectId)}" data-field="${escapeAttribute(field)}" ${state.saving ? "disabled" : ""}>
+        ${options.map(option => `<option value="${escapeAttribute(option)}" ${String(value || "") === option ? "selected" : ""}>${escapeHtml(option || "Not set")}</option>`).join("")}
+      </select>
+    </div>
+  `;
+}
+
+function textField(projectId, field, label, value, className = "") {
+  return `
+    <div class="compact-field ${className}">
+      <label>${escapeHtml(label)}</label>
+      <input class="control-input" data-project-id="${escapeAttribute(projectId)}" data-field="${escapeAttribute(field)}" value="${escapeAttribute(value || "")}" ${state.saving ? "disabled" : ""}>
+    </div>
+  `;
+}
+
+function dateField(projectId, field, label, value, className = "") {
+  return `
+    <div class="compact-field ${className}">
+      <label>${escapeHtml(label)}</label>
+      <input type="date" class="control-input" data-project-id="${escapeAttribute(projectId)}" data-field="${escapeAttribute(field)}" value="${escapeAttribute(value || "")}" ${state.saving ? "disabled" : ""}>
+    </div>
+  `;
+}
+
+function textareaField(projectId, field, label, value, className = "") {
+  return `
+    <div class="compact-field ${className}">
+      <label>${escapeHtml(label)}</label>
+      <textarea class="control-input" data-project-id="${escapeAttribute(projectId)}" data-field="${escapeAttribute(field)}" ${state.saving ? "disabled" : ""}>${escapeHtml(value || "")}</textarea>
     </div>
   `;
 }
@@ -1041,6 +1479,14 @@ function formatDateRange(startDate, endDate) {
   return startDate ? `Starts ${formatDate(startDate)}` : `Ends ${formatDate(endDate)}`;
 }
 
+function dateOnly(value) {
+  if (!value) return "";
+  const text = String(value).trim();
+  if (/^\d{4}-\d{2}-\d{2}/.test(text)) return text.slice(0, 10);
+  const date = parseDate(text);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -1068,12 +1514,50 @@ document.addEventListener("click", event => {
     return;
   }
 
+  const addTaskButton = event.target.closest(".add-task-button");
+  if (addTaskButton) {
+    const projectId = addTaskButton.dataset.projectId;
+    const field = document.getElementById(`newTask-${projectId}`);
+    const name = field ? field.value.trim() : "";
+    if (!name) return;
+    postUpdate("addTask", { projectId, name, status: "todo" }).catch(error => {
+      console.error("Add task failed:", error);
+      showSyncBanner("error", error.message || "Task could not be added.");
+    });
+    return;
+  }
+
   const projectToggle = event.target.closest("[data-project-toggle]");
   if (!projectToggle) return;
   const id = projectToggle.dataset.projectToggle;
   if (state.expandedProjects.has(id)) state.expandedProjects.delete(id);
   else state.expandedProjects.add(id);
   renderProjects();
+});
+
+document.addEventListener("change", event => {
+  const controlInput = event.target.closest(".control-input");
+  if (controlInput) {
+    const projectId = controlInput.dataset.projectId;
+    const field = controlInput.dataset.field;
+    const value = controlInput.type === "checkbox" ? controlInput.checked : controlInput.value.trim();
+    postUpdate("updateProjectControl", { projectId, field, value }).catch(error => {
+      console.error("Control update failed:", error);
+      showSyncBanner("error", error.message || "Project control could not be saved.");
+    });
+    return;
+  }
+
+  const taskInput = event.target.closest(".task-input");
+  if (taskInput) {
+    const taskId = taskInput.dataset.taskId;
+    const field = taskInput.dataset.field;
+    const value = taskInput.value;
+    postUpdate("updateTask", { taskId, field, value }).catch(error => {
+      console.error("Task update failed:", error);
+      showSyncBanner("error", error.message || "Task could not be saved.");
+    });
+  }
 });
 
 document.getElementById("searchInput").addEventListener("input", event => {

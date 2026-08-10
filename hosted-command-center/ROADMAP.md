@@ -1,20 +1,19 @@
 # Hosted Command Center Roadmap
 
-This roadmap is for the online/shared Command Center branch. It should not
-change the current Google Apps Script operating baseline unless Christen
-explicitly asks for that later.
+This roadmap is for the online Command Center. The hosted app is the foundation
+for the field-facing product.
 
 Operational default: ambiguous Command Center requests should be handled in
-`hosted-command-center/`, not in the original/internal root app. Use
-`../OPERATING_PROCEDURES.md` as the version map.
+`hosted-command-center/`. Use the root app as a reference source, not a
+separate destination.
 
 ## Phase 1 - Static Shared Dashboard
 
 Status: in progress
 
-- Keep the hosted app in `hosted-command-center`.
-- Use static JSON data so no subscription-based backend is required.
-- Keep the viewer experience read-only.
+- Keep the online app in `hosted-command-center`.
+- Use the existing Apps Script API for live data and editing.
+- Keep static JSON as a fallback so no subscription-based backend is required.
 - Validate hosted data before publishing.
 - Publish through a free static-hosting path when approved.
 
@@ -22,7 +21,7 @@ Status: in progress
 
 Status: started
 
-- Export from the current Command Center API into `data/projects.json`.
+- Export from the current Command Center API into fallback `data/projects.json`.
 - Sanitize the shared data shape.
 - Exclude notes, raw external IDs, credentials, and private details.
 - Exclude source links unless they are reviewed and intentionally enabled.
@@ -43,6 +42,8 @@ Status: pending
 - Improve mobile/tablet scanning.
 - Add project grouping and area filters if real data volume needs them.
 - Add source links only if they are safe and useful for the intended audience.
+- Continue migrating needed working features from the root app into the online
+  app instead of maintaining two user experiences.
 
 ## Approval Gates
 

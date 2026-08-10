@@ -4,20 +4,19 @@ Branch: `codex/phase-3-outcome-control`
 
 ## Purpose
 
-This branch is a secluded working model for evolving Project Command Center into
-an outcome-based project-control platform. It is intended for comparison against
-the current internal Command Center and the separate online/shared version.
+This branch is a working model for evolving Project Command Center into an
+outcome-based project-control platform. The hosted app is now the intended
+online foundation for that work.
 
-The goal is to let Christen test a different operating model without changing
-the current platform until a deliberate merge or deployment decision is made.
+The goal is to pull the useful control model into one coherent online Command
+Center instead of maintaining separate user experiences.
 
 ## Isolation Rules
 
 - Keep all outcome-control work on this branch until Christen approves merging.
-- Preserve the current internal Google Apps Script app unless a phase 3 change
-  explicitly needs it.
-- Preserve the hosted/shared dashboard unless Christen asks to adapt phase 3 for
-  a shared online view.
+- Treat the root app as legacy/reference UI unless Christen asks to edit it.
+- Use `Code.gs` as the Apps Script API source when the hosted app needs live
+  read/write behavior.
 - Do not deploy Apps Script, publish a hosted site, send email, alter calendars,
   or change external systems without explicit approval.
 - Use existing project data to demonstrate workflows. Do not invent project
@@ -25,9 +24,9 @@ the current platform until a deliberate merge or deployment decision is made.
 
 ## Existing System Findings
 
-The repository currently contains two Command Center versions:
+The repository currently contains a hosted online app and a legacy/root app:
 
-- Original/internal app at the repository root:
+- Legacy/root app at the repository root:
   - `index.html` is the main browser UI.
   - `Code.gs` is the Google Apps Script API.
   - Google Sheets tabs currently model Projects, Timelines, Tasks, Risks, and
@@ -35,9 +34,10 @@ The repository currently contains two Command Center versions:
   - The current app computes red/amber/green attention from risks, dates, task
     counts, and timeline gaps.
 
-- Hosted/shared app in `hosted-command-center/`:
-  - `index.html` is a read-focused static dashboard.
-  - `data/projects.json` is the safe exported data file.
+- Online app in `hosted-command-center/`:
+  - `index.html` is the field-facing online dashboard.
+  - It uses the Apps Script API for live data and lightweight editing.
+  - `data/projects.json` is the safe exported fallback data file.
   - `DATA_CONTRACT.md` keeps the shared data shape smaller and safer.
   - Hosted data intentionally excludes owners, notes, source details, and other
     internal fields unless approved.
@@ -47,13 +47,9 @@ is mostly through hosted data validation and manual preview.
 
 ## How The Outcome-Control Model Fits
 
-The requested outcome-control model belongs first in the original/internal app,
-because it needs owners, evidence, notes, blocker reasons, escalation state, and
-state-change history. Those fields are intentionally excluded from the current
-hosted/shared data contract.
-
-The hosted/shared dashboard can later receive a sanitized summary of phase 3
-signals if useful, but it should not be the first implementation target.
+The requested outcome-control model should be migrated into the hosted online
+app in lightweight field-usable slices. The root app remains useful as a source
+for proven controls and existing API behavior.
 
 ## Required New Control Layer
 

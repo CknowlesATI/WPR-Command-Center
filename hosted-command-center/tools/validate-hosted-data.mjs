@@ -18,10 +18,14 @@ const allowedProjectFields = new Set([
   "highPriorityTasks",
   "risks",
   "nextHandoff",
+  "approvalsPayments",
+  "taskList",
   "timelines",
   "attention",
   "links"
 ]);
+const allowedApprovalsPaymentsFields = new Set(["contract", "deposit", "changeOrders"]);
+const allowedTaskFields = new Set(["name", "status", "source", "externalUrl"]);
 const allowedAttentionFields = new Set(["severity", "label", "detail", "dueDate", "source"]);
 const allowedLinkFields = new Set(["label", "url"]);
 const allowedTimelineFields = new Set(["key", "label", "start", "end", "status"]);
@@ -48,6 +52,25 @@ if (!data || typeof data !== "object") {
   requireNumber(project.highPriorityTasks, `${prefix}.highPriorityTasks`);
   requireNumber(project.risks, `${prefix}.risks`);
   checkAllowedFields(project, allowedProjectFields, prefix);
+
+  if (project.approvalsPayments !== undefined) {
+    if (!project.approvalsPayments || typeof project.approvalsPayments !== "object" || Array.isArray(project.approvalsPayments)) {
+      errors.push(`${prefix}.approvalsPayments must be an object.`);
+    } else {
+      checkAllowedFields(project.approvalsPayments, allowedApprovalsPaymentsFields, `${prefix}.approvalsPayments`);
+    }
+  }
+
+  if (project.taskList !== undefined) {
+    if (!Array.isArray(project.taskList)) errors.push(`${prefix}.taskList must be an array.`);
+    (project.taskList || []).forEach((task, taskIndex) => {
+      const taskPrefix = `${prefix}.taskList[${taskIndex}]`;
+      requireText(task.name, `${taskPrefix}.name`);
+      requireEnum(task.status, ["todo", "progress", "done"], `${taskPrefix}.status`);
+      checkAllowedFields(task, allowedTaskFields, taskPrefix);
+      if (task.externalUrl) requireSafeUrl(task.externalUrl, `${taskPrefix}.externalUrl`);
+    });
+  }
 
   if (!Array.isArray(project.timelines)) errors.push(`${prefix}.timelines must be an array.`);
   (project.timelines || []).forEach((item, itemIndex) => {

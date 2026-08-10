@@ -1,12 +1,12 @@
 # Clasp Setup
 
-This repo keeps the original/internal Command Center frontend in `index.html`
-and the Google Sheets Apps Script backend in `Code.gs`.
+This repo keeps the legacy/root Command Center frontend in `index.html` and the
+Google Sheets Apps Script backend in `Code.gs`.
 
-Routine Command Center work should target the online/shared version in
-`hosted-command-center/` unless Christen explicitly specifies the
-original/internal version, the Google Sheet, Apps Script, or live API behavior.
-See `OPERATING_PROCEDURES.md` for the version map.
+Routine Command Center work should target the online version in
+`hosted-command-center/`. Use the root app as a reference implementation unless
+Christen explicitly asks for root-app work. See `OPERATING_PROCEDURES.md` for
+the version map.
 
 ## One-time local setup
 

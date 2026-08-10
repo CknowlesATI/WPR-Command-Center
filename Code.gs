@@ -191,7 +191,10 @@ function updateProjectControl(body) {
     "escalationLevel",
     "lastEscalationAction",
     "eventTrigger",
-    "overrideDaily"
+    "overrideDaily",
+    "contractStatus",
+    "depositStatus",
+    "changeOrderStatus"
   ];
   if (allowedFields.indexOf(field) === -1) throw new Error("Invalid control field: " + field);
 
@@ -444,6 +447,9 @@ function normalizeProjectControl(control) {
     lastEscalationAction: control.lastEscalationAction || "",
     eventTrigger: control.eventTrigger || "",
     overrideDaily: normalizeBoolean(control.overrideDaily),
+    contractStatus: normalizeContractStatus(control.contractStatus || ""),
+    depositStatus: normalizeDepositStatus(control.depositStatus || ""),
+    changeOrderStatus: normalizeChangeOrderStatus(control.changeOrderStatus || ""),
     updatedAt: control.updatedAt || ""
   };
 }
@@ -453,6 +459,9 @@ function normalizeControlField(field, value) {
   if (["responseDate", "reviewDate", "escalationDate", "lastMovementDate"].indexOf(field) !== -1) return normalizeDateValue(value, false);
   if (field === "operatingState") return normalizeOperatingState(value);
   if (field === "escalationLevel") return normalizeEscalationLevel(value);
+  if (field === "contractStatus") return normalizeContractStatus(value);
+  if (field === "depositStatus") return normalizeDepositStatus(value);
+  if (field === "changeOrderStatus") return normalizeChangeOrderStatus(value);
   return String(value || "").trim();
 }
 
@@ -467,6 +476,24 @@ function normalizeEscalationLevel(value) {
   if (value === "" || value === null || value === undefined) return "";
   const text = String(value).trim();
   if (["1", "2", "3", "4", "5", "6"].indexOf(text) === -1) throw new Error("Invalid escalation level: " + text);
+  return text;
+}
+
+function normalizeContractStatus(value) {
+  return normalizeStatusOption(value, ["", "Not Sent", "Sent", "Accepted", "Needs Review"], "contract status");
+}
+
+function normalizeDepositStatus(value) {
+  return normalizeStatusOption(value, ["", "Not Required", "Pending", "Paid", "Overdue"], "deposit status");
+}
+
+function normalizeChangeOrderStatus(value) {
+  return normalizeStatusOption(value, ["", "None", "Pending", "Approved", "Needs Review"], "change order status");
+}
+
+function normalizeStatusOption(value, allowed, label) {
+  const text = String(value || "").trim();
+  if (allowed.indexOf(text) === -1) throw new Error("Invalid " + label + ": " + text);
   return text;
 }
 
@@ -627,6 +654,9 @@ function ensureProjectControlSchema() {
     "lastEscalationAction",
     "eventTrigger",
     "overrideDaily",
+    "contractStatus",
+    "depositStatus",
+    "changeOrderStatus",
     "updatedAt"
   ];
   ensureSheetWithHeaders("ProjectControls", headers, [9, 10, 11, 12]);
@@ -772,9 +802,12 @@ function seedData() {
     "lastEscalationAction",
     "eventTrigger",
     "overrideDaily",
+    "contractStatus",
+    "depositStatus",
+    "changeOrderStatus",
     "updatedAt"
   ], projectNames.map((name, i) => {
-    return [i + 1, "", "", "Stable", false, "", "", "", "", "", "", "", "", "", "", "", "", false, ""];
+    return [i + 1, "", "", "Stable", false, "", "", "", "", "", "", "", "", "", "", "", "", false, "", "", "", ""];
   }), [9, 10, 11, 12]);
   setTab(ss, "ProjectControlHistory", ["id", "projectId", "changedAt", "field", "oldValue", "newValue"], [], [3]);
 

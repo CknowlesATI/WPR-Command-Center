@@ -71,10 +71,37 @@ function toHostedProject(project, options) {
     highPriorityTasks,
     risks: risks.length,
     nextHandoff: nextHandoffDate(timelines),
+    approvalsPayments: approvalsPayments(project),
+    taskList: hostedTasks(tasks, options),
     timelines: hostedTimelines(timelines),
     attention,
     links: options.includeLinks ? buildLinks(tasks) : []
   };
+}
+
+function approvalsPayments(project) {
+  const control = project && project.control && typeof project.control === "object" ? project.control : {};
+  return {
+    contract: approvalStatus(control.contractStatus),
+    deposit: approvalStatus(control.depositStatus),
+    changeOrders: approvalStatus(control.changeOrderStatus)
+  };
+}
+
+function approvalStatus(value) {
+  return text(value, "");
+}
+
+function hostedTasks(tasks, options) {
+  return tasks
+    .filter(task => task.status !== "done")
+    .map(task => ({
+      name: safeTaskTitle(task.name),
+      status: ["todo", "progress", "done"].includes(task.status) ? task.status : "todo",
+      source: sourceLabel(task.source),
+      externalUrl: options.includeLinks ? text(task.externalUrl, "") : ""
+    }))
+    .filter(task => task.name);
 }
 
 function hostedTimelines(timelines) {
