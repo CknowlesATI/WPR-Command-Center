@@ -1074,7 +1074,9 @@ function normalizeTaskList(tasks) {
     status: ["todo", "progress", "done"].includes(task.status) ? task.status : "todo",
     source: String(task.source || "").trim(),
     externalUrl: String(task.externalUrl || task.url || task.link || "").trim()
-  })).filter(task => task.name) : [];
+  }))
+    .filter(task => task.name)
+    .sort((a, b) => taskSourceRank(a.source) - taskSourceRank(b.source) || a.name.localeCompare(b.name)) : [];
 }
 
 function openTaskCount(project) {
@@ -1426,6 +1428,14 @@ function taskSourceGroup(source) {
   if (source === "pulse" || source === "Pulse") return "pulse";
   if (!source || source === "Command Center") return "command";
   return "other";
+}
+
+function taskSourceRank(source) {
+  const group = taskSourceGroup(source);
+  if (group === "procore") return 1;
+  if (group === "pulse") return 2;
+  if (group === "command") return 3;
+  return 4;
 }
 
 function renderTaskSource(task) {
