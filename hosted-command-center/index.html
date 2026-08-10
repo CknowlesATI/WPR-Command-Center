@@ -995,6 +995,8 @@ const state = {
 const API_URL = "https://wpr-command-center-api.wpr-command-center.workers.dev";
 const SYNC_ENABLED = API_URL.indexOf("http") === 0;
 const COLLAPSED_ATTENTION_LIMIT = 6;
+const PULSE_PROJECTS_URL = "https://www.pulsecentral.ai/c/ati-of-america/projects";
+const PROCORE_URL = "https://app.procore.com/";
 
 const healthLabels = {
   green: "On Track",
@@ -1531,8 +1533,21 @@ function taskSourceRank(source) {
 function renderTaskSource(task) {
   const label = taskSourceLabel(task.source);
   const className = taskSourceGroup(task.source);
-  if (task.externalUrl) return `<a class="source-chip ${escapeAttribute(className)}" href="${escapeAttribute(task.externalUrl)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+  const url = taskSourceUrl(task);
+  if (url) return `<a class="source-chip ${escapeAttribute(className)}" href="${escapeAttribute(url)}" target="_blank" rel="noopener" title="${escapeAttribute(sourceLinkTitle(label, task.externalUrl))}">${escapeHtml(label)}</a>`;
   return `<span class="source-chip ${escapeAttribute(className)}">${escapeHtml(label)}</span>`;
+}
+
+function taskSourceUrl(task) {
+  if (task.externalUrl) return task.externalUrl;
+  const group = taskSourceGroup(task.source);
+  if (group === "pulse") return PULSE_PROJECTS_URL;
+  if (group === "procore") return PROCORE_URL;
+  return "";
+}
+
+function sourceLinkTitle(label, hasExactUrl) {
+  return hasExactUrl ? `Open ${label} item` : `Open ${label}`;
 }
 
 function renderEditNote(item) {
