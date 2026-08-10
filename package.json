@@ -3,6 +3,9 @@
   "private": true,
   "scripts": {
     "test": "node tools/validate-control-rules.mjs && node hosted-command-center/tools/validate-hosted-data.mjs",
+    "d1:seed": "node worker/tools/export-d1-seed.mjs",
+    "cf:deploy": "wrangler deploy --config worker/wrangler.toml",
+    "cf:migrate": "wrangler d1 migrations apply wpr-command-center --remote --config worker/wrangler.toml",
     "clasp": "clasp",
     "apps:login": "clasp login",
     "apps:status": "clasp status",
@@ -11,6 +14,7 @@
     "apps:open": "clasp open-script"
   },
   "devDependencies": {
-    "@google/clasp": "^3.3.0"
+    "@google/clasp": "^3.3.0",
+    "wrangler": "^4.120.0"
   }
 }

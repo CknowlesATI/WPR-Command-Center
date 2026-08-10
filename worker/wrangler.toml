@@ -1,0 +1,8 @@
+name = "wpr-command-center-api"
+main = "src/index.js"
+compatibility_date = "2026-08-10"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "wpr-command-center"
+database_id = "27f45859-7060-4c1b-96ca-809fc7d7e058"
