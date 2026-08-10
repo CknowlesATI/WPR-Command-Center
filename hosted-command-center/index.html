@@ -119,6 +119,77 @@
     color: var(--green);
   }
 
+  .settings-panel {
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, .7fr);
+    gap: 14px;
+    align-items: start;
+  }
+
+  .settings-title {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 850;
+  }
+
+  .settings-copy {
+    margin: 0 0 4px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .recipient-list {
+    display: grid;
+    gap: 7px;
+    margin-top: 10px;
+  }
+
+  .recipient-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    border: 1px solid #edf0f4;
+    border-radius: 8px;
+    background: #fbfcfd;
+    padding: 8px;
+  }
+
+  .recipient-email {
+    min-width: 0;
+    font-size: 12px;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+  }
+
+  .settings-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .settings-form input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    font-size: 12px;
+    padding: 8px;
+  }
+
   .sync-banner {
     border: 1px solid #f3d9a3;
     border-radius: 8px;
@@ -1090,6 +1161,14 @@
       border-radius: 7px;
       align-items: flex-start;
     }
+
+    .settings-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .settings-form {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 </head>
@@ -1110,9 +1189,11 @@
     <div class="updated" id="updatedText">Loading project data...</div>
     <div class="status-actions">
       <button class="auth-button" id="authButton" type="button">Edit Access</button>
+      <button class="auth-button" id="settingsButton" type="button">Settings</button>
       <div class="filters" id="filters"></div>
     </div>
   </div>
+  <section id="settingsPanel"></section>
 
   <section class="kpis" id="kpis"></section>
 
@@ -1170,6 +1251,8 @@ const state = {
   addProjectOpen: false,
   expandedProjects: new Set(),
   closingProjects: new Set(),
+  settingsOpen: false,
+  settings: { notifications: { recipients: [], emailConfigured: false } },
   saving: false,
   live: false,
   auth: loadAuthSession()
@@ -1204,6 +1287,7 @@ async function loadData() {
       const projects = Array.isArray(data) ? data : data.data;
       if (!Array.isArray(projects)) throw new Error("Live API returned no project list");
       state.projects = normalizeProjects(projects);
+      state.settings = normalizeSettings(data.settings);
       state.live = true;
       document.getElementById("updatedText").textContent = "Live Command Center data";
       showSyncBanner("none");
@@ -1225,6 +1309,7 @@ async function loadData() {
     document.getElementById("updatedText").textContent = `Last updated ${formatDateTime(data.lastUpdated)} from ${data.source || "Command Center"}`;
   } catch (error) {
     state.projects = normalizeProjects(fallbackData.projects);
+    state.settings = normalizeSettings();
     document.getElementById("updatedText").textContent = "Project data could not be loaded.";
   }
   render();
@@ -1267,6 +1352,7 @@ async function postUpdate(action, payload) {
     if (data && data.ok === false) throw new Error(data.error || "Save failed");
     const projects = Array.isArray(data) ? data : data.data;
     if (Array.isArray(projects)) state.projects = normalizeProjects(projects);
+    state.settings = normalizeSettings(data.settings);
     showSyncBanner("none");
   } finally {
     state.saving = false;
@@ -1302,6 +1388,21 @@ function normalizeProjects(projects) {
       status: item.status || ""
     })) : []
   })) : [];
+}
+
+function normalizeSettings(settings = {}) {
+  const notifications = settings.notifications && typeof settings.notifications === "object" ? settings.notifications : {};
+  const recipients = Array.isArray(notifications.recipients) ? notifications.recipients : [];
+  return {
+    notifications: {
+      recipients: recipients.map(item => ({
+        email: String(item.email || "").trim(),
+        createdBy: String(item.createdBy || "").trim(),
+        createdAt: String(item.createdAt || "").trim()
+      })).filter(item => item.email),
+      emailConfigured: notifications.emailConfigured === true
+    }
+  };
 }
 
 function normalizeHealth(value) {
@@ -1375,11 +1476,55 @@ function isDashboardProject(project) {
 
 function render() {
   renderFilters();
+  renderSettings();
   renderKpis();
   renderAttention();
   renderTimeline();
   renderProjectTemplate();
   renderProjects();
+}
+
+function renderSettings() {
+  const panel = document.getElementById("settingsPanel");
+  const button = document.getElementById("settingsButton");
+  if (button) button.classList.toggle("connected", state.settingsOpen);
+  if (!panel) return;
+  if (!state.settingsOpen) {
+    panel.innerHTML = "";
+    return;
+  }
+
+  const recipients = state.settings.notifications.recipients;
+  const configured = state.settings.notifications.emailConfigured;
+  panel.innerHTML = `
+    <div class="settings-panel">
+      <div class="settings-grid">
+        <div>
+          <h2 class="settings-title">Notifications</h2>
+          <p class="settings-copy">New Command Center To-Dos and Notes will send an email to the recipients listed here.</p>
+          <p class="settings-copy">${configured ? "Email sending is connected." : "Email sending needs the Resend key and sending address before messages can go out."}</p>
+          <div class="recipient-list">
+            ${recipients.length ? recipients.map(item => `
+              <div class="recipient-row">
+                <div>
+                  <div class="recipient-email">${escapeHtml(item.email)}</div>
+                  ${item.createdBy ? `<div class="edit-note">Added ${escapeHtml(item.createdBy)}${item.createdAt ? ` · ${formatDateTime(item.createdAt)}` : ""}</div>` : ""}
+                </div>
+                <button class="secondary-button remove-recipient-button" type="button" data-email="${escapeAttribute(item.email)}" ${state.saving ? "disabled" : ""}>Remove</button>
+              </div>
+            `).join("") : `<div class="empty">No notification recipients have been added yet.</div>`}
+          </div>
+        </div>
+        <div>
+          <h2 class="settings-title">Add Recipient</h2>
+          <div class="settings-form">
+            <input id="notificationEmailInput" type="email" placeholder="name@example.com" ${state.saving ? "disabled" : ""}>
+            <button class="primary-button" id="addRecipientButton" type="button" ${state.saving ? "disabled" : ""}>Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function visibleProjects() {
@@ -1998,6 +2143,35 @@ document.addEventListener("click", event => {
   if (event.target.closest("#attentionToggle")) {
     state.attentionExpanded = !state.attentionExpanded;
     renderAttention();
+    return;
+  }
+
+  if (event.target.closest("#settingsButton")) {
+    state.settingsOpen = !state.settingsOpen;
+    renderSettings();
+    return;
+  }
+
+  if (event.target.closest("#addRecipientButton")) {
+    const email = valueFrom("notificationEmailInput");
+    if (!email) {
+      showSyncBanner("error", "Email address is required.");
+      return;
+    }
+    postUpdate("addNotificationRecipient", { email }).catch(error => {
+      console.error("Add notification recipient failed:", error);
+      showSyncBanner("error", error.message || "Notification recipient could not be added.");
+    });
+    return;
+  }
+
+  const removeRecipientButton = event.target.closest(".remove-recipient-button");
+  if (removeRecipientButton) {
+    const email = removeRecipientButton.dataset.email;
+    postUpdate("removeNotificationRecipient", { email }).catch(error => {
+      console.error("Remove notification recipient failed:", error);
+      showSyncBanner("error", error.message || "Notification recipient could not be removed.");
+    });
     return;
   }
 

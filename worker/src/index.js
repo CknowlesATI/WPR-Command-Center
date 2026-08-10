@@ -31,20 +31,20 @@ const CONTROL_FIELDS = new Map([
 ]);
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     if (request.method === "OPTIONS") return new Response(null, { headers: JSON_HEADERS });
 
     try {
       if (request.method === "GET") {
-        return json(await getAllData(env.DB));
+        return json({ ok: true, data: await getAllData(env.DB), settings: await getSettings(env.DB, env) });
       }
 
       if (request.method === "POST") {
         const body = await request.json();
         if (body.action === "authorize") return json(await createSession(body, env));
         const actor = await authorizeWrite(request, env);
-        await applyAction(env.DB, body, actor);
-        return json({ ok: true, data: await getAllData(env.DB) });
+        await applyAction(env.DB, body, actor, env, ctx);
+        return json({ ok: true, data: await getAllData(env.DB), settings: await getSettings(env.DB, env) });
       }
 
       return json({ ok: false, error: "Method not allowed" }, 405);
@@ -54,15 +54,17 @@ export default {
   }
 };
 
-async function applyAction(db, body, actor) {
+async function applyAction(db, body, actor, env, ctx) {
   if (!body || typeof body !== "object") throw new Error("Missing request body");
 
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
   if (body.action === "addProject") return addProject(db, body, actor);
   if (body.action === "closeProject") return closeProject(db, body, actor);
-  if (body.action === "addTask") return addTask(db, body, actor);
+  if (body.action === "addTask") return addTask(db, body, actor, env, ctx);
   if (body.action === "updateTask") return updateTask(db, body, actor);
   if (body.action === "deleteTask") return deleteById(db, "tasks", body.taskId);
+  if (body.action === "addNotificationRecipient") return addNotificationRecipient(db, body, actor);
+  if (body.action === "removeNotificationRecipient") return removeNotificationRecipient(db, body);
 
   throw new Error(`Unknown action: ${body.action}`);
 }
@@ -117,6 +119,20 @@ async function getAllData(db) {
       control: toControl(project.id, controlsByProject.get(String(project.id)))
     };
   });
+}
+
+async function getSettings(db, env) {
+  const recipients = await db.prepare("SELECT email, created_by, created_at FROM notification_recipients ORDER BY email").all();
+  return {
+    notifications: {
+      recipients: recipients.results.map(row => ({
+        email: row.email,
+        createdBy: row.created_by || "",
+        createdAt: row.created_at || ""
+      })),
+      emailConfigured: notificationsConfigured(env)
+    }
+  };
 }
 
 async function updateProjectControl(db, body, actor) {
@@ -189,16 +205,86 @@ async function closeProject(db, body, actor) {
   ]);
 }
 
-async function addTask(db, body, actor) {
+async function addTask(db, body, actor, env, ctx) {
   const projectId = required(body.projectId, "projectId");
   const name = normalizeText(required(body.name, "name"));
   if (!name) throw new Error("Task name is required");
   const status = normalizeTaskStatus(body.status || "todo");
   const source = normalizeText(body.source || "Command Center");
   const next = await db.prepare("SELECT COALESCE(MAX(CAST(id AS INTEGER)), 0) + 1 AS id FROM tasks").first();
+  const taskId = String(next.id);
+  const updatedAt = currentIsoMinute();
   await db.prepare("INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, updated_by, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
-    .bind(String(next.id), projectId, name, status, source, normalizeText(body.sourceState || ""), normalizeText(body.externalUrl || ""), actor.initials, currentIsoMinute())
+    .bind(taskId, projectId, name, status, source, normalizeText(body.sourceState || ""), normalizeText(body.externalUrl || ""), actor.initials, updatedAt)
     .run();
+
+  if (isManualTaskSource(source) && ["todo", "note"].includes(status)) {
+    const project = await db.prepare("SELECT id, name FROM projects WHERE id = ?").bind(projectId).first();
+    const notification = sendTaskNotification(db, env, {
+      projectId,
+      projectName: project ? project.name : projectId,
+      taskId,
+      taskName: name,
+      status,
+      actorInitials: actor.initials,
+      updatedAt
+    });
+    if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(notification);
+    else await notification;
+  }
+}
+
+async function addNotificationRecipient(db, body, actor) {
+  const email = normalizeEmail(required(body.email, "email"));
+  await db.prepare("INSERT OR IGNORE INTO notification_recipients (email, created_by, created_at) VALUES (?, ?, ?)")
+    .bind(email, actor.initials, currentIsoMinute())
+    .run();
+}
+
+async function removeNotificationRecipient(db, body) {
+  const email = normalizeEmail(required(body.email, "email"));
+  await db.prepare("DELETE FROM notification_recipients WHERE email = ?").bind(email).run();
+}
+
+async function sendTaskNotification(db, env, task) {
+  try {
+    if (!notificationsConfigured(env)) return;
+    const recipients = await db.prepare("SELECT email FROM notification_recipients ORDER BY email").all();
+    const to = recipients.results.map(row => row.email).filter(Boolean);
+    if (!to.length) return;
+
+    const typeLabel = task.status === "note" ? "Note" : "To-Do";
+    const commandCenterUrl = normalizeText(env.COMMAND_CENTER_URL || "https://cknowlesati.github.io/WPR-Command-Center/");
+    const subject = `Command Center: New ${typeLabel} - ${task.projectName}`;
+    const text = [
+      `A new ${typeLabel} was added in the WPR Command Center.`,
+      "",
+      `Project: ${task.projectName}`,
+      `Added by: ${task.actorInitials}`,
+      `Added: ${task.updatedAt}`,
+      "",
+      task.taskName,
+      "",
+      `Open Command Center: ${commandCenterUrl}`
+    ].join("\n");
+
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: env.NOTIFICATION_EMAIL_FROM,
+        to,
+        subject,
+        text
+      })
+    });
+    if (!response.ok) console.error("Task notification failed", response.status, await response.text());
+  } catch (error) {
+    console.error("Task notification failed", error);
+  }
 }
 
 async function updateTask(db, body, actor) {
@@ -357,6 +443,16 @@ function normalizeTaskStatus(value) {
 function isManualTaskSource(source) {
   const text = normalizeText(source);
   return !text || text === "Command Center";
+}
+
+function notificationsConfigured(env) {
+  return !!(normalizeText(env.RESEND_API_KEY) && normalizeText(env.NOTIFICATION_EMAIL_FROM));
+}
+
+function normalizeEmail(value) {
+  const email = normalizeText(value).toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("A valid email address is required.");
+  return email;
 }
 
 function normalizeOperatingState(value) {
