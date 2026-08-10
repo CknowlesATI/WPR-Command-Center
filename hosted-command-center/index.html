@@ -198,7 +198,7 @@
   .section-head {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     gap: 12px;
     margin: 22px 0 10px;
   }
@@ -214,6 +214,13 @@
   .count {
     color: var(--muted);
     font-size: 12px;
+  }
+
+  .section-title-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
   .attention-list {
@@ -284,6 +291,28 @@
   .project-list {
     display: grid;
     gap: 7px;
+  }
+
+  .project-template {
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  .template-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .template-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
   }
 
   .timeline-wrap {
@@ -616,6 +645,8 @@
   .compact-field input,
   .compact-field select,
   .compact-field textarea,
+  .project-template input,
+  .project-template select,
   .task-input,
   .add-task-row textarea {
     width: 100%;
@@ -643,6 +674,31 @@
 
   .control-grid .full {
     grid-column: 1 / -1;
+  }
+
+  .close-project-panel {
+    border-color: #f0b8b8;
+    background: var(--red-bg);
+  }
+
+  .close-project-actions {
+    display: grid;
+    gap: 9px;
+  }
+
+  .confirm-close {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 8px;
+    align-items: start;
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 750;
+    line-height: 1.35;
+  }
+
+  .confirm-close input {
+    margin-top: 1px;
   }
 
   .task-list {
@@ -749,7 +805,32 @@
     cursor: pointer;
   }
 
+  .secondary-button {
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 800;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  .danger-button {
+    width: max-content;
+    border: 1px solid #e3a1a1;
+    border-radius: 7px;
+    background: #fff;
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 850;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
   .primary-button:disabled,
+  .secondary-button:disabled,
+  .danger-button:disabled,
   .task-input:disabled,
   .control-input:disabled {
     opacity: .65;
@@ -853,6 +934,10 @@
       grid-template-columns: 1fr;
     }
 
+    .template-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .kpis {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -884,6 +969,15 @@
 
     .status-row {
       margin-bottom: 10px;
+    }
+
+    .section-head {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .template-grid {
+      grid-template-columns: 1fr;
     }
 
     .filters {
@@ -972,8 +1066,12 @@
   <section>
     <div class="section-head">
       <h2>Projects</h2>
-      <div class="count" id="projectCount"></div>
+      <div class="section-title-actions">
+        <button class="secondary-button" id="addProjectToggle" type="button">Add Project</button>
+        <div class="count" id="projectCount"></div>
+      </div>
     </div>
+    <div id="projectTemplate"></div>
     <div class="project-list" id="projectList"></div>
   </section>
 </main>
@@ -986,6 +1084,7 @@ const state = {
   filter: "all",
   query: "",
   attentionExpanded: false,
+  addProjectOpen: false,
   expandedProjects: new Set(),
   saving: false,
   live: false,
@@ -997,6 +1096,7 @@ const SYNC_ENABLED = API_URL.indexOf("http") === 0;
 const COLLAPSED_ATTENTION_LIMIT = 6;
 const PULSE_PROJECTS_URL = "https://www.pulsecentral.ai/c/ati-of-america/projects";
 const PROCORE_URL = "https://app.procore.com/";
+const CLOSE_PROJECT_CONFIRMATION = "Are you sure you want to close this project? After this action you will no longer be able to access any data stored within the Command Center";
 
 const healthLabels = {
   green: "On Track",
@@ -1196,6 +1296,7 @@ function render() {
   renderKpis();
   renderAttention();
   renderTimeline();
+  renderProjectTemplate();
   renderProjects();
 }
 
@@ -1348,6 +1449,54 @@ function timelineToday(range) {
   return ((now - range.min) / (range.max - range.min)) * 100;
 }
 
+function renderProjectTemplate() {
+  const target = document.getElementById("projectTemplate");
+  if (!target) return;
+  if (!state.live || !state.addProjectOpen) {
+    target.innerHTML = "";
+    return;
+  }
+
+  target.innerHTML = `
+    <div class="project-template">
+      <div class="file-label">New Project Template</div>
+      <div class="template-grid">
+        <div class="compact-field">
+          <label for="newProjectName">Project Name</label>
+          <input id="newProjectName" value="" placeholder="Project name" ${state.saving ? "disabled" : ""}>
+        </div>
+        <div class="compact-field">
+          <label for="newProjectGroup">Project Group</label>
+          <select id="newProjectGroup" ${state.saving ? "disabled" : ""}>
+            <option value="WPR Units">WPR Units</option>
+            <option value="Other Projects" selected>Other Projects</option>
+          </select>
+        </div>
+        <div class="compact-field">
+          <label for="newProjectSegment">Area</label>
+          <input id="newProjectSegment" value="" placeholder="Area or unit" ${state.saving ? "disabled" : ""}>
+        </div>
+        <div class="compact-field">
+          <label for="newProjectTeam">Client / Team</label>
+          <input id="newProjectTeam" value="" placeholder="Client or team" ${state.saving ? "disabled" : ""}>
+        </div>
+        <div class="compact-field">
+          <label for="newProjectStart">Start</label>
+          <input id="newProjectStart" type="date" value="" ${state.saving ? "disabled" : ""}>
+        </div>
+        <div class="compact-field">
+          <label for="newProjectEnd">End</label>
+          <input id="newProjectEnd" type="date" value="" ${state.saving ? "disabled" : ""}>
+        </div>
+      </div>
+      <div class="template-actions">
+        <button class="secondary-button" id="cancelProjectButton" type="button" ${state.saving ? "disabled" : ""}>Cancel</button>
+        <button class="primary-button" id="createProjectButton" type="button" ${state.saving ? "disabled" : ""}>Create Project</button>
+      </div>
+    </div>
+  `;
+}
+
 function renderProjects() {
   const projects = visibleProjects();
   document.getElementById("projectCount").textContent = `${projects.length} project${projects.length === 1 ? "" : "s"}`;
@@ -1408,6 +1557,23 @@ function renderProjectFile(project, expanded) {
       <div class="file-panel project-signal">
         <div class="file-label">Open Tasks</div>
         ${renderOpenTasks(project)}
+      </div>
+      ${state.live ? renderCloseProject(project) : ""}
+    </div>
+  `;
+}
+
+function renderCloseProject(project) {
+  const checkboxId = `closeProject-${project.id}`;
+  return `
+    <div class="file-panel project-signal close-project-panel">
+      <div class="file-label">Close Project</div>
+      <div class="close-project-actions">
+        <label class="confirm-close" for="${escapeAttribute(checkboxId)}">
+          <input id="${escapeAttribute(checkboxId)}" type="checkbox" data-close-confirm="${escapeAttribute(project.id)}" ${state.saving ? "disabled" : ""}>
+          <span>Are you sure you want to close this project? After this action you will no longer be able to access any data stored within the Command Center</span>
+        </label>
+        <button class="danger-button close-project-button" type="button" data-project-id="${escapeAttribute(project.id)}" disabled>Close Project</button>
       </div>
     </div>
   `;
@@ -1670,6 +1836,11 @@ function escapeAttribute(value) {
   return escapeHtml(value).replaceAll("`", "&#096;");
 }
 
+function cssEscape(value) {
+  if (window.CSS && typeof window.CSS.escape === "function") return window.CSS.escape(String(value));
+  return String(value).replace(/["\\]/g, "\\$&");
+}
+
 document.getElementById("filters").addEventListener("click", event => {
   const button = event.target.closest("[data-filter]");
   if (!button) return;
@@ -1681,6 +1852,55 @@ document.addEventListener("click", event => {
   if (event.target.closest("#attentionToggle")) {
     state.attentionExpanded = !state.attentionExpanded;
     renderAttention();
+    return;
+  }
+
+  if (event.target.closest("#addProjectToggle")) {
+    if (!state.live) {
+      showSyncBanner("error", "Live editing is unavailable right now. A project can only be added when the online database is connected.");
+      return;
+    }
+    state.addProjectOpen = !state.addProjectOpen;
+    renderProjectTemplate();
+    return;
+  }
+
+  if (event.target.closest("#cancelProjectButton")) {
+    state.addProjectOpen = false;
+    renderProjectTemplate();
+    return;
+  }
+
+  if (event.target.closest("#createProjectButton")) {
+    const payload = readNewProjectTemplate();
+    if (!payload.name) {
+      showSyncBanner("error", "Project name is required.");
+      return;
+    }
+    postUpdate("addProject", payload).then(() => {
+      state.addProjectOpen = false;
+      renderProjectTemplate();
+    }).catch(error => {
+      console.error("Add project failed:", error);
+      showSyncBanner("error", error.message || "Project could not be added.");
+    });
+    return;
+  }
+
+  const closeProjectButton = event.target.closest(".close-project-button");
+  if (closeProjectButton) {
+    const projectId = closeProjectButton.dataset.projectId;
+    const project = state.projects.find(item => String(item.id) === String(projectId));
+    const checkbox = document.querySelector(`[data-close-confirm="${cssEscape(projectId)}"]`);
+    if (!checkbox || !checkbox.checked) return;
+    if (!window.confirm(CLOSE_PROJECT_CONFIRMATION)) return;
+    postUpdate("closeProject", { projectId, confirmed: true, confirmationMessage: CLOSE_PROJECT_CONFIRMATION }).then(() => {
+      state.expandedProjects.delete(String(projectId));
+      showSyncBanner("none");
+    }).catch(error => {
+      console.error("Close project failed:", error);
+      showSyncBanner("error", error.message || `${project ? project.name : "Project"} could not be closed.`);
+    });
     return;
   }
 
@@ -1706,6 +1926,14 @@ document.addEventListener("click", event => {
 });
 
 document.addEventListener("change", event => {
+  const closeConfirm = event.target.closest("[data-close-confirm]");
+  if (closeConfirm) {
+    const projectId = closeConfirm.dataset.closeConfirm;
+    const button = document.querySelector(`.close-project-button[data-project-id="${cssEscape(projectId)}"]`);
+    if (button) button.disabled = !closeConfirm.checked || state.saving;
+    return;
+  }
+
   const controlInput = event.target.closest(".control-input");
   if (controlInput) {
     const projectId = controlInput.dataset.projectId;
@@ -1729,6 +1957,22 @@ document.addEventListener("change", event => {
     });
   }
 });
+
+function readNewProjectTemplate() {
+  return {
+    name: valueFrom("newProjectName"),
+    projectGroup: valueFrom("newProjectGroup") || "Other Projects",
+    segment: valueFrom("newProjectSegment"),
+    externalTeam: valueFrom("newProjectTeam"),
+    startsAt: valueFrom("newProjectStart"),
+    endsAt: valueFrom("newProjectEnd")
+  };
+}
+
+function valueFrom(id) {
+  const element = document.getElementById(id);
+  return element ? element.value.trim() : "";
+}
 
 document.getElementById("searchInput").addEventListener("input", event => {
   state.query = event.target.value;

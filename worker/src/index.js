@@ -58,6 +58,8 @@ async function applyAction(db, body, actor) {
   if (!body || typeof body !== "object") throw new Error("Missing request body");
 
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
+  if (body.action === "addProject") return addProject(db, body, actor);
+  if (body.action === "closeProject") return closeProject(db, body, actor);
   if (body.action === "addTask") return addTask(db, body, actor);
   if (body.action === "updateTask") return updateTask(db, body, actor);
   if (body.action === "deleteTask") return deleteById(db, "tasks", body.taskId);
@@ -135,6 +137,54 @@ async function updateProjectControl(db, body, actor) {
     db.prepare(`UPDATE project_controls SET ${column} = ?, updated_at = ?, updated_by = ? WHERE project_id = ?`).bind(value, updatedAt, updatedBy, projectId),
     db.prepare("INSERT INTO project_control_history (project_id, changed_at, field, old_value, new_value, changed_by) VALUES (?, ?, ?, ?, ?, ?)")
       .bind(projectId, updatedAt, field, String(existing[column] ?? ""), String(value ?? ""), updatedBy)
+  ]);
+}
+
+async function addProject(db, body, actor) {
+  const name = normalizeText(required(body.name, "name"));
+  const projectGroup = normalizeText(body.projectGroup || "Other Projects");
+  const segment = normalizeText(body.segment || "");
+  const externalTeam = normalizeText(body.externalTeam || "");
+  const startsAt = normalizeOptionalDate(body.startsAt || "");
+  const endsAt = normalizeOptionalDate(body.endsAt || "");
+  const next = await db.prepare("SELECT COALESCE(MAX(CAST(id AS INTEGER)), 0) + 1 AS id FROM projects").first();
+  const projectId = String(next.id);
+  const updatedAt = currentIsoMinute();
+
+  await db.batch([
+    db.prepare("INSERT INTO projects (id, name, project_group, segment, external_team, percent, starts_at, ends_at) VALUES (?, ?, ?, ?, ?, 0, ?, ?)")
+      .bind(projectId, name, projectGroup, segment, externalTeam, startsAt, endsAt),
+    db.prepare("INSERT INTO project_controls (project_id, operating_state, blocked, override_daily, updated_at, updated_by) VALUES (?, 'Stable', 0, 0, ?, ?)")
+      .bind(projectId, updatedAt, actor.initials),
+    db.prepare("INSERT INTO project_control_history (project_id, changed_at, field, old_value, new_value, changed_by) VALUES (?, ?, 'project', '', 'Created', ?)")
+      .bind(projectId, updatedAt, actor.initials),
+    db.prepare("INSERT INTO timelines (project_id, key, label, start, end, status) VALUES (?, 'prewire', 'Pre-Wire', '', '', '')")
+      .bind(projectId),
+    db.prepare("INSERT INTO timelines (project_id, key, label, start, end, status) VALUES (?, 'trim', 'Trim', '', '', '')")
+      .bind(projectId),
+    db.prepare("INSERT INTO timelines (project_id, key, label, start, end, status) VALUES (?, 'install', 'Install', '', '', '')")
+      .bind(projectId)
+  ]);
+}
+
+async function closeProject(db, body, actor) {
+  const projectId = required(body.projectId, "projectId");
+  const confirmed = body.confirmed === true;
+  const acceptedMessage = normalizeText(body.confirmationMessage);
+  const requiredMessage = "Are you sure you want to close this project? After this action you will no longer be able to access any data stored within the Command Center";
+  if (!confirmed || acceptedMessage !== requiredMessage) throw new Error("Project close confirmation is required.");
+
+  const project = await db.prepare("SELECT id, name FROM projects WHERE id = ?").bind(projectId).first();
+  if (!project) throw new Error(`Project row not found: ${projectId}`);
+
+  await db.batch([
+    db.prepare("DELETE FROM tasks WHERE project_id = ?").bind(projectId),
+    db.prepare("DELETE FROM timelines WHERE project_id = ?").bind(projectId),
+    db.prepare("DELETE FROM risks WHERE project_id = ?").bind(projectId),
+    db.prepare("DELETE FROM milestones WHERE project_id = ?").bind(projectId),
+    db.prepare("DELETE FROM project_control_history WHERE project_id = ?").bind(projectId),
+    db.prepare("DELETE FROM project_controls WHERE project_id = ?").bind(projectId),
+    db.prepare("DELETE FROM projects WHERE id = ?").bind(projectId)
   ]);
 }
 
