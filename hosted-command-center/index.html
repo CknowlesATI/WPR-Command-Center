@@ -1241,10 +1241,11 @@ function renderProjects() {
   const projects = visibleProjects();
   document.getElementById("projectCount").textContent = `${projects.length} project${projects.length === 1 ? "" : "s"}`;
   document.getElementById("projectList").innerHTML = projects.length ? projects.map(project => {
-    const expanded = state.expandedProjects.has(project.id);
+    const projectKey = String(project.id);
+    const expanded = state.expandedProjects.has(projectKey);
     return `
     <article class="project-card ${project.attention.length ? `has-signal ${topSeverity(project.attention)}` : ""}">
-      <button class="project-summary" type="button" data-project-toggle="${escapeAttribute(project.id)}" aria-expanded="${expanded}" aria-label="${expanded ? "Close" : "Open"} ${escapeAttribute(project.name)} project file">
+      <button class="project-summary" type="button" data-project-toggle="${escapeAttribute(projectKey)}" aria-expanded="${expanded}" aria-label="${expanded ? "Close" : "Open"} ${escapeAttribute(project.name)} project file">
         <div>
           <div class="project-title">${escapeHtml(project.name)}</div>
           <div class="project-sub">${escapeHtml(project.area)}</div>
