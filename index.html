@@ -863,13 +863,21 @@
   }
 
   .task-row.todo-item {
-    border-left: 4px solid var(--amber);
-    background: #fffdf7;
+    border-left: 6px solid var(--amber);
+    background: #fff7df;
   }
 
   .task-row.note-item {
-    border-left: 4px solid var(--blue);
-    background: #f8fbff;
+    border-left: 6px solid var(--blue);
+    background: #edf5ff;
+  }
+
+  .task-row.todo-item .task-title {
+    color: #704700;
+  }
+
+  .task-row.note-item .task-title {
+    color: #1d4f9c;
   }
 
   .task-row.closed {
@@ -1029,6 +1037,27 @@
   .control-input:disabled {
     opacity: .65;
     cursor: default;
+  }
+
+  .task-status-input.todo {
+    border-color: #d8ad54;
+    background: var(--amber-bg);
+    color: var(--amber);
+    font-weight: 850;
+  }
+
+  .task-status-input.note {
+    border-color: #a9c3fb;
+    background: var(--blue-bg);
+    color: var(--blue);
+    font-weight: 850;
+  }
+
+  .task-status-input.done {
+    border-color: #c8d0da;
+    background: #eef1f5;
+    color: #6b7280;
+    font-weight: 850;
   }
 
   .project-signal {
@@ -1985,7 +2014,7 @@ function renderTaskMeta(task, closed) {
 function renderTaskStateControl(task) {
   if (state.live && isManualTask(task)) {
     return `
-      <select class="task-input" data-task-id="${escapeAttribute(task.id)}" data-field="status" ${state.saving ? "disabled" : ""}>
+      <select class="task-input task-status-input ${escapeAttribute(task.status)}" data-task-id="${escapeAttribute(task.id)}" data-field="status" ${state.saving ? "disabled" : ""}>
         <option value="todo" ${task.status === "todo" ? "selected" : ""}>To-Do</option>
         <option value="note" ${task.status === "note" ? "selected" : ""}>Note</option>
         <option value="done" ${task.status === "done" ? "selected" : ""}>Close</option>
