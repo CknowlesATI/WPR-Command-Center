@@ -43,7 +43,7 @@ export default {
         const body = await request.json();
         if (body.action === "authorize") return json(await createSession(body, env));
         const actor = await authorizeWrite(request, env);
-        await applyAction(env.DB, body, actor, env, ctx);
+        await applyAction(env.DB, body, actor, env);
         return json({ ok: true, data: await getAllData(env.DB), settings: await getSettings(env.DB, env) });
       }
 
@@ -54,13 +54,13 @@ export default {
   }
 };
 
-async function applyAction(db, body, actor, env, ctx) {
+async function applyAction(db, body, actor, env) {
   if (!body || typeof body !== "object") throw new Error("Missing request body");
 
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
   if (body.action === "addProject") return addProject(db, body, actor);
   if (body.action === "closeProject") return closeProject(db, body, actor);
-  if (body.action === "addTask") return addTask(db, body, actor, env, ctx);
+  if (body.action === "addTask") return addTask(db, body, actor, env);
   if (body.action === "updateTask") return updateTask(db, body, actor);
   if (body.action === "deleteTask") return deleteById(db, "tasks", body.taskId);
   if (body.action === "addNotificationRecipient") return addNotificationRecipient(db, body, actor);
@@ -122,7 +122,10 @@ async function getAllData(db) {
 }
 
 async function getSettings(db, env) {
-  const recipients = await db.prepare("SELECT email, created_by, created_at FROM notification_recipients ORDER BY email").all();
+  const [recipients, notificationLog] = await Promise.all([
+    db.prepare("SELECT email, created_by, created_at FROM notification_recipients ORDER BY email").all(),
+    db.prepare("SELECT created_at, status, subject, recipient_count, provider_id, error FROM notification_log ORDER BY id DESC LIMIT 5").all()
+  ]);
   return {
     notifications: {
       recipients: recipients.results.map(row => ({
@@ -130,7 +133,15 @@ async function getSettings(db, env) {
         createdBy: row.created_by || "",
         createdAt: row.created_at || ""
       })),
-      emailConfigured: notificationsConfigured(env)
+      emailConfigured: notificationsConfigured(env),
+      recent: notificationLog.results.map(row => ({
+        createdAt: row.created_at || "",
+        status: row.status || "",
+        subject: row.subject || "",
+        recipientCount: Number(row.recipient_count) || 0,
+        providerId: row.provider_id || "",
+        error: row.error || ""
+      }))
     }
   };
 }
@@ -205,7 +216,7 @@ async function closeProject(db, body, actor) {
   ]);
 }
 
-async function addTask(db, body, actor, env, ctx) {
+async function addTask(db, body, actor, env) {
   const projectId = required(body.projectId, "projectId");
   const name = normalizeText(required(body.name, "name"));
   if (!name) throw new Error("Task name is required");
@@ -220,7 +231,7 @@ async function addTask(db, body, actor, env, ctx) {
 
   if (isManualTaskSource(source) && ["todo", "note"].includes(status)) {
     const project = await db.prepare("SELECT id, name FROM projects WHERE id = ?").bind(projectId).first();
-    const notification = sendTaskNotification(db, env, {
+    await sendTaskNotification(db, env, {
       projectId,
       projectName: project ? project.name : projectId,
       taskId,
@@ -229,8 +240,6 @@ async function addTask(db, body, actor, env, ctx) {
       actorInitials: actor.initials,
       updatedAt
     });
-    if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(notification);
-    else await notification;
   }
 }
 
@@ -247,11 +256,28 @@ async function removeNotificationRecipient(db, body) {
 }
 
 async function sendTaskNotification(db, env, task) {
+  const fallbackSubject = `Command Center: New ${task.status === "note" ? "Note" : "To-Do"} - ${task.projectName}`;
   try {
-    if (!notificationsConfigured(env)) return;
+    if (!notificationsConfigured(env)) {
+      await recordNotification(db, {
+        status: "skipped",
+        subject: fallbackSubject,
+        recipientCount: 0,
+        error: "Email sending is not configured."
+      });
+      return;
+    }
     const recipients = await db.prepare("SELECT email FROM notification_recipients ORDER BY email").all();
     const to = recipients.results.map(row => row.email).filter(Boolean);
-    if (!to.length) return;
+    if (!to.length) {
+      await recordNotification(db, {
+        status: "skipped",
+        subject: fallbackSubject,
+        recipientCount: 0,
+        error: "No notification recipients are configured."
+      });
+      return;
+    }
 
     const typeLabel = task.status === "note" ? "Note" : "To-Do";
     const commandCenterUrl = normalizeText(env.COMMAND_CENTER_URL || "https://cknowlesati.github.io/WPR-Command-Center/");
@@ -281,10 +307,30 @@ async function sendTaskNotification(db, env, task) {
         text
       })
     });
-    if (!response.ok) console.error("Task notification failed", response.status, await response.text());
+    const responseText = await response.text();
+    let responseData = {};
+    try {
+      responseData = JSON.parse(responseText || "{}");
+    } catch {
+      responseData = {};
+    }
+    if (!response.ok) {
+      const message = responseData.message || responseText || `Resend returned ${response.status}`;
+      await recordNotification(db, { status: "failed", subject, recipientCount: to.length, error: message });
+      console.error("Task notification failed", response.status, responseText);
+      return;
+    }
+    await recordNotification(db, { status: "sent", subject, recipientCount: to.length, providerId: responseData.id || "" });
   } catch (error) {
+    await recordNotification(db, { status: "failed", subject: fallbackSubject, recipientCount: 0, error: error.message || String(error) });
     console.error("Task notification failed", error);
   }
+}
+
+async function recordNotification(db, event) {
+  await db.prepare("INSERT INTO notification_log (created_at, status, subject, recipient_count, provider_id, error) VALUES (?, ?, ?, ?, ?, ?)")
+    .bind(currentIsoMinute(), event.status || "unknown", normalizeText(event.subject || ""), Number(event.recipientCount) || 0, normalizeText(event.providerId || ""), normalizeText(event.error || "").slice(0, 500))
+    .run();
 }
 
 async function updateTask(db, body, actor) {

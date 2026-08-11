@@ -172,6 +172,35 @@
     overflow-wrap: anywhere;
   }
 
+  .email-activity {
+    display: grid;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .email-activity-row {
+    border: 1px solid #edf0f4;
+    border-radius: 8px;
+    background: #fbfcfd;
+    padding: 8px;
+  }
+
+  .email-activity-row.sent {
+    border-color: #b8dec8;
+    background: var(--green-bg);
+  }
+
+  .email-activity-row.failed {
+    border-color: #f0b8b8;
+    background: var(--red-bg);
+  }
+
+  .email-activity-title {
+    font-size: 12px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+  }
+
   .settings-form {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -833,8 +862,19 @@
     padding: 8px;
   }
 
+  .task-row.todo-item {
+    border-left: 4px solid var(--amber);
+    background: #fffdf7;
+  }
+
+  .task-row.note-item {
+    border-left: 4px solid var(--blue);
+    background: #f8fbff;
+  }
+
   .task-row.closed {
     border-color: #dfe4eb;
+    border-left-color: #c8d0da;
     background: #eef1f5;
     color: var(--muted);
   }
@@ -1400,7 +1440,15 @@ function normalizeSettings(settings = {}) {
         createdBy: String(item.createdBy || "").trim(),
         createdAt: String(item.createdAt || "").trim()
       })).filter(item => item.email),
-      emailConfigured: notifications.emailConfigured === true
+      emailConfigured: notifications.emailConfigured === true,
+      recent: Array.isArray(notifications.recent) ? notifications.recent.map(item => ({
+        createdAt: String(item.createdAt || "").trim(),
+        status: String(item.status || "").trim(),
+        subject: String(item.subject || "").trim(),
+        recipientCount: Number(item.recipientCount) || 0,
+        providerId: String(item.providerId || "").trim(),
+        error: String(item.error || "").trim()
+      })) : []
     }
   };
 }
@@ -1496,6 +1544,7 @@ function renderSettings() {
 
   const recipients = state.settings.notifications.recipients;
   const configured = state.settings.notifications.emailConfigured;
+  const recent = state.settings.notifications.recent;
   panel.innerHTML = `
     <div class="settings-panel">
       <div class="settings-grid">
@@ -1513,6 +1562,16 @@ function renderSettings() {
                 <button class="secondary-button remove-recipient-button" type="button" data-email="${escapeAttribute(item.email)}" ${state.saving ? "disabled" : ""}>Remove</button>
               </div>
             `).join("") : `<div class="empty">No notification recipients have been added yet.</div>`}
+          </div>
+          <div class="email-activity">
+            <h2 class="settings-title">Recent Email Activity</h2>
+            ${recent.length ? recent.map(item => `
+              <div class="email-activity-row ${escapeAttribute(item.status)}">
+                <div class="email-activity-title">${escapeHtml(item.status === "sent" ? "Sent" : item.status === "failed" ? "Failed" : "Skipped")}: ${escapeHtml(item.subject || "Notification")}</div>
+                <div class="edit-note">${item.createdAt ? escapeHtml(formatDateTime(item.createdAt)) : "Time unknown"} · ${item.recipientCount} recipient${item.recipientCount === 1 ? "" : "s"}${item.providerId ? ` · ${escapeHtml(item.providerId)}` : ""}</div>
+                ${item.error ? `<div class="edit-note">${escapeHtml(item.error)}</div>` : ""}
+              </div>
+            `).join("") : `<div class="empty">No email attempts have been recorded yet.</div>`}
           </div>
         </div>
         <div>
@@ -1906,8 +1965,9 @@ function renderTaskGroups(tasks, closed) {
 }
 
 function renderTaskRow(task, closed) {
+  const statusClass = task.status === "note" ? "note-item" : task.status === "todo" ? "todo-item" : "";
   return `
-    <div class="task-row ${closed ? "closed" : ""}">
+    <div class="task-row ${closed ? "closed" : statusClass}">
       <div>
         <div class="task-title">${escapeHtml(task.name)}</div>
         <div class="task-meta">${renderTaskMeta(task, closed)}</div>
