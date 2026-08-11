@@ -863,21 +863,21 @@
   }
 
   .task-row.todo-item {
-    border-left: 6px solid var(--amber);
-    background: #fff7df;
+    border-left: 4px solid #d8ad54;
+    background: #fffaf0;
   }
 
   .task-row.note-item {
-    border-left: 6px solid var(--blue);
-    background: #edf5ff;
+    border-left: 4px solid #a9c3fb;
+    background: #f4f8ff;
   }
 
   .task-row.todo-item .task-title {
-    color: #704700;
+    color: #4f3b16;
   }
 
   .task-row.note-item .task-title {
-    color: #1d4f9c;
+    color: #254d86;
   }
 
   .task-row.closed {
@@ -1994,7 +1994,7 @@ function renderTaskGroups(tasks, closed) {
 }
 
 function renderTaskRow(task, closed) {
-  const statusClass = task.status === "note" ? "note-item" : task.status === "todo" ? "todo-item" : "";
+  const statusClass = isManualTask(task) && task.status === "note" ? "note-item" : isManualTask(task) && task.status === "todo" ? "todo-item" : "";
   return `
     <div class="task-row ${closed ? "closed" : statusClass}">
       <div>
