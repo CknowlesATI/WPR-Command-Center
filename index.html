@@ -2284,7 +2284,7 @@ document.addEventListener("change", event => {
   }
 
   const taskInput = event.target.closest(".task-input");
-  if (taskInput) {
+  if (taskInput && taskInput.dataset.taskId && taskInput.dataset.field) {
     const taskId = taskInput.dataset.taskId;
     const field = taskInput.dataset.field;
     const value = taskInput.value;
