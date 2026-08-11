@@ -1662,7 +1662,7 @@ function renderKpis() {
   };
   const cards = [
     [totals.projects, "Visible Projects"],
-    [totals.openTasks, "Open Tasks"],
+    [totals.openTasks, "Open Items"],
     [totals.overdueTasks, "Overdue Tasks"],
     [totals.highPriorityTasks, "High Priority"],
     [totals.risks, "Open Risks"],
@@ -1870,7 +1870,7 @@ function renderProjectFile(project, expanded) {
         </div>
       </div>
       <div class="file-panel project-signal">
-        <div class="file-label">Open Tasks</div>
+        <div class="file-label">Open Items</div>
         ${renderOpenTasks(project)}
       </div>
       ${state.live ? renderCloseProject(project) : ""}
@@ -1962,7 +1962,7 @@ function renderProjectControl(project) {
 function renderOpenTasks(project) {
   const openTasks = project.taskList.filter(task => task.status !== "done");
   const closedTasks = project.taskList.filter(task => task.status === "done");
-  const taskRows = renderTaskGroups(openTasks, false) || `<span class="project-sub">No open tasks.</span>`;
+  const taskRows = renderTaskGroups(openTasks, false) || `<span class="project-sub">No open items.</span>`;
   const closedRows = renderTaskGroups(closedTasks, true) || `<span class="project-sub">No closed items.</span>`;
 
   return `
