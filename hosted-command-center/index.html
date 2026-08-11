@@ -847,8 +847,35 @@
     background: #f4f6f8;
   }
 
-  .closed-task-section .task-group-title {
+  .closed-task-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    border: 0;
+    background: transparent;
     color: #6b7280;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .closed-task-toggle .task-group-title {
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .closed-task-toggle-count {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 750;
+    white-space: nowrap;
+  }
+
+  .closed-task-content {
+    margin-top: 10px;
   }
 
   .task-row {
@@ -1319,6 +1346,7 @@ const state = {
   attentionExpanded: false,
   addProjectOpen: false,
   expandedProjects: new Set(),
+  expandedClosedItems: new Set(),
   closingProjects: new Set(),
   settingsOpen: false,
   settings: { notifications: { recipients: [], emailConfigured: false } },
@@ -1960,8 +1988,10 @@ function renderProjectControl(project) {
 }
 
 function renderOpenTasks(project) {
+  const projectKey = String(project.id);
   const openTasks = project.taskList.filter(task => task.status !== "done");
   const closedTasks = project.taskList.filter(task => task.status === "done");
+  const closedExpanded = state.expandedClosedItems.has(projectKey);
   const taskRows = renderTaskGroups(openTasks, false) || `<span class="project-sub">No open items.</span>`;
   const closedRows = renderTaskGroups(closedTasks, true) || `<span class="project-sub">No closed items.</span>`;
 
@@ -1978,8 +2008,11 @@ function renderOpenTasks(project) {
       </div>
     ` : ""}
     <div class="closed-task-section">
-      <div class="task-group-title">Closed Items</div>
-      <div class="task-list">${closedRows}</div>
+      <button class="closed-task-toggle" type="button" data-closed-toggle="${escapeAttribute(project.id)}" aria-expanded="${closedExpanded}">
+        <span class="task-group-title">${closedExpanded ? "Hide" : "Show"} Closed Items</span>
+        <span class="closed-task-toggle-count">${closedTasks.length} item${closedTasks.length === 1 ? "" : "s"} ${closedExpanded ? "−" : "+"}</span>
+      </button>
+      ${closedExpanded ? `<div class="closed-task-content"><div class="task-list">${closedRows}</div></div>` : ""}
     </div>
   `;
 }
@@ -2261,6 +2294,15 @@ document.addEventListener("click", event => {
       console.error("Remove notification recipient failed:", error);
       showSyncBanner("error", error.message || "Notification recipient could not be removed.");
     });
+    return;
+  }
+
+  const closedToggle = event.target.closest("[data-closed-toggle]");
+  if (closedToggle) {
+    const projectId = String(closedToggle.dataset.closedToggle);
+    if (state.expandedClosedItems.has(projectId)) state.expandedClosedItems.delete(projectId);
+    else state.expandedClosedItems.add(projectId);
+    renderProjects();
     return;
   }
 
