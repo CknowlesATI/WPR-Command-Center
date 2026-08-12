@@ -628,37 +628,44 @@
   }
 
   .metric.open-metric {
-    position: relative;
-    overflow: hidden;
-    padding-right: 72px;
+    display: grid;
+    grid-template-columns: minmax(28px, 1fr) auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: 8px;
   }
 
   .open-source-breakdown {
-    position: absolute;
-    top: 50%;
-    right: 6px;
+    grid-column: 2;
+    grid-row: 1 / 3;
     display: grid;
     align-content: center;
     gap: 2px;
-    width: 58px;
-    max-height: calc(100% - 10px);
+    width: 50px;
     border: 1px solid #e2e7ee;
     border-radius: 6px;
-    padding: 3px 4px;
-    transform: translateY(-50%);
+    padding: 4px 5px;
     background: #fff;
     color: var(--muted);
-    font-size: 9px;
+    font-size: 8.5px;
     font-weight: 850;
     line-height: 1;
     white-space: nowrap;
   }
 
+  .metric .open-source-breakdown span {
+    display: initial;
+    margin-top: 0;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
   .open-source-row {
     display: grid;
-    grid-template-columns: 14px minmax(0, 1fr);
+    grid-template-columns: 13px minmax(0, 1fr);
     align-items: baseline;
-    gap: 3px;
+    gap: 4px;
   }
 
   .open-source-count {
@@ -671,7 +678,6 @@
     min-width: 0;
     overflow: hidden;
     text-align: left;
-    text-overflow: ellipsis;
   }
 
   .expand-button {
@@ -2053,7 +2059,7 @@ function renderOpenSourceBreakdown(project) {
   const counts = project.openSourceCounts || {};
   const rows = [
     ["procore", "PC", "Procore"],
-    ["pulse", "Pulse", "Pulse"],
+    ["pulse", "PLS", "Pulse"],
     ["command", "CC", "Command Center"],
     ["other", "Other", "Other"]
   ]
