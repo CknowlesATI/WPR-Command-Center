@@ -66,6 +66,7 @@ async function applyAction(db, body, actor, env) {
   if (body.action === "closeProject") return closeProject(db, body, actor);
   if (body.action === "addTask") return addTask(db, body, actor, env);
   if (body.action === "updateTask") return updateTask(db, body, actor);
+  if (body.action === "syncSourceTasks") return syncSourceTasks(db, body);
   if (body.action === "deleteTask") return deleteById(db, "tasks", body.taskId);
   if (body.action === "addNotificationRecipient") return addNotificationRecipient(db, body, actor);
   if (body.action === "removeNotificationRecipient") return removeNotificationRecipient(db, body);
@@ -418,6 +419,50 @@ async function updateTask(db, body, actor) {
   if (!result.meta || result.meta.changes === 0) throw new Error(`Task row not found: ${taskId}`);
 }
 
+async function syncSourceTasks(db, body) {
+  const { source, tasks, replaceProjectIds } = normalizeSourceTaskSync(body);
+  if (!tasks.length && !replaceProjectIds.length) throw new Error("No synced source tasks were provided.");
+
+  const projectIds = [...new Set([...replaceProjectIds, ...tasks.map(task => task.projectId)])];
+  const placeholders = projectIds.map(() => "?").join(",");
+  const existing = await db.prepare(`SELECT id FROM projects WHERE id IN (${placeholders})`).bind(...projectIds).all();
+  const existingIds = new Set((existing.results || []).map(row => String(row.id)));
+  const missing = projectIds.filter(id => !existingIds.has(id));
+  if (missing.length) throw new Error(`Project not found for source sync: ${missing.join(", ")}`);
+
+  const now = currentIsoMinute();
+  const sourcePlaceholders = source.values.map(() => "?").join(",");
+  const statements = [];
+
+  if (replaceProjectIds.length) {
+    const projectPlaceholders = replaceProjectIds.map(() => "?").join(",");
+    statements.push(
+      db.prepare(`DELETE FROM tasks WHERE source IN (${sourcePlaceholders}) AND project_id IN (${projectPlaceholders})`)
+        .bind(...source.values, ...replaceProjectIds)
+    );
+  }
+
+  tasks.forEach(task => {
+    statements.push(
+      db.prepare(`
+        INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, updated_by, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'SYNC', ?)
+        ON CONFLICT(id) DO UPDATE SET
+          project_id = excluded.project_id,
+          name = excluded.name,
+          status = excluded.status,
+          source = excluded.source,
+          source_state = excluded.source_state,
+          external_url = excluded.external_url,
+          updated_by = excluded.updated_by,
+          updated_at = excluded.updated_at
+      `).bind(task.id, task.projectId, task.name, task.status, source.primary, task.sourceState, task.externalUrl, now)
+    );
+  });
+
+  await db.batch(statements);
+}
+
 async function deleteById(db, table, id) {
   const result = await db.prepare(`DELETE FROM ${table} WHERE id = ?`).bind(required(id, "id")).run();
   if (!result.meta || result.meta.changes === 0) throw new Error(`${table} row not found: ${id}`);
@@ -582,6 +627,39 @@ function normalizePulseTimelineItems(items) {
       })).filter(timeline => WORK_PHASES.includes(timeline.key))
     };
   }).filter(item => item.timelines.length);
+}
+
+function normalizeSourceTaskSync(body) {
+  const source = normalizeSyncedTaskSource(body.source);
+  const tasks = Array.isArray(body.tasks) ? body.tasks.slice(0, 1000).map((task, index) => ({
+    id: normalizeSyncedTaskId(source.primary, required(task && task.id, `tasks[${index}].id`)),
+    projectId: required(task && task.projectId, `tasks[${index}].projectId`),
+    name: normalizeText(required(task && task.name, `tasks[${index}].name`)).slice(0, 500),
+    status: normalizeSyncedTaskStatus(task && task.status),
+    sourceState: normalizeText(task && task.sourceState || "").slice(0, 120),
+    externalUrl: normalizeText(task && task.externalUrl || "").slice(0, 1000)
+  })) : [];
+  const replaceProjectIds = Array.isArray(body.replaceProjectIds) ? [...new Set(body.replaceProjectIds.map(value => required(value, "replaceProjectIds[]")))] : [];
+  return { source, tasks, replaceProjectIds };
+}
+
+function normalizeSyncedTaskSource(value) {
+  const source = normalizeText(value).toLowerCase();
+  if (source === "pulse") return { primary: "pulse", values: ["pulse", "Pulse"] };
+  if (source === "procore" || source === "procore-review") return { primary: "procore", values: ["procore", "procore-review", "Procore"] };
+  throw new Error(`Invalid synced task source: ${source}`);
+}
+
+function normalizeSyncedTaskId(source, value) {
+  const id = normalizeText(value).replace(/\s+/g, "-").slice(0, 120);
+  if (!id) throw new Error("Synced task id is required");
+  return id.startsWith(`${source}-`) ? id : `${source}-${id}`;
+}
+
+function normalizeSyncedTaskStatus(value) {
+  const status = normalizeText(value).toLowerCase();
+  if (["done", "closed", "complete", "completed"].includes(status)) return "done";
+  return "todo";
 }
 
 function normalizeProjectPhase(value) {

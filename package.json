@@ -1,6 +1,7 @@
 {
   "name": "wpr-command-center",
   "private": true,
+  "type": "module",
   "scripts": {
     "test": "node tools/validate-control-rules.mjs && node hosted-command-center/tools/validate-hosted-data.mjs",
     "d1:seed": "node worker/tools/export-d1-seed.mjs",
