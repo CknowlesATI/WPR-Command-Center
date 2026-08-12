@@ -1,11 +1,11 @@
 # Hosted Command Center
 
-This folder is the online version of Project Command Center. It is the intended
-field-facing Command Center experience.
+This folder is the source copy for the online version of Project Command
+Center. It is the intended field-facing Command Center experience.
 
 Unless Christen explicitly specifies otherwise, this online version is the
 default target for Command Center work. See `../OPERATING_PROCEDURES.md` before
-changing legacy/root app behavior.
+changing legacy Apps Script behavior.
 
 ## Purpose
 
@@ -23,8 +23,9 @@ This version should stay:
 
 ## Current Shape
 
-- `index.html` is the online dashboard shell.
-- It loads live data from the Apps Script API when available.
+- `index.html` is the source dashboard shell. Mirror changes to root
+  `../index.html`, which is served by GitHub Pages.
+- It loads live data from the Cloudflare Worker API when available.
 - `data/projects.json` is the fallback data file the hosted dashboard loads
   when live data is unavailable.
 - `data/projects.sample.json` is the example data contract for future sync work.
@@ -35,28 +36,26 @@ This version should stay:
 - `run-preview.ps1` starts a local preview for this hosted folder.
 - `DATA_CONTRACT.md` documents the safe shared data shape.
 
-The current dashboard uses the existing Apps Script API for live data and
-editing. Static JSON remains as a no-backend fallback so the page can still be
-hosted without a paid database.
+The current dashboard uses the Cloudflare Worker and D1 database for live data
+and editing. Static JSON remains as a fallback snapshot.
 
 ## No-Subscription Hosting Path
 
 The intended first hosting path is GitHub Pages, Cloudflare Pages, Netlify, or
 Vercel free tier. No custom domain is required.
 
-The lowest-complexity option is:
+The current no-subscription hosting path is:
 
-1. Publish this folder as a static site.
-2. Generate or update `data/projects.json` from sanitized Command Center data.
-3. Use the live Apps Script API for field editing where appropriate.
+1. Serve root `index.html` through GitHub Pages.
+2. Keep `hosted-command-center/index.html` mirrored to root `index.html`.
+3. Use the Cloudflare Worker API and D1 database for live field editing.
 
-The included GitHub Pages workflow publishes this folder and can refresh the
-hosted data automatically when the repository has a private secret named
-`COMMAND_CENTER_API_URL`.
+The repository's `main` branch is the public GitHub Pages publishing path.
 
-## Data Export
+## Fallback Data Export
 
-The hosted data file can be generated from the existing Command Center API:
+The hosted fallback data file can still be generated from an older Command
+Center API when a static snapshot is needed:
 
 ```powershell
 node hosted-command-center/tools/export-hosted-data.mjs --url "<Apps Script URL>"
@@ -67,9 +66,6 @@ Or by setting `COMMAND_CENTER_API_URL` before running the script.
 By default, the export does not include task notes, raw external IDs, or source
 links. Source links can be added later with `--include-links` only after the
 links are reviewed and considered safe for the intended audience.
-
-The GitHub Pages workflow is scheduled for weekday mornings and can also be run
-manually.
 
 Hosted data can be checked with:
 
@@ -87,5 +83,5 @@ Before using real data online, remove or avoid exposing:
 - Financial, contractual, personnel, or access-sensitive details.
 
 The online view should show enough signal to guide action and allow lightweight
-field updates. Deeper detail can still live in Pulse, Procore, or the source
-Google Sheet where appropriate.
+field updates. Deeper detail can still live in Pulse, Procore, or the relevant
+source system where appropriate.

@@ -2,55 +2,67 @@
 
 ## Default Work Target
 
-The active Command Center product is the online version in
-`hosted-command-center`.
+The active Command Center product is the online GitHub Pages + Cloudflare
+version.
 
-The original Google Apps Script command center at the repository root is a
-legacy/reference implementation. Use it as a source for proven workflow ideas
-and API behavior, but do not maintain it as a separate long-term user
-experience unless Christen explicitly asks for that.
+The original Google Apps Script command center is a legacy/reference
+implementation. Use it as a source for proven workflow ideas only when needed,
+but do not maintain it as a separate long-term user experience unless Christen
+explicitly asks for that.
 
 ## Version Map
 
 Online Command Center:
 
-- App files: `hosted-command-center/`
-- Main page: `hosted-command-center/index.html`
-- Published data: `hosted-command-center/data/projects.json`
-- Data export: `hosted-command-center/tools/export-hosted-data.mjs`
+- Source page: `hosted-command-center/index.html`
+- Public page served by GitHub Pages: `index.html`
+- Published fallback data: `hosted-command-center/data/projects.json`
+- Live API: `https://wpr-command-center-api.wpr-command-center.workers.dev`
+- Live database: Cloudflare D1 `wpr-command-center`
+- Worker source: `worker/src/index.js`
 - Validation: `hosted-command-center/tools/validate-hosted-data.mjs`
-- Intended publishing path: GitHub Pages workflow
-- Live data/editing path: Google Sheet through the Apps Script web app URL
+- Intended publishing path: push root `index.html` to `main`
 
-Legacy/root Command Center:
+Legacy/reference path:
 
-- Main page: `index.html`
 - Apps Script backend: `Code.gs`
-- Data source: Google Sheet through the Apps Script web app URL
-- Use: reference implementation and Apps Script API source
+- Former data source: Google Sheet through the Apps Script web app URL
+- Use: legacy/reference only unless explicitly requested
 
 ## Before Making Changes
 
-1. Confirm which version is affected by the request.
-2. Default to `hosted-command-center/` when the request is ambiguous.
-3. Pull needed workflow features forward into the hosted app instead of
-   expanding the legacy/root app.
-4. State clearly when a change needs to touch the Apps Script API in `Code.gs`.
+1. Run `git status --short --branch`.
+2. Inspect any uncommitted changes and preserve work from other chats.
+3. Confirm the request targets the online Command Center unless Christen says
+   otherwise.
+4. Update `hosted-command-center/index.html` first, then mirror it to root
+   `index.html`.
+5. State clearly when a change needs to touch the Cloudflare Worker or D1
+   database.
 
 ## Verification
 
-For online Command Center changes:
+For online Command Center UI changes:
 
 - Check the affected files under `hosted-command-center/`.
+- Keep root `index.html` mirrored with `hosted-command-center/index.html`.
+- Parse both page scripts.
 - Validate `hosted-command-center/data/projects.json` when the static snapshot
   contract changes.
-- Preview or publish through the hosted workflow when requested.
-- If live editing changes, verify the corresponding Apps Script API action in
-  `Code.gs`.
+- When publishing, push both `codex/phase-3-outcome-control` and `main`, then
+  confirm GitHub Pages is serving the update.
 
-For Apps Script API changes:
+For Cloudflare Worker or D1 changes:
+
+- Check `worker/src/index.js`.
+- Add a migration under `worker/migrations/` for schema changes.
+- Apply remote migrations with Wrangler.
+- Deploy the Worker with `worker/wrangler.toml`.
+- Test the live Worker endpoint before reporting completion.
+
+For Apps Script API changes, only when explicitly requested:
 
 - Check `Code.gs`.
 - Push `Code.gs` with clasp when backend code changes.
-- Create or update the Apps Script deployment version before expecting the live
-  online Command Center to receive backend behavior changes.
+- Treat it as legacy/reference work, not the current online Command Center
+  path.
