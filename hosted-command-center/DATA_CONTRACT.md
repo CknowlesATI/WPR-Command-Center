@@ -51,7 +51,7 @@ smaller and safer than the current internal Command Center data.
 - `label`: visible phase label.
 - `start`: phase start date, `YYYY-MM-DD` or `null`.
 - `end`: phase end date, `YYYY-MM-DD` or `null`.
-- `status`: `complete` or empty string.
+- `status`: `active`, `complete`, or empty string.
 
 ## Attention Fields
 

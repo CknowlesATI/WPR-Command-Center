@@ -113,7 +113,7 @@ function hostedTimelines(timelines) {
       label: PHASE_LABELS[item.key] || text(item.label, "Phase"),
       start: dateOnly(item.start),
       end: dateOnly(item.end),
-      status: isComplete(item) ? "complete" : ""
+      status: timelineStatus(item)
     }));
 }
 
@@ -172,6 +172,12 @@ function buildLinks(tasks) {
 }
 
 function currentPhase(timelines) {
+  const active = PHASE_ORDER
+    .filter(key => key !== "handover")
+    .map(key => timelines.find(item => item.key === key))
+    .find(isActive);
+  if (active) return PHASE_LABELS[active.key] || text(active.label, "Active phase");
+
   const open = PHASE_ORDER
     .map(key => timelines.find(item => item.key === key))
     .find(item => item && !isComplete(item));
@@ -203,6 +209,16 @@ function nextHandoffDate(timelines) {
 
 function isComplete(item) {
   return item && item.status === "complete";
+}
+
+function isActive(item) {
+  return item && item.status === "active";
+}
+
+function timelineStatus(item) {
+  if (isComplete(item)) return "complete";
+  if (isActive(item)) return "active";
+  return "";
 }
 
 function isPast(value) {

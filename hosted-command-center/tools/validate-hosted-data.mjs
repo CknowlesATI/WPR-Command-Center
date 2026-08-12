@@ -77,7 +77,7 @@ if (!data || typeof data !== "object") {
     const itemPrefix = `${prefix}.timelines[${itemIndex}]`;
     requireEnum(item.key, ["prewire", "trim", "handover", "install"], `${itemPrefix}.key`);
     requireText(item.label, `${itemPrefix}.label`);
-    if (item.status) requireEnum(item.status, ["complete"], `${itemPrefix}.status`);
+    if (item.status) requireEnum(item.status, ["active", "complete"], `${itemPrefix}.status`);
     checkAllowedFields(item, allowedTimelineFields, itemPrefix);
   });
 

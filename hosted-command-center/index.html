@@ -592,11 +592,15 @@
     background: currentColor;
   }
 
-  .state-badge.stable { background: var(--green-bg); color: var(--green); }
-  .state-badge.monitor { background: #eef1f5; color: var(--muted); }
-  .state-badge.follow-up-needed { background: var(--amber-bg); color: var(--amber); }
-  .state-badge.action-needed { background: var(--red-bg); color: var(--red); }
-  .state-badge.not-set { background: #fff; border: 1px solid #d8dee7; color: var(--muted); }
+  .state-badge.not-started,
+  .state-badge.not-scheduled {
+    background: #eef1f5;
+    color: var(--muted);
+  }
+  .state-badge.pre-wire { background: #e7f8f5; color: #0f766e; }
+  .state-badge.trim { background: var(--amber-bg); color: var(--amber); }
+  .state-badge.install { background: var(--blue-bg); color: var(--blue); }
+  .state-badge.wpr-handover { background: #f0edff; color: #6d4bd9; }
 
   .metric {
     min-width: 0;
@@ -811,6 +815,12 @@
   .timeline-edit-grid {
     display: grid;
     gap: 8px;
+  }
+
+  .phase-select-row {
+    display: grid;
+    grid-template-columns: minmax(150px, 240px);
+    margin-bottom: 9px;
   }
 
   .timeline-edit-row {
@@ -1252,6 +1262,7 @@
   .danger-button:disabled,
   .task-input:disabled,
   .control-input:disabled,
+  .phase-input:disabled,
   .timeline-input:disabled {
     opacity: .65;
     cursor: default;
@@ -1591,13 +1602,12 @@ const BIGD_CONTACTS = {
   ]
 };
 
-const projectStateLabels = {
-  "Not Set": "Not Set",
-  "Stable": "Stable",
-  "Monitor": "Monitor",
-  "Follow-Up Needed": "Follow Up",
-  "Action Needed": "Action Needed"
-};
+const PROJECT_PHASE_OPTIONS = [
+  ["not-started", "Not Started"],
+  ["prewire", "Pre-Wire"],
+  ["trim", "Trim"],
+  ["install", "Install"]
+];
 
 const fallbackData = {
   lastUpdated: "2026-07-27T09:00:00-06:00",
@@ -1698,7 +1708,7 @@ function normalizeProjects(projects) {
     name: project.name || "Untitled project",
     area: project.area || project.segment || project.projectGroup || "Unassigned",
     team: project.team || project.externalTeam || "No team listed",
-    phase: project.phase || currentProjectPhase(project.timelines) || "Not scheduled",
+    phase: currentProjectPhase(project.timelines) || project.phase || "Not Started",
     startDate: project.startDate || project.startsAt || null,
     endDate: project.endDate || project.endsAt || null,
     openTasks: Number(project.openTasks) || openTaskCount(project),
@@ -1839,8 +1849,40 @@ function openSourceCounts(tasks) {
 }
 
 function currentProjectPhase(timelines = []) {
-  const open = (Array.isArray(timelines) ? timelines : []).find(item => item && item.status !== "complete");
-  return open ? open.label : "";
+  const items = Array.isArray(timelines) ? timelines : [];
+  const work = TIMELINE_PHASE_ORDER
+    .filter(key => key !== "handover")
+    .map(key => items.find(item => item && item.key === key))
+    .filter(Boolean);
+  if (!work.length) return "";
+  const active = work.find(item => item.status === "active");
+  if (active) return active.label || phaseLabel(active.key);
+  if (!work.some(item => item.status === "complete")) return "Not Started";
+  const open = work.find(item => item.status !== "complete");
+  return open ? (open.label || phaseLabel(open.key)) : "Install";
+}
+
+function projectPhaseValue(project) {
+  const timelines = Array.isArray(project.timelines) ? project.timelines : [];
+  const active = timelines.find(item => item.status === "active");
+  if (active && ["prewire", "trim", "install"].includes(active.key)) return active.key;
+  const work = TIMELINE_PHASE_ORDER
+    .filter(key => key !== "handover")
+    .map(key => timelines.find(item => item && item.key === key))
+    .filter(Boolean);
+  const open = work.find(item => item.status !== "complete");
+  if (open && work.some(item => item.status === "complete")) return open.key;
+  if (work.length && work.every(item => item.status === "complete")) return "install";
+  const phase = String(project.phase || "").toLowerCase();
+  if (phase.includes("pre")) return "prewire";
+  if (phase.includes("trim")) return "trim";
+  if (phase.includes("install")) return "install";
+  return "not-started";
+}
+
+function phaseLabel(key) {
+  const option = PROJECT_PHASE_OPTIONS.find(item => item[0] === key);
+  return option ? option[1] : "Not Started";
 }
 
 function isDashboardProject(project) {
@@ -1921,14 +1963,14 @@ function renderSettings() {
 function visibleProjects() {
   const query = state.query.trim().toLowerCase();
   return state.projects.filter(project => {
-    if (state.filter !== "all" && project.control.operatingState !== state.filter) return false;
+    if (state.filter !== "all" && projectPhaseValue(project) !== state.filter) return false;
     if (!query) return true;
     return [
       project.name,
       project.area,
       project.team,
       project.phase,
-      project.control.operatingState,
+      project.phase,
       project.approvalsPayments.contract,
       project.approvalsPayments.deposit,
       project.approvalsPayments.changeOrders,
@@ -1942,11 +1984,7 @@ function visibleProjects() {
 function renderFilters() {
   const options = [
     ["all", "All"],
-    ["Not Set", "Not Set"],
-    ["Action Needed", "Action Needed"],
-    ["Follow-Up Needed", "Follow Up"],
-    ["Monitor", "Monitor"],
-    ["Stable", "Stable"]
+    ...PROJECT_PHASE_OPTIONS
   ];
   document.getElementById("filters").innerHTML = options.map(([value, label]) => (
     `<button class="chip ${state.filter === value ? "active" : ""}" data-filter="${value}" type="button">${label}</button>`
@@ -2130,7 +2168,7 @@ function renderProjects() {
           <div class="project-title">${escapeHtml(project.name)}</div>
           <div class="project-sub">${escapeHtml(project.area)}</div>
         </div>
-        <span class="state-badge compact ${projectStateClass(project.control.operatingState)}">${escapeHtml(projectStateLabel(project.control.operatingState))}</span>
+        <span class="state-badge compact ${projectPhaseClass(project.phase)}">${escapeHtml(project.phase || "Not Started")}</span>
         <span class="expand-button" aria-hidden="true">${expanded ? "−" : "+"}</span>
       </button>
       ${renderProjectFile(project, expanded)}
@@ -2325,6 +2363,14 @@ function renderScheduleEditor(project) {
   }
 
   return `
+    <div class="phase-select-row">
+      <div class="compact-field">
+        <label>Project Phase</label>
+        <select class="phase-input" data-project-id="${escapeAttribute(project.id)}" ${state.saving ? "disabled" : ""}>
+          ${PROJECT_PHASE_OPTIONS.map(([value, label]) => `<option value="${escapeAttribute(value)}" ${projectPhaseValue(project) === value ? "selected" : ""}>${escapeHtml(label)}</option>`).join("")}
+        </select>
+      </div>
+    </div>
     <div class="timeline-edit-grid">
       ${timelines.map(item => `
         <div class="timeline-edit-row">
@@ -2360,12 +2406,8 @@ function renderProjectControl(project) {
   `;
 }
 
-function projectStateLabel(state) {
-  return projectStateLabels[state] || "Not Set";
-}
-
-function projectStateClass(state) {
-  return String(state || "Not Set").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "not-set";
+function projectPhaseClass(phase) {
+  return String(phase || "Not Started").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "not-started";
 }
 
 function renderOpenTasks(project) {
@@ -2800,6 +2842,17 @@ document.addEventListener("change", event => {
     postUpdate("updateProjectControl", { projectId, field, value }).catch(error => {
       console.error("Control update failed:", error);
       showSyncBanner("error", error.message || "Project control could not be saved.");
+    });
+    return;
+  }
+
+  const phaseInput = event.target.closest(".phase-input");
+  if (phaseInput) {
+    const projectId = phaseInput.dataset.projectId;
+    const phase = phaseInput.value;
+    postUpdate("setProjectPhase", { projectId, phase }).catch(error => {
+      console.error("Project phase update failed:", error);
+      showSyncBanner("error", error.message || "Project phase could not be saved.");
     });
     return;
   }

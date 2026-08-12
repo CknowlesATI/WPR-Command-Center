@@ -6,6 +6,7 @@ const JSON_HEADERS = {
 };
 
 const SESSION_DAYS = 183;
+const WORK_PHASES = ["prewire", "trim", "install"];
 
 const CONTROL_FIELDS = new Map([
   ["nextOutcome", ["next_outcome", normalizeText]],
@@ -59,6 +60,7 @@ async function applyAction(db, body, actor, env) {
 
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
   if (body.action === "updateTimeline") return updateTimeline(db, body);
+  if (body.action === "setProjectPhase") return setProjectPhase(db, body);
   if (body.action === "addProject") return addProject(db, body, actor);
   if (body.action === "closeProject") return closeProject(db, body, actor);
   if (body.action === "addTask") return addTask(db, body, actor, env);
@@ -188,6 +190,23 @@ async function updateTimeline(db, body) {
 
   const result = await db.prepare(`UPDATE timelines SET ${field} = ? WHERE project_id = ? AND key = ?`).bind(value, projectId, key).run();
   if (!result.meta || result.meta.changes === 0) throw new Error(`Timeline row not found: ${projectId} / ${key}`);
+}
+
+async function setProjectPhase(db, body) {
+  const projectId = required(body.projectId, "projectId");
+  const phase = normalizeProjectPhase(body.phase);
+  const statements = WORK_PHASES.map((key, index) => {
+    let status = "";
+    if (phase !== "not-started") {
+      const activeIndex = WORK_PHASES.indexOf(phase);
+      if (index < activeIndex) status = "complete";
+      else if (index === activeIndex) status = "active";
+    }
+    return db.prepare("UPDATE timelines SET status = ? WHERE project_id = ? AND key = ?").bind(status, projectId, key);
+  });
+  const results = await db.batch(statements);
+  const changed = results.reduce((total, result) => total + (result.meta?.changes || 0), 0);
+  if (changed === 0) throw new Error(`Timeline rows not found for project ${projectId}`);
 }
 
 function validateTimelineRange(start, end) {
@@ -520,8 +539,14 @@ function normalizeTimelineKey(value) {
 
 function normalizeTimelineStatus(value) {
   const status = normalizeText(value);
-  if (!status || status === "complete") return status;
+  if (!status || status === "active" || status === "complete") return status;
   throw new Error(`Invalid timeline status: ${status}`);
+}
+
+function normalizeProjectPhase(value) {
+  const phase = normalizeText(value);
+  if (phase === "not-started" || WORK_PHASES.includes(phase)) return phase;
+  throw new Error(`Invalid project phase: ${phase}`);
 }
 
 function isManualTaskSource(source) {
