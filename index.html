@@ -55,33 +55,35 @@
 
   h1 {
     margin: 0;
-    font-size: 20px;
     line-height: 1.2;
   }
 
   .brand-reset {
     display: inline-flex;
     align-items: center;
+    width: min(260px, 72vw);
     margin: 0;
     padding: 0;
     border: 0;
     background: transparent;
-    color: inherit;
-    font: inherit;
-    font-weight: 700;
-    text-align: left;
     cursor: pointer;
   }
 
   .brand-reset:hover,
   .brand-reset:focus-visible {
-    color: var(--blue);
+    opacity: .86;
   }
 
   .brand-reset:focus-visible {
     outline: 2px solid var(--blue);
     outline-offset: 3px;
     border-radius: 4px;
+  }
+
+  .brand-logo {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .subtitle {
@@ -1655,7 +1657,7 @@
 <header>
   <div class="topbar">
     <div>
-      <h1><button class="brand-reset" id="homeResetButton" type="button" aria-label="Refresh Command Center and return to the default view">WPR Command Center</button></h1>
+      <h1><button class="brand-reset" id="homeResetButton" type="button" aria-label="Refresh Command Center and return to the default view"><img class="brand-logo" src="assets/wpr-lockup-light.svg" alt="WPR Command Center"></button></h1>
       <div class="subtitle">Shared project signal view for field teams</div>
     </div>
     <input class="search" id="searchInput" type="search" placeholder="Search project, area, team, phase">
