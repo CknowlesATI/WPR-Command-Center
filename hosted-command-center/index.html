@@ -630,7 +630,7 @@
   .metric.open-metric {
     position: relative;
     overflow: hidden;
-    padding-right: 52px;
+    padding-right: 72px;
   }
 
   .open-source-breakdown {
@@ -638,15 +638,40 @@
     top: 50%;
     right: 6px;
     display: grid;
-    gap: 1px;
-    width: 43px;
+    align-content: center;
+    gap: 2px;
+    width: 58px;
+    max-height: calc(100% - 10px);
+    border: 1px solid #e2e7ee;
+    border-radius: 6px;
+    padding: 3px 4px;
     transform: translateY(-50%);
+    background: #fff;
     color: var(--muted);
     font-size: 9px;
     font-weight: 850;
-    line-height: 1.05;
-    text-align: right;
+    line-height: 1;
     white-space: nowrap;
+  }
+
+  .open-source-row {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    align-items: baseline;
+    gap: 3px;
+  }
+
+  .open-source-count {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .open-source-label {
+    min-width: 0;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
   }
 
   .expand-button {
@@ -2036,7 +2061,12 @@ function renderOpenSourceBreakdown(project) {
     .filter(item => item.count > 0);
   if (!rows.length) return "";
   const title = rows.map(item => `${item.count} ${item.fullLabel}`).join(", ");
-  return `<div class="open-source-breakdown" title="${escapeAttribute(title)}">${rows.map(item => `<span>${item.count} ${escapeHtml(item.shortLabel)}</span>`).join("")}</div>`;
+  return `<div class="open-source-breakdown" title="${escapeAttribute(title)}">${rows.map(item => `
+    <span class="open-source-row">
+      <span class="open-source-count">${item.count}</span>
+      <span class="open-source-label">${escapeHtml(item.shortLabel)}</span>
+    </span>
+  `).join("")}</div>`;
 }
 
 function renderCloseProject(project) {
