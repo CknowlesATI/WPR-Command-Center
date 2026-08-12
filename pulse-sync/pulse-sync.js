@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const LOCAL_ENV_PATH = path.join(ROOT, "pulse-sync", ".env");
 const ROOT_ENV_PATH = path.join(ROOT, ".env");
 const PROJECT_MAP_PATH = path.join(ROOT, "pulse-sync", "project-map.json");
+const SQL_OUTPUT_PATH = path.join(ROOT, "tmp", "source-sync.sql");
+const WRANGLER_CONFIG = path.join(ROOT, "worker", "wrangler.toml");
+const D1_DATABASE_NAME = "wpr-command-center";
 const LIVE_COMMAND_CENTER_API_URL = "https://wpr-command-center-api.wpr-command-center.workers.dev";
 const PULSE_DASHBOARD_URL = "https://www.pulsecentral.ai/c/ati-of-america/pm-contracts/ati/dashboard";
 const EXCLUDED_TODO_SECTION_PATTERNS = [
@@ -83,16 +87,20 @@ if (command === "login-test") {
   } else if (!plan.timelineItems.length && !plan.taskSyncs.length) {
     console.log("No date or source-task changes are ready to sync.");
   } else {
-    const auth = await getAuth();
+    const auth = await getAuthIfConfigured();
 
-    if (plan.timelineItems.length) {
-      await postUpdate("syncPulseTimelines", { items: plan.timelineItems }, auth);
-      console.log(`Synced Pulse timeline dates for ${plan.timelineItems.length} project(s).`);
-    }
+    if (auth) {
+      if (plan.timelineItems.length) {
+        await postUpdate("syncPulseTimelines", { items: plan.timelineItems }, auth);
+        console.log(`Synced Pulse timeline dates for ${plan.timelineItems.length} project(s).`);
+      }
 
-    for (const taskSync of plan.taskSyncs) {
-      await postUpdate("syncSourceTasks", taskSync, auth);
-      console.log(`Synced ${taskSync.source} items: ${taskSync.tasks.length} task(s), ${taskSync.replaceProjectIds.length} project scope(s).`);
+      for (const taskSync of plan.taskSyncs) {
+        await postUpdate("syncSourceTasks", taskSync, auth);
+        console.log(`Synced ${taskSync.source} items: ${taskSync.tasks.length} task(s), ${taskSync.replaceProjectIds.length} project scope(s).`);
+      }
+    } else {
+      applyPlanToD1(plan);
     }
 
     console.log("Source sync complete.");
@@ -662,13 +670,13 @@ async function postUpdate(action, payload, auth) {
   return data;
 }
 
-async function getAuth() {
+async function getAuthIfConfigured() {
   const session = process.env.COMMAND_CENTER_SESSION || "";
   const initials = process.env.COMMAND_CENTER_INITIALS || "SYNC";
   if (session) return { token: session, initials };
 
   const accessCode = process.env.COMMAND_CENTER_ACCESS_CODE || "";
-  if (!accessCode) throw new Error("Set COMMAND_CENTER_SESSION or COMMAND_CENTER_ACCESS_CODE before running sync.");
+  if (!accessCode) return null;
 
   const response = await fetch(commandCenterApiUrl(), {
     method: "POST",
@@ -678,6 +686,95 @@ async function getAuth() {
   const data = await response.json();
   if (!response.ok || data.ok === false || !data.token) throw new Error(data.error || "Command Center authorization failed.");
   return { token: data.token, initials: data.initials || initials };
+}
+
+function applyPlanToD1(plan) {
+  const lines = [];
+
+  for (const item of plan.timelineItems) {
+    for (const timeline of item.timelines) {
+      lines.push(
+        "UPDATE timelines SET start = " +
+        `${sqlString(timeline.date)}, end = ${sqlString(timeline.date)} ` +
+        `WHERE project_id = ${sqlString(item.projectId)} AND key = ${sqlString(timeline.key)};`
+      );
+    }
+  }
+
+  for (const sync of plan.taskSyncs) {
+    appendSourceTaskSyncSql(lines, sync);
+  }
+
+  if (!lines.length) return;
+  mkdirSync(path.dirname(SQL_OUTPUT_PATH), { recursive: true });
+  writeFileSync(SQL_OUTPUT_PATH, lines.join("\n") + "\n", "utf8");
+  applySqlFileToD1(SQL_OUTPUT_PATH);
+}
+
+function appendSourceTaskSyncSql(lines, sync) {
+  const source = syncedTaskSource(sync.source);
+  const replaceProjectIds = [...new Set((sync.replaceProjectIds || []).map(String).filter(Boolean))];
+  const sourceValues = source.values.map(sqlString).join(", ");
+  const now = new Date().toISOString().slice(0, 16);
+
+  if (replaceProjectIds.length) {
+    lines.push(
+      `DELETE FROM tasks WHERE source IN (${sourceValues}) AND project_id IN (${replaceProjectIds.map(sqlString).join(", ")});`
+    );
+  }
+
+  for (const task of sync.tasks || []) {
+    const id = normalizedSyncedTaskId(source.primary, task.id);
+    lines.push(
+      "INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, updated_by, updated_at) VALUES " +
+      `(${sqlString(id)}, ${sqlString(task.projectId)}, ${sqlString(task.name)}, ${sqlString(syncedTaskStatus(task.status))}, ` +
+      `${sqlString(source.primary)}, ${sqlString(task.sourceState || "")}, ${sqlString(task.externalUrl || "")}, 'SYNC', ${sqlString(now)}) ` +
+      "ON CONFLICT(id) DO UPDATE SET " +
+      "project_id = excluded.project_id, name = excluded.name, status = excluded.status, source = excluded.source, " +
+      "source_state = excluded.source_state, external_url = excluded.external_url, updated_by = excluded.updated_by, updated_at = excluded.updated_at;"
+    );
+  }
+}
+
+function applySqlFileToD1(sqlPath) {
+  const wranglerBin = process.platform === "win32"
+    ? path.join(ROOT, "node_modules", "wrangler", "bin", "wrangler.js")
+    : path.join(ROOT, "node_modules", ".bin", "wrangler");
+  const useLocalWrangler = existsSync(wranglerBin);
+  const command = useLocalWrangler && process.platform === "win32" ? process.execPath : useLocalWrangler ? wranglerBin : "npx";
+  const args = useLocalWrangler && process.platform === "win32"
+    ? [wranglerBin, "d1", "execute", D1_DATABASE_NAME, "--remote", "--config", WRANGLER_CONFIG, "--file", sqlPath]
+    : useLocalWrangler
+      ? ["d1", "execute", D1_DATABASE_NAME, "--remote", "--config", WRANGLER_CONFIG, "--file", sqlPath]
+      : ["wrangler", "d1", "execute", D1_DATABASE_NAME, "--remote", "--config", WRANGLER_CONFIG, "--file", sqlPath];
+
+  console.log(`Applying source sync directly to Cloudflare D1: ${sqlPath}`);
+  const result = spawnSync(command, args, { cwd: ROOT, encoding: "utf8", shell: false });
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
+  if (result.status !== 0) throw new Error(`Wrangler D1 sync failed with exit code ${result.status}.`);
+}
+
+function syncedTaskSource(value) {
+  const source = cleanCell(value).toLowerCase();
+  if (source === "pulse") return { primary: "pulse", values: ["pulse", "Pulse"] };
+  if (source === "procore" || source === "procore-review") return { primary: source, values: ["procore", "procore-review", "Procore"] };
+  throw new Error(`Invalid synced task source: ${source}`);
+}
+
+function normalizedSyncedTaskId(source, value) {
+  const id = cleanCell(value).replace(/\s+/g, "-").slice(0, 120);
+  if (!id) throw new Error("Synced task id is required");
+  return id.startsWith(`${source}-`) ? id : `${source}-${id}`;
+}
+
+function syncedTaskStatus(value) {
+  const status = cleanCell(value).toLowerCase();
+  return ["done", "closed", "complete", "completed"].includes(status) ? "done" : "todo";
+}
+
+function sqlString(value) {
+  return `'${String(value ?? "").replace(/'/g, "''")}'`;
 }
 
 function commandCenterApiUrl() {

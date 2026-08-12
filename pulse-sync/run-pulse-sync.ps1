@@ -36,4 +36,12 @@ if (-not $NodePath -or -not (Test-Path $NodePath)) {
   throw "Node.js was not found. Install Node.js or set PULSE_SYNC_NODE to node.exe."
 }
 
+$PreviousErrorActionPreference = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
 & $NodePath ".\pulse-sync\pulse-sync.js" $Command @RemainingArgs *>&1 | Tee-Object -FilePath $LogFile
+$ExitCode = $LASTEXITCODE
+$ErrorActionPreference = $PreviousErrorActionPreference
+
+if ($ExitCode -ne 0) {
+  exit $ExitCode
+}
