@@ -721,6 +721,92 @@
     background: #fbfcfd;
   }
 
+  .bigd-contact-card {
+    margin-top: 9px;
+    border: 1px solid #e2e7ee;
+    border-radius: 7px;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .bigd-contact-primary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    padding: 7px 8px;
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  .bigd-contact-primary span,
+  .bigd-contact-row span {
+    display: block;
+    color: var(--muted);
+    font-size: 10.5px;
+    font-weight: 750;
+    line-height: 1.25;
+  }
+
+  .bigd-contact-primary strong {
+    display: block;
+    margin-top: 2px;
+    color: var(--text);
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .bigd-contact-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bigd-contact-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 6px;
+    align-items: baseline;
+    min-width: 0;
+    padding: 5px 7px;
+    border-top: 1px solid #f2f4f7;
+  }
+
+  .bigd-contact-row:nth-child(-n + 2) {
+    border-top: 0;
+  }
+
+  .bigd-contact-row:nth-child(odd) {
+    border-right: 1px solid #f2f4f7;
+  }
+
+  .bigd-contact-row strong {
+    display: block;
+    grid-column: 1;
+    min-width: 0;
+    color: var(--text);
+    font-size: 11.5px;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .bigd-contact-row span {
+    grid-column: 1 / -1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .bigd-contact-phone {
+    display: block;
+    margin-top: 0;
+    color: var(--blue);
+    font-size: 11.5px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
   .timeline-edit-grid {
     display: grid;
     gap: 8px;
@@ -1478,6 +1564,31 @@ const PULSE_PROJECTS_URL = "https://www.pulsecentral.ai/c/ati-of-america/project
 const PROCORE_URL = "https://app.procore.com/";
 const CLOSE_PROJECT_CONFIRMATION = "Are you sure you want to close this project? After this action you will no longer be able to access any data stored within the Command Center";
 const TIMELINE_PHASE_ORDER = ["prewire", "trim", "handover", "install"];
+const BIGD_CONTACTS = {
+  "Big-D Units 1-6": [
+    { name: "John Eagan", role: "Superintendent", note: "Primary field contact", mobile: "(435) 300-0328", primary: true },
+    { name: "Logan Hanners", role: "Senior Project Manager", mobile: "(801) 318-5533" },
+    { name: "Tanner Dalton", role: "Project Engineer", mobile: "(801) 657-1339" }
+  ],
+  "Big-D Units 7-12": [
+    { name: "Bill Dixon", role: "Superintendent", note: "Primary field/schedule contact", mobile: "(801) 668-2518", primary: true },
+    { name: "Dustin Forman", role: "Superintendent", note: "Framing and back-box coordination", mobile: "(801) 556-2790" },
+    { name: "Landon Woytassek", role: "Project Manager", mobile: "(970) 305-7074" },
+    { name: "Joe LaScala", role: "Project Engineer", mobile: "(630) 528-7883" }
+  ],
+  "Big-D Condos/Penthouse": [
+    { name: "Jason Lewis", role: "Superintendent", note: "Primary field contact", mobile: "(435) 267-3796", primary: true },
+    { name: "Chris Keeble", role: "Project Manager", note: "Primary condo contact", mobile: "(435) 650-3880" },
+    { name: "Thomas Hickman", role: "Project Engineer", note: "Plans and submittals", mobile: "(385) 491-9782" },
+    { name: "Katie Mahoney", role: "Acting Project Engineer", mobile: "(385) 518-5767" }
+  ],
+  "Big-D Skier Services": [
+    { name: "David White", role: "Superintendent", note: "Primary field contact", mobile: "(801) 232-1949", primary: true },
+    { name: "Terry Russell", role: "Big-D Signature Superintendent", note: "Recent Skier Services meetings", mobile: "(801) 557-0177" },
+    { name: "Evan Tompkins", role: "Project Manager", mobile: "(435) 315-7127" },
+    { name: "Jared Gustafson", role: "Project Engineer", note: "Plans and submittals", mobile: "(385) 294-5152" }
+  ]
+};
 
 const healthLabels = {
   green: "On Track",
@@ -2015,6 +2126,7 @@ function renderProjectFile(project, expanded) {
         <div class="file-label">Project File</div>
         <div class="metric"><strong>${escapeHtml(project.phase)}</strong><span>${formatDateRange(project.startDate, project.endDate)}</span></div>
         <div class="project-sub">${escapeHtml(project.team)}</div>
+        ${renderBigDContacts(project)}
         ${renderLinks(project.links)}
       </div>
       <div class="file-panel">
@@ -2073,6 +2185,43 @@ function renderOpenSourceBreakdown(project) {
       <span class="open-source-label">${escapeHtml(item.shortLabel)}</span>
     </span>
   `).join("")}</div>`;
+}
+
+function renderBigDContacts(project) {
+  const contacts = BIGD_CONTACTS[project.team] || [];
+  if (!contacts.length) return "";
+  const primary = contacts.find(contact => contact.primary) || contacts[0];
+  const secondary = contacts.filter(contact => contact !== primary);
+  return `
+    <div class="bigd-contact-card">
+      <div class="bigd-contact-primary">
+        <div>
+          <span>Big-D Primary</span>
+          <strong>${escapeHtml(primary.name)} · ${escapeHtml(contactDescription(primary))}</strong>
+        </div>
+        <a class="bigd-contact-phone" href="tel:${escapeAttribute(phoneHref(primary.mobile))}">${escapeHtml(primary.mobile)}</a>
+      </div>
+      <div class="bigd-contact-list">
+        ${secondary.map(contact => `
+          <div class="bigd-contact-row">
+            <div>
+              <strong title="${escapeAttribute(contact.name)}">${escapeHtml(contact.name)}</strong>
+              <span title="${escapeAttribute(contactDescription(contact))}">${escapeHtml(contact.role)}</span>
+            </div>
+            <a class="bigd-contact-phone" href="tel:${escapeAttribute(phoneHref(contact.mobile))}">${escapeHtml(contact.mobile)}</a>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function contactDescription(contact) {
+  return [contact.role, contact.note].filter(Boolean).join(" · ");
+}
+
+function phoneHref(value) {
+  return String(value || "").replace(/[^\d+]/g, "");
 }
 
 function renderCloseProject(project) {
