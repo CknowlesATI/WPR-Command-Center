@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - main
-      - codex/hosted-shared-command-center
     paths:
       - "hosted-command-center/**"
       - ".github/workflows/hosted-command-center-pages.yml"

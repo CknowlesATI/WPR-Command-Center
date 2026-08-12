@@ -10,7 +10,7 @@ The active product is the online WPR Command Center:
 - Live API: `https://wpr-command-center-api.wpr-command-center.workers.dev`
 - Cloudflare Worker source: `worker/src/index.js`
 - Cloudflare D1 database: `wpr-command-center`
-- Current working branch: `codex/phase-3-outcome-control`
+- Current working branch: `main`
 
 When changing the Command Center UI, update `hosted-command-center/index.html`
 first, then mirror it to root `index.html`. GitHub Pages serves the root
@@ -22,9 +22,8 @@ first, then mirror it to root `index.html`. GitHub Pages serves the root
 paths unless Christen explicitly asks to work on them. Do not implement new
 Command Center behavior only in `Code.gs`.
 
-The branch `codex/hosted-shared-command-center` is an older separated version
-and should not be used as the target for new work unless Christen explicitly
-asks to inspect historical work.
+Historical Codex experiment branches have been removed. New Command Center work
+should happen on `main` unless Christen explicitly asks for a separate branch.
 
 ## Before Any Edit
 
@@ -40,7 +39,7 @@ For UI-only changes:
 
 - Parse both page scripts.
 - Validate hosted data when the data contract is touched.
-- Push both `codex/phase-3-outcome-control` and `main` when publishing.
+- Push `main` when publishing.
 - Confirm GitHub Pages is serving the expected update.
 
 For Worker/database changes:

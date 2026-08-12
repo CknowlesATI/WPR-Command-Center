@@ -49,8 +49,7 @@ For online Command Center UI changes:
 - Parse both page scripts.
 - Validate `hosted-command-center/data/projects.json` when the static snapshot
   contract changes.
-- When publishing, push both `codex/phase-3-outcome-control` and `main`, then
-  confirm GitHub Pages is serving the update.
+- When publishing, push `main`, then confirm GitHub Pages is serving the update.
 
 For Cloudflare Worker or D1 changes:
 

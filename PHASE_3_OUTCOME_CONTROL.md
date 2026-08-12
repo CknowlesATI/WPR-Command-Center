@@ -1,19 +1,21 @@
 # Command Center Phase 3 - Outcome Control
 
-Branch: `codex/phase-3-outcome-control`
+Status: historical reference. This work has been folded into the active `main`
+line where applicable.
 
 ## Purpose
 
-This branch is a working model for evolving Project Command Center into an
-outcome-based project-control platform. The hosted app is now the intended
-online foundation for that work.
+This document records the earlier working model for evolving Project Command
+Center into an outcome-based project-control platform. The hosted app is now the
+intended online foundation for that work.
 
 The goal is to pull the useful control model into one coherent online Command
 Center instead of maintaining separate user experiences.
 
 ## Isolation Rules
 
-- Keep all outcome-control work on this branch until Christen approves merging.
+- Keep future outcome-control work on `main` unless Christen asks for a separate
+  branch.
 - Treat the root app as legacy/reference UI unless Christen asks to edit it.
 - Use `Code.gs` as the Apps Script API source when the hosted app needs live
   read/write behavior.
