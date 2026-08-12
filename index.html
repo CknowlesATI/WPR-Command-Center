@@ -219,6 +219,75 @@
     padding: 8px;
   }
 
+  .pulse-sync {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+    border-top: 1px solid #edf0f4;
+    padding-top: 12px;
+  }
+
+  .pulse-sync textarea {
+    width: 100%;
+    min-height: 94px;
+    resize: vertical;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    font-size: 12px;
+    line-height: 1.35;
+    padding: 8px;
+  }
+
+  .pulse-sync-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .pulse-sync-result {
+    display: grid;
+    gap: 6px;
+  }
+
+  .pulse-sync-summary {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 750;
+  }
+
+  .pulse-sync-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    border: 1px solid #edf0f4;
+    border-radius: 7px;
+    background: #fbfcfd;
+    padding: 7px 8px;
+    font-size: 12px;
+  }
+
+  .pulse-sync-row strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pulse-sync-row span {
+    color: var(--muted);
+    font-size: 11.5px;
+  }
+
+  .pulse-sync-row.missing {
+    border-color: #f3d9a3;
+    background: var(--amber-bg);
+  }
+
   .sync-banner {
     border: 1px solid #f3d9a3;
     border-radius: 8px;
@@ -1564,6 +1633,7 @@ const state = {
   closingProjects: new Set(),
   settingsOpen: false,
   settings: { notifications: { recipients: [], emailConfigured: false } },
+  pulseSync: { input: "", preview: null },
   saving: false,
   live: false,
   auth: loadAuthSession()
@@ -1573,6 +1643,7 @@ const API_URL = "https://wpr-command-center-api.wpr-command-center.workers.dev";
 const SYNC_ENABLED = API_URL.indexOf("http") === 0;
 const COLLAPSED_ATTENTION_LIMIT = 6;
 const PULSE_PROJECTS_URL = "https://www.pulsecentral.ai/c/ati-of-america/projects";
+const PULSE_DASHBOARD_URL = "https://www.pulsecentral.ai/c/ati-of-america/pm-contracts/ati/dashboard";
 const PROCORE_URL = "https://app.procore.com/";
 const CLOSE_PROJECT_CONFIRMATION = "Are you sure you want to close this project? After this action you will no longer be able to access any data stored within the Command Center";
 const TIMELINE_PHASE_ORDER = ["prewire", "trim", "handover", "install"];
@@ -1954,8 +2025,54 @@ function renderSettings() {
             <input id="notificationEmailInput" type="email" placeholder="name@example.com" ${state.saving ? "disabled" : ""}>
             <button class="primary-button" id="addRecipientButton" type="button" ${state.saving ? "disabled" : ""}>Add</button>
           </div>
+          ${renderPulseSyncPanel()}
         </div>
       </div>
+    </div>
+  `;
+}
+
+function renderPulseSyncPanel() {
+  const preview = state.pulseSync.preview;
+  const matched = preview ? preview.matched : [];
+  const missing = preview ? preview.missing : [];
+  const changed = matched.filter(item => item.changes.length);
+  return `
+    <div class="pulse-sync">
+      <div>
+        <h2 class="settings-title">Pulse Timeline Sync</h2>
+        <p class="settings-copy">Copy the filtered WPR rows from Pulse, paste them here, then preview before applying schedule date updates.</p>
+      </div>
+      <a class="secondary-button" href="${escapeAttribute(PULSE_DASHBOARD_URL)}" target="_blank" rel="noopener">Open Pulse</a>
+      <textarea id="pulseSyncInput" placeholder="Paste copied Pulse dashboard rows" ${state.saving ? "disabled" : ""}>${escapeHtml(state.pulseSync.input)}</textarea>
+      <div class="pulse-sync-actions">
+        <button class="primary-button" id="previewPulseSyncButton" type="button" ${state.saving ? "disabled" : ""}>Preview</button>
+        <button class="secondary-button" id="clearPulseSyncButton" type="button" ${state.saving ? "disabled" : ""}>Clear</button>
+        ${preview ? `<button class="primary-button" id="applyPulseSyncButton" type="button" ${state.saving || !changed.length ? "disabled" : ""}>Apply ${changed.length}</button>` : ""}
+      </div>
+      ${preview ? `
+        <div class="pulse-sync-result">
+          <div class="pulse-sync-summary">${matched.length} matched · ${changed.length} with date changes · ${missing.length} unmatched</div>
+          ${changed.slice(0, 5).map(item => `
+            <div class="pulse-sync-row">
+              <div>
+                <strong>${escapeHtml(item.projectName)}</strong>
+                <span>${escapeHtml(item.changes.map(change => `${change.label}: ${change.next || "clear"}`).join(" · "))}</span>
+              </div>
+              <span>${item.changes.length}</span>
+            </div>
+          `).join("")}
+          ${missing.slice(0, 3).map(item => `
+            <div class="pulse-sync-row missing">
+              <div>
+                <strong>${escapeHtml(item.pulseName || "Unmatched Pulse row")}</strong>
+                <span>No Command Center project match</span>
+              </div>
+              <span>Review</span>
+            </div>
+          `).join("")}
+        </div>
+      ` : ""}
     </div>
   `;
 }
@@ -2668,6 +2785,211 @@ function dateOnly(value) {
   return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
 }
 
+function buildPulseSyncPreview(input) {
+  const rows = parsePulseTimelineRows(input);
+  const merged = new Map();
+  const missing = [];
+
+  rows.forEach(row => {
+    const project = matchPulseProject(row.customer);
+    if (!project) {
+      missing.push({ pulseName: row.customer });
+      return;
+    }
+
+    if (!merged.has(project.id)) {
+      merged.set(project.id, {
+        project,
+        pulseName: row.customer,
+        dates: { prewire: null, trim: null, install: null }
+      });
+    }
+
+    const target = merged.get(project.id);
+    ["prewire", "trim", "install"].forEach(key => {
+      if (!row.phases[key]) return;
+      if (row.dates[key] || target.dates[key] === null) target.dates[key] = row.dates[key];
+    });
+  });
+
+  const matched = [...merged.values()].map(item => {
+    const changes = ["prewire", "trim", "install"].flatMap(key => {
+      const next = item.dates[key];
+      if (next === null) return [];
+      const timeline = item.project.timelines.find(row => row.key === key) || {};
+      const currentStart = timeline.start || "";
+      const currentEnd = timeline.end || "";
+      if (currentStart === next && currentEnd === next) return [];
+      return [{
+        key,
+        label: phaseLabel(key),
+        current: currentStart === currentEnd ? currentStart : [currentStart, currentEnd].filter(Boolean).join(" to "),
+        next
+      }];
+    });
+    return {
+      projectId: item.project.id,
+      projectName: item.project.name,
+      pulseName: item.pulseName,
+      changes
+    };
+  });
+
+  return {
+    matched,
+    missing,
+    items: matched
+      .filter(item => item.changes.length)
+      .map(item => ({
+        projectId: item.projectId,
+        timelines: item.changes.map(change => ({ key: change.key, date: change.next }))
+      }))
+  };
+}
+
+function parsePulseTimelineRows(input) {
+  const text = String(input || "").trim();
+  if (!text) return [];
+
+  const jsonRows = parsePulseJsonRows(text);
+  if (jsonRows) return jsonRows;
+
+  const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  if (!lines.length) return [];
+
+  const tableRows = lines
+    .filter(line => line.includes("\t"))
+    .map(line => line.split("\t").map(cell => cleanPulseCell(cell)));
+  if (!tableRows.length) return [];
+
+  const defaultHeaders = [
+    "customer", "project manager", "prewire schedule", "prewire date",
+    "trim schedule", "trim date", "install schedule", "install date",
+    "racks due date", "integrations due date", "pm billing status",
+    "estimated project completion date", "ati install completion date",
+    "add to ati", "comments"
+  ];
+  const first = tableRows[0].map(normalizePulseHeader);
+  const hasHeader = first.some(cell => cell === "customer") && first.some(cell => cell.includes("prewire date"));
+  const headers = hasHeader ? first : defaultHeaders;
+  const dataRows = hasHeader ? tableRows.slice(1) : tableRows;
+
+  return dataRows.map(cells => pulseRowFromCells(headers, cells)).filter(row => row.customer);
+}
+
+function parsePulseJsonRows(text) {
+  if (!/^[\[{]/.test(text)) return null;
+  try {
+    const value = JSON.parse(text);
+    const rows = Array.isArray(value) ? value : Array.isArray(value.rows) ? value.rows : null;
+    if (!rows) return null;
+    return rows.map(row => {
+      if (Array.isArray(row)) {
+        return pulseRowFromCells([], row.map(cleanPulseCell));
+      }
+      return pulseRowFromObject(row);
+    }).filter(row => row.customer);
+  } catch {
+    return null;
+  }
+}
+
+function pulseRowFromObject(row) {
+  const pick = (...keys) => {
+    const found = keys.find(key => row[key] !== undefined);
+    return cleanPulseCell(found ? row[found] : "");
+  };
+  return normalizePulseRow({
+    customer: pick("Customer", "customer", "project", "name"),
+    prewireSchedule: pick("Prewire Schedule", "Prewire Schedule*", "prewireSchedule"),
+    prewireDate: pick("Prewire Date", "prewireDate"),
+    trimSchedule: pick("Trim Schedule", "Trim Schedule*", "trimSchedule"),
+    trimDate: pick("Trim Date", "trimDate"),
+    installSchedule: pick("Install Schedule", "installSchedule"),
+    installDate: pick("Install Date", "installDate"),
+    addToAti: pick("Add to ATI", "addToATI", "addToAti")
+  });
+}
+
+function pulseRowFromCells(headers, cells) {
+  const get = (header, fallbackIndex) => {
+    const index = headers.findIndex(item => item === header || item.includes(header));
+    return cleanPulseCell(cells[index >= 0 ? index : fallbackIndex] || "");
+  };
+  return normalizePulseRow({
+    customer: get("customer", 0),
+    prewireSchedule: get("prewire schedule", 2),
+    prewireDate: get("prewire date", 3),
+    trimSchedule: get("trim schedule", 4),
+    trimDate: get("trim date", 5),
+    installSchedule: get("install schedule", 6),
+    installDate: get("install date", 7),
+    addToAti: get("add to ati", 13)
+  });
+}
+
+function normalizePulseRow(row) {
+  const addToAti = row.addToAti.toLowerCase();
+  const phaseListed = key => addToAti ? addToAti.includes(key === "prewire" ? "prewire" : key) : false;
+  return {
+    customer: row.customer,
+    dates: {
+      prewire: pulseDateOnly(row.prewireDate),
+      trim: pulseDateOnly(row.trimDate),
+      install: pulseDateOnly(row.installDate)
+    },
+    phases: {
+      prewire: phaseListed("prewire") || !!row.prewireSchedule || !!row.prewireDate,
+      trim: phaseListed("trim") || !!row.trimSchedule || !!row.trimDate,
+      install: phaseListed("install") || !!row.installSchedule || !!row.installDate
+    }
+  };
+}
+
+function matchPulseProject(customer) {
+  const text = String(customer || "").toLowerCase();
+  if (!text) return null;
+  if (text.includes("skier services")) return findProjectByName("Skier Services");
+  if (text.includes("penthouse")) return findProjectByName("WPR Condo Penthouse");
+  if (text.includes("condo")) {
+    const unit = text.match(/unit\s*(\d+)/);
+    if (unit) return findProjectByName(`WPR Condo ${unit[1]}`);
+  }
+  const unit = text.match(/unit\s*(\d+)/);
+  if (unit) return findProjectByName(`WPR Unit ${unit[1]}`);
+  if (/\bd4\b/.test(text)) return findProjectByName("D4");
+  if (/\bd35\b/.test(text)) return findProjectByName("D35");
+  return null;
+}
+
+function findProjectByName(name) {
+  const key = normalizeMatchText(name);
+  return state.projects.find(project => normalizeMatchText(project.name) === key) || null;
+}
+
+function pulseDateOnly(value) {
+  const text = cleanPulseCell(value);
+  if (!text || text === "—" || /^tbd$/i.test(text)) return "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!match) return "";
+  const month = match[1].padStart(2, "0");
+  const day = match[2].padStart(2, "0");
+  return `${match[3]}-${month}-${day}`;
+}
+
+function cleanPulseCell(value) {
+  return String(value ?? "").replace(/\u00a0/g, " ").trim();
+}
+
+function normalizePulseHeader(value) {
+  return cleanPulseCell(value).toLowerCase().replace(/[▲*]/g, "").replace(/\s+/g, " ").trim();
+}
+
+function normalizeMatchText(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -2715,6 +3037,42 @@ document.addEventListener("click", event => {
     postUpdate("addNotificationRecipient", { email }).catch(error => {
       console.error("Add notification recipient failed:", error);
       showSyncBanner("error", error.message || "Notification recipient could not be added.");
+    });
+    return;
+  }
+
+  if (event.target.closest("#previewPulseSyncButton")) {
+    state.pulseSync.input = valueFrom("pulseSyncInput");
+    const preview = buildPulseSyncPreview(state.pulseSync.input);
+    if (!preview.matched.length && !preview.missing.length) {
+      showSyncBanner("error", "No Pulse table rows were found. Copy rows from the Pulse dashboard table and paste them here.");
+      return;
+    }
+    state.pulseSync.preview = preview;
+    renderSettings();
+    return;
+  }
+
+  if (event.target.closest("#clearPulseSyncButton")) {
+    state.pulseSync = { input: "", preview: null };
+    renderSettings();
+    return;
+  }
+
+  if (event.target.closest("#applyPulseSyncButton")) {
+    const preview = state.pulseSync.preview;
+    const items = preview && Array.isArray(preview.items) ? preview.items : [];
+    if (!items.length) {
+      showSyncBanner("error", "No Pulse date changes are ready to apply.");
+      return;
+    }
+    postUpdate("syncPulseTimelines", { items }).then(() => {
+      state.pulseSync.preview = null;
+      showSyncBanner("none");
+      renderSettings();
+    }).catch(error => {
+      console.error("Pulse timeline sync failed:", error);
+      showSyncBanner("error", error.message || "Pulse timeline dates could not be synced.");
     });
     return;
   }

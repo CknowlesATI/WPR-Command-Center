@@ -60,6 +60,7 @@ async function applyAction(db, body, actor, env) {
 
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
   if (body.action === "updateTimeline") return updateTimeline(db, body);
+  if (body.action === "syncPulseTimelines") return syncPulseTimelines(db, body);
   if (body.action === "setProjectPhase") return setProjectPhase(db, body);
   if (body.action === "addProject") return addProject(db, body, actor);
   if (body.action === "closeProject") return closeProject(db, body, actor);
@@ -190,6 +191,31 @@ async function updateTimeline(db, body) {
 
   const result = await db.prepare(`UPDATE timelines SET ${field} = ? WHERE project_id = ? AND key = ?`).bind(value, projectId, key).run();
   if (!result.meta || result.meta.changes === 0) throw new Error(`Timeline row not found: ${projectId} / ${key}`);
+}
+
+async function syncPulseTimelines(db, body) {
+  const items = normalizePulseTimelineItems(body.items);
+  if (!items.length) throw new Error("No Pulse timeline matches were provided.");
+
+  const projectIds = [...new Set(items.map(item => item.projectId))];
+  const placeholders = projectIds.map(() => "?").join(",");
+  const existing = await db.prepare(`SELECT id FROM projects WHERE id IN (${placeholders})`).bind(...projectIds).all();
+  const existingIds = new Set((existing.results || []).map(row => String(row.id)));
+  const missing = projectIds.filter(id => !existingIds.has(id));
+  if (missing.length) throw new Error(`Project not found for Pulse sync: ${missing.join(", ")}`);
+
+  const statements = [];
+  items.forEach(item => {
+    item.timelines.forEach(timeline => {
+      statements.push(
+        db.prepare("UPDATE timelines SET start = ?, end = ? WHERE project_id = ? AND key = ?")
+          .bind(timeline.date, timeline.date, item.projectId, timeline.key)
+      );
+    });
+  });
+
+  if (!statements.length) throw new Error("No valid Pulse dates were provided.");
+  await db.batch(statements);
 }
 
 async function setProjectPhase(db, body) {
@@ -541,6 +567,21 @@ function normalizeTimelineStatus(value) {
   const status = normalizeText(value);
   if (!status || status === "active" || status === "complete") return status;
   throw new Error(`Invalid timeline status: ${status}`);
+}
+
+function normalizePulseTimelineItems(items) {
+  if (!Array.isArray(items)) throw new Error("Pulse sync items must be an array.");
+  return items.slice(0, 100).map((item, index) => {
+    const projectId = required(item && item.projectId, `items[${index}].projectId`);
+    const timelines = Array.isArray(item && item.timelines) ? item.timelines : [];
+    return {
+      projectId,
+      timelines: timelines.map((timeline, timelineIndex) => ({
+        key: normalizeTimelineKey(required(timeline && timeline.key, `items[${index}].timelines[${timelineIndex}].key`)),
+        date: normalizeStrictDate(timeline && timeline.date)
+      })).filter(timeline => WORK_PHASES.includes(timeline.key))
+    };
+  }).filter(item => item.timelines.length);
 }
 
 function normalizeProjectPhase(value) {
