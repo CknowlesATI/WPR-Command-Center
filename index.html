@@ -59,6 +59,31 @@
     line-height: 1.2;
   }
 
+  .brand-reset {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .brand-reset:hover,
+  .brand-reset:focus-visible {
+    color: var(--blue);
+  }
+
+  .brand-reset:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
   .subtitle {
     margin-top: 3px;
     color: var(--muted);
@@ -1555,7 +1580,7 @@
 <header>
   <div class="topbar">
     <div>
-      <h1>WPR Command Center</h1>
+      <h1><button class="brand-reset" id="homeResetButton" type="button" aria-label="Refresh Command Center and return to the default view">WPR Command Center</button></h1>
       <div class="subtitle">Shared project signal view for field teams</div>
     </div>
     <input class="search" id="searchInput" type="search" placeholder="Search project, area, team, phase">
@@ -3016,6 +3041,11 @@ document.getElementById("filters").addEventListener("click", event => {
 });
 
 document.addEventListener("click", event => {
+  if (event.target.closest("#homeResetButton")) {
+    window.location.reload();
+    return;
+  }
+
   if (event.target.closest("#attentionToggle")) {
     state.attentionExpanded = !state.attentionExpanded;
     renderAttention();
