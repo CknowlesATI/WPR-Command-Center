@@ -5,7 +5,7 @@
   <rect x="36" y="36" width="24" height="24" rx="6" fill="#0F172A"></rect>
   <rect x="36" y="4" width="24" height="24" rx="6" fill="#2563EB"></rect>
   </g>
-  <text x="80" y="38" font-family="Sweet Sans Pro, -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Helvetica, Arial, sans-serif" font-size="24" letter-spacing="0.24">
-    <tspan fill="#2563EB" font-weight="700">WPR</tspan><tspan fill="#0F172A" font-weight="400" dx="7">Command Center</tspan>
+  <text x="80" y="44" font-family="Sweet Sans Pro, -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Helvetica, Arial, sans-serif" font-size="36" letter-spacing="0.24" text-decoration="underline">
+    <tspan fill="#2563EB" font-weight="700">WPR</tspan><tspan fill="#0F172A" font-weight="400" dx="10">Command Center</tspan>
   </text>
 </svg>
