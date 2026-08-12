@@ -820,6 +820,29 @@
     background: #fbfcfd;
   }
 
+  details.file-panel {
+    display: block;
+  }
+
+  .mobile-section > summary.file-label {
+    list-style: none;
+    cursor: default;
+  }
+
+  .mobile-section > summary.file-label::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-section-body {
+    margin-top: 8px;
+  }
+
+  @media (min-width: 521px) {
+    .mobile-section > summary.file-label {
+      pointer-events: none;
+    }
+  }
+
   .bigd-contact-card {
     margin-top: 9px;
     border: 1px solid #e2e7ee;
@@ -1526,6 +1549,10 @@
       flex-direction: column;
     }
 
+    .schedule-overview-section {
+      display: none;
+    }
+
     .template-grid {
       grid-template-columns: 1fr;
     }
@@ -1558,12 +1585,60 @@
     }
 
     .signal-list {
-      flex-direction: column;
+      grid-template-columns: 1fr;
     }
 
     .signal-pill {
       border-radius: 7px;
       align-items: flex-start;
+    }
+
+    .project-file {
+      gap: 8px;
+      padding: 8px;
+    }
+
+    .mobile-section {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .mobile-section > summary.file-label {
+      min-height: 42px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .mobile-section > summary.file-label::after {
+      content: "+";
+      width: 22px;
+      height: 22px;
+      border: 1px solid #d7dee8;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      background: #fff;
+      font-size: 15px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .mobile-section[open] > summary.file-label::after {
+      content: "-";
+      color: var(--blue);
+      border-color: #cbd9fb;
+      background: var(--blue-bg);
+    }
+
+    .mobile-section-body {
+      margin-top: 0;
+      padding: 0 10px 10px;
     }
 
     .settings-grid {
@@ -1609,7 +1684,7 @@
     <div class="attention-list" id="attentionList"></div>
   </section>
 
-  <section>
+  <section class="schedule-overview-section">
     <div class="section-head">
       <h2>Schedule Timeline</h2>
       <div class="count" id="timelineCount"></div>
@@ -2317,54 +2392,61 @@ function renderProjects() {
     </article>
   `;
   }).join("") : `<div class="empty">No projects match the current view.</div>`;
+  syncMobileProjectSections();
+}
+
+function syncMobileProjectSections() {
+  const mobile = window.matchMedia("(max-width: 520px)").matches;
+  document.querySelectorAll(".mobile-section").forEach(section => {
+    section.open = mobile ? section.dataset.mobileOpen === "true" : true;
+  });
 }
 
 function renderProjectFile(project, expanded) {
   const items = project.attention.slice(0, 6);
   const remaining = Math.max(0, project.attention.length - items.length);
+  const projectFile = `
+    <div class="metric"><strong>${escapeHtml(project.phase)}</strong><span>${formatDateRange(project.startDate, project.endDate)}</span></div>
+    <div class="project-sub">${escapeHtml(project.team)}</div>
+    ${renderBigDContacts(project)}
+    ${renderLinks(project.links)}
+  `;
+  const counts = `
+    <div class="metric-strip">
+      <div class="metric open-metric"><strong>${project.openTasks}</strong><span>Open</span>${renderOpenSourceBreakdown(project)}</div>
+      <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
+      <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
+      <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
+    </div>
+  `;
+  const topSignals = `
+    <div class="signal-list">
+      ${items.length ? items.map(item => `<span class="signal-pill ${escapeHtml(item.severity || "amber")}">${escapeHtml(item.detail || item.label || "Review needed")}${item.dueDate ? ` · ${formatDate(item.dueDate)}` : ""}</span>`).join("") : `<span class="project-sub">No current signals.</span>`}
+      ${remaining ? `<span class="signal-pill more">${remaining} more</span>` : ""}
+    </div>
+  `;
   return `
     <div class="project-file" ${expanded ? "" : "hidden"}>
-      <div class="file-panel">
-        <div class="file-label">Project File</div>
-        <div class="metric"><strong>${escapeHtml(project.phase)}</strong><span>${formatDateRange(project.startDate, project.endDate)}</span></div>
-        <div class="project-sub">${escapeHtml(project.team)}</div>
-        ${renderBigDContacts(project)}
-        ${renderLinks(project.links)}
-      </div>
-      <div class="file-panel">
-        <div class="file-label">Counts</div>
-        <div class="metric-strip">
-          <div class="metric open-metric"><strong>${project.openTasks}</strong><span>Open</span>${renderOpenSourceBreakdown(project)}</div>
-          <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
-          <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
-          <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
-        </div>
-      </div>
-      <div class="file-panel">
-        <div class="file-label">Approvals &amp; Payments</div>
-        ${renderApprovalsPayments(project)}
-      </div>
-      <div class="file-panel project-signal">
-        <div class="file-label">Schedule</div>
-        ${renderScheduleEditor(project)}
-      </div>
-      <div class="file-panel">
-        <div class="file-label">Project Control</div>
-        ${renderProjectControl(project)}
-      </div>
-      <div class="file-panel project-signal">
-        <div class="file-label">Top Signals</div>
-        <div class="signal-list">
-          ${items.length ? items.map(item => `<span class="signal-pill ${escapeHtml(item.severity || "amber")}">${escapeHtml(item.detail || item.label || "Review needed")}${item.dueDate ? ` · ${formatDate(item.dueDate)}` : ""}</span>`).join("") : `<span class="project-sub">No current signals.</span>`}
-          ${remaining ? `<span class="signal-pill more">${remaining} more</span>` : ""}
-        </div>
-      </div>
-      <div class="file-panel project-signal">
-        <div class="file-label">Open Items</div>
-        ${renderOpenTasks(project)}
-      </div>
+      ${renderProjectSection("Project File", projectFile)}
+      ${renderProjectSection("Counts", counts, { mobileOpen: true })}
+      ${renderProjectSection("Approvals & Payments", renderApprovalsPayments(project))}
+      ${renderProjectSection("Schedule", renderScheduleEditor(project), { wide: true })}
+      ${renderProjectSection("Project Control", renderProjectControl(project), { mobileOpen: true })}
+      ${renderProjectSection("Top Signals", topSignals, { mobileOpen: true, wide: true })}
+      ${renderProjectSection("Open Items", renderOpenTasks(project), { mobileOpen: true, wide: true })}
       ${state.live ? renderCloseProject(project) : ""}
     </div>
+  `;
+}
+
+function renderProjectSection(label, body, options = {}) {
+  const classes = ["file-panel", "mobile-section"];
+  if (options.wide) classes.push("project-signal");
+  return `
+    <details class="${classes.join(" ")}"${options.mobileOpen ? " data-mobile-open=\"true\"" : ""} open>
+      <summary class="file-label">${escapeHtml(label)}</summary>
+      <div class="mobile-section-body">${body}</div>
+    </details>
   `;
 }
 
@@ -3290,6 +3372,8 @@ document.getElementById("searchInput").addEventListener("input", event => {
   state.query = event.target.value;
   render();
 });
+
+window.addEventListener("resize", syncMobileProjectSections);
 
 document.getElementById("authButton").addEventListener("click", async () => {
   if (authIsValid()) {
