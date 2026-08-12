@@ -627,6 +627,28 @@
     background: #fbfcfd;
   }
 
+  .metric.open-metric {
+    position: relative;
+    overflow: hidden;
+    padding-right: 52px;
+  }
+
+  .open-source-breakdown {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    display: grid;
+    gap: 1px;
+    width: 43px;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 850;
+    line-height: 1.05;
+    text-align: right;
+    white-space: nowrap;
+  }
+
   .expand-button {
     display: inline-flex;
     align-items: center;
@@ -1544,6 +1566,7 @@ function normalizeProjects(projects) {
     approvalsPayments: normalizeApprovalsPayments(project.approvalsPayments, project.control),
     control: normalizeControl(project.control, project.id),
     taskList: normalizeTaskList(project.taskList),
+    openSourceCounts: openSourceCounts(project.taskList),
     attention: Array.isArray(project.attention) ? project.attention : [],
     links: Array.isArray(project.links) ? project.links : [],
     timelines: normalizeTimelines(project.timelines)
@@ -1640,7 +1663,17 @@ function normalizeTaskList(tasks) {
 }
 
 function openTaskCount(project) {
-  return normalizeTaskList(project.taskList).filter(task => task.status === "todo").length;
+  return normalizeTaskList(project.taskList).filter(task => task.status !== "done").length;
+}
+
+function openSourceCounts(tasks) {
+  return normalizeTaskList(tasks)
+    .filter(task => task.status !== "done")
+    .reduce((counts, task) => {
+      const group = taskSourceGroup(task.source);
+      counts[group] = (counts[group] || 0) + 1;
+      return counts;
+    }, { procore: 0, pulse: 0, command: 0, other: 0 });
 }
 
 function currentProjectPhase(timelines = []) {
@@ -1956,7 +1989,7 @@ function renderProjectFile(project, expanded) {
       <div class="file-panel">
         <div class="file-label">Counts</div>
         <div class="metric-strip">
-          <div class="metric"><strong>${project.openTasks}</strong><span>Open</span></div>
+          <div class="metric open-metric"><strong>${project.openTasks}</strong><span>Open</span>${renderOpenSourceBreakdown(project)}</div>
           <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
           <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
           <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
@@ -1988,6 +2021,22 @@ function renderProjectFile(project, expanded) {
       ${state.live ? renderCloseProject(project) : ""}
     </div>
   `;
+}
+
+function renderOpenSourceBreakdown(project) {
+  if (!project.openTasks) return "";
+  const counts = project.openSourceCounts || {};
+  const rows = [
+    ["procore", "PC", "Procore"],
+    ["pulse", "Pulse", "Pulse"],
+    ["command", "CC", "Command Center"],
+    ["other", "Other", "Other"]
+  ]
+    .map(([key, shortLabel, fullLabel]) => ({ count: Number(counts[key]) || 0, shortLabel, fullLabel }))
+    .filter(item => item.count > 0);
+  if (!rows.length) return "";
+  const title = rows.map(item => `${item.count} ${item.fullLabel}`).join(", ");
+  return `<div class="open-source-breakdown" title="${escapeAttribute(title)}">${rows.map(item => `<span>${item.count} ${escapeHtml(item.shortLabel)}</span>`).join("")}</div>`;
 }
 
 function renderCloseProject(project) {
