@@ -568,7 +568,7 @@
     font-size: 12px;
   }
 
-  .health {
+  .state-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -579,12 +579,12 @@
     font-weight: 800;
   }
 
-  .health.compact {
+  .state-badge.compact {
     padding: 4px 8px;
     font-size: 11px;
   }
 
-  .health::before {
+  .state-badge::before {
     content: "";
     width: 7px;
     height: 7px;
@@ -592,10 +592,11 @@
     background: currentColor;
   }
 
-  .health.green { background: var(--green-bg); color: var(--green); }
-  .health.amber { background: var(--amber-bg); color: var(--amber); }
-  .health.red { background: var(--red-bg); color: var(--red); }
-  .health.pending { background: #eef1f5; color: var(--muted); }
+  .state-badge.stable { background: var(--green-bg); color: var(--green); }
+  .state-badge.monitor { background: #eef1f5; color: var(--muted); }
+  .state-badge.follow-up-needed { background: var(--amber-bg); color: var(--amber); }
+  .state-badge.action-needed { background: var(--red-bg); color: var(--red); }
+  .state-badge.not-set { background: #fff; border: 1px solid #d8dee7; color: var(--muted); }
 
   .metric {
     min-width: 0;
@@ -1590,11 +1591,12 @@ const BIGD_CONTACTS = {
   ]
 };
 
-const healthLabels = {
-  green: "On Track",
-  amber: "At Risk",
-  red: "Needs Help",
-  pending: "Not Started"
+const projectStateLabels = {
+  "Not Set": "Not Set",
+  "Stable": "Stable",
+  "Monitor": "Monitor",
+  "Follow-Up Needed": "Follow Up",
+  "Action Needed": "Action Needed"
 };
 
 const fallbackData = {
@@ -1696,7 +1698,6 @@ function normalizeProjects(projects) {
     name: project.name || "Untitled project",
     area: project.area || project.segment || project.projectGroup || "Unassigned",
     team: project.team || project.externalTeam || "No team listed",
-    health: normalizeHealth(project.health || project.rag),
     phase: project.phase || currentProjectPhase(project.timelines) || "Not scheduled",
     startDate: project.startDate || project.startsAt || null,
     endDate: project.endDate || project.endsAt || null,
@@ -1755,10 +1756,6 @@ function normalizeSettings(settings = {}) {
   };
 }
 
-function normalizeHealth(value) {
-  return ["green", "amber", "red", "pending"].includes(value) ? value : "pending";
-}
-
 function normalizeApprovalsPayments(value, control = {}) {
   const incoming = value && typeof value === "object" ? value : {};
   const source = control && typeof control === "object" ? control : {};
@@ -1771,9 +1768,10 @@ function normalizeApprovalsPayments(value, control = {}) {
 
 function normalizeControl(value, projectId) {
   const incoming = value && typeof value === "object" ? value : {};
+  const explicitState = controlHasExplicitState(incoming);
   return {
     projectId,
-    operatingState: ["Action Needed", "Follow-Up Needed", "Monitor", "Stable"].includes(incoming.operatingState) ? incoming.operatingState : "Stable",
+    operatingState: normalizeProjectState(incoming.operatingState, explicitState),
     nextOutcome: String(incoming.nextOutcome || "").trim(),
     nextMoveOwner: String(incoming.nextMoveOwner || "").trim(),
     nextAction: String(incoming.nextAction || "").trim(),
@@ -1787,6 +1785,28 @@ function normalizeControl(value, projectId) {
     updatedBy: String(incoming.updatedBy || "").trim(),
     updatedAt: String(incoming.updatedAt || "").trim()
   };
+}
+
+function normalizeProjectState(value, explicitState = true) {
+  const state = String(value || "").trim();
+  if (["Not Set", "Action Needed", "Follow-Up Needed", "Monitor", "Stable"].includes(state)) return state;
+  return explicitState ? "Stable" : "Not Set";
+}
+
+function controlHasExplicitState(control) {
+  const state = String(control.operatingState || "").trim();
+  if (!state) return false;
+  if (state !== "Stable") return true;
+  return Boolean(
+    String(control.updatedBy || "").trim() ||
+    String(control.updatedAt || "").trim() ||
+    String(control.nextOutcome || "").trim() ||
+    String(control.nextMoveOwner || "").trim() ||
+    String(control.nextAction || "").trim() ||
+    String(control.reviewDate || "").trim() ||
+    String(control.responseDate || "").trim() ||
+    String(control.blockerReason || "").trim()
+  );
 }
 
 function normalizeTaskList(tasks) {
@@ -1901,13 +1921,14 @@ function renderSettings() {
 function visibleProjects() {
   const query = state.query.trim().toLowerCase();
   return state.projects.filter(project => {
-    if (state.filter !== "all" && project.health !== state.filter) return false;
+    if (state.filter !== "all" && project.control.operatingState !== state.filter) return false;
     if (!query) return true;
     return [
       project.name,
       project.area,
       project.team,
       project.phase,
+      project.control.operatingState,
       project.approvalsPayments.contract,
       project.approvalsPayments.deposit,
       project.approvalsPayments.changeOrders,
@@ -1921,10 +1942,11 @@ function visibleProjects() {
 function renderFilters() {
   const options = [
     ["all", "All"],
-    ["red", "Needs Help"],
-    ["amber", "At Risk"],
-    ["green", "On Track"],
-    ["pending", "Not Started"]
+    ["Not Set", "Not Set"],
+    ["Action Needed", "Action Needed"],
+    ["Follow-Up Needed", "Follow Up"],
+    ["Monitor", "Monitor"],
+    ["Stable", "Stable"]
   ];
   document.getElementById("filters").innerHTML = options.map(([value, label]) => (
     `<button class="chip ${state.filter === value ? "active" : ""}" data-filter="${value}" type="button">${label}</button>`
@@ -2108,7 +2130,7 @@ function renderProjects() {
           <div class="project-title">${escapeHtml(project.name)}</div>
           <div class="project-sub">${escapeHtml(project.area)}</div>
         </div>
-        <span class="health compact ${project.health}">${healthLabels[project.health]}</span>
+        <span class="state-badge compact ${projectStateClass(project.control.operatingState)}">${escapeHtml(projectStateLabel(project.control.operatingState))}</span>
         <span class="expand-button" aria-hidden="true">${expanded ? "−" : "+"}</span>
       </button>
       ${renderProjectFile(project, expanded)}
@@ -2327,7 +2349,7 @@ function renderProjectControl(project) {
   }
   return `
     <div class="control-grid">
-      ${selectField(project.id, "operatingState", "State", control.operatingState, ["Action Needed", "Follow-Up Needed", "Monitor", "Stable"])}
+      ${selectField(project.id, "operatingState", "State", control.operatingState, ["Not Set", "Action Needed", "Follow-Up Needed", "Monitor", "Stable"])}
       ${textField(project.id, "nextMoveOwner", "Owner", control.nextMoveOwner)}
       ${textareaField(project.id, "nextOutcome", "Next Outcome", control.nextOutcome, "full")}
       ${textareaField(project.id, "nextAction", "Next Action", control.nextAction, "full")}
@@ -2336,6 +2358,14 @@ function renderProjectControl(project) {
     </div>
     ${renderEditNote(control)}
   `;
+}
+
+function projectStateLabel(state) {
+  return projectStateLabels[state] || "Not Set";
+}
+
+function projectStateClass(state) {
+  return String(state || "Not Set").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "not-set";
 }
 
 function renderOpenTasks(project) {

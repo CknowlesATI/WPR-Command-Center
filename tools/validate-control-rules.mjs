@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const states = ["Action Needed", "Follow-Up Needed", "Monitor", "Stable"];
+const states = ["Not Set", "Action Needed", "Follow-Up Needed", "Monitor", "Stable"];
 
 const cases = [
   {
@@ -56,7 +56,7 @@ if (failures) {
 console.log("Phase 3 control rule validation passed.");
 
 function validateControl(control) {
-  const state = states.includes(control.operatingState) ? control.operatingState : "Stable";
+  const state = states.includes(control.operatingState) ? control.operatingState : "Not Set";
   const errors = [];
   const nextOutcome = String(control.nextOutcome || "").trim();
   const owner = String(control.nextMoveOwner || "").trim();

@@ -208,7 +208,7 @@ async function addProject(db, body, actor) {
   await db.batch([
     db.prepare("INSERT INTO projects (id, name, project_group, segment, external_team, percent, starts_at, ends_at) VALUES (?, ?, ?, ?, ?, 0, ?, ?)")
       .bind(projectId, name, projectGroup, segment, externalTeam, startsAt, endsAt),
-    db.prepare("INSERT INTO project_controls (project_id, operating_state, blocked, override_daily, updated_at, updated_by) VALUES (?, 'Stable', 0, 0, ?, ?)")
+    db.prepare("INSERT INTO project_controls (project_id, operating_state, blocked, override_daily, updated_at, updated_by) VALUES (?, 'Not Set', 0, 0, ?, ?)")
       .bind(projectId, updatedAt, actor.initials),
     db.prepare("INSERT INTO project_control_history (project_id, changed_at, field, old_value, new_value, changed_by) VALUES (?, ?, 'project', '', 'Created', ?)")
       .bind(projectId, updatedAt, actor.initials),
@@ -379,7 +379,7 @@ async function deleteById(db, table, id) {
 }
 
 async function ensureControlRow(db, projectId) {
-  await db.prepare("INSERT OR IGNORE INTO project_controls (project_id, operating_state, blocked, override_daily) VALUES (?, 'Stable', 0, 0)")
+  await db.prepare("INSERT OR IGNORE INTO project_controls (project_id, operating_state, blocked, override_daily) VALUES (?, 'Not Set', 0, 0)")
     .bind(projectId)
     .run();
 }
@@ -389,7 +389,7 @@ function toControl(projectId, row = {}) {
     projectId,
     nextOutcome: row.next_outcome || "",
     nextMoveOwner: row.next_move_owner || "",
-    operatingState: row.operating_state || "Stable",
+    operatingState: row.operating_state || "Not Set",
     blocked: truthy(row.blocked),
     blockerReason: row.blocker_reason || "",
     delayConsequence: row.delay_consequence || "",
@@ -502,7 +502,7 @@ function isDashboardProject(project) {
 }
 
 function validateControlField(field, value) {
-  if (field === "operatingState" && !["Action Needed", "Follow-Up Needed", "Monitor", "Stable"].includes(value)) {
+  if (field === "operatingState" && !["Not Set", "Action Needed", "Follow-Up Needed", "Monitor", "Stable"].includes(value)) {
     throw new Error("Invalid operating state");
   }
 }
@@ -541,7 +541,7 @@ function normalizeEmail(value) {
 
 function normalizeOperatingState(value) {
   const state = normalizeText(value);
-  return ["Action Needed", "Follow-Up Needed", "Monitor", "Stable"].includes(state) ? state : "Stable";
+  return ["Not Set", "Action Needed", "Follow-Up Needed", "Monitor", "Stable"].includes(state) ? state : "Not Set";
 }
 
 function normalizeOptionalDate(value) {
