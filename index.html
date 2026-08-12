@@ -668,6 +668,56 @@
     background: #fbfcfd;
   }
 
+  .timeline-edit-grid {
+    display: grid;
+    gap: 8px;
+  }
+
+  .timeline-edit-row {
+    display: grid;
+    grid-template-columns: minmax(92px, .8fr) minmax(110px, 1fr) minmax(110px, 1fr) auto;
+    align-items: end;
+    gap: 8px;
+  }
+
+  .timeline-phase-label {
+    align-self: center;
+    min-width: 0;
+    font-size: 12px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+  }
+
+  .timeline-complete-field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding-bottom: 1px;
+  }
+
+  .timeline-complete-field input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--blue);
+  }
+
+  .timeline-readonly-list {
+    display: grid;
+    gap: 7px;
+  }
+
+  .timeline-readonly-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid #edf0f4;
+    border-radius: 7px;
+    padding: 7px 8px;
+    background: #fff;
+    font-size: 12px;
+  }
+
   .approval-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1061,7 +1111,8 @@
   .secondary-button:disabled,
   .danger-button:disabled,
   .task-input:disabled,
-  .control-input:disabled {
+  .control-input:disabled,
+  .timeline-input:disabled {
     opacity: .65;
     cursor: default;
   }
@@ -1184,6 +1235,10 @@
       grid-template-columns: 1fr;
     }
 
+    .timeline-edit-row {
+      grid-template-columns: minmax(96px, .7fr) minmax(110px, 1fr) minmax(110px, 1fr) auto;
+    }
+
     .template-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -1243,6 +1298,14 @@
 
     .metric-strip {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .timeline-edit-row {
+      grid-template-columns: 1fr 1fr auto;
+    }
+
+    .timeline-phase-label {
+      grid-column: 1 / -1;
     }
 
     .project-signal {
@@ -1361,6 +1424,7 @@ const COLLAPSED_ATTENTION_LIMIT = 6;
 const PULSE_PROJECTS_URL = "https://www.pulsecentral.ai/c/ati-of-america/projects";
 const PROCORE_URL = "https://app.procore.com/";
 const CLOSE_PROJECT_CONFIRMATION = "Are you sure you want to close this project? After this action you will no longer be able to access any data stored within the Command Center";
+const TIMELINE_PHASE_ORDER = ["prewire", "trim", "handover", "install"];
 
 const healthLabels = {
   green: "On Track",
@@ -1444,9 +1508,14 @@ async function postUpdate(action, payload) {
       renderAuthStatus();
       throw new Error("Edit access expired. Please reconnect edit access.");
     }
-    if (!response.ok) throw new Error(`Save failed (${response.status})`);
-    const data = await response.json();
-    if (data && data.ok === false) throw new Error(data.error || "Save failed");
+    const responseText = await response.text();
+    let data = {};
+    try {
+      data = responseText ? JSON.parse(responseText) : {};
+    } catch {
+      data = {};
+    }
+    if (!response.ok || data.ok === false) throw new Error(data.error || `Save failed (${response.status})`);
     const projects = Array.isArray(data) ? data : data.data;
     if (Array.isArray(projects)) state.projects = normalizeProjects(projects);
     state.settings = normalizeSettings(data.settings);
@@ -1477,14 +1546,25 @@ function normalizeProjects(projects) {
     taskList: normalizeTaskList(project.taskList),
     attention: Array.isArray(project.attention) ? project.attention : [],
     links: Array.isArray(project.links) ? project.links : [],
-    timelines: Array.isArray(project.timelines) ? project.timelines.map(item => ({
+    timelines: normalizeTimelines(project.timelines)
+  })) : [];
+}
+
+function normalizeTimelines(timelines) {
+  return (Array.isArray(timelines) ? timelines : [])
+    .map(item => ({
       key: item.key || "",
       label: item.label || "",
       start: item.start || null,
       end: item.end || null,
       status: item.status || ""
-    })) : []
-  })) : [];
+    }))
+    .sort((a, b) => timelinePhaseIndex(a.key) - timelinePhaseIndex(b.key));
+}
+
+function timelinePhaseIndex(key) {
+  const index = TIMELINE_PHASE_ORDER.indexOf(key);
+  return index === -1 ? TIMELINE_PHASE_ORDER.length : index;
 }
 
 function normalizeSettings(settings = {}) {
@@ -1886,6 +1966,10 @@ function renderProjectFile(project, expanded) {
         <div class="file-label">Approvals &amp; Payments</div>
         ${renderApprovalsPayments(project)}
       </div>
+      <div class="file-panel project-signal">
+        <div class="file-label">Schedule</div>
+        ${renderScheduleEditor(project)}
+      </div>
       <div class="file-panel">
         <div class="file-label">Project Control</div>
         ${renderProjectControl(project)}
@@ -1965,6 +2049,39 @@ function approvalClass(type, value) {
   if ((type === "deposit" && value === "Overdue") || value === "Needs Review") return "bad";
   if (value) return "watch";
   return "";
+}
+
+function renderScheduleEditor(project) {
+  const timelines = Array.isArray(project.timelines) ? project.timelines : [];
+  if (!timelines.length) return `<span class="project-sub">No schedule phases set up.</span>`;
+
+  if (!state.live) {
+    return `
+      <div class="timeline-readonly-list">
+        ${timelines.map(item => `
+          <div class="timeline-readonly-row">
+            <strong>${escapeHtml(item.label || item.key || "Phase")}</strong>
+            <span>${escapeHtml(formatDateRange(item.start, item.end))}${item.status === "complete" ? " · Complete" : ""}</span>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  return `
+    <div class="timeline-edit-grid">
+      ${timelines.map(item => `
+        <div class="timeline-edit-row">
+          <div class="timeline-phase-label">${escapeHtml(item.label || item.key || "Phase")}</div>
+          ${timelineDateField(project.id, item.key, "start", "Start", item.start)}
+          ${timelineDateField(project.id, item.key, "end", "End", item.end)}
+          <label class="timeline-complete-field" title="Mark complete">
+            <input type="checkbox" class="timeline-input" data-project-id="${escapeAttribute(project.id)}" data-key="${escapeAttribute(item.key)}" data-field="status" ${item.status === "complete" ? "checked" : ""} ${state.saving ? "disabled" : ""}>
+          </label>
+        </div>
+      `).join("")}
+    </div>
+  `;
 }
 
 function renderProjectControl(project) {
@@ -2172,6 +2289,15 @@ function dateField(projectId, field, label, value, className = "") {
     <div class="compact-field ${className}">
       <label>${escapeHtml(label)}</label>
       <input type="date" class="control-input" data-project-id="${escapeAttribute(projectId)}" data-field="${escapeAttribute(field)}" value="${escapeAttribute(value || "")}" ${state.saving ? "disabled" : ""}>
+    </div>
+  `;
+}
+
+function timelineDateField(projectId, key, field, label, value) {
+  return `
+    <div class="compact-field">
+      <label>${escapeHtml(label)}</label>
+      <input type="date" class="timeline-input" data-project-id="${escapeAttribute(projectId)}" data-key="${escapeAttribute(key)}" data-field="${escapeAttribute(field)}" value="${escapeAttribute(value || "")}" ${state.saving ? "disabled" : ""}>
     </div>
   `;
 }
@@ -2410,6 +2536,19 @@ document.addEventListener("change", event => {
     postUpdate("updateProjectControl", { projectId, field, value }).catch(error => {
       console.error("Control update failed:", error);
       showSyncBanner("error", error.message || "Project control could not be saved.");
+    });
+    return;
+  }
+
+  const timelineInput = event.target.closest(".timeline-input");
+  if (timelineInput) {
+    const projectId = timelineInput.dataset.projectId;
+    const key = timelineInput.dataset.key;
+    const field = timelineInput.dataset.field;
+    const value = field === "status" ? (timelineInput.checked ? "complete" : "") : timelineInput.value.trim();
+    postUpdate("updateTimeline", { projectId, key, field, value }).catch(error => {
+      console.error("Timeline update failed:", error);
+      showSyncBanner("error", error.message || "Schedule could not be saved.");
     });
     return;
   }

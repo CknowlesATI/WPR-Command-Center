@@ -58,6 +58,7 @@ async function applyAction(db, body, actor, env) {
   if (!body || typeof body !== "object") throw new Error("Missing request body");
 
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
+  if (body.action === "updateTimeline") return updateTimeline(db, body);
   if (body.action === "addProject") return addProject(db, body, actor);
   if (body.action === "closeProject") return closeProject(db, body, actor);
   if (body.action === "addTask") return addTask(db, body, actor, env);
@@ -166,6 +167,31 @@ async function updateProjectControl(db, body, actor) {
     db.prepare("INSERT INTO project_control_history (project_id, changed_at, field, old_value, new_value, changed_by) VALUES (?, ?, ?, ?, ?, ?)")
       .bind(projectId, updatedAt, field, String(existing[column] ?? ""), String(value ?? ""), updatedBy)
   ]);
+}
+
+async function updateTimeline(db, body) {
+  const projectId = required(body.projectId, "projectId");
+  const key = normalizeTimelineKey(required(body.key, "key"));
+  const field = required(body.field, "field");
+  if (!["start", "end", "status"].includes(field)) throw new Error(`Invalid timeline field: ${field}`);
+
+  const existing = await db.prepare("SELECT start, end, status FROM timelines WHERE project_id = ? AND key = ?").bind(projectId, key).first();
+  if (!existing) throw new Error(`Timeline row not found: ${projectId} / ${key}`);
+
+  const value = field === "status" ? normalizeTimelineStatus(body.value) : normalizeStrictDate(body.value);
+  const next = {
+    start: field === "start" ? value : normalizeStrictDate(existing.start || ""),
+    end: field === "end" ? value : normalizeStrictDate(existing.end || ""),
+    status: field === "status" ? value : normalizeTimelineStatus(existing.status || "")
+  };
+  validateTimelineRange(next.start, next.end);
+
+  const result = await db.prepare(`UPDATE timelines SET ${field} = ? WHERE project_id = ? AND key = ?`).bind(value, projectId, key).run();
+  if (!result.meta || result.meta.changes === 0) throw new Error(`Timeline row not found: ${projectId} / ${key}`);
+}
+
+function validateTimelineRange(start, end) {
+  if (start && end && end < start) throw new Error("Schedule end date cannot be before the start date.");
 }
 
 async function addProject(db, body, actor) {
@@ -486,6 +512,18 @@ function normalizeTaskStatus(value) {
   return ["todo", "note", "done"].includes(status) ? status : "todo";
 }
 
+function normalizeTimelineKey(value) {
+  const key = normalizeText(value);
+  if (["prewire", "trim", "handover", "install"].includes(key)) return key;
+  throw new Error(`Invalid timeline key: ${key}`);
+}
+
+function normalizeTimelineStatus(value) {
+  const status = normalizeText(value);
+  if (!status || status === "complete") return status;
+  throw new Error(`Invalid timeline status: ${status}`);
+}
+
 function isManualTaskSource(source) {
   const text = normalizeText(source);
   return !text || text === "Command Center";
@@ -509,6 +547,15 @@ function normalizeOperatingState(value) {
 function normalizeOptionalDate(value) {
   const text = normalizeText(value);
   return /^\d{4}-\d{2}-\d{2}/.test(text) ? text.slice(0, 10) : "";
+}
+
+function normalizeStrictDate(value) {
+  const text = normalizeText(value);
+  if (!text) return "";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) throw new Error(`Invalid date format: ${text}`);
+  const date = new Date(`${text}T00:00:00`);
+  if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== text) throw new Error(`Invalid date: ${text}`);
+  return text;
 }
 
 function normalizeText(value) {
