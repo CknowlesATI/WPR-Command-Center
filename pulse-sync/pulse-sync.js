@@ -127,6 +127,21 @@ async function buildSyncPlan(projects, options) {
     plan.unmatched.push(...timelinePlan.unmatched);
   }
 
+  if (options.pulseTimelineApi) {
+    if (!pulseCredentialsAvailable()) {
+      plan.errors.push("Pulse timeline API sync requires PULSE_EMAIL/PULSE_PASSWORD.");
+    } else {
+      hasSourceInput = true;
+      const token = await loginToPulse();
+      const rows = await fetchPulseTimelineRows(token);
+      const timelinePlan = buildTimelinePlan(projects, rows);
+      plan.timelineMatches = mergeTimelineMatches(plan.timelineMatches, timelinePlan.matches);
+      plan.timelineItems = mergeTimelineItems(plan.timelineItems, timelinePlan.items);
+      plan.unmatched.push(...timelinePlan.unmatched);
+      plan.pulseTimelineApi = { rows: rows.length };
+    }
+  }
+
   for (const input of [
     { source: "pulse", file: options.pulseTodosFile },
     { source: "procore", file: options.procoreObservationsFile }
@@ -209,6 +224,42 @@ async function buildPulseApiTaskPlan(projects) {
       replaceProjectIds: [...new Set(matched.map(String))]
     }
   };
+}
+
+async function fetchPulseTimelineRows(token) {
+  const contracts = rowsFrom(await pulseGet(token, "/api/pm-contracts?pipeline=dashboard"));
+  return contracts.map(contract => normalizePulseRow({
+    customer: contract.customer_name,
+    prewireSchedule: contract.ati_prewire_schedule,
+    prewireDate: contract.ati_prewire_from,
+    trimSchedule: contract.ati_trim_schedule,
+    trimDate: contract.ati_trim_from,
+    installSchedule: contract.ati_install_schedule,
+    installDate: contract.ati_install_estimated_start,
+    addToAti: contract.add_to_ati
+  })).filter(row => row.customer);
+}
+
+function mergeTimelineMatches(first, second) {
+  const byProject = new Map();
+  [...first, ...second].forEach(item => {
+    byProject.set(String(item.projectId), item);
+  });
+  return [...byProject.values()];
+}
+
+function mergeTimelineItems(first, second) {
+  const byProject = new Map();
+  [...first, ...second].forEach(item => {
+    if (!byProject.has(String(item.projectId))) {
+      byProject.set(String(item.projectId), { projectId: item.projectId, timelines: [] });
+    }
+    const target = byProject.get(String(item.projectId));
+    const byKey = new Map(target.timelines.map(timeline => [timeline.key, timeline]));
+    item.timelines.forEach(timeline => byKey.set(timeline.key, timeline));
+    target.timelines = [...byKey.values()];
+  });
+  return [...byProject.values()];
 }
 
 function buildTimelinePlan(projects, rows) {
@@ -570,6 +621,7 @@ function objectToRow(value) {
 function normalizePulseRow(row) {
   const addToAti = cleanCell(row.addToAti).toLowerCase();
   const phaseListed = key => addToAti ? addToAti.includes(key === "prewire" ? "prewire" : key) : false;
+  const phasePresent = (key, schedule, date) => addToAti ? phaseListed(key) : !!cleanCell(schedule) || !!cleanCell(date);
   return {
     customer: cleanCell(row.customer),
     dates: {
@@ -578,9 +630,9 @@ function normalizePulseRow(row) {
       install: dateOnly(row.installDate)
     },
     phases: {
-      prewire: phaseListed("prewire") || !!cleanCell(row.prewireSchedule) || !!cleanCell(row.prewireDate),
-      trim: phaseListed("trim") || !!cleanCell(row.trimSchedule) || !!cleanCell(row.trimDate),
-      install: phaseListed("install") || !!cleanCell(row.installSchedule) || !!cleanCell(row.installDate)
+      prewire: phasePresent("prewire", row.prewireSchedule, row.prewireDate),
+      trim: phasePresent("trim", row.trimSchedule, row.trimDate),
+      install: phasePresent("install", row.installSchedule, row.installDate)
     }
   };
 }
@@ -618,6 +670,10 @@ function findProjectByName(projects, name) {
 function printPlan(plan) {
   if (plan.pulseApi) {
     console.log(`Pulse API to-dos: ${plan.pulseApi.pulseProjects} Pulse project(s), ${plan.pulseApi.matchedProjects} matched, ${plan.pulseApi.tasks} to-do item(s).`);
+  }
+
+  if (plan.pulseTimelineApi) {
+    console.log(`Pulse PM Contracts dates: ${plan.pulseTimelineApi.rows} dashboard row(s) fetched.`);
   }
 
   if (plan.timelineMatches.length) {
@@ -742,17 +798,41 @@ function applySqlFileToD1(sqlPath) {
     : path.join(ROOT, "node_modules", ".bin", "wrangler");
   const useLocalWrangler = existsSync(wranglerBin);
   const command = useLocalWrangler && process.platform === "win32" ? process.execPath : useLocalWrangler ? wranglerBin : "npx";
-  const args = useLocalWrangler && process.platform === "win32"
-    ? [wranglerBin, "d1", "execute", D1_DATABASE_NAME, "--remote", "--config", WRANGLER_CONFIG, "--file", sqlPath]
-    : useLocalWrangler
-      ? ["d1", "execute", D1_DATABASE_NAME, "--remote", "--config", WRANGLER_CONFIG, "--file", sqlPath]
-      : ["wrangler", "d1", "execute", D1_DATABASE_NAME, "--remote", "--config", WRANGLER_CONFIG, "--file", sqlPath];
 
   console.log(`Applying source sync directly to Cloudflare D1: ${sqlPath}`);
-  const result = spawnSync(command, args, { cwd: ROOT, encoding: "utf8", shell: false });
-  if (result.stdout) process.stdout.write(result.stdout);
-  if (result.stderr) process.stderr.write(result.stderr);
-  if (result.status !== 0) throw new Error(`Wrangler D1 sync failed with exit code ${result.status}.`);
+  const statements = readFileSync(sqlPath, "utf8").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  let batch = [];
+  let batchLength = 0;
+  let applied = 0;
+
+  const runBatch = items => {
+    if (!items.length) return;
+    const sql = items.join("\n");
+    const args = useLocalWrangler && process.platform === "win32"
+      ? [wranglerBin, "d1", "execute", D1_DATABASE_NAME, "--remote", "--config", WRANGLER_CONFIG, "--command", sql]
+      : useLocalWrangler
+        ? ["d1", "execute", D1_DATABASE_NAME, "--remote", "--config", WRANGLER_CONFIG, "--command", sql]
+        : ["wrangler", "d1", "execute", D1_DATABASE_NAME, "--remote", "--config", WRANGLER_CONFIG, "--command", sql];
+
+    const result = spawnSync(command, args, { cwd: ROOT, encoding: "utf8", shell: false });
+    if (result.stdout) process.stdout.write(result.stdout);
+    if (result.stderr) process.stderr.write(result.stderr);
+    if (result.status !== 0) throw new Error(`Wrangler D1 sync failed with exit code ${result.status}.`);
+    applied += items.length;
+    console.log(`Applied D1 statements: ${applied}/${statements.length}`);
+  };
+
+  for (const statement of statements) {
+    if (batchLength + statement.length > 22000) {
+      runBatch(batch);
+      batch = [];
+      batchLength = 0;
+    }
+    batch.push(statement);
+    batchLength += statement.length + 1;
+  }
+
+  runBatch(batch);
 }
 
 function syncedTaskSource(value) {
@@ -770,7 +850,9 @@ function normalizedSyncedTaskId(source, value) {
 
 function syncedTaskStatus(value) {
   const status = cleanCell(value).toLowerCase();
-  return ["done", "closed", "complete", "completed"].includes(status) ? "done" : "todo";
+  if (["done", "closed", "complete", "completed"].includes(status)) return "done";
+  if (["progress", "in-progress", "in progress", "ready for review", "review"].includes(status)) return "progress";
+  return "todo";
 }
 
 function sqlString(value) {

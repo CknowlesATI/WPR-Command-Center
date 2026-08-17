@@ -94,6 +94,23 @@ Run a fully automated extraction attempt:
 pwsh -NoProfile -ExecutionPolicy Bypass -File ".\procore-browser-sync\run-procore-browser-sync.ps1" extract-auto --ati-only --open-only
 ```
 
+The automated extractor now treats status capture as required. It reads the
+current Procore list layout, opens each observation detail page to confirm the
+actual Procore status, and retries slow browser/detail reads before failing.
+This prevents a blank or partially rendered Procore page from being accepted as
+"no observations" and clearing Command Center rows.
+
+Recommended guarded extraction command:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\procore-browser-sync\run-procore-browser-sync.ps1" extract-auto --ati-only --open-only --login-timeout 120000 --timeout 45000 --page-timeout 30000 --detail-timeout 45000 --detail-attempts 2 --attempts 2
+```
+
+Use `--allow-empty` only after manually verifying that the Procore project truly
+has no observation rows. Use `--allow-missing-status` only for investigation;
+normal syncs should fail if any extracted observation is missing a Procore
+status.
+
 This is only viable if Procore accepts username/password login without MFA, verification, SSO handoff, or CAPTCHA. If Procore requires MFA, this path is blocked for unattended automation and the next viable path is official API/service-account access from the Procore-owning company.
 
 ## Persistent Login Test

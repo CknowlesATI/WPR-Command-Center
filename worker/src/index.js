@@ -659,6 +659,7 @@ function normalizeSyncedTaskId(source, value) {
 function normalizeSyncedTaskStatus(value) {
   const status = normalizeText(value).toLowerCase();
   if (["done", "closed", "complete", "completed"].includes(status)) return "done";
+  if (["progress", "in-progress", "in progress", "ready for review", "review"].includes(status)) return "progress";
   return "todo";
 }
 

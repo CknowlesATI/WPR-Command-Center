@@ -2,12 +2,13 @@
 
 This folder restores the source-sync runner referenced by `package.json`.
 
-Pulse has usable internal JSON endpoints for project to-dos, but the PM
-Contracts schedule dates are currently only verified through the dashboard
-table. This runner keeps one clean Command Center sync path for:
+Pulse has usable internal JSON endpoints for project to-dos and PM Contracts
+schedule dates. This runner keeps one clean Command Center sync path for:
 
 - Pulse to-dos from the Pulse login/API path.
-- Pulse PM dashboard timeline dates from an extracted table.
+- Pulse PM Contracts timeline dates from the Pulse API.
+- Pulse PM dashboard timeline dates from an extracted table when explicitly
+  provided.
 - Pulse to-dos from a table/JSON file when API extraction is not desired.
 - Procore observations when exported/copied into a table or JSON file.
 
@@ -15,7 +16,9 @@ table. This runner keeps one clean Command Center sync path for:
 
 ```powershell
 pnpm pulse:dry-run -- --pulse-timeline-file .\tmp\pulse-wpr.tsv
+pnpm pulse:dry-run -- --pulse-timeline-api --no-pulse-todos
 pnpm pulse:sync -- --pulse-timeline-file .\tmp\pulse-wpr.tsv
+pnpm pulse:sync -- --pulse-timeline-api
 pnpm pulse:sync -- --pulse-timeline-file .\tmp\pulse-wpr.tsv --pulse-todos-file .\tmp\pulse-todos.tsv --procore-observations-file .\tmp\procore-observations.tsv
 pnpm pulse:search-projects -- WPR
 pnpm pulse:login-test
@@ -76,3 +79,23 @@ columns:
 - Synced Pulse and Procore tasks remain read-only inside Command Center.
 - Task sync replaces items for the source and project scope included in the
   run, then upserts the extracted items.
+
+## Morning Runner Date Cadence
+
+`run-morning-sync.ps1` runs Pulse to-dos every time it runs. It also checks
+whether Pulse timeline dates are due for refresh. By default, timeline dates
+sync daily from the Pulse PM Contracts API.
+
+Useful options:
+
+```powershell
+.\run-morning-sync.ps1 -ForcePulseTimeline
+.\run-morning-sync.ps1 -PulseTimelineCadenceDays 14
+.\run-morning-sync.ps1 -PulseTimelineFile .\tmp\pulse-wpr-timeline-2026-08-13.json
+.\run-morning-sync.ps1 -SkipPulseTimeline
+```
+
+`-PulseTimelineFile` overrides the API source for that run.
+
+The cadence state is written to `logs/pulse-timeline-sync-state.json` after a
+successful non-dry-run timeline sync.
