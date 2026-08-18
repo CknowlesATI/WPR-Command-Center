@@ -375,6 +375,23 @@
     border-radius: 8px;
     padding: 14px;
     box-shadow: var(--shadow);
+    text-align: left;
+  }
+
+  .kpi-button {
+    width: 100%;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+  }
+
+  .kpi-button:hover,
+  .kpi-button:focus-visible {
+    border-color: #bac5d4;
+    box-shadow: 0 12px 26px rgba(21, 32, 43, .12);
+    transform: translateY(-1px);
+    outline: 0;
   }
 
   .kpi strong {
@@ -1255,6 +1272,101 @@
     font-weight: 650;
   }
 
+  .overview-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(15, 23, 42, .36);
+  }
+
+  .overview-dialog {
+    width: min(560px, 100%);
+    max-height: min(680px, calc(100vh - 36px));
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+    box-shadow: 0 24px 60px rgba(21, 32, 43, .24);
+  }
+
+  .overview-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  .overview-head h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .overview-head span {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .overview-list {
+    display: grid;
+    gap: 7px;
+    max-height: min(500px, calc(100vh - 160px));
+    overflow: auto;
+    padding: 12px 16px 16px;
+  }
+
+  .overview-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    border: 1px solid #edf0f4;
+    border-radius: 8px;
+    background: #fbfcfd;
+    padding: 10px;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .overview-row:hover,
+  .overview-row:focus-visible {
+    border-color: #bac5d4;
+    outline: 0;
+  }
+
+  .overview-title {
+    font-size: 13px;
+    font-weight: 850;
+    overflow-wrap: anywhere;
+  }
+
+  .overview-meta {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 650;
+  }
+
+  .overview-count {
+    border-radius: 999px;
+    background: var(--blue-bg);
+    color: var(--blue);
+    padding: 5px 8px;
+    font-size: 11px;
+    font-weight: 850;
+    white-space: nowrap;
+  }
+
   .source-link {
     color: var(--blue);
     text-decoration: none;
@@ -1676,6 +1788,7 @@
   <section id="settingsPanel"></section>
 
   <section class="kpis" id="kpis"></section>
+  <div id="overviewModal"></div>
 
   <section>
     <div class="section-head">
@@ -1729,6 +1842,7 @@ const state = {
   query: "",
   attentionExpanded: false,
   addProjectOpen: false,
+  overviewKey: "",
   expandedProjects: new Set(),
   expandedClosedItems: new Set(),
   closingProjects: new Set(),
@@ -1748,6 +1862,68 @@ const PULSE_DASHBOARD_URL = "https://www.pulsecentral.ai/c/ati-of-america/pm-con
 const PROCORE_URL = "https://app.procore.com/";
 const CLOSE_PROJECT_CONFIRMATION = "Are you sure you want to close this project? After this action you will no longer be able to access any data stored within the Command Center";
 const TIMELINE_PHASE_ORDER = ["prewire", "trim", "handover", "install"];
+const KPI_OVERVIEWS = {
+  overdueTasks: {
+    title: "Overdue Tasks",
+    empty: "No overdue tasks match the current view.",
+    countLabel: "overdue",
+    items: projects => projects.filter(project => project.overdueTasks > 0).map(project => ({
+      project,
+      count: project.overdueTasks,
+      detail: `${project.phase || "No phase"} · ${project.area || "Unassigned"}`
+    }))
+  },
+  highPriorityTasks: {
+    title: "High Priority",
+    empty: "No high priority items match the current view.",
+    countLabel: "high",
+    items: projects => projects.filter(project => project.highPriorityTasks > 0).map(project => ({
+      project,
+      count: project.highPriorityTasks,
+      detail: `${project.phase || "No phase"} · ${project.area || "Unassigned"}`
+    }))
+  },
+  risks: {
+    title: "Open Risks",
+    empty: "No open risks match the current view.",
+    countLabel: "risk",
+    items: projects => projects.filter(project => project.risks > 0).map(project => ({
+      project,
+      count: project.risks,
+      detail: topAttentionDetail(project) || `${project.phase || "No phase"} · ${project.area || "Unassigned"}`
+    }))
+  },
+  contractsAccepted: {
+    title: "Contracts Accepted",
+    empty: "No accepted contracts match the current view.",
+    countLabel: "accepted",
+    items: projects => projects.filter(project => project.approvalsPayments.contract === "Accepted").map(project => ({
+      project,
+      count: 1,
+      detail: `${project.area || "Unassigned"} · ${project.team || "No team listed"}`
+    }))
+  },
+  depositsOpen: {
+    title: "Deposits Open",
+    empty: "No open deposits match the current view.",
+    countLabel: "deposit",
+    items: projects => projects.filter(project => ["Pending", "Overdue"].includes(project.approvalsPayments.deposit)).map(project => ({
+      project,
+      count: 1,
+      detail: `Deposit ${project.approvalsPayments.deposit || "Open"} · ${project.area || "Unassigned"}`
+    }))
+  },
+  changeOrdersReview: {
+    title: "Change Orders Need Review",
+    empty: "No change orders need review in the current view.",
+    countLabel: "change order",
+    items: projects => projects.filter(project => ["Pending", "Needs Review"].includes(project.approvalsPayments.changeOrders)).map(project => ({
+      project,
+      count: 1,
+      detail: `Change orders ${project.approvalsPayments.changeOrders || "Need Review"} · ${project.area || "Unassigned"}`
+    }))
+  }
+};
 const BIGD_CONTACTS = {
   "Big-D Units 1-6": [
     { name: "John Eagan", role: "Superintendent", note: "Primary field contact", mobile: "(435) 300-0328", primary: true },
@@ -2222,18 +2398,70 @@ function renderKpis() {
     changeOrdersReview: projects.filter(project => ["Pending", "Needs Review"].includes(project.approvalsPayments.changeOrders)).length
   };
   const cards = [
-    [totals.projects, "Visible Projects"],
-    [totals.openTasks, "Open Items"],
-    [totals.overdueTasks, "Overdue Tasks"],
-    [totals.highPriorityTasks, "High Priority"],
-    [totals.risks, "Open Risks"],
-    [totals.contractsAccepted, "Contracts Accepted"],
-    [totals.depositsOpen, "Deposits Open"],
-    [totals.changeOrdersReview, "Change Orders Need Review"]
+    ["projects", totals.projects, "Visible Projects"],
+    ["openTasks", totals.openTasks, "Open Items"],
+    ["overdueTasks", totals.overdueTasks, "Overdue Tasks"],
+    ["highPriorityTasks", totals.highPriorityTasks, "High Priority"],
+    ["risks", totals.risks, "Open Risks"],
+    ["contractsAccepted", totals.contractsAccepted, "Contracts Accepted"],
+    ["depositsOpen", totals.depositsOpen, "Deposits Open"],
+    ["changeOrdersReview", totals.changeOrdersReview, "Change Orders Need Review"]
   ];
-  document.getElementById("kpis").innerHTML = cards.map(([value, label]) => (
-    `<div class="kpi"><strong>${value}</strong><span>${label}</span></div>`
+  document.getElementById("kpis").innerHTML = cards.map(([key, value, label]) => (
+    KPI_OVERVIEWS[key]
+      ? `<button class="kpi kpi-button" type="button" data-kpi-key="${escapeAttribute(key)}" aria-haspopup="dialog"><strong>${value}</strong><span>${label}</span></button>`
+      : `<div class="kpi"><strong>${value}</strong><span>${label}</span></div>`
   )).join("");
+  renderOverviewModal();
+}
+
+function renderOverviewModal() {
+  const target = document.getElementById("overviewModal");
+  if (!target) return;
+  const config = KPI_OVERVIEWS[state.overviewKey];
+  if (!config) {
+    target.innerHTML = "";
+    return;
+  }
+  const items = config.items(visibleProjects()).sort((a, b) => a.project.name.localeCompare(b.project.name));
+  const itemTotal = items.reduce((total, item) => total + (Number(item.count) || 0), 0);
+  target.innerHTML = `
+    <div class="overview-backdrop" data-overview-close>
+      <section class="overview-dialog" role="dialog" aria-modal="true" aria-labelledby="overviewTitle">
+        <div class="overview-head">
+          <div>
+            <h2 id="overviewTitle">${escapeHtml(config.title)}</h2>
+            <span>${itemTotal} ${escapeHtml(config.title.toLowerCase())} across ${items.length} project${items.length === 1 ? "" : "s"}</span>
+          </div>
+          <button class="secondary-button" type="button" data-overview-close>Close</button>
+        </div>
+        <div class="overview-list">
+          ${items.length ? items.map(item => renderOverviewRow(item, config)).join("") : `<div class="empty">${escapeHtml(config.empty)}</div>`}
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function renderOverviewRow(item, config) {
+  const project = item.project;
+  const count = Number(item.count) || 0;
+  return `
+    <button class="overview-row" type="button" data-overview-project="${escapeAttribute(project.id)}">
+      <div>
+        <div class="overview-title">${escapeHtml(project.name)}</div>
+        <div class="overview-meta">${escapeHtml(item.detail || project.area || "Project")}</div>
+      </div>
+      <span class="overview-count">${escapeHtml(formatOverviewCount(count, config.countLabel))}</span>
+    </button>
+  `;
+}
+
+function formatOverviewCount(count, label) {
+  if (label === "accepted") return "Accepted";
+  if (["overdue", "high priority"].includes(label)) return `${count} ${label}`;
+  if (count === 1) return `1 ${label}`;
+  return `${count} ${label}s`;
 }
 
 function renderAttention() {
@@ -2380,7 +2608,7 @@ function renderProjects() {
     const projectKey = String(project.id);
     const expanded = state.expandedProjects.has(projectKey);
     return `
-    <article class="project-card ${project.attention.length ? `has-signal ${topSeverity(project.attention)}` : ""}">
+    <article class="project-card ${project.attention.length ? `has-signal ${topSeverity(project.attention)}` : ""}" data-project-card="${escapeAttribute(projectKey)}">
       <button class="project-summary" type="button" data-project-toggle="${escapeAttribute(projectKey)}" aria-expanded="${expanded}" aria-label="${expanded ? "Close" : "Open"} ${escapeAttribute(project.name)} project file">
         <div>
           <div class="project-title">${escapeHtml(project.name)}</div>
@@ -2846,6 +3074,12 @@ function topSeverity(items) {
   return items.some(item => item.severity === "red") ? "red" : items.some(item => item.severity === "amber") ? "amber" : "green";
 }
 
+function topAttentionDetail(project) {
+  const item = (project.attention || []).slice().sort((a, b) => severityScore(b.severity) - severityScore(a.severity))[0];
+  if (!item) return "";
+  return `${item.detail || item.label || "Review needed"}${item.dueDate ? ` · Due ${formatDate(item.dueDate)}` : ""}`;
+}
+
 function renderLinks(links) {
   const visibleLinks = links.filter(link => link && link.url);
   if (!visibleLinks.length) return "";
@@ -3126,6 +3360,31 @@ document.getElementById("filters").addEventListener("click", event => {
 document.addEventListener("click", event => {
   if (event.target.closest("#homeResetButton")) {
     window.location.reload();
+    return;
+  }
+
+  if (event.target.hasAttribute("data-overview-close")) {
+    state.overviewKey = "";
+    renderOverviewModal();
+    return;
+  }
+
+  const overviewButton = event.target.closest("[data-kpi-key]");
+  if (overviewButton) {
+    state.overviewKey = overviewButton.dataset.kpiKey;
+    renderOverviewModal();
+    return;
+  }
+
+  const overviewProject = event.target.closest("[data-overview-project]");
+  if (overviewProject) {
+    const projectId = String(overviewProject.dataset.overviewProject);
+    state.expandedProjects.add(projectId);
+    state.overviewKey = "";
+    renderProjects();
+    renderOverviewModal();
+    const card = document.querySelector(`[data-project-card="${cssEscape(projectId)}"]`);
+    if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
 
