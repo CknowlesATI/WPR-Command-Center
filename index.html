@@ -2023,6 +2023,7 @@ async function loadData() {
       document.getElementById("updatedText").textContent = "Live Command Center data";
       showSyncBanner("none");
       render();
+      renderSourceFreshnessBanner();
       renderAuthStatus();
       return;
     } catch (error) {
@@ -2329,6 +2330,17 @@ function renderSourceFreshness() {
       <div class="freshness-meta">${item.recordsWritten} written · ${item.projectCount} project${item.projectCount === 1 ? "" : "s"}</div>
     </article>
   `).join("");
+}
+
+function renderSourceFreshnessBanner() {
+  const sources = sourceStatuses();
+  const failed = sources.filter(item => item.status === "failed");
+  const stale = sources.filter(item => item.status !== "failed" && freshnessClass(item) === "stale");
+  if (failed.length) {
+    showSyncBanner("error", `${failed.map(item => item.label).join(" and ")} sync failed. Check Source Freshness before relying on synced items.`);
+  } else if (stale.length) {
+    showSyncBanner("warning", `${stale.map(item => item.label).join(" and ")} sync is stale or has not been recorded. Check Source Freshness before relying on synced items.`);
+  }
 }
 
 function renderSettings() {

@@ -292,6 +292,14 @@ async function commandSyncAuto(args) {
       projectCount: new Set([...tasks.map(task => String(task.projectId)), ...reviewTasks.map(task => String(task.projectId))]).size,
       message: `${tasks.length} mapped, ${reviewTasks.length} sent to review bucket.`
     }, auth);
+  } else {
+    applySyncRunToD1("procore", {
+      status: "success",
+      recordsSeen: rows.length,
+      recordsWritten: tasks.length + reviewTasks.length,
+      projectCount: new Set([...tasks.map(task => String(task.projectId)), ...reviewTasks.map(task => String(task.projectId))]).size,
+      message: `${tasks.length} mapped, ${reviewTasks.length} sent to review bucket.`
+    });
   }
 
   console.log(`Rows extracted: ${rows.length}`);
@@ -709,6 +717,10 @@ function sqlString(value) {
   return `'${String(value ?? "").replace(/'/g, "''")}'`;
 }
 
+function safeCount(value) {
+  return Math.min(Math.max(0, Math.floor(Number(value) || 0)), 1000000);
+}
+
 async function syncProcoreReviewTasks(tasks, auth, commandProjects) {
   const reviewProjectFields = {
     name: "Procore Observation Review",
@@ -788,7 +800,16 @@ async function recordCommandCenterSyncRun(source, payload, auth) {
 
 async function reportProcoreSyncFailure(error) {
   const auth = await getCommandCenterAuthIfConfigured();
-  if (!auth) return;
+  if (!auth) {
+    applySyncRunToD1("procore", {
+      status: "failed",
+      recordsSeen: 0,
+      recordsWritten: 0,
+      projectCount: 0,
+      message: error.message || "Procore sync failed."
+    });
+    return;
+  }
   await recordCommandCenterSyncRun("procore", {
     status: "failed",
     recordsSeen: 0,
@@ -796,6 +817,23 @@ async function reportProcoreSyncFailure(error) {
     projectCount: 0,
     message: error.message || "Procore sync failed."
   }, auth);
+}
+
+function applySyncRunToD1(source, payload) {
+  const now = new Date().toISOString();
+  const status = ["success", "failed", "skipped"].includes(String(payload.status || "").toLowerCase()) ? String(payload.status).toLowerCase() : "unknown";
+  const lastSuccessAt = status === "success" ? now : "";
+  const message = String(payload.message || "").trim().slice(0, 500);
+  const line = "INSERT INTO sync_runs (source, label, status, last_attempt_at, last_success_at, records_seen, records_written, project_count, message, updated_at, updated_by) VALUES " +
+    `(${sqlString(source)}, ${sqlString(source === "procore" ? "Procore" : source)}, ${sqlString(status)}, ${sqlString(now)}, ${sqlString(lastSuccessAt)}, ` +
+    `${safeCount(payload.recordsSeen)}, ${safeCount(payload.recordsWritten)}, ${safeCount(payload.projectCount)}, ${sqlString(message)}, ${sqlString(now)}, 'SYNC') ` +
+    "ON CONFLICT(source) DO UPDATE SET label = excluded.label, status = excluded.status, last_attempt_at = excluded.last_attempt_at, " +
+    "last_success_at = CASE WHEN excluded.status = 'success' THEN excluded.last_success_at ELSE sync_runs.last_success_at END, " +
+    "records_seen = excluded.records_seen, records_written = excluded.records_written, project_count = excluded.project_count, " +
+    "message = excluded.message, updated_at = excluded.updated_at, updated_by = excluded.updated_by;";
+  fs.mkdirSync(path.dirname(SQL_OUTPUT_PATH), { recursive: true });
+  fs.writeFileSync(SQL_OUTPUT_PATH, `${line}\n`, "utf8");
+  applySqlFileToD1(SQL_OUTPUT_PATH);
 }
 
 function commandCenterHeaders(auth) {

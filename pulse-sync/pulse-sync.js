@@ -105,6 +105,12 @@ async function main() {
             ...stats,
             message: `Sync stopped with ${plan.errors.length} plan error(s).`
           }, auth);
+        } else {
+          applySyncRunToD1("pulse", {
+            status: "failed",
+            ...stats,
+            message: `Sync stopped with ${plan.errors.length} plan error(s).`
+          });
         }
         console.error("Sync stopped because the plan has errors.");
         process.exitCode = 1;
@@ -115,6 +121,12 @@ async function main() {
             ...stats,
             message: "No source changes were ready to sync."
           }, auth);
+        } else {
+          applySyncRunToD1("pulse", {
+            status: "success",
+            ...stats,
+            message: "No source changes were ready to sync."
+          });
         }
         console.log("No date or source-task changes are ready to sync.");
       } else {
@@ -136,6 +148,11 @@ async function main() {
           }, auth);
         } else {
           applyPlanToD1(plan);
+          applySyncRunToD1("pulse", {
+            status: "success",
+            ...stats,
+            message: `Synced ${stats.recordsWritten} Pulse record(s).`
+          });
         }
 
         console.log("Source sync complete.");
@@ -841,6 +858,23 @@ function applyPlanToD1(plan) {
   applySqlFileToD1(SQL_OUTPUT_PATH);
 }
 
+function applySyncRunToD1(source, payload) {
+  const now = new Date().toISOString();
+  const status = ["success", "failed", "skipped"].includes(String(payload.status || "").toLowerCase()) ? String(payload.status).toLowerCase() : "unknown";
+  const lastSuccessAt = status === "success" ? now : "";
+  const message = cleanCell(payload.message || "").slice(0, 500);
+  const line = "INSERT INTO sync_runs (source, label, status, last_attempt_at, last_success_at, records_seen, records_written, project_count, message, updated_at, updated_by) VALUES " +
+    `(${sqlString(source)}, ${sqlString(source === "pulse" ? "Pulse" : source)}, ${sqlString(status)}, ${sqlString(now)}, ${sqlString(lastSuccessAt)}, ` +
+    `${safeCount(payload.recordsSeen)}, ${safeCount(payload.recordsWritten)}, ${safeCount(payload.projectCount)}, ${sqlString(message)}, ${sqlString(now)}, 'SYNC') ` +
+    "ON CONFLICT(source) DO UPDATE SET label = excluded.label, status = excluded.status, last_attempt_at = excluded.last_attempt_at, " +
+    "last_success_at = CASE WHEN excluded.status = 'success' THEN excluded.last_success_at ELSE sync_runs.last_success_at END, " +
+    "records_seen = excluded.records_seen, records_written = excluded.records_written, project_count = excluded.project_count, " +
+    "message = excluded.message, updated_at = excluded.updated_at, updated_by = excluded.updated_by;";
+  mkdirSync(path.dirname(SQL_OUTPUT_PATH), { recursive: true });
+  writeFileSync(SQL_OUTPUT_PATH, `${line}\n`, "utf8");
+  applySqlFileToD1(SQL_OUTPUT_PATH);
+}
+
 function appendSourceTaskSyncSql(lines, sync) {
   const source = syncedTaskSource(sync.source);
   const replaceProjectIds = [...new Set((sync.replaceProjectIds || []).map(String).filter(Boolean))];
@@ -931,6 +965,10 @@ function syncedTaskStatus(value) {
 
 function sqlString(value) {
   return `'${String(value ?? "").replace(/'/g, "''")}'`;
+}
+
+function safeCount(value) {
+  return Math.min(Math.max(0, Math.floor(Number(value) || 0)), 1000000);
 }
 
 function commandCenterApiUrl() {
