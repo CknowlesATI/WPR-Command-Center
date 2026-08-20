@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-20T19:54:59.204Z",
+  "lastUpdated": "2026-08-20T20:41:26.286Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -119,7 +119,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 14,
+      "openTasks": 13,
       "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -204,12 +204,6 @@
         },
         {
           "name": "Install: Still need the customers WiFi SSID and password",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Parts Shuffle: From WPR 101 (10ea) James: PD42-2 for WPR Townhome 1, Unit 2.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1373,7 +1367,7 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 12,
+      "openTasks": 13,
       "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1446,6 +1440,12 @@
         },
         {
           "name": "Install: Swap bed cam. To cam 102 at the panel",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Swap elevator Camera screws for decorative screws",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1824,7 +1824,7 @@
         },
         {
           "name": "Procore #893: A/V complete in AV room",
-          "status": "todo",
+          "status": "progress",
           "source": "Procore",
           "externalUrl": ""
         }
