@@ -60,14 +60,15 @@ async function applyAction(db, body, actor, env) {
 
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
   if (body.action === "updateTimeline") return updateTimeline(db, body);
-  if (body.action === "syncPulseTimelines") return syncPulseTimelines(db, body);
+  if (body.action === "syncPulseTimelines") return syncPulseTimelines(db, body, actor);
   if (body.action === "setProjectPhase") return setProjectPhase(db, body);
   if (body.action === "addProject") return addProject(db, body, actor);
   if (body.action === "closeProject") return closeProject(db, body, actor);
   if (body.action === "addTask") return addTask(db, body, actor, env);
   if (body.action === "updateTask") return updateTask(db, body, actor);
-  if (body.action === "syncSourceTasks") return syncSourceTasks(db, body);
+  if (body.action === "syncSourceTasks") return syncSourceTasks(db, body, actor);
   if (body.action === "deleteTask") return deleteTask(db, body.taskId);
+  if (body.action === "recordSyncRun") return recordSyncRun(db, body, actor);
   if (body.action === "addNotificationRecipient") return addNotificationRecipient(db, body, actor);
   if (body.action === "removeNotificationRecipient") return removeNotificationRecipient(db, body);
 
@@ -127,9 +128,10 @@ async function getAllData(db) {
 }
 
 async function getSettings(db, env) {
-  const [recipients, notificationLog] = await Promise.all([
+  const [recipients, notificationLog, sources] = await Promise.all([
     db.prepare("SELECT email, created_by, created_at FROM notification_recipients ORDER BY email").all(),
-    db.prepare("SELECT created_at, status, subject, recipient_count, provider_id, error FROM notification_log ORDER BY id DESC LIMIT 5").all()
+    db.prepare("SELECT created_at, status, subject, recipient_count, provider_id, error FROM notification_log ORDER BY id DESC LIMIT 5").all(),
+    getSourceStatus(db)
   ]);
   return {
     notifications: {
@@ -147,17 +149,19 @@ async function getSettings(db, env) {
         providerId: row.provider_id || "",
         error: row.error || ""
       }))
-    }
+    },
+    sources
   };
 }
 
-function getPublicSettings(env) {
+async function getPublicSettings(db, env) {
   return {
     notifications: {
       recipients: [],
       emailConfigured: notificationsConfigured(env),
       recent: []
-    }
+    },
+    sources: await getSourceStatus(db)
   };
 }
 
@@ -165,7 +169,65 @@ async function getReadableSettings(request, db, env) {
   const expectedCode = normalizeText(env.ACCESS_CODE || env.WRITE_TOKEN || "");
   const session = request.headers.get("x-command-center-session") || "";
   if (expectedCode && session && await verifySession(session, env)) return getSettings(db, env);
-  return getPublicSettings(env);
+  return getPublicSettings(db, env);
+}
+
+async function getSourceStatus(db) {
+  const rows = await db.prepare(`
+    SELECT source, label, status, last_attempt_at, last_success_at, records_seen, records_written, project_count, message, updated_at, updated_by
+    FROM sync_runs
+    ORDER BY CASE source WHEN 'pulse' THEN 1 WHEN 'procore' THEN 2 ELSE 3 END, source
+  `).all();
+  return (rows.results || []).map(row => ({
+    source: row.source || "",
+    label: row.label || sourceLabel(row.source),
+    status: row.status || "unknown",
+    lastAttemptAt: row.last_attempt_at || "",
+    lastSuccessAt: row.last_success_at || "",
+    recordsSeen: Number(row.records_seen) || 0,
+    recordsWritten: Number(row.records_written) || 0,
+    projectCount: Number(row.project_count) || 0,
+    message: row.message || "",
+    updatedAt: row.updated_at || "",
+    updatedBy: row.updated_by || ""
+  }));
+}
+
+async function recordSyncRun(db, body, actor) {
+  return upsertSyncRun(db, normalizeSyncRun(body), actor);
+}
+
+async function upsertSyncRun(db, run, actor) {
+  const now = new Date().toISOString();
+  const attemptedAt = run.at || now;
+  const successAt = run.status === "success" ? attemptedAt : "";
+  await db.prepare(`
+    INSERT INTO sync_runs (source, label, status, last_attempt_at, last_success_at, records_seen, records_written, project_count, message, updated_at, updated_by)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(source) DO UPDATE SET
+      label = excluded.label,
+      status = excluded.status,
+      last_attempt_at = excluded.last_attempt_at,
+      last_success_at = CASE WHEN excluded.status = 'success' THEN excluded.last_success_at ELSE sync_runs.last_success_at END,
+      records_seen = excluded.records_seen,
+      records_written = excluded.records_written,
+      project_count = excluded.project_count,
+      message = excluded.message,
+      updated_at = excluded.updated_at,
+      updated_by = excluded.updated_by
+  `).bind(
+    run.source,
+    run.label || sourceLabel(run.source),
+    run.status,
+    attemptedAt,
+    successAt,
+    run.recordsSeen,
+    run.recordsWritten,
+    run.projectCount,
+    run.message,
+    now,
+    actor.initials
+  ).run();
 }
 
 async function updateProjectControl(db, body, actor) {
@@ -211,7 +273,7 @@ async function updateTimeline(db, body) {
   if (!result.meta || result.meta.changes === 0) throw new Error(`Timeline row not found: ${projectId} / ${key}`);
 }
 
-async function syncPulseTimelines(db, body) {
+async function syncPulseTimelines(db, body, actor) {
   const items = normalizePulseTimelineItems(body.items);
   if (!items.length) throw new Error("No Pulse timeline matches were provided.");
 
@@ -234,6 +296,15 @@ async function syncPulseTimelines(db, body) {
 
   if (!statements.length) throw new Error("No valid Pulse dates were provided.");
   await db.batch(statements);
+  await upsertSyncRun(db, {
+    source: "pulse",
+    label: "Pulse",
+    status: "success",
+    recordsSeen: items.length,
+    recordsWritten: statements.length,
+    projectCount: projectIds.length,
+    message: `Updated ${statements.length} timeline date(s).`
+  }, actor);
 }
 
 async function setProjectPhase(db, body) {
@@ -444,7 +515,7 @@ async function deleteTask(db, taskIdValue) {
   return deleteById(db, "tasks", taskId);
 }
 
-async function syncSourceTasks(db, body) {
+async function syncSourceTasks(db, body, actor) {
   const { source, tasks, replaceProjectIds } = normalizeSourceTaskSync(body);
   if (!tasks.length && !replaceProjectIds.length) throw new Error("No synced source tasks were provided.");
 
@@ -486,6 +557,15 @@ async function syncSourceTasks(db, body) {
   });
 
   await db.batch(statements);
+  await upsertSyncRun(db, {
+    source: source.primary,
+    label: source.primary === "procore" ? "Procore" : "Pulse",
+    status: "success",
+    recordsSeen: tasks.length,
+    recordsWritten: tasks.length,
+    projectCount: projectIds.length,
+    message: `Synced ${tasks.length} item(s) across ${projectIds.length} project scope(s).`
+  }, actor);
 }
 
 async function deleteById(db, table, id) {
@@ -686,6 +766,52 @@ function normalizeSyncedTaskStatus(value) {
   if (["done", "closed", "complete", "completed"].includes(status)) return "done";
   if (["progress", "in-progress", "in progress", "ready for review", "review"].includes(status)) return "progress";
   return "todo";
+}
+
+function normalizeSyncRun(body) {
+  const source = normalizeSyncRunSource(body.source);
+  return {
+    source,
+    label: normalizeText(body.label || sourceLabel(source)).slice(0, 80),
+    status: normalizeSyncRunStatus(body.status),
+    at: normalizeIsoTimestamp(body.at || ""),
+    recordsSeen: clampCount(body.recordsSeen),
+    recordsWritten: clampCount(body.recordsWritten),
+    projectCount: clampCount(body.projectCount),
+    message: normalizeText(body.message || "").slice(0, 500)
+  };
+}
+
+function normalizeSyncRunSource(value) {
+  const source = normalizeText(value).toLowerCase();
+  if (source === "pulse") return "pulse";
+  if (source === "procore" || source === "procore-review") return "procore";
+  throw new Error(`Invalid sync source: ${source}`);
+}
+
+function normalizeSyncRunStatus(value) {
+  const status = normalizeText(value).toLowerCase();
+  if (["success", "failed", "skipped"].includes(status)) return status;
+  return "unknown";
+}
+
+function normalizeIsoTimestamp(value) {
+  const text = normalizeText(value);
+  if (!text) return "";
+  const date = new Date(text);
+  if (Number.isNaN(date.getTime())) throw new Error(`Invalid timestamp: ${text}`);
+  return date.toISOString();
+}
+
+function clampCount(value) {
+  const count = Math.max(0, Math.floor(Number(value) || 0));
+  return Math.min(count, 1000000);
+}
+
+function sourceLabel(source) {
+  if (source === "pulse") return "Pulse";
+  if (source === "procore") return "Procore";
+  return source || "Source";
 }
 
 function normalizeProjectPhase(value) {

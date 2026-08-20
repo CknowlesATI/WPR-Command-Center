@@ -53,57 +53,94 @@ if (!["login-test", "dry-run", "sync", "search-projects"].includes(command)) {
   exitWithUsage(`Unknown command: ${command}`);
 }
 
-const live = await readCommandCenter();
-
-if (command === "login-test") {
-  const token = await loginToPulse();
-  const me = await pulseGet(token, "/api/auth/me");
-  const user = me && me.user ? me.user : me;
-  console.log(`Pulse login ok: ${user.email || user.username || user.name || "current user"}`);
-} else if (command === "search-projects") {
-  const query = args._.slice(1).join(" ").trim();
-  if (query && pulseCredentialsAvailable()) {
-    const token = await loginToPulse();
-    const projects = await searchPulseProjects(token, query);
-    console.log(`Pulse project search "${query}" found: ${projects.length}`);
-    projects.slice(0, 50).forEach(project => {
-      console.log(`${pulseProjectId(project)}\t${pulseProjectName(project) || "(unnamed)"}`);
-    });
-    if (projects.length > 50) console.log(`...and ${projects.length - 50} more.`);
-  } else {
-    live.projects.forEach(project => {
-      console.log(`${project.id}\t${project.name}\t${project.segment || project.projectGroup || ""}`);
+try {
+  await main();
+} catch (error) {
+  console.error(`Pulse sync failed: ${error.message}`);
+  if (command === "sync") {
+    await reportSyncFailure(error).catch(reportError => {
+      console.error(`Pulse sync failure could not be reported: ${reportError.message}`);
     });
   }
-} else {
-  const plan = await buildSyncPlan(live.projects, args);
-  printPlan(plan);
+  process.exitCode = 1;
+}
 
-  if (command === "dry-run") {
-    process.exitCode = plan.errors.length ? 1 : 0;
-  } else if (plan.errors.length) {
-    console.error("Sync stopped because the plan has errors.");
-    process.exitCode = 1;
-  } else if (!plan.timelineItems.length && !plan.taskSyncs.length) {
-    console.log("No date or source-task changes are ready to sync.");
-  } else {
-    const auth = await getAuthIfConfigured();
+async function main() {
+  const live = await readCommandCenter();
 
-    if (auth) {
-      if (plan.timelineItems.length) {
-        await postUpdate("syncPulseTimelines", { items: plan.timelineItems }, auth);
-        console.log(`Synced Pulse timeline dates for ${plan.timelineItems.length} project(s).`);
-      }
-
-      for (const taskSync of plan.taskSyncs) {
-        await postUpdate("syncSourceTasks", taskSync, auth);
-        console.log(`Synced ${taskSync.source} items: ${taskSync.tasks.length} task(s), ${taskSync.replaceProjectIds.length} project scope(s).`);
-      }
+  if (command === "login-test") {
+    const token = await loginToPulse();
+    const me = await pulseGet(token, "/api/auth/me");
+    const user = me && me.user ? me.user : me;
+    console.log(`Pulse login ok: ${user.email || user.username || user.name || "current user"}`);
+  } else if (command === "search-projects") {
+    const query = args._.slice(1).join(" ").trim();
+    if (query && pulseCredentialsAvailable()) {
+      const token = await loginToPulse();
+      const projects = await searchPulseProjects(token, query);
+      console.log(`Pulse project search "${query}" found: ${projects.length}`);
+      projects.slice(0, 50).forEach(project => {
+        console.log(`${pulseProjectId(project)}\t${pulseProjectName(project) || "(unnamed)"}`);
+      });
+      if (projects.length > 50) console.log(`...and ${projects.length - 50} more.`);
     } else {
-      applyPlanToD1(plan);
+      live.projects.forEach(project => {
+        console.log(`${project.id}\t${project.name}\t${project.segment || project.projectGroup || ""}`);
+      });
     }
+  } else {
+    const plan = await buildSyncPlan(live.projects, args);
+    printPlan(plan);
 
-    console.log("Source sync complete.");
+    if (command === "dry-run") {
+      process.exitCode = plan.errors.length ? 1 : 0;
+    } else {
+      const auth = await getAuthIfConfigured();
+      const stats = pulseSyncStats(plan);
+
+      if (plan.errors.length) {
+        if (auth) {
+          await recordCommandCenterSyncRun("pulse", {
+            status: "failed",
+            ...stats,
+            message: `Sync stopped with ${plan.errors.length} plan error(s).`
+          }, auth);
+        }
+        console.error("Sync stopped because the plan has errors.");
+        process.exitCode = 1;
+      } else if (!plan.timelineItems.length && !plan.taskSyncs.length) {
+        if (auth) {
+          await recordCommandCenterSyncRun("pulse", {
+            status: "success",
+            ...stats,
+            message: "No source changes were ready to sync."
+          }, auth);
+        }
+        console.log("No date or source-task changes are ready to sync.");
+      } else {
+        if (auth) {
+          if (plan.timelineItems.length) {
+            await postUpdate("syncPulseTimelines", { items: plan.timelineItems }, auth);
+            console.log(`Synced Pulse timeline dates for ${plan.timelineItems.length} project(s).`);
+          }
+
+          for (const taskSync of plan.taskSyncs) {
+            await postUpdate("syncSourceTasks", taskSync, auth);
+            console.log(`Synced ${taskSync.source} items: ${taskSync.tasks.length} task(s), ${taskSync.replaceProjectIds.length} project scope(s).`);
+          }
+
+          await recordCommandCenterSyncRun("pulse", {
+            status: "success",
+            ...stats,
+            message: `Synced ${stats.recordsWritten} Pulse record(s).`
+          }, auth);
+        } else {
+          applyPlanToD1(plan);
+        }
+
+        console.log("Source sync complete.");
+      }
+    }
   }
 }
 
@@ -724,6 +761,43 @@ async function postUpdate(action, payload, auth) {
   }
   if (!response.ok || data.ok === false) throw new Error(data.error || `Command Center update failed (${response.status})`);
   return data;
+}
+
+async function recordCommandCenterSyncRun(source, payload, auth) {
+  return postUpdate("recordSyncRun", {
+    source,
+    label: source === "pulse" ? "Pulse" : source,
+    ...payload
+  }, auth);
+}
+
+async function reportSyncFailure(error) {
+  const auth = await getAuthIfConfigured();
+  if (!auth) return;
+  await recordCommandCenterSyncRun("pulse", {
+    status: "failed",
+    recordsSeen: 0,
+    recordsWritten: 0,
+    projectCount: 0,
+    message: error.message || "Pulse sync failed."
+  }, auth);
+}
+
+function pulseSyncStats(plan) {
+  const taskCount = plan.taskSyncs.reduce((total, sync) => total + sync.tasks.length, 0);
+  const taskProjectCount = plan.taskSyncs.reduce((ids, sync) => {
+    sync.replaceProjectIds.forEach(id => ids.add(String(id)));
+    sync.tasks.forEach(task => ids.add(String(task.projectId)));
+    return ids;
+  }, new Set());
+  plan.timelineItems.forEach(item => taskProjectCount.add(String(item.projectId)));
+  const timelineCount = plan.timelineItems.reduce((total, item) => total + item.timelines.length, 0);
+  const recordsSeen = taskCount + plan.timelineMatches.length + plan.unmatched.length;
+  return {
+    recordsSeen,
+    recordsWritten: taskCount + timelineCount,
+    projectCount: taskProjectCount.size
+  };
 }
 
 async function getAuthIfConfigured() {

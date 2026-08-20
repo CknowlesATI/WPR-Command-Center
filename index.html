@@ -332,6 +332,50 @@
     color: var(--red);
   }
 
+  .source-freshness {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -3px 0 14px;
+  }
+
+  .freshness-pill {
+    display: grid;
+    gap: 3px;
+    min-width: 178px;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--muted);
+    border-radius: 8px;
+    background: #fff;
+    padding: 8px 10px;
+  }
+
+  .freshness-pill.good { border-left-color: var(--green); }
+  .freshness-pill.stale { border-left-color: var(--amber); }
+  .freshness-pill.failed { border-left-color: var(--red); }
+
+  .freshness-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 850;
+  }
+
+  .freshness-title span:last-child {
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+
+  .freshness-meta {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
   .edit-note {
     margin-top: 5px;
     color: var(--muted);
@@ -1785,6 +1829,7 @@
       <div class="filters" id="filters"></div>
     </div>
   </div>
+  <section class="source-freshness" id="sourceFreshness"></section>
   <section id="settingsPanel"></section>
 
   <section class="kpis" id="kpis"></section>
@@ -1847,7 +1892,7 @@ const state = {
   expandedClosedItems: new Set(),
   closingProjects: new Set(),
   settingsOpen: false,
-  settings: { notifications: { recipients: [], emailConfigured: false } },
+  settings: { notifications: { recipients: [], emailConfigured: false }, sources: [] },
   pulseSync: { input: "", preview: null },
   saving: false,
   live: false,
@@ -2095,6 +2140,7 @@ function timelinePhaseIndex(key) {
 function normalizeSettings(settings = {}) {
   const notifications = settings.notifications && typeof settings.notifications === "object" ? settings.notifications : {};
   const recipients = Array.isArray(notifications.recipients) ? notifications.recipients : [];
+  const sources = Array.isArray(settings.sources) ? settings.sources : [];
   return {
     notifications: {
       recipients: recipients.map(item => ({
@@ -2111,7 +2157,20 @@ function normalizeSettings(settings = {}) {
         providerId: String(item.providerId || "").trim(),
         error: String(item.error || "").trim()
       })) : []
-    }
+    },
+    sources: sources.map(item => ({
+      source: String(item.source || "").trim(),
+      label: String(item.label || item.source || "Source").trim(),
+      status: String(item.status || "unknown").trim(),
+      lastAttemptAt: String(item.lastAttemptAt || "").trim(),
+      lastSuccessAt: String(item.lastSuccessAt || "").trim(),
+      recordsSeen: Number(item.recordsSeen) || 0,
+      recordsWritten: Number(item.recordsWritten) || 0,
+      projectCount: Number(item.projectCount) || 0,
+      message: String(item.message || "").trim(),
+      updatedAt: String(item.updatedAt || "").trim(),
+      updatedBy: String(item.updatedBy || "").trim()
+    })).filter(item => item.source)
   };
 }
 
@@ -2247,12 +2306,29 @@ function isDashboardProject(project) {
 
 function render() {
   renderFilters();
+  renderSourceFreshness();
   renderSettings();
   renderKpis();
   renderAttention();
   renderTimeline();
   renderProjectTemplate();
   renderProjects();
+}
+
+function renderSourceFreshness() {
+  const panel = document.getElementById("sourceFreshness");
+  if (!panel) return;
+  const sources = sourceStatuses();
+  panel.innerHTML = sources.map(item => `
+    <article class="freshness-pill ${freshnessClass(item)}">
+      <div class="freshness-title">
+        <strong>${escapeHtml(item.label)}</strong>
+        <span>${escapeHtml(freshnessStateLabel(item))}</span>
+      </div>
+      <div class="freshness-meta">${escapeHtml(freshnessTiming(item))}</div>
+      <div class="freshness-meta">${item.recordsWritten} written · ${item.projectCount} project${item.projectCount === 1 ? "" : "s"}</div>
+    </article>
+  `).join("");
 }
 
 function renderSettings() {
@@ -2268,6 +2344,7 @@ function renderSettings() {
   const recipients = state.settings.notifications.recipients;
   const configured = state.settings.notifications.emailConfigured;
   const recent = state.settings.notifications.recent;
+  const sources = sourceStatuses();
   panel.innerHTML = `
     <div class="settings-panel">
       <div class="settings-grid">
@@ -2298,6 +2375,18 @@ function renderSettings() {
           </div>
         </div>
         <div>
+          <h2 class="settings-title">Source Freshness</h2>
+          <div class="recipient-list">
+            ${sources.map(item => `
+              <div class="recipient-row">
+                <div>
+                  <div class="recipient-email">${escapeHtml(item.label)}</div>
+                  <div class="edit-note">${escapeHtml(freshnessTiming(item))}${item.message ? ` · ${escapeHtml(item.message)}` : ""}</div>
+                </div>
+                <span class="source-chip ${escapeAttribute(item.source)}">${escapeHtml(freshnessStateLabel(item))}</span>
+              </div>
+            `).join("")}
+          </div>
           <h2 class="settings-title">Add Recipient</h2>
           <div class="settings-form">
             <input id="notificationEmailInput" type="email" placeholder="name@example.com" ${state.saving ? "disabled" : ""}>
@@ -2308,6 +2397,43 @@ function renderSettings() {
       </div>
     </div>
   `;
+}
+
+function sourceStatuses() {
+  const bySource = new Map((state.settings.sources || []).map(item => [item.source, item]));
+  return ["pulse", "procore"].map(source => ({
+    source,
+    label: source === "pulse" ? "Pulse" : "Procore",
+    status: "unknown",
+    lastAttemptAt: "",
+    lastSuccessAt: "",
+    recordsSeen: 0,
+    recordsWritten: 0,
+    projectCount: 0,
+    message: "No sync run has been recorded yet.",
+    ...(bySource.get(source) || {})
+  }));
+}
+
+function freshnessClass(item) {
+  if (item.status === "failed") return "failed";
+  if (!item.lastSuccessAt) return "stale";
+  const ageMs = Date.now() - new Date(item.lastSuccessAt).getTime();
+  if (!Number.isFinite(ageMs) || ageMs > 30 * 60 * 60 * 1000) return "stale";
+  return "good";
+}
+
+function freshnessStateLabel(item) {
+  if (item.status === "failed") return "Failed";
+  if (!item.lastSuccessAt) return "Not Recorded";
+  if (freshnessClass(item) === "stale") return "Stale";
+  return "Fresh";
+}
+
+function freshnessTiming(item) {
+  if (item.lastSuccessAt) return `Last success ${formatDateTime(item.lastSuccessAt)}`;
+  if (item.lastAttemptAt) return `Last attempt ${formatDateTime(item.lastAttemptAt)}`;
+  return "No sync run recorded";
 }
 
 function renderPulseSyncPanel() {

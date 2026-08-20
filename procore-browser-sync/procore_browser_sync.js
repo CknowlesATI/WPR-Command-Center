@@ -284,6 +284,15 @@ async function commandSyncAuto(args) {
     : [];
   const result = await syncToCommandCenter(tasks, replaceProjectIds, auth);
   const reviewResult = await syncProcoreReviewTasks(reviewTasks, auth, commandProjects);
+  if (auth) {
+    await recordCommandCenterSyncRun("procore", {
+      status: "success",
+      recordsSeen: rows.length,
+      recordsWritten: tasks.length + reviewTasks.length,
+      projectCount: new Set([...tasks.map(task => String(task.projectId)), ...reviewTasks.map(task => String(task.projectId))]).size,
+      message: `${tasks.length} mapped, ${reviewTasks.length} sent to review bucket.`
+    }, auth);
+  }
 
   console.log(`Rows extracted: ${rows.length}`);
   console.log(`Rows mapped to Command Center: ${tasks.length}`);
@@ -760,6 +769,33 @@ async function getCommandCenterAuthIfConfigured() {
   const data = await response.json();
   if (!response.ok || data.ok === false || !data.token) throw new Error(data.error || "Command Center authorization failed.");
   return { token: data.token, initials: data.initials || initials };
+}
+
+async function recordCommandCenterSyncRun(source, payload, auth) {
+  const json = await requestJson(commandCenterApiUrl(), {
+    method: "POST",
+    headers: commandCenterHeaders(auth),
+    body: JSON.stringify({
+      action: "recordSyncRun",
+      source,
+      label: source === "procore" ? "Procore" : source,
+      ...payload
+    })
+  });
+  if (json && json.ok === false) throw new Error(json.error || "Command Center sync status update failed");
+  return json;
+}
+
+async function reportProcoreSyncFailure(error) {
+  const auth = await getCommandCenterAuthIfConfigured();
+  if (!auth) return;
+  await recordCommandCenterSyncRun("procore", {
+    status: "failed",
+    recordsSeen: 0,
+    recordsWritten: 0,
+    projectCount: 0,
+    message: error.message || "Procore sync failed."
+  }, auth);
 }
 
 function commandCenterHeaders(auth) {
@@ -1487,7 +1523,13 @@ async function main() {
   throw new Error(`Unknown command: ${command}`);
 }
 
-main().catch(error => {
+main().catch(async error => {
   console.error(`Procore browser sync failed: ${error.message}`);
+  const command = (process.argv.slice(2).find(value => !value.startsWith("--")) || "").trim();
+  if (command === "sync-auto") {
+    await reportProcoreSyncFailure(error).catch(reportError => {
+      console.error(`Procore sync failure could not be reported: ${reportError.message}`);
+    });
+  }
   process.exitCode = 1;
 });
