@@ -1966,7 +1966,8 @@ const fallbackData = {
 async function loadData() {
   if (SYNC_ENABLED) {
     try {
-      const response = await fetch(API_URL, { cache: "no-store" });
+      const headers = authIsValid() ? { "x-command-center-session": state.auth.token } : {};
+      const response = await fetch(API_URL, { cache: "no-store", headers });
       if (!response.ok) throw new Error(`Live API unavailable (${response.status})`);
       const data = await response.json();
       const projects = Array.isArray(data) ? data : data.data;

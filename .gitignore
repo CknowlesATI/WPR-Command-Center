@@ -3,4 +3,7 @@
 node_modules/
 pulse-sync/.env
 pulse-sync/logs/
+procore-browser-sync/.env
+procore-browser-sync/logs/
+procore-browser-sync/output/
 tmp/

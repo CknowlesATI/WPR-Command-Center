@@ -37,7 +37,7 @@ export default {
 
     try {
       if (request.method === "GET") {
-        return json({ ok: true, data: await getAllData(env.DB), settings: await getSettings(env.DB, env) });
+        return json({ ok: true, data: await getAllData(env.DB), settings: await getReadableSettings(request, env.DB, env) });
       }
 
       if (request.method === "POST") {
@@ -67,7 +67,7 @@ async function applyAction(db, body, actor, env) {
   if (body.action === "addTask") return addTask(db, body, actor, env);
   if (body.action === "updateTask") return updateTask(db, body, actor);
   if (body.action === "syncSourceTasks") return syncSourceTasks(db, body);
-  if (body.action === "deleteTask") return deleteById(db, "tasks", body.taskId);
+  if (body.action === "deleteTask") return deleteTask(db, body.taskId);
   if (body.action === "addNotificationRecipient") return addNotificationRecipient(db, body, actor);
   if (body.action === "removeNotificationRecipient") return removeNotificationRecipient(db, body);
 
@@ -149,6 +149,23 @@ async function getSettings(db, env) {
       }))
     }
   };
+}
+
+function getPublicSettings(env) {
+  return {
+    notifications: {
+      recipients: [],
+      emailConfigured: notificationsConfigured(env),
+      recent: []
+    }
+  };
+}
+
+async function getReadableSettings(request, db, env) {
+  const expectedCode = normalizeText(env.ACCESS_CODE || env.WRITE_TOKEN || "");
+  const session = request.headers.get("x-command-center-session") || "";
+  if (expectedCode && session && await verifySession(session, env)) return getSettings(db, env);
+  return getPublicSettings(env);
 }
 
 async function updateProjectControl(db, body, actor) {
@@ -419,6 +436,14 @@ async function updateTask(db, body, actor) {
   if (!result.meta || result.meta.changes === 0) throw new Error(`Task row not found: ${taskId}`);
 }
 
+async function deleteTask(db, taskIdValue) {
+  const taskId = required(taskIdValue, "taskId");
+  const existing = await db.prepare("SELECT source FROM tasks WHERE id = ?").bind(taskId).first();
+  if (!existing) throw new Error(`Task row not found: ${taskId}`);
+  if (!isManualTaskSource(existing.source)) throw new Error("Synced Pulse and Procore items cannot be deleted in Command Center.");
+  return deleteById(db, "tasks", taskId);
+}
+
 async function syncSourceTasks(db, body) {
   const { source, tasks, replaceProjectIds } = normalizeSourceTaskSync(body);
   if (!tasks.length && !replaceProjectIds.length) throw new Error("No synced source tasks were provided.");
@@ -516,7 +541,7 @@ async function createSession(body, env) {
 
 async function authorizeWrite(request, env) {
   const expectedCode = normalizeText(env.ACCESS_CODE || env.WRITE_TOKEN || "");
-  if (!expectedCode) return { initials: normalizeInitials(request.headers.get("x-command-center-initials") || "CC") };
+  if (!expectedCode) throw unauthorized("Command Center write access is not configured.");
 
   const session = request.headers.get("x-command-center-session") || "";
   const actor = await verifySession(session, env);

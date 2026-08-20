@@ -40,7 +40,8 @@ jobs:
           if [ -n "$COMMAND_CENTER_API_URL" ]; then
             node hosted-command-center/tools/export-hosted-data.mjs --url "$COMMAND_CENTER_API_URL"
           else
-            echo "COMMAND_CENTER_API_URL is not set. Using checked-in hosted data."
+            echo "::error::COMMAND_CENTER_API_URL is not set. Refusing to deploy a stale hosted data snapshot."
+            exit 1
           fi
 
       - name: Validate hosted data
