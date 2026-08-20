@@ -3134,6 +3134,7 @@ function renderTaskMeta(task, closed) {
   const parts = [task.source ? renderTaskSource(task, closed) : "Command Center"];
   if (task.priority) parts.push(`${titleCase(task.priority)} priority`);
   if (task.dueDate) parts.push(`Due ${formatDate(task.dueDate)}`);
+  if (task.sourceUpdatedAt) parts.push(`${taskSourceGroup(task.source) === "procore" ? "Notified" : "Updated"} ${formatDate(task.sourceUpdatedAt)}`);
   if (task.assignee) parts.push(escapeHtml(task.assignee));
   return parts.join(" · ");
 }

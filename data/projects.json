@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-20T21:55:40.087Z",
+  "lastUpdated": "2026-08-20T23:16:47.307Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1213,13 +1213,13 @@
       "name": "WPR Unit 11",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "green",
+      "health": "amber",
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
       "openTasks": 5,
-      "overdueTasks": 1,
-      "highPriorityTasks": 0,
+      "overdueTasks": 0,
+      "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -1291,10 +1291,10 @@
       ],
       "attention": [
         {
-          "severity": "red",
-          "label": "Overdue task",
+          "severity": "amber",
+          "label": "High priority",
           "detail": "Procore #250: Nicked wire",
-          "dueDate": "2026-07-20",
+          "dueDate": null,
           "source": "Procore"
         }
       ],
@@ -1605,13 +1605,13 @@
       "name": "WPR Condo 201",
       "area": "Condos/Penthouse",
       "team": "Big-D Condos/Penthouse",
-      "health": "green",
+      "health": "amber",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
       "openTasks": 11,
-      "overdueTasks": 3,
-      "highPriorityTasks": 0,
+      "overdueTasks": 0,
+      "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -1719,24 +1719,10 @@
       ],
       "attention": [
         {
-          "severity": "red",
-          "label": "Overdue task",
+          "severity": "amber",
+          "label": "High priority",
           "detail": "Procore #3546: Roller Shade is out of drywall",
-          "dueDate": "2026-04-13",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #4471: Missing speakers",
-          "dueDate": "2026-06-10",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #4877: Similar to unit 4 lvl 3, need to add a single Smurf tube from tv down directly below to the right of the outlet below the tv.",
-          "dueDate": "2026-08-06",
+          "dueDate": null,
           "source": "Procore"
         }
       ],
@@ -1747,13 +1733,13 @@
       "name": "WPR Condo 202",
       "area": "Condos/Penthouse",
       "team": "Big-D Condos/Penthouse",
-      "health": "red",
+      "health": "amber",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
       "openTasks": 16,
-      "overdueTasks": 8,
-      "highPriorityTasks": 2,
+      "overdueTasks": 0,
+      "highPriorityTasks": 5,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -1891,45 +1877,38 @@
       ],
       "attention": [
         {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #1471: Unit #202 elevator closet the data port is not centered per RCP",
-          "dueDate": "2026-03-09",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #1540: Unit 202 elevator vestibule the keypad is to high.",
-          "dueDate": "2026-03-23",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
+          "severity": "amber",
+          "label": "High priority",
           "detail": "Procore #4204: Finish Plywood, Metal, and Roller Shade",
-          "dueDate": "2026-06-10",
+          "dueDate": null,
           "source": "Procore"
         },
         {
-          "severity": "red",
-          "label": "Overdue task",
+          "severity": "amber",
+          "label": "High priority",
           "detail": "Procore #4248: Lockable roller shade needed",
-          "dueDate": "2026-06-10",
+          "dueDate": null,
           "source": "Procore"
         },
         {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #4275: No action needed. Tell us what the cover plate is covering.",
-          "dueDate": "2026-06-10",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
+          "severity": "amber",
+          "label": "High priority",
           "detail": "Procore #4376: Finish fiber area better - all units",
-          "dueDate": "2026-06-10",
+          "dueDate": null,
+          "source": "Procore"
+        },
+        {
+          "severity": "amber",
+          "label": "High priority",
+          "detail": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
+          "dueDate": null,
+          "source": "Procore"
+        },
+        {
+          "severity": "amber",
+          "label": "High priority",
+          "detail": "Procore #4390: Motion sensor should be in corner",
+          "dueDate": null,
           "source": "Procore"
         }
       ],
@@ -1940,13 +1919,13 @@
       "name": "WPR Condo Penthouse",
       "area": "Condos/Penthouse",
       "team": "Big-D Condos/Penthouse",
-      "health": "red",
+      "health": "green",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
       "openTasks": 16,
-      "overdueTasks": 1,
-      "highPriorityTasks": 1,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -2082,15 +2061,7 @@
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #1645: Unit #300 primary suite data port is at 5’ AFF",
-          "dueDate": "2026-04-15",
-          "source": "Procore"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {

@@ -513,13 +513,13 @@ function normalizeProcoreTask(row, project) {
     name: `Procore #${row.number}: ${row.title}`,
     status: normalizeProcoreStatus(row.status),
     sourceState: row.status || "",
-    priority: normalizeProcorePriority(row.priority),
+    priority: commandCenterProcorePriority(row),
     externalId: `procore-${procoreProjectId}-${itemId}`,
     externalProjectId: `procore-${procoreProjectId}`,
     externalProjectName: row.project,
     externalUrl: row.detailUrl || row.itemUrl,
     assignee: row.assignee,
-    dueDate: row.dueDate,
+    dueDate: "",
     sourceUpdatedAt: row.dateNotified,
     notes: [
       `Type: ${row.type}`,
@@ -562,6 +562,34 @@ function normalizeProcoreStatus(value) {
   if (text === "closed") return "done";
   if (text.includes("review")) return "progress";
   return "todo";
+}
+
+function commandCenterProcorePriority(row) {
+  const status = String(row && row.status || "").trim().toLowerCase();
+  if (status === "closed") return "low";
+  if (status.includes("ready") && status.includes("review")) return "low";
+
+  if (["initiated", "not accepted", "work required"].includes(status)) {
+    const ageDays = daysSince(row.dateNotified);
+    return ageDays >= 30 ? "high" : "medium";
+  }
+
+  return "medium";
+}
+
+function daysSince(value) {
+  const date = parseDateOnly(value);
+  if (!date) return 0;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.max(0, Math.floor((today - date) / 86400000));
+}
+
+function parseDateOnly(value) {
+  const text = normalizeDate(value);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return null;
+  const date = new Date(`${text}T00:00:00`);
+  return Number.isNaN(date.getTime()) ? null : date;
 }
 
 function normalizeProcorePriority(value) {
