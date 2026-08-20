@@ -52,7 +52,7 @@ function toHostedProject(project, options) {
   const timelines = Array.isArray(project.timelines) ? project.timelines : [];
   const openTasks = tasks.filter(task => task.status !== "done").length;
   const overdueTasks = tasks.filter(task => task.status !== "done" && isPast(task.dueDate)).length;
-  const highPriorityTasks = tasks.filter(task => task.status !== "done" && normalizeTaskPriority(task.priority) === "high").length;
+  const highPriorityTasks = tasks.filter(task => task.status !== "done" && isActionPriority(task.priority)).length;
   const activePhase = currentPhase(timelines);
   const health = project.rag || computeHealth(project, tasks, risks, timelines);
   const attention = buildAttention(project, tasks, risks, timelines);
@@ -121,11 +121,11 @@ function buildAttention(project, tasks, risks, timelines) {
   const items = [];
 
   tasks
-    .filter(task => task.status !== "done" && (normalizeTaskPriority(task.priority) === "high" || isPast(task.dueDate)))
+    .filter(task => task.status !== "done" && (isActionPriority(task.priority) || isPast(task.dueDate)))
     .forEach(task => {
       items.push({
-        severity: isPast(task.dueDate) ? "red" : "amber",
-        label: isPast(task.dueDate) ? "Overdue task" : "High priority",
+        severity: isPast(task.dueDate) ? "red" : prioritySeverity(task.priority),
+        label: isPast(task.dueDate) ? "Overdue task" : taskPriorityLabel(task.priority),
         detail: safeTaskTitle(task.name),
         dueDate: dateOnly(task.dueDate),
         source: sourceLabel(task.source)
@@ -194,11 +194,11 @@ function computeHealth(project, tasks, risks, timelines) {
   const activeTimelines = timelines.filter(item => !isComplete(item));
   if (!activeTimelines.some(item => item.start && item.end)) return "pending";
   if (risks.some(risk => risk.severity === "high" && isPast(risk.due))) return "red";
-  if (tasks.some(task => task.status !== "done" && task.priority === "high" && isPast(task.dueDate))) return "red";
+  if (tasks.some(task => task.status !== "done" && isPast(task.dueDate) && isActionPriority(task.priority))) return "red";
   const install = timelines.find(item => item.key === "install");
   if (install && !isComplete(install) && isPast(install.end) && tasks.some(task => task.status !== "done")) return "red";
   if (risks.some(risk => risk.severity === "medium" && isPast(risk.due))) return "amber";
-  if (tasks.some(task => task.status !== "done" && task.priority === "high")) return "amber";
+  if (tasks.some(task => task.status !== "done" && isActionPriority(task.priority))) return "amber";
   return "green";
 }
 
@@ -274,10 +274,32 @@ function sourceLabel(source) {
 
 function normalizeTaskPriority(value) {
   const clean = text(value, "").toLowerCase();
+  if (["new", "due-soon", "needs-action", "critical-aging"].includes(clean)) return clean;
   if (["urgent", "high"].includes(clean)) return "high";
   if (["normal", "medium", "med"].includes(clean)) return "medium";
   if (clean === "low") return "low";
   return "";
+}
+
+function isActionPriority(value) {
+  return ["high", "new", "due-soon", "needs-action", "critical-aging"].includes(normalizeTaskPriority(value));
+}
+
+function taskPriorityLabel(value) {
+  const priority = normalizeTaskPriority(value);
+  if (priority === "critical-aging") return "Critical aging";
+  if (priority === "needs-action") return "Needs action";
+  if (priority === "due-soon") return "Due soon";
+  if (priority === "new") return "New";
+  if (priority === "high") return "High priority";
+  return "Attention";
+}
+
+function prioritySeverity(value) {
+  const priority = normalizeTaskPriority(value);
+  if (priority === "critical-aging" || priority === "high") return "red";
+  if (priority === "needs-action" || priority === "due-soon") return "amber";
+  return "green";
 }
 
 function severityScore(severity) {

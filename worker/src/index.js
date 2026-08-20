@@ -138,12 +138,12 @@ async function getAllData(db) {
 function buildTaskSignals(tasks) {
   const activeTasks = tasks.filter(task => task.status !== "done");
   const overdueTasks = activeTasks.filter(task => isPastDate(task.due_date)).length;
-  const highPriorityTasks = activeTasks.filter(task => normalizeTaskPriority(task.priority) === "high").length;
+  const highPriorityTasks = activeTasks.filter(task => isActionPriority(task.priority)).length;
   const attention = activeTasks
-    .filter(task => normalizeTaskPriority(task.priority) === "high" || isPastDate(task.due_date))
+    .filter(task => isActionPriority(task.priority) || isPastDate(task.due_date))
     .map(task => ({
-      severity: isPastDate(task.due_date) ? "red" : "amber",
-      label: isPastDate(task.due_date) ? "Overdue task" : "High priority",
+      severity: isPastDate(task.due_date) ? "red" : prioritySeverity(task.priority),
+      label: isPastDate(task.due_date) ? "Overdue task" : taskPriorityLabel(task.priority),
       detail: task.name || "Task needs review",
       dueDate: task.due_date || "",
       source: sourceLabel(task.source)
@@ -151,6 +151,29 @@ function buildTaskSignals(tasks) {
     .sort((a, b) => severityScore(b.severity) - severityScore(a.severity) || String(a.dueDate || "9999-12-31").localeCompare(String(b.dueDate || "9999-12-31")))
     .slice(0, 20);
   return { overdueTasks, highPriorityTasks, attention };
+}
+
+function isActionPriority(value) {
+  return ["high", "new", "due-soon", "needs-action", "critical-aging"].includes(normalizeTaskPriority(value));
+}
+
+function taskPriorityLabel(value) {
+  const priority = normalizeTaskPriority(value);
+  if (priority === "critical-aging") return "Critical aging";
+  if (priority === "needs-action") return "Needs action";
+  if (priority === "due-soon") return "Due soon";
+  if (priority === "new") return "New";
+  if (priority === "high") return "High priority";
+  if (priority === "medium") return "Medium priority";
+  if (priority === "low") return "Low priority";
+  return "Attention";
+}
+
+function prioritySeverity(value) {
+  const priority = normalizeTaskPriority(value);
+  if (priority === "critical-aging" || priority === "high") return "red";
+  if (priority === "needs-action" || priority === "due-soon") return "amber";
+  return "green";
 }
 
 function isPastDate(value) {
@@ -902,6 +925,7 @@ function normalizeOptionalDate(value) {
 
 function normalizeTaskPriority(value) {
   const text = normalizeText(value).toLowerCase();
+  if (["new", "due-soon", "needs-action", "critical-aging"].includes(text)) return text;
   if (["urgent", "high"].includes(text)) return "high";
   if (["normal", "medium", "med"].includes(text)) return "medium";
   if (text === "low") return "low";

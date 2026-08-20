@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-20T23:16:47.307Z",
+  "lastUpdated": "2026-08-20T23:44:02.604Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1291,8 +1291,8 @@
       ],
       "attention": [
         {
-          "severity": "amber",
-          "label": "High priority",
+          "severity": "red",
+          "label": "Critical aging",
           "detail": "Procore #250: Nicked wire",
           "dueDate": null,
           "source": "Procore"
@@ -1611,7 +1611,7 @@
       "endDate": null,
       "openTasks": 11,
       "overdueTasks": 0,
-      "highPriorityTasks": 1,
+      "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -1719,9 +1719,16 @@
       ],
       "attention": [
         {
-          "severity": "amber",
-          "label": "High priority",
+          "severity": "red",
+          "label": "Critical aging",
           "detail": "Procore #3546: Roller Shade is out of drywall",
+          "dueDate": null,
+          "source": "Procore"
+        },
+        {
+          "severity": "red",
+          "label": "Critical aging",
+          "detail": "Procore #4877: Similar to unit 4 lvl 3, need to add a single Smurf tube from tv down directly below to the right of the outlet below the tv.",
           "dueDate": null,
           "source": "Procore"
         }
@@ -1877,36 +1884,36 @@
       ],
       "attention": [
         {
-          "severity": "amber",
-          "label": "High priority",
+          "severity": "red",
+          "label": "Critical aging",
           "detail": "Procore #4204: Finish Plywood, Metal, and Roller Shade",
           "dueDate": null,
           "source": "Procore"
         },
         {
-          "severity": "amber",
-          "label": "High priority",
+          "severity": "red",
+          "label": "Critical aging",
           "detail": "Procore #4248: Lockable roller shade needed",
           "dueDate": null,
           "source": "Procore"
         },
         {
-          "severity": "amber",
-          "label": "High priority",
+          "severity": "red",
+          "label": "Critical aging",
           "detail": "Procore #4376: Finish fiber area better - all units",
           "dueDate": null,
           "source": "Procore"
         },
         {
-          "severity": "amber",
-          "label": "High priority",
+          "severity": "red",
+          "label": "Critical aging",
           "detail": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
           "dueDate": null,
           "source": "Procore"
         },
         {
-          "severity": "amber",
-          "label": "High priority",
+          "severity": "red",
+          "label": "Critical aging",
           "detail": "Procore #4390: Motion sensor should be in corner",
           "dueDate": null,
           "source": "Procore"

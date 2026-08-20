@@ -1939,9 +1939,9 @@ const KPI_OVERVIEWS = {
     }))
   },
   highPriorityTasks: {
-    title: "High Priority",
-    empty: "No high priority items match the current view.",
-    countLabel: "high",
+    title: "Needs Action",
+    empty: "No action-triaged items match the current view.",
+    countLabel: "needs action",
     items: projects => projects.filter(project => project.highPriorityTasks > 0).map(project => ({
       project,
       count: project.highPriorityTasks,
@@ -2280,15 +2280,15 @@ function countOverdueTasks(tasks) {
 }
 
 function countHighPriorityTasks(tasks) {
-  return tasks.filter(task => task.status !== "done" && task.priority === "high").length;
+  return tasks.filter(task => task.status !== "done" && isActionPriority(task.priority)).length;
 }
 
 function taskAttentionItems(tasks) {
   return tasks
-    .filter(task => task.status !== "done" && (task.priority === "high" || isPastDate(task.dueDate)))
+    .filter(task => task.status !== "done" && (isActionPriority(task.priority) || isPastDate(task.dueDate)))
     .map(task => ({
-      severity: isPastDate(task.dueDate) ? "red" : "amber",
-      label: isPastDate(task.dueDate) ? "Overdue task" : "High priority",
+      severity: isPastDate(task.dueDate) ? "red" : prioritySeverity(task.priority),
+      label: isPastDate(task.dueDate) ? "Overdue task" : taskPriorityLabel(task.priority),
       detail: task.name,
       dueDate: task.dueDate,
       source: taskSourceLabel(task.source)
@@ -2615,7 +2615,7 @@ function renderKpis() {
     ["projects", totals.projects, "Visible Projects"],
     ["openTasks", totals.openTasks, "Open Items"],
     ["overdueTasks", totals.overdueTasks, "Overdue Tasks"],
-    ["highPriorityTasks", totals.highPriorityTasks, "High Priority"],
+    ["highPriorityTasks", totals.highPriorityTasks, "Needs Action"],
     ["risks", totals.risks, "Open Risks"],
     ["contractsAccepted", totals.contractsAccepted, "Contracts Accepted"],
     ["depositsOpen", totals.depositsOpen, "Deposits Open"],
@@ -2673,7 +2673,7 @@ function renderOverviewRow(item, config) {
 
 function formatOverviewCount(count, label) {
   if (label === "accepted") return "Accepted";
-  if (["overdue", "high priority"].includes(label)) return `${count} ${label}`;
+  if (["overdue", "high priority", "needs action"].includes(label)) return `${count} ${label}`;
   if (count === 1) return `1 ${label}`;
   return `${count} ${label}s`;
 }
@@ -2858,7 +2858,7 @@ function renderProjectFile(project, expanded) {
     <div class="metric-strip">
       <div class="metric open-metric"><strong>${project.openTasks}</strong><span>Open</span>${renderOpenSourceBreakdown(project)}</div>
       <div class="metric"><strong>${project.overdueTasks}</strong><span>Overdue</span></div>
-      <div class="metric"><strong>${project.highPriorityTasks}</strong><span>High</span></div>
+      <div class="metric"><strong>${project.highPriorityTasks}</strong><span>Action</span></div>
       <div class="metric"><strong>${project.risks}</strong><span>Risks</span></div>
     </div>
   `;
@@ -3132,7 +3132,7 @@ function renderTaskRow(task, closed) {
 
 function renderTaskMeta(task, closed) {
   const parts = [task.source ? renderTaskSource(task, closed) : "Command Center"];
-  if (task.priority) parts.push(`${titleCase(task.priority)} priority`);
+  if (task.priority) parts.push(taskPriorityLabel(task.priority));
   if (task.dueDate) parts.push(`Due ${formatDate(task.dueDate)}`);
   if (task.sourceUpdatedAt) parts.push(`${taskSourceGroup(task.source) === "procore" ? "Notified" : "Updated"} ${formatDate(task.sourceUpdatedAt)}`);
   if (task.assignee) parts.push(escapeHtml(task.assignee));
@@ -3238,15 +3238,34 @@ function taskSourceLabel(source) {
 
 function normalizeTaskPriority(value) {
   const text = String(value || "").trim().toLowerCase();
+  if (["new", "due-soon", "needs-action", "critical-aging"].includes(text)) return text;
   if (["urgent", "high"].includes(text)) return "high";
   if (["normal", "medium", "med"].includes(text)) return "medium";
   if (text === "low") return "low";
   return "";
 }
 
-function titleCase(value) {
-  const text = String(value || "").trim();
-  return text ? `${text.slice(0, 1).toUpperCase()}${text.slice(1)}` : "";
+function isActionPriority(value) {
+  return ["high", "new", "due-soon", "needs-action", "critical-aging"].includes(normalizeTaskPriority(value));
+}
+
+function taskPriorityLabel(value) {
+  const priority = normalizeTaskPriority(value);
+  if (priority === "critical-aging") return "Critical aging";
+  if (priority === "needs-action") return "Needs action";
+  if (priority === "due-soon") return "Due soon";
+  if (priority === "new") return "New";
+  if (priority === "high") return "High priority";
+  if (priority === "medium") return "Medium priority";
+  if (priority === "low") return "Low priority";
+  return "Attention";
+}
+
+function prioritySeverity(value) {
+  const priority = normalizeTaskPriority(value);
+  if (priority === "critical-aging" || priority === "high") return "red";
+  if (priority === "needs-action" || priority === "due-soon") return "amber";
+  return "green";
 }
 
 function taskStatusLabel(status) {

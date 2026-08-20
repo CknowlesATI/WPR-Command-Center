@@ -566,23 +566,31 @@ function normalizeProcoreStatus(value) {
 
 function commandCenterProcorePriority(row) {
   const status = String(row && row.status || "").trim().toLowerCase();
-  if (status === "closed") return "low";
-  if (status.includes("ready") && status.includes("review")) return "low";
+  if (status === "closed") return "";
+  if (status.includes("ready") && status.includes("review")) return "";
 
   if (["initiated", "not accepted", "work required"].includes(status)) {
-    const ageDays = daysSince(row.dateNotified);
-    return ageDays >= 30 ? "high" : "medium";
+    const ageDays = businessDaysSince(row.dateNotified);
+    if (ageDays >= 8) return "critical-aging";
+    if (ageDays >= 4) return "needs-action";
+    if (ageDays >= 2) return "due-soon";
+    return "new";
   }
 
-  return "medium";
+  return "";
 }
 
-function daysSince(value) {
+function businessDaysSince(value) {
   const date = parseDateOnly(value);
-  if (!date) return 0;
+  if (!date) return 4;
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  return Math.max(0, Math.floor((today - date) / 86400000));
+  let count = 0;
+  for (let cursor = new Date(date); cursor < today; cursor.setDate(cursor.getDate() + 1)) {
+    const day = cursor.getDay();
+    if (day !== 0 && day !== 6) count += 1;
+  }
+  return count;
 }
 
 function parseDateOnly(value) {
@@ -594,9 +602,11 @@ function parseDateOnly(value) {
 
 function normalizeProcorePriority(value) {
   const text = String(value || "").toLowerCase();
+  if (["new", "due-soon", "needs-action", "critical-aging"].includes(text)) return text;
   if (["urgent", "high"].includes(text)) return "high";
+  if (["normal", "medium", "med"].includes(text)) return "medium";
   if (text === "low") return "low";
-  return "medium";
+  return "";
 }
 
 function currentSourceProjectIds(commandProjects, source) {
