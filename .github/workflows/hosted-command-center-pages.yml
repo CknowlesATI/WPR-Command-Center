@@ -12,7 +12,7 @@ on:
       - ".github/workflows/hosted-command-center-pages.yml"
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -40,8 +40,24 @@ jobs:
           COMMAND_CENTER_API_URL="${COMMAND_CENTER_API_URL:-https://wpr-command-center-api.wpr-command-center.workers.dev}"
           node hosted-command-center/tools/export-hosted-data.mjs --url "$COMMAND_CENTER_API_URL"
 
+      - name: Mirror root hosted data
+        run: |
+          mkdir -p data
+          cp hosted-command-center/data/projects.json data/projects.json
+
       - name: Validate hosted data
         run: node hosted-command-center/tools/validate-hosted-data.mjs
+
+      - name: Commit refreshed data
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hosted-command-center/data/projects.json data/projects.json
+          git diff --cached --quiet || {
+            git commit -m "Refresh hosted Command Center data"
+            git push
+          }
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3

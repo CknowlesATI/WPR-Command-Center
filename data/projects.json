@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-27T20:28:42.059Z",
+  "lastUpdated": "2026-08-20T19:54:59.204Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,24 +11,85 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 8,
-      "overdueTasks": 3,
+      "openTasks": 9,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "Accepted",
+        "deposit": "Pending",
+        "changeOrders": "None"
+      },
+      "taskList": [
+        {
+          "name": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 1 - AV Mech - missing AV panel cover (see if we can find this onsite somewhere",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: UL pendent speaker",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Unit 1 - Level 2 - observation 2415 - Av not to right dimension, does not line up (THE REQUEST IS THAT IT NEEDS TO BE CENTERED ON T",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "This is a test",
+          "status": "todo",
+          "source": "Command Center",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
+          "start": "2025-02-13",
+          "end": "2025-02-13",
           "status": "complete"
         },
         {
           "key": "trim",
           "label": "Trim",
-          "start": null,
-          "end": null,
+          "start": "2026-02-23",
+          "end": "2026-02-23",
           "status": "complete"
         },
         {
@@ -46,29 +107,7 @@
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Unit 1 - Level 2 - observation 2415 - Av not to right dimension, does not line up (THE REQUEST IS THAT IT NEEDS TO BE CENTERED ON T",
-          "dueDate": "2026-04-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Lvl 1 - AV Mech - missing AV panel cover (see if we can find this onsite somewhere",
-          "dueDate": "2026-04-20",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
-          "dueDate": "2026-06-26",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -76,29 +115,120 @@
       "name": "WPR Unit 2",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "pending",
-      "phase": "Pre-Wire",
+      "health": "red",
+      "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 12,
-      "overdueTasks": 2,
+      "openTasks": 14,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "Accepted",
+        "deposit": "Pending",
+        "changeOrders": "None"
+      },
+      "taskList": [
+        {
+          "name": "Admin: Big-D Information Request - go into system to double check product documentation. Wwhat they are asking for is in the notes. (AV/Secu",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: L1 - Garage: Verify wiring location for camera installation",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: L3 - Flex Room: Trim out TV wiring (shielded Cat6, blue and grey Cat6)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: L3 - Terrace: Has the camera wiring location been finalized and ready for install?",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl2 Bed 5 - tv single gang box height does not match power. (Too high)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Reminder, Turn on \"Auto Reboot\" On PDU 1. When the network is up an running.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Sonos Will need to be turned over to the customer",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Still need the customers WiFi SSID and password",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Parts Shuffle: From WPR 101 (10ea) James: PD42-2 for WPR Townhome 1, Unit 2.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
           "start": null,
           "end": null,
-          "status": ""
+          "status": "complete"
         },
         {
           "key": "trim",
           "label": "Trim",
           "start": null,
           "end": null,
-          "status": ""
+          "status": "complete"
         },
         {
           "key": "handover",
@@ -110,27 +240,12 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-08-03",
+          "end": "2026-08-03",
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Lvl2 Bed 5 - tv single gang box height does not match power. (Too high)",
-          "dueDate": "2026-05-26",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Big-D Information Request - go into system to double check product documentation. Wwhat they are asking for is in the notes. (AV/Secu",
-          "dueDate": "2026-07-14",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -138,28 +253,71 @@
       "name": "WPR Unit 3",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "pending",
-      "phase": "Pre-Wire",
+      "health": "green",
+      "phase": "Trim",
       "startDate": null,
       "endDate": null,
       "openTasks": 6,
-      "overdueTasks": 1,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Admin: Unit 3 - Observation #2027: QC - FIELD OBSERVATION - Doorbell Wrong Location",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Was primary closet",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2025-06-24",
+          "end": "2025-06-24",
+          "status": "complete"
         },
         {
           "key": "trim",
           "label": "Trim",
-          "start": null,
-          "end": null,
+          "start": "2026-03-09",
+          "end": "2026-03-09",
           "status": ""
         },
         {
@@ -177,15 +335,7 @@
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Unit 3 - Observation #2027: QC - FIELD OBSERVATION - Doorbell Wrong Location",
-          "dueDate": "2025-11-19",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -193,29 +343,132 @@
       "name": "WPR Unit 4",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "pending",
-      "phase": "Pre-Wire",
+      "health": "green",
+      "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 11,
-      "overdueTasks": 4,
+      "openTasks": 16,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "Accepted",
+        "deposit": "Paid",
+        "changeOrders": "None"
+      },
+      "taskList": [
+        {
+          "name": "Admin: AV Deposit has been paid",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: As-builts turned into design 5/20/26",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Unit 4 - Lvl 3 - Flex - will need horizontal adapter for tv mount with where the WB was placed on the wall (see pic in notes)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Unit 4 - Primary Bedroom - possibly need vertical adapter for tv mount with where the back box is placed. See pic in notes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Update as-built",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Design: Follow up with Earth Shades on Turn around",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Design: Get first order for Earthshade completed, so we can get discounted pricing",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Level 1: Garage - Locate camera wiring and expose",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 3 - we are not doing pendant speakers in this unit. We need to clean up the speaker wire hanging from the beams",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Project Handoff: Get CO approved for side channels",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Project Handoff: Get lead time on fabric to Justin and Nate owens",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Project Handoff: Get with Logan and Lake Flato on Mock-up for side channels in corner conditions",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
           "start": null,
           "end": null,
-          "status": ""
+          "status": "complete"
         },
         {
           "key": "trim",
           "label": "Trim",
           "start": null,
           "end": null,
-          "status": ""
+          "status": "complete"
         },
         {
           "key": "handover",
@@ -227,41 +480,12 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-09-14",
+          "end": "2026-09-14",
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: AV Deposit has been paid",
-          "dueDate": "2026-02-27",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Unit 4 - Lvl 3 - Flex - will need horizontal adapter for tv mount with where the WB was placed on the wall (see pic in notes)",
-          "dueDate": "2026-03-06",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Unit 4 - Primary Bedroom - possibly need vertical adapter for tv mount with where the back box is placed. See pic in notes",
-          "dueDate": "2026-03-06",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Lvl 3 - we are not doing pendant speakers in this unit. We need to clean up the speaker wire hanging from the beams",
-          "dueDate": "2026-06-10",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -270,28 +494,89 @@
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
       "health": "pending",
-      "phase": "Pre-Wire",
+      "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
       "openTasks": 9,
-      "overdueTasks": 5,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "Sent",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Admin: Unit 5 - Lvl 2 - Family - WB box is not centered, need horizontal adapter for tv mount at install (pic in notes)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 1 - AV Mech - Missing Av Panel Brush Plate (look around onsite to see if you can find this)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Tanner's List 5/18 - Garage - ATI - Clarify what boxes in the ceiling can be covered or patched (mark using tape)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Tanner's List 5/18 - General item - Low voltage trim (verify all trim out locations have been terminamted and are ready for wall pl",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Unit 5 - LVL 2 - bedrooms entry - do we need to center this AP? Talk to Tanner (pic in notes)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2025-07-21",
+          "end": "2025-07-21",
+          "status": "complete"
         },
         {
           "key": "trim",
           "label": "Trim",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2026-03-16",
+          "end": "2026-03-16",
+          "status": "complete"
         },
         {
           "key": "handover",
@@ -308,43 +593,7 @@
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Unit 5 - Lvl 2 - Family - WB box is not centered, need horizontal adapter for tv mount at install (pic in notes)",
-          "dueDate": "2026-03-06",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Unit 5 - LVL 2 - bedrooms entry - do we need to center this AP? Talk to Tanner (pic in notes)",
-          "dueDate": "2026-04-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Lvl 1 - AV Mech - Missing Av Panel Brush Plate (look around onsite to see if you can find this)",
-          "dueDate": "2026-04-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Tanner's List 5/18 - General item - Low voltage trim (verify all trim out locations have been terminamted and are ready for wall pl",
-          "dueDate": "2026-05-21",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Tanner's List 5/18 - Garage - ATI - Clarify what boxes in the ceiling can be covered or patched (mark using tape)",
-          "dueDate": "2026-05-21",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -353,28 +602,137 @@
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
       "health": "pending",
-      "phase": "Pre-Wire",
+      "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 16,
-      "overdueTasks": 4,
+      "openTasks": 17,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "Accepted",
+        "deposit": "Paid",
+        "changeOrders": "Pending"
+      },
+      "taskList": [
+        {
+          "name": "Admin: Review plans 3/16/26 for changes (link in notes) - No green light until we get approval.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lv2 Primary Bedroom - Install WB 21 (Pending Bedroom Back Box Proposal)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 1 AV Mech Room - Fiber junction box solution with Big-D",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 1 AV Mech Room - Panel Clean up - Terminations upon contract",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 1 Bed 1 - Install WB 21 (Pending Bedroom Back Box Proposal)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 1 Bed 2 - Install WB 21 (Pending Bedroom Back Box Proposal)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 1 front door - stone needs cut for doorbell box",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 2 Bed 3 - Install WB 21 (Pending Bedroom Back Box Proposal)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 2 Bed 4 - Install WB 21 (Pending Bedroom Back Box Proposal)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 3 Flex Room - verify WB26 is installed (65\" Tv going here)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: PENDING APPROVAL - Bedrooms 1,2,3,4 will get WB21 Tv Back Boxes (for 55\" Tvs)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Primary SITTING - install WB21 back box",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2025-07-21",
+          "end": "2025-07-21",
+          "status": "complete"
         },
         {
           "key": "trim",
           "label": "Trim",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2026-03-16",
+          "end": "2026-03-16",
+          "status": "complete"
         },
         {
           "key": "handover",
@@ -391,36 +749,7 @@
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Review plans 3/16/26 for changes (link in notes) - No green light until we get approval.",
-          "dueDate": "2026-03-19",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Primary SITTING - install WB21 back box",
-          "dueDate": "2026-04-24",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Lvl 1 front door - stone needs cut for doorbell box",
-          "dueDate": "2026-05-22",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Lvl 3 Flex Room - verify WB26 is installed (65\" Tv going here)",
-          "dueDate": "2026-05-22",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -428,28 +757,149 @@
       "name": "WPR Unit 7",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "pending",
-      "phase": "Pre-Wire",
+      "health": "green",
+      "phase": "Trim",
       "startDate": null,
       "endDate": null,
       "openTasks": 19,
-      "overdueTasks": 8,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Admin: All bedrooms will be getting WB boxes. Need sizes and approval",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Eliminate all security wiring? Bury? what are we doing with the panel? (I will discuss on 2/20 from Landon)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Lvl 3 - Living - verify with Landon we are blind wiring the tv location or putting up single gang box",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Lvl 3 Flex Room - will need horizontal adapter for mounting TV at install",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: LVL1: Mudroom - Move WAP wires in line with lights",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: LVL3: Kitchen - Line up WAP wiring with sprinkler head",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: LVL3: Patio - Verify WAP wiring",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 1 Bed 1 - Install WB 26 (Pending Bedroom Back Box Proposal)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 1 Bed 2 - Install WB 26 (Pending Bedroom Back Box Proposal)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 2 Bed 3 - (Pending Bedroom Back Box Proposal) we don’t have enough depth for the WB26, we only have 2.25” of depth. Need a solu",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 2 Bed 4 - Install WB 26 (Pending Bedroom Back Box Proposal)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 3 WestTerrace - Land speaker wire (2) in planter boxes once the planter boxes have been installed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: PENDING APPROVAL - Bedroom 1,2,3,4 will get WB26 Tv back boxes (for 65\" Tvs)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Walk unit and mark up plan accordingly. Install cover plates where needed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2025-07-23",
+          "end": "2025-07-23",
+          "status": "complete"
         },
         {
           "key": "trim",
           "label": "Trim",
-          "start": null,
-          "end": null,
+          "start": "2026-03-23",
+          "end": "2026-03-23",
           "status": ""
         },
         {
@@ -467,50 +917,7 @@
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
-          "dueDate": "2026-01-23",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: All bedrooms will be getting WB boxes. Need sizes and approval",
-          "dueDate": "2026-02-20",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Eliminate all security wiring? Bury? what are we doing with the panel? (I will discuss on 2/20 from Landon)",
-          "dueDate": "2026-02-20",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Lvl 3 - Living - verify with Landon we are blind wiring the tv location or putting up single gang box",
-          "dueDate": "2026-02-27",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Walk unit and mark up plan accordingly. Install cover plates where needed.",
-          "dueDate": "2026-05-26",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: PENDING APPROVAL - Bedroom 1,2,3,4 will get WB26 Tv back boxes (for 65\" Tvs)",
-          "dueDate": "2026-06-12",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -518,28 +925,95 @@
       "name": "WPR Unit 8",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "pending",
+      "health": "green",
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
       "openTasks": 10,
-      "overdueTasks": 4,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "Sent",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Unit 8 - update WB back box locations and list (possible changes)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Unit 8 access control",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Unit 8 level 1 bed 1 wap",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: LVL3: Kitchen - Line up WAO wiring with sprinkler head",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Lvl 3 WestTerrace - Land speaker wire (2) in planter boxes once the planter boxes have been installed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2025-07-23",
+          "end": "2025-07-23",
+          "status": "active"
         },
         {
           "key": "trim",
           "label": "Trim",
-          "start": null,
-          "end": null,
+          "start": "2026-03-23",
+          "end": "2026-03-23",
           "status": ""
         },
         {
@@ -557,36 +1031,7 @@
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Unit 8 access control",
-          "dueDate": "2026-01-20",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
-          "dueDate": "2026-01-23",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Unit 8 level 1 bed 1 wap",
-          "dueDate": "2026-01-28",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Lvl 3 WestTerrace - Land speaker wire (2) in planter boxes once the planter boxes have been installed.",
-          "dueDate": "2026-06-12",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -594,22 +1039,59 @@
       "name": "WPR Unit 9",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "pending",
+      "health": "green",
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
       "openTasks": 5,
-      "overdueTasks": 1,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: WB Back boxes are onsite (9 total) - these need to be installed. Some areas still need framing finished. (talk to Bill about which ",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2026-05-13",
+          "end": "2026-05-13",
+          "status": "active"
         },
         {
           "key": "trim",
@@ -633,15 +1115,7 @@
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: WB Back boxes are onsite (9 total) - these need to be installed. Some areas still need framing finished. (talk to Bill about which ",
-          "dueDate": "2026-06-05",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -649,22 +1123,71 @@
       "name": "WPR Unit 10",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "pending",
+      "health": "green",
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
       "openTasks": 7,
-      "overdueTasks": 3,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Install WB Back boxes (8 total)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: NEED FRAMING COMPLETED for WB Back boxes (8 total) - talk to Bill to make sure they have the info and layouts needed to complete fr",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Place staging request with warehouse for WB Back Boxes once framing is complete.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2026-05-13",
+          "end": "2026-05-13",
+          "status": "active"
         },
         {
           "key": "trim",
@@ -688,29 +1211,7 @@
           "status": ""
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: NEED FRAMING COMPLETED for WB Back boxes (8 total) - talk to Bill to make sure they have the info and layouts needed to complete fr",
-          "dueDate": "2026-06-05",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Place staging request with warehouse for WB Back Boxes once framing is complete.",
-          "dueDate": "2026-06-12",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Install WB Back boxes (8 total)",
-          "dueDate": "2026-06-19",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -718,22 +1219,59 @@
       "name": "WPR Unit 11",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "pending",
+      "health": "green",
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 4,
+      "openTasks": 5,
       "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #250: Nicked wire",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2026-06-09",
+          "end": "2026-06-09",
+          "status": "active"
         },
         {
           "key": "trim",
@@ -765,7 +1303,7 @@
       "name": "WPR Unit 12",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "pending",
+      "health": "green",
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
@@ -774,13 +1312,32 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Install: Level 2: Family Room - right rear speaker wire needs brought down off of I-beam",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
+          "start": "2026-06-09",
+          "end": "2026-06-09",
+          "status": "active"
         },
         {
           "key": "trim",
@@ -813,14 +1370,1071 @@
       "area": "Condos/Penthouse",
       "team": "Big-D Condos/Penthouse",
       "health": "green",
-      "phase": "Trim",
+      "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 13,
-      "overdueTasks": 6,
+      "openTasks": 12,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": "2026-08-14",
+      "approvalsPayments": {
+        "contract": "Accepted",
+        "deposit": "Paid",
+        "changeOrders": "None"
+      },
+      "taskList": [
+        {
+          "name": "ATI: Trim Phone/Data wires in Flex Room A101c.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "ATI: Trim Phone/Data wires in Primary Suite.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Correct the Lighting Plan based on Thomas Hickman's markup.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: How can we integrate with HVAC system?",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Update As-builts - Primary Closet change from 2 speakers to 1 DVC (once the work has been completed)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: AV Mech Room - ADD PICTURES OF SERVICE SMURF TUBE PRE-DRYWALL to Pulse Plans Folder",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: RTV Locations - Crestron D30 (Sh.Cat6 IP Video) / PDU (network) / Tv (network & IR)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Swap bed cam. To cam 102 at the panel",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Turn auto reboot back on in rack PDU 1 once rack is up and running stable.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": "2025-09-04",
+          "end": "2025-09-04",
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": "2026-06-29",
+          "end": "2026-06-29",
+          "status": "complete"
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": "2026-08-14",
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": "2026-08-24",
+          "end": "2026-08-24",
+          "status": ""
+        }
+      ],
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "wpr-condo-102",
+      "name": "WPR Condo 102",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "green",
+      "phase": "Trim",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 8,
+      "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "Sent",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Admin: Update As-builts (Tv locations and any other wiring changes)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: AV Mech Room - ADD PICTURES OF SERVICE SMURF TUBE PRE-DRYWALL (USE DURING INSTALL) to Pulse Plans Folder",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Living Room - We can not do blind wire at TV locations, this will need a single gang box and will get trimmed out with a wall plate",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Relocate Motion Detector (MT-106) wire in the Vestibule",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Relocate keypad (KP-102) wire in the Vestibule.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": "2025-09-04",
+          "end": "2025-09-04",
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": "2026-08-18",
+          "end": "2026-08-18",
+          "status": "active"
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "wpr-condo-201",
+      "name": "WPR Condo 201",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "green",
+      "phase": "Trim",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 11,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "ATI: Update As-Built to reflect WAP-101 in Bedroom 1 closet",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: AV Mech Room - ADD PICTURES OF SERVICE SMURF TUBE PRE-DRYWALL (USE DURING INSTALL) to Pulse Plans Folder",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Living Room - Sub location needs power (either move sub or get them to move power)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #3546: Roller Shade is out of drywall",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4471: Missing speakers",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4877: Similar to unit 4 lvl 3, need to add a single Smurf tube from tv down directly below to the right of the outlet below the tv.",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "This is a test",
+          "status": "todo",
+          "source": "Command Center",
+          "externalUrl": ""
+        }
+      ],
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": "2025-10-13",
+          "end": "2025-10-13",
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": "2026-08-31",
+          "end": "2026-08-31",
+          "status": "active"
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "wpr-condo-202",
+      "name": "WPR Condo 202",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "green",
+      "phase": "Trim",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 16,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "Admin: Follow up with Solus on wall plates (white arch matte .. beveled edge) Also verify that Helix is following this direction for outlets",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: AV Mech Room - ADD PICTURES OF SERVICE SMURF TUBE PRE-DRYWALL (USE DURING INSTALL) to pulse plans folder",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: SERVICE CONDUIT - this is blocked and we don't have fiber to garage mech",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #1471: Unit #202 elevator closet the data port is not centered per RCP",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #1540: Unit 202 elevator vestibule the keypad is to high.",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4204: Finish Plywood, Metal, and Roller Shade",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4248: Lockable roller shade needed",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4275: No action needed. Tell us what the cover plate is covering.",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4376: Finish fiber area better - all units",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4390: Motion sensor should be in corner",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #893: A/V complete in AV room",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        }
+      ],
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": "2025-10-13",
+          "end": "2025-10-13",
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": "2026-08-31",
+          "end": "2026-08-31",
+          "status": "active"
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "wpr-condo-penthouse",
+      "name": "WPR Condo Penthouse",
+      "area": "Condos/Penthouse",
+      "team": "Big-D Condos/Penthouse",
+      "health": "green",
+      "phase": "Trim",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 16,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "ATI: Update As-Built to reflect Kitchen Phone/Data (PD-103) is buried behind the millwork.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Current Proposal - Rec Room shows PS 80 mount... we only have a WB31 in place here. This will need to be a PS65 mount and will requir",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Primary Bath Small Ap Speakers - 3\" round retro (bezel) - will need requested for ordering from austin after contracted",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: AV Mech Room - ADD a picture of the wall in the mech room where the smurf tube meets the metal conduit that runs to the basement (B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Follow up with Helix on occupancy sensor in laundry room",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Mech Room - dimmer switch needs moved due to vent (follow up with Helix and BigD)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Primary Steam Shower - need to see if we can get a cat6 to the steam shower controller (need to verify with Shamrock/Plummers if th",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Rec Room WB31 - touch base with Jason to see if this box can be mounted yet (it was left tacked to the wall). See if BigD need any ",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: SERVICE CONDUIT - this is blocked and we don't have fiber to garage mech",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Sauna, needs dvc landed in a speaker bracket (sonance medium ring) once ceiling grid is framed",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Talk to Shamrock about network cable in Sauna.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #1645: Unit #300 primary suite data port is at 5’ AFF",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        }
+      ],
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": "2025-12-22",
+          "end": "2025-12-22",
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": "2026-09-07",
+          "end": "2026-09-07",
+          "status": "active"
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": null,
+          "end": null,
+          "status": ""
+        }
+      ],
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "skier-services",
+      "name": "Skier Services",
+      "area": "Skier Services",
+      "team": "Big-D Skier Services",
+      "health": "green",
+      "phase": "Trim",
+      "startDate": "2025-06-04",
+      "endDate": "2026-11-30",
+      "openTasks": 10,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "Accepted",
+        "deposit": "Pending",
+        "changeOrders": "Pending"
+      },
+      "taskList": [
+        {
+          "name": "Admin: (2) WB21 back boxes have been pulled from stock for the LL Fitness area. (1) WB31 pulled from stock for ML Member Lounge. These are o",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Need Current AV system C/O approved 0515 2.1",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Prewire Additions 0678 needs approved (covers back boxes)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Use RCP for Speaker Grills (Round or Square) - we will need to order accordingly (possible C/O)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Wade, where are we at with the change order for the volume controls and touch panels? Do we have time to edit that C/O for a few more",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Get network switch from Clint MacKay (WPR IT) to add to our rack",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Head end wiring needs pulled into Mech Room once ladder tray is confirmed installed",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project has been verified as complete with Project Manager",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
+      "timelines": [
+        {
+          "key": "prewire",
+          "label": "Pre-Wire",
+          "start": "2026-05-13",
+          "end": "2026-05-13",
+          "status": "complete"
+        },
+        {
+          "key": "trim",
+          "label": "Trim",
+          "start": "2026-09-28",
+          "end": "2026-09-28",
+          "status": ""
+        },
+        {
+          "key": "handover",
+          "label": "WPR Handover",
+          "start": null,
+          "end": null,
+          "status": ""
+        },
+        {
+          "key": "install",
+          "label": "Install",
+          "start": "2026-10-12",
+          "end": "2026-10-12",
+          "status": ""
+        }
+      ],
+      "attention": [],
+      "links": []
+    },
+    {
+      "id": "metni",
+      "name": "Metni",
+      "area": "Other Projects",
+      "team": "No team listed",
+      "health": "pending",
+      "phase": "Install",
+      "startDate": null,
+      "endDate": null,
+      "openTasks": 48,
+      "overdueTasks": 0,
+      "highPriorityTasks": 0,
+      "risks": 0,
+      "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [
+        {
+          "name": "AV: Admin: Garage: Make sure that the two network switches are setup and documented properly",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Admin: Relabel Equipment accordingly. (See Notes)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Admin: Starlink location - steal SH Cat6 from Loft RTV. We can find the wire where it runs through the mech room up in the loft and punc",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Admin: Update Solar System Network drawings",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Gun Display: Install 10U rack w/ all related equipment",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Gun Display: Install camera",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Main Mech: Clean up wiring",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Main Mech: Elevator Panel phone connection",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Main Mech: Lutron Processor Panel: Verify blue Cat6 3PC wire for network connection. Update 2-Post I/O sheet",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Rack Room: Get a latch for the side of the 2-post",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Rack Room: Move speaker wiring in rack for Lap Pool to distribution amp for Pool speakers",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Safe Room: Install camera w/ white flat back plate",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Staff Entry: Install camera (pending rock work)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL Lounge: Install speaker grills x4",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL Safe Room Storage: Remove camera back-box",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL - Batcave: Entry: Remove camera back-box and install flat black plate",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL - Batcave: Install X2 cameras (this is based on a pending change order)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL - Lap Pool: Install fisheye camera w/ recessed kit",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL - Outdoor Living: Remove WAP antennas and paint black",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL - Theater: Straighten projector with screen (it's twisted to the left)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL - Yoga Area: Install owner provided TV (after mirror is installed)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL Gym: Center TV on cabinet",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Fire: Install PTZ camera with recess kit",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Fire: Install owner provided TV",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Fire: Remove WAP antennas and paint black",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Garage: Battery Bunker: Check on network switch",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Garage: Label solar system network wiring",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Garage: Mudroom Entry: reinstall camera",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Garage: Security switch on 2nd door to the right: see if it can be fished down and brought through lower plate",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Master Suite: Install owner provided TV w/ soundbar",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Master Suite: Relable wiring on Sonos Port that used to be Lap Pool which is now Master Bed - audio cable and network",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Office: Deck: remove WAP antennas and paint black",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Outdoor Living: Install owner provided TV",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Outdoor Living: Remove WAP antennas and paint black",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Punch List: ML/LL: ML Deck WAP was relocated to the Lap Pool. Need to update the name of this WAP in Ubiquiti",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Punch List: ML: Deck- Add new WAP to Ubiquiti system",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Techs Priority List: Label Master Bathroom Mirror tv spares",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Techs Priority List: Master landscape speaker pair needs a box, box will be buried in the dirt because wire comes out below grade, speak",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Techs Priority List: Need to set static IP on garage solar switch, adopt spa outdoor AP and DHCP Res for ski bridge PTZ",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Techs Priority List: Transfer Sonos to customer account or default Ports and Amps if no account created by end of install.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: UL - Loft: Install Starlink modem in mech room",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: UL - Loft: Install Starlink on roof as designated by builder",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Transfer Test: This is transfer test one",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Transfer Test: Transfer test three",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Transfer Test: Transfer test two",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: ATI C/O 1.2 AV System: Return parts back to stock",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: ATI C/O 1.3 AV System: Return parts back to stock",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: ATI C/O 1.4 AV System: Return parts back to stock",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
@@ -834,516 +2448,17 @@
           "label": "Trim",
           "start": null,
           "end": null,
-          "status": ""
-        },
-        {
-          "key": "handover",
-          "label": "WPR Handover",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "install",
-          "label": "Install",
-          "start": "2026-08-10",
-          "end": "2026-08-24",
-          "status": ""
-        }
-      ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Correct the Lighting Plan based on Thomas Hickman's markup.",
-          "dueDate": "2025-10-10",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Primary Closet - need a change order to swap the 2 current speakers to a DVC due to speaker placement capability",
-          "dueDate": "2026-06-08",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Turn auto reboot back on in rack PDU 1 once rack is up and running stable.",
-          "dueDate": "2026-07-14",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Update As-builts - Primary Closet change from 2 speakers to 1 DVC (once the work has been completed)",
-          "dueDate": "2026-07-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Unit 101 Bed 3 TV Back Box Not Level",
-          "dueDate": "2026-07-22",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Warehouse: Please stage the bin for this job",
-          "dueDate": "2026-07-24",
-          "source": "Pulse"
-        }
-      ],
-      "links": []
-    },
-    {
-      "id": "wpr-condo-102",
-      "name": "WPR Condo 102",
-      "area": "Condos/Penthouse",
-      "team": "Big-D Condos/Penthouse",
-      "health": "pending",
-      "phase": "Pre-Wire",
-      "startDate": null,
-      "endDate": null,
-      "openTasks": 7,
-      "overdueTasks": 3,
-      "highPriorityTasks": 0,
-      "risks": 0,
-      "nextHandoff": null,
-      "timelines": [
-        {
-          "key": "prewire",
-          "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "trim",
-          "label": "Trim",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "handover",
-          "label": "WPR Handover",
-          "start": null,
-          "end": null,
-          "status": ""
+          "status": "complete"
         },
         {
           "key": "install",
           "label": "Install",
           "start": null,
           "end": null,
-          "status": ""
+          "status": "active"
         }
       ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Living Room - find out if we will blind wire the Tv wiring or if we need to put it in a single gang box",
-          "dueDate": "2026-05-26",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Move WAP location in Pantry; center it between door and access panel.",
-          "dueDate": "2026-05-27",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Update As-builts (Tv locations and any other wiring changes)",
-          "dueDate": "2026-07-24",
-          "source": "Pulse"
-        }
-      ],
-      "links": []
-    },
-    {
-      "id": "wpr-condo-201",
-      "name": "WPR Condo 201",
-      "area": "Condos/Penthouse",
-      "team": "Big-D Condos/Penthouse",
-      "health": "pending",
-      "phase": "Pre-Wire",
-      "startDate": null,
-      "endDate": null,
-      "openTasks": 8,
-      "overdueTasks": 2,
-      "highPriorityTasks": 0,
-      "risks": 0,
-      "nextHandoff": null,
-      "timelines": [
-        {
-          "key": "prewire",
-          "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "trim",
-          "label": "Trim",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "handover",
-          "label": "WPR Handover",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "install",
-          "label": "Install",
-          "start": null,
-          "end": null,
-          "status": ""
-        }
-      ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
-          "dueDate": "2026-01-23",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Living Room - Sub location needs power (either move sub or get them to move power)",
-          "dueDate": "2026-06-01",
-          "source": "Pulse"
-        }
-      ],
-      "links": []
-    },
-    {
-      "id": "wpr-condo-202",
-      "name": "WPR Condo 202",
-      "area": "Condos/Penthouse",
-      "team": "Big-D Condos/Penthouse",
-      "health": "pending",
-      "phase": "Pre-Wire",
-      "startDate": null,
-      "endDate": null,
-      "openTasks": 7,
-      "overdueTasks": 3,
-      "highPriorityTasks": 2,
-      "risks": 0,
-      "nextHandoff": null,
-      "timelines": [
-        {
-          "key": "prewire",
-          "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "trim",
-          "label": "Trim",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "handover",
-          "label": "WPR Handover",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "install",
-          "label": "Install",
-          "start": null,
-          "end": null,
-          "status": ""
-        }
-      ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
-          "dueDate": "2026-01-23",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #1471: Unit #202 elevator closet the data port is not centered per RCP",
-          "dueDate": "2026-03-09",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #1540: Unit 202 elevator vestibule the keypad is to high.",
-          "dueDate": "2026-03-23",
-          "source": "Procore"
-        }
-      ],
-      "links": []
-    },
-    {
-      "id": "wpr-condo-penthouse",
-      "name": "WPR Condo Penthouse",
-      "area": "Condos/Penthouse",
-      "team": "Big-D Condos/Penthouse",
-      "health": "pending",
-      "phase": "Pre-Wire",
-      "startDate": null,
-      "endDate": null,
-      "openTasks": 15,
-      "overdueTasks": 10,
-      "highPriorityTasks": 2,
-      "risks": 0,
-      "nextHandoff": null,
-      "timelines": [
-        {
-          "key": "prewire",
-          "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "trim",
-          "label": "Trim",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "handover",
-          "label": "WPR Handover",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "install",
-          "label": "Install",
-          "start": null,
-          "end": null,
-          "status": ""
-        }
-      ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
-          "dueDate": "2026-01-23",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Primary Bath Small Ap Speakers - 3\" round retro (bezel)",
-          "dueDate": "2026-04-08",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #1645: Unit #300 primary suite data port is at 5’ AFF",
-          "dueDate": "2026-04-15",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Primary Steam Shower - need to see if we can get a cat6 to the steam shower controller (need to verify with Shamrock/Plummers if th",
-          "dueDate": "2026-04-30",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Current Proposal - Rec Room shows PS 80 mount... we only have a WB31 in place here. This will need to be a PS65 mount and will requir",
-          "dueDate": "2026-05-08",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Rec Room WB31 - touch base with Jason to see if this box can be mounted yet (it was left tacked to the wall). See if BigD need any ",
-          "dueDate": "2026-05-14",
-          "source": "Pulse"
-        }
-      ],
-      "links": []
-    },
-    {
-      "id": "skier-services",
-      "name": "Skier Services",
-      "area": "Skier Services",
-      "team": "Big-D Skier Services",
-      "health": "pending",
-      "phase": "Pre-Wire",
-      "startDate": "2025-06-04",
-      "endDate": "2026-11-30",
-      "openTasks": 14,
-      "overdueTasks": 10,
-      "highPriorityTasks": 1,
-      "risks": 0,
-      "nextHandoff": null,
-      "timelines": [
-        {
-          "key": "prewire",
-          "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "trim",
-          "label": "Trim",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "handover",
-          "label": "WPR Handover",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "install",
-          "label": "Install",
-          "start": null,
-          "end": null,
-          "status": ""
-        }
-      ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Wade, where are we at with the change order for the volume controls and touch panels? Do we have time to edit that C/O for a few more",
-          "dueDate": "2026-06-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Procore #257: Incomplete Speakers at member lockers",
-          "dueDate": "2026-06-18",
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: (2) WB21 back boxes have been pulled from stock for the LL Fitness area. (1) WB31 pulled from stock for ML Member Lounge. These are o",
-          "dueDate": "2026-06-19",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Use RCP for Speaker Grills (Round or Square) - we will need to order accordingly (possible C/O)",
-          "dueDate": "2026-06-19",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: AV Mech - NEED CHANGE ORDER - switch AV Rack to match the rack being provided for the IT rack. Model information is in the notes (als",
-          "dueDate": "2026-06-19",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Possible C/O - need to check speaker count on RCP compared to our contract.",
-          "dueDate": "2026-06-19",
-          "source": "Pulse"
-        }
-      ],
-      "links": []
-    },
-    {
-      "id": "metni",
-      "name": "Metni",
-      "area": "Other Projects",
-      "team": "No team listed",
-      "health": "pending",
-      "phase": "Pre-Wire",
-      "startDate": null,
-      "endDate": null,
-      "openTasks": 54,
-      "overdueTasks": 4,
-      "highPriorityTasks": 0,
-      "risks": 0,
-      "nextHandoff": null,
-      "timelines": [
-        {
-          "key": "prewire",
-          "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "trim",
-          "label": "Trim",
-          "start": null,
-          "end": null,
-          "status": ""
-        },
-        {
-          "key": "install",
-          "label": "Install",
-          "start": null,
-          "end": null,
-          "status": ""
-        }
-      ],
-      "attention": [
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "AV: ML - Garage: Security switch on 2nd door to the right: see if it can be fished down and brought through lower plate",
-          "dueDate": "2026-04-21",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "AV: Techs Priority List: Transfer Sonos to customer account or default Ports and Amps if no account created by end of install.",
-          "dueDate": "2026-05-08",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "AV: Admin: Update Solar System Network drawings",
-          "dueDate": "2026-06-05",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "AV: Admin: Check Wifi is disabled on Hardwired Sonos devices - unless wireless needed to a sub.",
-          "dueDate": "2026-06-29",
-          "source": "Pulse"
-        }
-      ],
+      "attention": [],
       "links": []
     },
     {
@@ -1360,13 +2475,19 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
           "start": null,
           "end": null,
-          "status": ""
+          "status": "active"
         },
         {
           "key": "trim",
@@ -1400,19 +2521,25 @@
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
+      "approvalsPayments": {
+        "contract": "",
+        "deposit": "",
+        "changeOrders": ""
+      },
+      "taskList": [],
       "timelines": [
         {
           "key": "prewire",
           "label": "Pre-Wire",
           "start": "2026-04-13",
-          "end": "2026-07-13",
-          "status": ""
+          "end": "2026-04-13",
+          "status": "active"
         },
         {
           "key": "trim",
           "label": "Trim",
           "start": "2026-11-09",
-          "end": "2026-11-16",
+          "end": "2026-11-09",
           "status": ""
         },
         {
@@ -1420,46 +2547,6 @@
           "label": "Install",
           "start": "2026-11-30",
           "end": "2026-12-14",
-          "status": ""
-        }
-      ],
-      "attention": [],
-      "links": []
-    },
-    {
-      "id": "parkin",
-      "name": "Parkin",
-      "area": "Other Projects",
-      "team": "Jennifer Parkin",
-      "health": "pending",
-      "phase": "Install",
-      "startDate": null,
-      "endDate": null,
-      "openTasks": 0,
-      "overdueTasks": 0,
-      "highPriorityTasks": 0,
-      "risks": 0,
-      "nextHandoff": null,
-      "timelines": [
-        {
-          "key": "prewire",
-          "label": "Pre-Wire",
-          "start": null,
-          "end": null,
-          "status": "complete"
-        },
-        {
-          "key": "trim",
-          "label": "Trim",
-          "start": null,
-          "end": null,
-          "status": "complete"
-        },
-        {
-          "key": "install",
-          "label": "Install",
-          "start": null,
-          "end": null,
           "status": ""
         }
       ],
