@@ -52,7 +52,7 @@ function toHostedProject(project, options) {
   const timelines = Array.isArray(project.timelines) ? project.timelines : [];
   const openTasks = tasks.filter(task => task.status !== "done").length;
   const overdueTasks = tasks.filter(task => task.status !== "done" && isPast(task.dueDate)).length;
-  const highPriorityTasks = tasks.filter(task => task.status !== "done" && task.priority === "high").length;
+  const highPriorityTasks = tasks.filter(task => task.status !== "done" && normalizeTaskPriority(task.priority) === "high").length;
   const activePhase = currentPhase(timelines);
   const health = project.rag || computeHealth(project, tasks, risks, timelines);
   const attention = buildAttention(project, tasks, risks, timelines);
@@ -121,7 +121,7 @@ function buildAttention(project, tasks, risks, timelines) {
   const items = [];
 
   tasks
-    .filter(task => task.status !== "done" && (task.priority === "high" || isPast(task.dueDate)))
+    .filter(task => task.status !== "done" && (normalizeTaskPriority(task.priority) === "high" || isPast(task.dueDate)))
     .forEach(task => {
       items.push({
         severity: isPast(task.dueDate) ? "red" : "amber",
@@ -270,6 +270,14 @@ function sourceLabel(source) {
   if (source === "pulse") return "Pulse";
   if (source === "procore" || source === "procore-review") return "Procore";
   return "Command Center";
+}
+
+function normalizeTaskPriority(value) {
+  const clean = text(value, "").toLowerCase();
+  if (["urgent", "high"].includes(clean)) return "high";
+  if (["normal", "medium", "med"].includes(clean)) return "medium";
+  if (clean === "low") return "low";
+  return "";
 }
 
 function severityScore(severity) {

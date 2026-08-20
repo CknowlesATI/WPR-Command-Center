@@ -40,7 +40,11 @@ const TASK_COLUMNS = {
   title: ["title", "task", "todo", "to-do", "observation", "description", "subject"],
   status: ["status", "state"],
   sourceState: ["source state", "source status", "pulse status", "procore status", "ball in court"],
-  externalUrl: ["url", "link", "external url"]
+  externalUrl: ["url", "link", "external url"],
+  dueDate: ["due date", "due", "deadline", "target date"],
+  priority: ["priority", "importance"],
+  assignee: ["assignee", "assigned to", "owner", "responsible"],
+  sourceUpdatedAt: ["updated at", "updated", "modified at", "last updated"]
 };
 
 const args = parseArgs(process.argv.slice(2));
@@ -385,7 +389,11 @@ function buildTaskPlan(projects, source, rows) {
       name,
       status: row.status || row.sourceState || "todo",
       sourceState: row.sourceState || row.status || "",
-      externalUrl: row.externalUrl || ""
+      externalUrl: row.externalUrl || "",
+      dueDate: row.dueDate || "",
+      priority: row.priority || "",
+      assignee: row.assignee || "",
+      sourceUpdatedAt: row.sourceUpdatedAt || ""
     });
   });
 
@@ -545,7 +553,11 @@ function normalizePulseApiTodo(item, context) {
     name: titleWithSection(title, context.todoListTitle || item.section),
     status: isCompleted(item) ? "done" : "todo",
     sourceState: taskStatusLabel(isCompleted(item) ? "done" : "todo"),
-    externalUrl: normalizePulseUrl(item, context)
+    externalUrl: normalizePulseUrl(item, context),
+    dueDate: dateOnly(firstValue(item, ["due_date", "dueDate", "due", "deadline", "target_date", "targetDate"])),
+    priority: normalizeTaskPriority(firstValue(item, ["priority", "importance"])),
+    assignee: firstValue(item, ["assignee_name", "assigneeName", "assignee", "assigned_to", "assignedTo", "owner", "responsible"]),
+    sourceUpdatedAt: firstValue(item, ["updated_at", "updatedAt", "modified_at", "modifiedAt", "last_updated", "lastUpdated"])
   };
 }
 
@@ -618,7 +630,11 @@ function parseTaskRows(text) {
     title: pick(row, TASK_COLUMNS.title),
     status: pick(row, TASK_COLUMNS.status),
     sourceState: pick(row, TASK_COLUMNS.sourceState),
-    externalUrl: pick(row, TASK_COLUMNS.externalUrl)
+    externalUrl: pick(row, TASK_COLUMNS.externalUrl),
+    dueDate: dateOnly(pick(row, TASK_COLUMNS.dueDate)),
+    priority: normalizeTaskPriority(pick(row, TASK_COLUMNS.priority)),
+    assignee: pick(row, TASK_COLUMNS.assignee),
+    sourceUpdatedAt: pick(row, TASK_COLUMNS.sourceUpdatedAt)
   })).filter(row => row.project && row.title);
 }
 
@@ -890,12 +906,16 @@ function appendSourceTaskSyncSql(lines, sync) {
   for (const task of sync.tasks || []) {
     const id = normalizedSyncedTaskId(source.primary, task.id);
     lines.push(
-      "INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, updated_by, updated_at) VALUES " +
+      "INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, due_date, priority, assignee, source_updated_at, updated_by, updated_at) VALUES " +
       `(${sqlString(id)}, ${sqlString(task.projectId)}, ${sqlString(task.name)}, ${sqlString(syncedTaskStatus(task.status))}, ` +
-      `${sqlString(source.primary)}, ${sqlString(task.sourceState || "")}, ${sqlString(task.externalUrl || "")}, 'SYNC', ${sqlString(now)}) ` +
+      `${sqlString(source.primary)}, ${sqlString(task.sourceState || "")}, ${sqlString(task.externalUrl || "")}, ` +
+      `${sqlString(dateOnly(task.dueDate))}, ${sqlString(normalizeTaskPriority(task.priority))}, ${sqlString(cleanCell(task.assignee).slice(0, 160))}, ` +
+      `${sqlString(cleanCell(task.sourceUpdatedAt).slice(0, 80))}, 'SYNC', ${sqlString(now)}) ` +
       "ON CONFLICT(id) DO UPDATE SET " +
       "project_id = excluded.project_id, name = excluded.name, status = excluded.status, source = excluded.source, " +
-      "source_state = excluded.source_state, external_url = excluded.external_url, updated_by = excluded.updated_by, updated_at = excluded.updated_at;"
+      "source_state = excluded.source_state, external_url = excluded.external_url, due_date = excluded.due_date, " +
+      "priority = excluded.priority, assignee = excluded.assignee, source_updated_at = excluded.source_updated_at, " +
+      "updated_by = excluded.updated_by, updated_at = excluded.updated_at;"
     );
   }
 }
@@ -1031,6 +1051,22 @@ function dateOnly(value) {
   const match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (!match) return "";
   return `${match[3]}-${match[1].padStart(2, "0")}-${match[2].padStart(2, "0")}`;
+}
+
+function firstValue(item, keys) {
+  for (const key of keys) {
+    const value = cleanCell(item && item[key]);
+    if (value) return value;
+  }
+  return "";
+}
+
+function normalizeTaskPriority(value) {
+  const text = cleanCell(value).toLowerCase();
+  if (["urgent", "high"].includes(text)) return "high";
+  if (["normal", "medium", "med"].includes(text)) return "medium";
+  if (text === "low") return "low";
+  return "";
 }
 
 function cleanCell(value) {

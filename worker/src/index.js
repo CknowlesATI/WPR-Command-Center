@@ -79,7 +79,7 @@ async function getAllData(db) {
   const [projects, controls, tasks, timelines, risks, milestones] = await Promise.all([
     db.prepare("SELECT * FROM projects ORDER BY CAST(id AS INTEGER), name").all(),
     db.prepare("SELECT * FROM project_controls").all(),
-    db.prepare("SELECT id, project_id, name, status, source, source_state, external_url, updated_by, updated_at FROM tasks ORDER BY CAST(id AS INTEGER), name").all(),
+    db.prepare("SELECT id, project_id, name, status, source, source_state, external_url, due_date, priority, assignee, source_updated_at, updated_by, updated_at FROM tasks ORDER BY CAST(id AS INTEGER), name").all(),
     db.prepare("SELECT * FROM timelines ORDER BY project_id, key").all(),
     db.prepare("SELECT * FROM risks ORDER BY CAST(id AS INTEGER), title").all(),
     db.prepare("SELECT * FROM milestones ORDER BY project_id, date").all()
@@ -89,6 +89,7 @@ async function getAllData(db) {
 
   return projects.results.filter(isDashboardProject).map(project => {
     const projectTasks = tasks.results.filter(task => String(task.project_id) === String(project.id));
+    const taskSignals = buildTaskSignals(projectTasks);
     return {
       id: project.id,
       name: project.name,
@@ -106,6 +107,9 @@ async function getAllData(db) {
         progress: projectTasks.filter(task => task.status === "progress").length,
         done: projectTasks.filter(task => task.status === "done").length
       },
+      overdueTasks: taskSignals.overdueTasks,
+      highPriorityTasks: taskSignals.highPriorityTasks,
+      attention: taskSignals.attention,
       taskList: projectTasks.map(task => ({
         id: task.id,
         name: task.name,
@@ -113,6 +117,10 @@ async function getAllData(db) {
         source: task.source || "",
         sourceState: task.source_state || "",
         externalUrl: task.external_url || "",
+        dueDate: task.due_date || "",
+        priority: task.priority || "",
+        assignee: task.assignee || "",
+        sourceUpdatedAt: task.source_updated_at || "",
         updatedBy: task.updated_by || "",
         updatedAt: task.updated_at || ""
       })),
@@ -125,6 +133,45 @@ async function getAllData(db) {
       control: toControl(project.id, controlsByProject.get(String(project.id)))
     };
   });
+}
+
+function buildTaskSignals(tasks) {
+  const activeTasks = tasks.filter(task => task.status !== "done");
+  const overdueTasks = activeTasks.filter(task => isPastDate(task.due_date)).length;
+  const highPriorityTasks = activeTasks.filter(task => normalizeTaskPriority(task.priority) === "high").length;
+  const attention = activeTasks
+    .filter(task => normalizeTaskPriority(task.priority) === "high" || isPastDate(task.due_date))
+    .map(task => ({
+      severity: isPastDate(task.due_date) ? "red" : "amber",
+      label: isPastDate(task.due_date) ? "Overdue task" : "High priority",
+      detail: task.name || "Task needs review",
+      dueDate: task.due_date || "",
+      source: sourceLabel(task.source)
+    }))
+    .sort((a, b) => severityScore(b.severity) - severityScore(a.severity) || String(a.dueDate || "9999-12-31").localeCompare(String(b.dueDate || "9999-12-31")))
+    .slice(0, 20);
+  return { overdueTasks, highPriorityTasks, attention };
+}
+
+function isPastDate(value) {
+  const date = parseDateOnly(value);
+  if (!date) return false;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return date < today;
+}
+
+function parseDateOnly(value) {
+  const text = normalizeOptionalDate(value);
+  if (!text) return null;
+  const date = new Date(`${text}T00:00:00`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function severityScore(severity) {
+  if (severity === "red") return 3;
+  if (severity === "amber") return 2;
+  return 1;
 }
 
 async function getSettings(db, env) {
@@ -541,8 +588,8 @@ async function syncSourceTasks(db, body, actor) {
   tasks.forEach(task => {
     statements.push(
       db.prepare(`
-        INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, updated_by, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'SYNC', ?)
+        INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, due_date, priority, assignee, source_updated_at, updated_by, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'SYNC', ?)
         ON CONFLICT(id) DO UPDATE SET
           project_id = excluded.project_id,
           name = excluded.name,
@@ -550,9 +597,13 @@ async function syncSourceTasks(db, body, actor) {
           source = excluded.source,
           source_state = excluded.source_state,
           external_url = excluded.external_url,
+          due_date = excluded.due_date,
+          priority = excluded.priority,
+          assignee = excluded.assignee,
+          source_updated_at = excluded.source_updated_at,
           updated_by = excluded.updated_by,
           updated_at = excluded.updated_at
-      `).bind(task.id, task.projectId, task.name, task.status, source.primary, task.sourceState, task.externalUrl, now)
+      `).bind(task.id, task.projectId, task.name, task.status, source.primary, task.sourceState, task.externalUrl, task.dueDate, task.priority, task.assignee, task.sourceUpdatedAt, now)
     );
   });
 
@@ -742,7 +793,11 @@ function normalizeSourceTaskSync(body) {
     name: normalizeText(required(task && task.name, `tasks[${index}].name`)).slice(0, 500),
     status: normalizeSyncedTaskStatus(task && task.status),
     sourceState: normalizeText(task && task.sourceState || "").slice(0, 120),
-    externalUrl: normalizeText(task && task.externalUrl || "").slice(0, 1000)
+    externalUrl: normalizeText(task && task.externalUrl || "").slice(0, 1000),
+    dueDate: normalizeOptionalDate(task && (task.dueDate || task.due_date) || ""),
+    priority: normalizeTaskPriority(task && task.priority),
+    assignee: normalizeText(task && task.assignee || "").slice(0, 160),
+    sourceUpdatedAt: normalizeText(task && (task.sourceUpdatedAt || task.source_updated_at) || "").slice(0, 80)
   })) : [];
   const replaceProjectIds = Array.isArray(body.replaceProjectIds) ? [...new Set(body.replaceProjectIds.map(value => required(value, "replaceProjectIds[]")))] : [];
   return { source, tasks, replaceProjectIds };
@@ -791,7 +846,7 @@ function normalizeSyncRunSource(value) {
 
 function normalizeSyncRunStatus(value) {
   const status = normalizeText(value).toLowerCase();
-  if (["success", "failed", "skipped"].includes(status)) return status;
+  if (["success", "failed", "skipped", "requested"].includes(status)) return status;
   return "unknown";
 }
 
@@ -843,6 +898,14 @@ function normalizeOperatingState(value) {
 function normalizeOptionalDate(value) {
   const text = normalizeText(value);
   return /^\d{4}-\d{2}-\d{2}/.test(text) ? text.slice(0, 10) : "";
+}
+
+function normalizeTaskPriority(value) {
+  const text = normalizeText(value).toLowerCase();
+  if (["urgent", "high"].includes(text)) return "high";
+  if (["normal", "medium", "med"].includes(text)) return "medium";
+  if (text === "low") return "low";
+  return "";
 }
 
 function normalizeStrictDate(value) {

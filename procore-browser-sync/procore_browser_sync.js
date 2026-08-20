@@ -520,6 +520,7 @@ function normalizeProcoreTask(row, project) {
     externalUrl: row.detailUrl || row.itemUrl,
     assignee: row.assignee,
     dueDate: row.dueDate,
+    sourceUpdatedAt: row.dateNotified,
     notes: [
       `Type: ${row.type}`,
       `Procore Status: ${row.status}`,
@@ -641,12 +642,16 @@ function appendSourceTaskSyncSql(lines, sync) {
   for (const task of sync.tasks || []) {
     const id = normalizedSyncedTaskId(source.primary, task.id);
     lines.push(
-      "INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, updated_by, updated_at) VALUES " +
+      "INSERT INTO tasks (id, project_id, name, status, source, source_state, external_url, due_date, priority, assignee, source_updated_at, updated_by, updated_at) VALUES " +
       `(${sqlString(id)}, ${sqlString(task.projectId)}, ${sqlString(task.name)}, ${sqlString(syncedTaskStatus(task.status))}, ` +
-      `${sqlString(source.primary)}, ${sqlString(task.sourceState || "")}, ${sqlString(task.externalUrl || "")}, 'SYNC', ${sqlString(now)}) ` +
+      `${sqlString(source.primary)}, ${sqlString(task.sourceState || "")}, ${sqlString(task.externalUrl || "")}, ` +
+      `${sqlString(normalizeDate(task.dueDate || ""))}, ${sqlString(normalizeProcorePriority(task.priority))}, ${sqlString(String(task.assignee || "").trim().slice(0, 160))}, ` +
+      `${sqlString(String(task.sourceUpdatedAt || "").trim().slice(0, 80))}, 'SYNC', ${sqlString(now)}) ` +
       "ON CONFLICT(id) DO UPDATE SET " +
       "project_id = excluded.project_id, name = excluded.name, status = excluded.status, source = excluded.source, " +
-      "source_state = excluded.source_state, external_url = excluded.external_url, updated_by = excluded.updated_by, updated_at = excluded.updated_at;"
+      "source_state = excluded.source_state, external_url = excluded.external_url, due_date = excluded.due_date, " +
+      "priority = excluded.priority, assignee = excluded.assignee, source_updated_at = excluded.source_updated_at, " +
+      "updated_by = excluded.updated_by, updated_at = excluded.updated_at;"
     );
   }
 }

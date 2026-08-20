@@ -353,6 +353,7 @@
   .freshness-pill.good { border-left-color: var(--green); }
   .freshness-pill.stale { border-left-color: var(--amber); }
   .freshness-pill.failed { border-left-color: var(--red); }
+  .freshness-pill.requested { border-left-color: var(--amber); }
 
   .freshness-title {
     display: flex;
@@ -374,6 +375,17 @@
     font-size: 11px;
     font-weight: 700;
     line-height: 1.3;
+  }
+
+  .freshness-actions {
+    display: flex;
+    margin-top: 5px;
+  }
+
+  .freshness-actions .secondary-button {
+    min-height: 31px;
+    padding: 6px 9px;
+    font-size: 11px;
   }
 
   .edit-note {
@@ -1454,6 +1466,14 @@
     color: var(--muted);
   }
 
+  .source-row-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
   .state-chip {
     display: inline-flex;
     align-items: center;
@@ -2098,27 +2118,31 @@ async function postUpdate(action, payload) {
 }
 
 function normalizeProjects(projects) {
-  return Array.isArray(projects) ? projects.filter(isDashboardProject).map(project => ({
-    id: project.id || project.name,
-    name: project.name || "Untitled project",
-    area: project.area || project.segment || project.projectGroup || "Unassigned",
-    team: project.team || project.externalTeam || "No team listed",
-    phase: currentProjectPhase(project.timelines) || project.phase || "Not Started",
-    startDate: project.startDate || project.startsAt || null,
-    endDate: project.endDate || project.endsAt || null,
-    openTasks: Number(project.openTasks) || openTaskCount(project),
-    overdueTasks: Number(project.overdueTasks) || 0,
-    highPriorityTasks: Number(project.highPriorityTasks) || 0,
-    risks: Number(project.risks) || (Array.isArray(project.risks) ? project.risks.length : 0),
-    nextHandoff: project.nextHandoff || null,
-    approvalsPayments: normalizeApprovalsPayments(project.approvalsPayments, project.control),
-    control: normalizeControl(project.control, project.id),
-    taskList: normalizeTaskList(project.taskList),
-    openSourceCounts: openSourceCounts(project.taskList),
-    attention: Array.isArray(project.attention) ? project.attention : [],
-    links: Array.isArray(project.links) ? project.links : [],
-    timelines: normalizeTimelines(project.timelines)
-  })) : [];
+  return Array.isArray(projects) ? projects.filter(isDashboardProject).map(project => {
+    const taskList = normalizeTaskList(project.taskList);
+    const generatedAttention = taskAttentionItems(taskList);
+    return {
+      id: project.id || project.name,
+      name: project.name || "Untitled project",
+      area: project.area || project.segment || project.projectGroup || "Unassigned",
+      team: project.team || project.externalTeam || "No team listed",
+      phase: currentProjectPhase(project.timelines) || project.phase || "Not Started",
+      startDate: project.startDate || project.startsAt || null,
+      endDate: project.endDate || project.endsAt || null,
+      openTasks: Number(project.openTasks) || taskList.filter(task => task.status !== "done").length,
+      overdueTasks: Math.max(Number(project.overdueTasks) || 0, countOverdueTasks(taskList)),
+      highPriorityTasks: Math.max(Number(project.highPriorityTasks) || 0, countHighPriorityTasks(taskList)),
+      risks: Number(project.risks) || (Array.isArray(project.risks) ? project.risks.length : 0),
+      nextHandoff: project.nextHandoff || null,
+      approvalsPayments: normalizeApprovalsPayments(project.approvalsPayments, project.control),
+      control: normalizeControl(project.control, project.id),
+      taskList,
+      openSourceCounts: openSourceCounts(taskList),
+      attention: Array.isArray(project.attention) && project.attention.length ? project.attention : generatedAttention,
+      links: Array.isArray(project.links) ? project.links : [],
+      timelines: normalizeTimelines(project.timelines)
+    };
+  }) : [];
 }
 
 function normalizeTimelines(timelines) {
@@ -2236,6 +2260,10 @@ function normalizeTaskList(tasks) {
     source: String(task.source || "").trim(),
     sourceState: String(task.sourceState || task.source_state || "").trim(),
     externalUrl: String(task.externalUrl || task.url || task.link || "").trim(),
+    dueDate: dateOnly(task.dueDate || task.due_date),
+    priority: normalizeTaskPriority(task.priority),
+    assignee: String(task.assignee || "").trim(),
+    sourceUpdatedAt: String(task.sourceUpdatedAt || task.source_updated_at || "").trim(),
     updatedBy: String(task.updatedBy || "").trim(),
     updatedAt: String(task.updatedAt || "").trim()
   }))
@@ -2245,6 +2273,36 @@ function normalizeTaskList(tasks) {
 
 function openTaskCount(project) {
   return normalizeTaskList(project.taskList).filter(task => task.status !== "done").length;
+}
+
+function countOverdueTasks(tasks) {
+  return tasks.filter(task => task.status !== "done" && isPastDate(task.dueDate)).length;
+}
+
+function countHighPriorityTasks(tasks) {
+  return tasks.filter(task => task.status !== "done" && task.priority === "high").length;
+}
+
+function taskAttentionItems(tasks) {
+  return tasks
+    .filter(task => task.status !== "done" && (task.priority === "high" || isPastDate(task.dueDate)))
+    .map(task => ({
+      severity: isPastDate(task.dueDate) ? "red" : "amber",
+      label: isPastDate(task.dueDate) ? "Overdue task" : "High priority",
+      detail: task.name,
+      dueDate: task.dueDate,
+      source: taskSourceLabel(task.source)
+    }))
+    .sort((a, b) => severityScore(b.severity) - severityScore(a.severity) || String(a.dueDate || "9999-12-31").localeCompare(String(b.dueDate || "9999-12-31")))
+    .slice(0, 20);
+}
+
+function isPastDate(value) {
+  const date = parseDate(value);
+  if (Number.isNaN(date.getTime())) return false;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return date < today;
 }
 
 function openSourceCounts(tasks) {
@@ -2328,6 +2386,11 @@ function renderSourceFreshness() {
       </div>
       <div class="freshness-meta">${escapeHtml(freshnessTiming(item))}</div>
       <div class="freshness-meta">${item.recordsWritten} written · ${item.projectCount} project${item.projectCount === 1 ? "" : "s"}</div>
+      ${sourceNeedsSyncRequest(item) ? `
+        <div class="freshness-actions">
+          <button class="secondary-button" type="button" data-request-sync="${escapeAttribute(item.source)}" ${state.saving ? "disabled" : ""}>Request Sync</button>
+        </div>
+      ` : ""}
     </article>
   `).join("");
 }
@@ -2335,9 +2398,12 @@ function renderSourceFreshness() {
 function renderSourceFreshnessBanner() {
   const sources = sourceStatuses();
   const failed = sources.filter(item => item.status === "failed");
+  const requested = sources.filter(item => item.status === "requested");
   const stale = sources.filter(item => item.status !== "failed" && freshnessClass(item) === "stale");
   if (failed.length) {
     showSyncBanner("error", `${failed.map(item => item.label).join(" and ")} sync failed. Check Source Freshness before relying on synced items.`);
+  } else if (requested.length) {
+    showSyncBanner("warning", `${requested.map(item => item.label).join(" and ")} sync has been requested and is waiting on the sync runner.`);
   } else if (stale.length) {
     showSyncBanner("warning", `${stale.map(item => item.label).join(" and ")} sync is stale or has not been recorded. Check Source Freshness before relying on synced items.`);
   }
@@ -2395,7 +2461,10 @@ function renderSettings() {
                   <div class="recipient-email">${escapeHtml(item.label)}</div>
                   <div class="edit-note">${escapeHtml(freshnessTiming(item))}${item.message ? ` · ${escapeHtml(item.message)}` : ""}</div>
                 </div>
-                <span class="source-chip ${escapeAttribute(item.source)}">${escapeHtml(freshnessStateLabel(item))}</span>
+                <div class="source-row-actions">
+                  <span class="source-chip ${escapeAttribute(item.source)}">${escapeHtml(freshnessStateLabel(item))}</span>
+                  ${sourceNeedsSyncRequest(item) ? `<button class="secondary-button" type="button" data-request-sync="${escapeAttribute(item.source)}" ${state.saving ? "disabled" : ""}>Request Sync</button>` : ""}
+                </div>
               </div>
             `).join("")}
           </div>
@@ -2429,6 +2498,7 @@ function sourceStatuses() {
 
 function freshnessClass(item) {
   if (item.status === "failed") return "failed";
+  if (item.status === "requested") return "requested";
   if (!item.lastSuccessAt) return "stale";
   const ageMs = Date.now() - new Date(item.lastSuccessAt).getTime();
   if (!Number.isFinite(ageMs) || ageMs > 30 * 60 * 60 * 1000) return "stale";
@@ -2437,6 +2507,7 @@ function freshnessClass(item) {
 
 function freshnessStateLabel(item) {
   if (item.status === "failed") return "Failed";
+  if (item.status === "requested") return "Requested";
   if (!item.lastSuccessAt) return "Not Recorded";
   if (freshnessClass(item) === "stale") return "Stale";
   return "Fresh";
@@ -2446,6 +2517,10 @@ function freshnessTiming(item) {
   if (item.lastSuccessAt) return `Last success ${formatDateTime(item.lastSuccessAt)}`;
   if (item.lastAttemptAt) return `Last attempt ${formatDateTime(item.lastAttemptAt)}`;
   return "No sync run recorded";
+}
+
+function sourceNeedsSyncRequest(item) {
+  return item.status === "failed" || freshnessClass(item) === "stale";
 }
 
 function renderPulseSyncPanel() {
@@ -3056,7 +3131,11 @@ function renderTaskRow(task, closed) {
 }
 
 function renderTaskMeta(task, closed) {
-  return task.source ? renderTaskSource(task, closed) : "Command Center";
+  const parts = [task.source ? renderTaskSource(task, closed) : "Command Center"];
+  if (task.priority) parts.push(`${titleCase(task.priority)} priority`);
+  if (task.dueDate) parts.push(`Due ${formatDate(task.dueDate)}`);
+  if (task.assignee) parts.push(escapeHtml(task.assignee));
+  return parts.join(" · ");
 }
 
 function renderTaskStateControl(task) {
@@ -3154,6 +3233,19 @@ function taskSourceLabel(source) {
   if (source === "pulse") return "Pulse";
   if (source === "procore" || source === "procore-review") return "Procore";
   return source || "Command Center";
+}
+
+function normalizeTaskPriority(value) {
+  const text = String(value || "").trim().toLowerCase();
+  if (["urgent", "high"].includes(text)) return "high";
+  if (["normal", "medium", "med"].includes(text)) return "medium";
+  if (text === "low") return "low";
+  return "";
+}
+
+function titleCase(value) {
+  const text = String(value || "").trim();
+  return text ? `${text.slice(0, 1).toUpperCase()}${text.slice(1)}` : "";
 }
 
 function taskStatusLabel(status) {
@@ -3539,6 +3631,12 @@ document.addEventListener("click", event => {
     return;
   }
 
+  const requestSyncButton = event.target.closest("[data-request-sync]");
+  if (requestSyncButton) {
+    requestSourceSync(requestSyncButton.dataset.requestSync);
+    return;
+  }
+
   if (event.target.closest("#addRecipientButton")) {
     const email = valueFrom("notificationEmailInput");
     if (!email) {
@@ -3765,6 +3863,24 @@ function readNewProjectTemplate() {
 function valueFrom(id) {
   const element = document.getElementById(id);
   return element ? element.value.trim() : "";
+}
+
+function requestSourceSync(source) {
+  const label = source === "pulse" ? "Pulse" : source === "procore" ? "Procore" : "Source";
+  const current = sourceStatuses().find(item => item.source === source) || {};
+  postUpdate("recordSyncRun", {
+    source,
+    status: "requested",
+    recordsSeen: current.recordsSeen || 0,
+    recordsWritten: current.recordsWritten || 0,
+    projectCount: current.projectCount || 0,
+    message: `${label} sync requested from Command Center.`
+  }).then(() => {
+    showSyncBanner("warning", `${label} sync requested. Run the ${label} sync routine to refresh live project data.`);
+  }).catch(error => {
+    console.error(`${label} sync request failed:`, error);
+    showSyncBanner("error", error.message || `${label} sync request could not be recorded.`);
+  });
 }
 
 document.getElementById("searchInput").addEventListener("input", event => {
