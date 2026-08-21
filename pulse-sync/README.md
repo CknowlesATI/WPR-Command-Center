@@ -76,6 +76,11 @@ columns:
 - Pulse timeline dates update `prewire`, `trim`, and `install` timeline date
   fields only.
 - Timeline phase/status checkmarks are not overwritten.
+- Pulse API to-dos only sync open ATI-related items. Lists for Solus, Solace,
+  Linked, Sales, and Service are excluded; completed Pulse to-dos are omitted
+  so they drop out of Command Center on the next project-scoped task sync.
+- Pulse API to-do urgency is driven only by `due_date`. Pulse priorities are not
+  imported, and open Pulse to-dos without a due date remain informational.
 - Synced Pulse and Procore tasks remain read-only inside Command Center.
 - Task sync replaces items for the source and project scope included in the
   run, then upserts the extracted items.

@@ -18,6 +18,7 @@ const LIVE_COMMAND_CENTER_API_URL = "https://wpr-command-center-api.wpr-command-
 const PULSE_DASHBOARD_URL = "https://www.pulsecentral.ai/c/ati-of-america/pm-contracts/ati/dashboard";
 const EXCLUDED_TODO_SECTION_PATTERNS = [
   /\bsolus\b/i,
+  /\bsolace\b/i,
   /\blinked\b/i,
   /\bsales\b/i,
   /\bservice\b/i
@@ -383,15 +384,17 @@ function buildTaskPlan(projects, source, rows) {
     replaceProjectIds.add(project.id);
     const name = cleanCell(row.title);
     if (!name) return;
+    const status = syncedTaskStatus(row.status || row.sourceState || "todo");
+    if (source === "pulse" && status === "done") return;
     tasks.push({
       id: row.id || stableTaskId(source, project.id, name),
       projectId: project.id,
       name,
-      status: row.status || row.sourceState || "todo",
+      status,
       sourceState: row.sourceState || row.status || "",
       externalUrl: row.externalUrl || "",
       dueDate: row.dueDate || "",
-      priority: row.priority || "",
+      priority: source === "pulse" ? "" : row.priority || "",
       assignee: row.assignee || "",
       sourceUpdatedAt: row.sourceUpdatedAt || ""
     });
@@ -544,6 +547,7 @@ function pulseProjectName(project) {
 function normalizePulseApiTodo(item, context) {
   const title = itemTitle(item);
   if (!title || isTitleOnly(item)) return null;
+  if (isCompleted(item)) return null;
   const externalId = cleanCell(item.id || item.todo_item_id);
   if (!externalId) return null;
 
@@ -551,11 +555,11 @@ function normalizePulseApiTodo(item, context) {
     id: `pulse-${externalId}`,
     projectId: String(context.commandProject.id),
     name: titleWithSection(title, context.todoListTitle || item.section),
-    status: isCompleted(item) ? "done" : "todo",
-    sourceState: taskStatusLabel(isCompleted(item) ? "done" : "todo"),
+    status: "todo",
+    sourceState: taskStatusLabel("todo"),
     externalUrl: normalizePulseUrl(item, context),
     dueDate: dateOnly(firstValue(item, ["due_date", "dueDate", "due", "deadline", "target_date", "targetDate"])),
-    priority: normalizeTaskPriority(firstValue(item, ["priority", "importance"])),
+    priority: "",
     assignee: firstValue(item, ["assignee_name", "assigneeName", "assignee", "assigned_to", "assignedTo", "owner", "responsible"]),
     sourceUpdatedAt: firstValue(item, ["updated_at", "updatedAt", "modified_at", "modifiedAt", "last_updated", "lastUpdated"])
   };
@@ -1047,6 +1051,8 @@ function splitDelimited(line, delimiter) {
 function dateOnly(value) {
   const text = cleanCell(value);
   if (!text || text === "-" || text === "—" || /^tbd$/i.test(text)) return "";
+  const isoMatch = text.match(/^(\d{4}-\d{2}-\d{2})(?:[T\s]|$)/);
+  if (isoMatch) return isoMatch[1];
   if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
   const match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (!match) return "";
