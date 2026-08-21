@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-21T02:09:34.997Z",
+  "lastUpdated": "2026-08-21T12:25:41.590Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -142,7 +142,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 15,
-      "overdueTasks": 3,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -293,6 +293,13 @@
           "label": "Overdue task",
           "detail": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
           "dueDate": "2026-08-14",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: L2 Primary Bed needs crossrails, waiting on elections to move outlet for tv installation",
+          "dueDate": "2026-08-20",
           "source": "Pulse"
         }
       ],
@@ -1657,7 +1664,7 @@
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
       "openTasks": 13,
-      "overdueTasks": 3,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": "2026-08-14",
@@ -1796,6 +1803,13 @@
           "label": "Overdue task",
           "detail": "Admin: Update As-builts - Primary Closet change from 2 speakers to 1 DVC (once the work has been completed)",
           "dueDate": "2026-07-17",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Swap bed cam. To cam 102 at the panel",
+          "dueDate": "2026-08-20",
           "source": "Pulse"
         }
       ],
