@@ -98,9 +98,15 @@ Useful options:
 .\run-morning-sync.ps1 -PulseTimelineCadenceDays 14
 .\run-morning-sync.ps1 -PulseTimelineFile .\tmp\pulse-wpr-timeline-2026-08-13.json
 .\run-morning-sync.ps1 -SkipPulseTimeline
+.\run-morning-sync.ps1 -StepRetryCount 3 -StepRetryDelaySeconds 300 -StepRetryBackoffSeconds 600
 ```
 
 `-PulseTimelineFile` overrides the API source for that run.
 
 The cadence state is written to `logs/pulse-timeline-sync-state.json` after a
 successful non-dry-run timeline sync.
+
+Each source step retries independently. By default the morning runner tries
+Pulse and Procore up to three times, waiting 5 minutes before the second
+attempt and 15 minutes before the third. If one source still fails, the other
+source still runs.

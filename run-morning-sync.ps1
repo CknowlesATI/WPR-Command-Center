@@ -5,7 +5,10 @@ param(
   [switch]$DryRun,
   [switch]$ForcePulseTimeline,
   [int]$PulseTimelineCadenceDays = 1,
-  [string]$PulseTimelineFile = ""
+  [string]$PulseTimelineFile = "",
+  [int]$StepRetryCount = 3,
+  [int]$StepRetryDelaySeconds = 300,
+  [int]$StepRetryBackoffSeconds = 600
 )
 
 $ErrorActionPreference = "Continue"
@@ -21,24 +24,42 @@ $Failures = 0
 function Run-Step {
   param(
     [string]$Name,
-    [scriptblock]$Script
+    [scriptblock]$Script,
+    [int]$RetryCount = $StepRetryCount,
+    [int]$RetryDelaySeconds = $StepRetryDelaySeconds,
+    [int]$RetryBackoffSeconds = $StepRetryBackoffSeconds
   )
-  "===== $Name started $(Get-Date -Format s) =====" | Tee-Object -FilePath $LogFile -Append
-  try {
-    & $Script *>&1 | Tee-Object -FilePath $LogFile -Append
-    if ($LASTEXITCODE -ne 0) {
-      "===== $Name failed with exit code $LASTEXITCODE =====" | Tee-Object -FilePath $LogFile -Append
-      $script:Failures += 1
-      return $false
-    } else {
-      "===== $Name completed =====" | Tee-Object -FilePath $LogFile -Append
-      return $true
+
+  $Attempts = [Math]::Max(1, $RetryCount)
+  for ($Attempt = 1; $Attempt -le $Attempts; $Attempt += 1) {
+    "===== $Name attempt $Attempt/$Attempts started $(Get-Date -Format s) =====" | Tee-Object -FilePath $LogFile -Append
+    try {
+      $global:LASTEXITCODE = 0
+      & $Script *>&1 | Tee-Object -FilePath $LogFile -Append
+      if ($LASTEXITCODE -eq 0) {
+        "===== $Name completed on attempt $Attempt/$Attempts =====" | Tee-Object -FilePath $LogFile -Append
+        return $true
+      }
+
+      "===== $Name attempt $Attempt/$Attempts failed with exit code $LASTEXITCODE =====" | Tee-Object -FilePath $LogFile -Append
+    } catch {
+      "===== $Name attempt $Attempt/$Attempts failed: $($_.Exception.Message) =====" | Tee-Object -FilePath $LogFile -Append
     }
-  } catch {
-    "===== $Name failed: $($_.Exception.Message) =====" | Tee-Object -FilePath $LogFile -Append
-    $script:Failures += 1
-    return $false
+
+    if ($Attempt -lt $Attempts) {
+      $DelaySeconds = [Math]::Max(0, $RetryDelaySeconds + (($Attempt - 1) * $RetryBackoffSeconds))
+      if ($DelaySeconds -gt 0) {
+        "===== $Name retrying in $DelaySeconds second(s) =====" | Tee-Object -FilePath $LogFile -Append
+        Start-Sleep -Seconds $DelaySeconds
+      } else {
+        "===== $Name retrying immediately =====" | Tee-Object -FilePath $LogFile -Append
+      }
+    }
   }
+
+  "===== $Name failed after $Attempts attempt(s) =====" | Tee-Object -FilePath $LogFile -Append
+  $script:Failures += 1
+  return $false
 }
 
 function Resolve-PulseTimelineFile {
@@ -120,7 +141,7 @@ if (-not $SkipPulse) {
 }
 
 if (-not $SkipProcore) {
-  Run-Step "Procore observation sync" {
+  $ProcoreSucceeded = Run-Step "Procore observation sync" {
     $ProcoreCommand = if ($DryRun) { "env-check" } else { "sync-auto" }
     $PowerShell = if (Get-Command pwsh -ErrorAction SilentlyContinue) { "pwsh" } else { "powershell.exe" }
     if ($DryRun) {
