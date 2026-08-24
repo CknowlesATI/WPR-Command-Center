@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-21T12:25:41.590Z",
+  "lastUpdated": "2026-08-24T12:26:21.588Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -141,8 +141,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 15,
-      "overdueTasks": 4,
+      "openTasks": 16,
+      "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -171,6 +171,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Hang primary bed tv when power is moved",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: L1 Install driveway cam after stone is removed",
           "status": "todo",
           "source": "Pulse",
@@ -183,25 +189,13 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: L2 Primary Bed needs crossrails, waiting on elections to move outlet for tv installation",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: L3 - Flex Room: Trim out TV wiring (shielded Cat6, blue and grey Cat6)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: L3 - Terrace: Has the camera wiring location been finalized and ready for install?",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "Install: Lvl2 Bed 5 - tv single gang box height does not match power. (Too high)",
+          "name": "Install: Make changes for Ubiquity Door Stations. From AV Room to L1 Mudroom. And Mudroom to L3 Mudroom",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -241,6 +235,18 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
+        },
+        {
+          "name": "Install: Wire and lable TVs BED 1,2,3 Primary and flex",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: ATI C/O Revision 5 - Return parts back to stock",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -277,13 +283,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Lvl2 Bed 5 - tv single gang box height does not match power. (Too high)",
-          "dueDate": "2026-05-26",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Admin: Big-D Information Request - go into system to double check product documentation. Wwhat they are asking for is in the notes. (AV/Secu",
           "dueDate": "2026-07-14",
           "source": "Pulse"
@@ -298,8 +297,8 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: L2 Primary Bed needs crossrails, waiting on elections to move outlet for tv installation",
-          "dueDate": "2026-08-20",
+          "detail": "Warehouse: ATI C/O Revision 5 - Return parts back to stock",
+          "dueDate": "2026-08-21",
           "source": "Pulse"
         }
       ],
@@ -408,13 +407,13 @@
       "name": "WPR Unit 4",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "green",
+      "health": "amber",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 16,
+      "openTasks": 17,
       "overdueTasks": 9,
-      "highPriorityTasks": 0,
+      "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -499,6 +498,12 @@
           "name": "Install: Splice speaker wiring in rooftop junction boxes",
           "status": "todo",
           "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4890: Need to adjust all Smurf tubes to be 2” in unit 4",
+          "status": "todo",
+          "source": "Procore",
           "externalUrl": ""
         },
         {
@@ -1825,7 +1830,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 8,
-      "overdueTasks": 3,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1935,6 +1940,13 @@
           "detail": "Install: Relocate keypad (KP-102) wire in the Vestibule.",
           "dueDate": "2026-08-03",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Living Room - We can not do blind wire at TV locations, this will need a single gang box and will get trimmed out with a wall plate",
+          "dueDate": "2026-08-21",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -1948,9 +1960,9 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 11,
+      "openTasks": 9,
       "overdueTasks": 2,
-      "highPriorityTasks": 2,
+      "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -1999,18 +2011,6 @@
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
           "status": "todo",
           "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #3546: Roller Shade is out of drywall",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4471: Missing speakers",
-          "status": "progress",
-          "source": "Procore",
           "externalUrl": ""
         },
         {
@@ -2070,13 +2070,6 @@
           "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "dueDate": "2026-08-19",
           "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Critical aging",
-          "detail": "Procore #3546: Roller Shade is out of drywall",
-          "dueDate": null,
-          "source": "Procore"
         },
         {
           "severity": "red",
@@ -2291,7 +2284,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 16,
-      "overdueTasks": 9,
+      "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
