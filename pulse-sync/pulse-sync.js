@@ -119,7 +119,7 @@ async function main() {
         }
         console.error("Sync stopped because the plan has errors.");
         process.exitCode = 1;
-      } else if (!plan.timelineItems.length && !plan.taskSyncs.length) {
+      } else if (!plan.timelineItems.length && !plan.contractStatusItems.length && !plan.taskSyncs.length) {
         if (auth) {
           await recordCommandCenterSyncRun("pulse", {
             status: "success",
@@ -139,6 +139,11 @@ async function main() {
           if (plan.timelineItems.length) {
             await postUpdate("syncPulseTimelines", { items: plan.timelineItems }, auth);
             console.log(`Synced Pulse timeline dates for ${plan.timelineItems.length} project(s).`);
+          }
+
+          if (plan.contractStatusItems.length) {
+            await postUpdate("syncPulseContractStatuses", { items: plan.contractStatusItems }, auth);
+            console.log(`Synced Pulse contract statuses for ${plan.contractStatusItems.length} project(s).`);
           }
 
           for (const taskSync of plan.taskSyncs) {
@@ -170,6 +175,8 @@ async function buildSyncPlan(projects, options) {
   const plan = {
     timelineMatches: [],
     timelineItems: [],
+    contractStatusMatches: [],
+    contractStatusItems: [],
     taskSyncs: [],
     unmatched: [],
     errors: []
@@ -194,9 +201,13 @@ async function buildSyncPlan(projects, options) {
       const token = await loginToPulse();
       const rows = await fetchPulseTimelineRows(token);
       const timelinePlan = buildTimelinePlan(projects, rows);
+      const contractPlan = buildContractStatusPlan(projects, rows);
       plan.timelineMatches = mergeTimelineMatches(plan.timelineMatches, timelinePlan.matches);
       plan.timelineItems = mergeTimelineItems(plan.timelineItems, timelinePlan.items);
+      plan.contractStatusMatches = mergeContractStatusMatches(plan.contractStatusMatches, contractPlan.matches);
+      plan.contractStatusItems = mergeContractStatusItems(plan.contractStatusItems, contractPlan.items);
       plan.unmatched.push(...timelinePlan.unmatched);
+      plan.unmatched.push(...contractPlan.unmatched);
       plan.pulseTimelineApi = { rows: rows.length };
     }
   }
@@ -295,7 +306,13 @@ async function fetchPulseTimelineRows(token) {
     trimDate: contract.ati_trim_from,
     installSchedule: contract.ati_install_schedule,
     installDate: contract.ati_install_estimated_start,
-    addToAti: contract.add_to_ati
+    addToAti: contract.add_to_ati,
+    projectContractDate: contract.project_contract_date,
+    linkedPrewireContractDate: contract.linked_prewire_contract_date,
+    linkedInstallContractDate: contract.linked_install_contract_date,
+    prewireContractStatus: contract.ati_prewire_contract_status,
+    installContractStatus: contract.ati_install_contract_status,
+    linkedContractStatus: contract.linked_contract_status_finance_only
   })).filter(row => row.customer);
 }
 
@@ -317,6 +334,22 @@ function mergeTimelineItems(first, second) {
     const byKey = new Map(target.timelines.map(timeline => [timeline.key, timeline]));
     item.timelines.forEach(timeline => byKey.set(timeline.key, timeline));
     target.timelines = [...byKey.values()];
+  });
+  return [...byProject.values()];
+}
+
+function mergeContractStatusMatches(first, second) {
+  const byProject = new Map();
+  [...first, ...second].forEach(item => {
+    byProject.set(String(item.projectId), item);
+  });
+  return [...byProject.values()];
+}
+
+function mergeContractStatusItems(first, second) {
+  const byProject = new Map();
+  [...first, ...second].forEach(item => {
+    byProject.set(String(item.projectId), item);
   });
   return [...byProject.values()];
 }
@@ -366,6 +399,43 @@ function buildTimelinePlan(projects, rows) {
     items: matches.filter(item => item.changes.length).map(item => ({
       projectId: item.projectId,
       timelines: item.changes.map(change => ({ key: change.key, date: change.next }))
+    }))
+  };
+}
+
+function buildContractStatusPlan(projects, rows) {
+  const matches = [];
+  const unmatched = [];
+
+  rows.forEach(row => {
+    const contractStatus = pulseContractStatus(row);
+    if (!contractStatus) return;
+
+    const project = matchProject(projects, row.customer);
+    if (!project) {
+      unmatched.push({ source: "pulse-contract", name: row.customer });
+      return;
+    }
+
+    const current = cleanCell(project.control && project.control.contractStatus);
+    matches.push({
+      projectId: project.id,
+      projectName: project.name,
+      pulseName: row.customer,
+      current,
+      next: contractStatus,
+      reason: row.contractSignal
+    });
+  });
+
+  return {
+    matches,
+    unmatched,
+    items: matches.filter(item => item.current !== item.next).map(item => ({
+      projectId: item.projectId,
+      contractStatus: item.next,
+      current: item.current,
+      reason: item.reason
     }))
   };
 }
@@ -696,6 +766,7 @@ function normalizePulseRow(row) {
   const addToAti = cleanCell(row.addToAti).toLowerCase();
   const phaseListed = key => addToAti ? addToAti.includes(key === "prewire" ? "prewire" : key) : false;
   const phasePresent = (key, schedule, date) => addToAti ? phaseListed(key) : !!cleanCell(schedule) || !!cleanCell(date);
+  const contractSignal = pulseAcceptedContractSignal(row);
   return {
     customer: cleanCell(row.customer),
     dates: {
@@ -707,8 +778,53 @@ function normalizePulseRow(row) {
       prewire: phasePresent("prewire", row.prewireSchedule, row.prewireDate),
       trim: phasePresent("trim", row.trimSchedule, row.trimDate),
       install: phasePresent("install", row.installSchedule, row.installDate)
-    }
+    },
+    contractStatus: contractSignal ? "Accepted" : "",
+    contractSignal
   };
+}
+
+function pulseContractStatus(row) {
+  return row.contractStatus === "Accepted" ? "Accepted" : "";
+}
+
+function pulseAcceptedContractSignal(row) {
+  const statusFields = [
+    row.installContractStatus,
+    row.linkedContractStatus
+  ].map(cleanCell).filter(Boolean);
+  const acceptedStatus = statusFields.find(value => {
+    const text = value.toLowerCase();
+    return /\bcontracted\b/.test(text) ||
+      /\bdeposit received\b/.test(text) ||
+      /\bpayment received\b/.test(text) ||
+      /\bbilled final\b/.test(text) ||
+      /\bcomplete\b/.test(text);
+  });
+  if (acceptedStatus) return acceptedStatus;
+
+  const contractDate = [
+    row.projectContractDate,
+    row.linkedInstallContractDate
+  ].map(dateOnly).find(Boolean);
+  return contractDate && isRecentDate(contractDate, contractAcceptedLookbackDays()) ? `Contract date ${contractDate}` : "";
+}
+
+function isRecentDate(value, days) {
+  if (!value) return false;
+  if (!Number.isFinite(days) || days <= 0) return true;
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return false;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const oldest = new Date(today);
+  oldest.setDate(oldest.getDate() - days);
+  return date >= oldest && date <= today;
+}
+
+function contractAcceptedLookbackDays() {
+  const days = Number(process.env.PULSE_CONTRACT_ACCEPTED_LOOKBACK_DAYS || 14);
+  return Number.isFinite(days) ? days : 14;
 }
 
 function pick(row, aliases) {
@@ -755,6 +871,15 @@ function printPlan(plan) {
     console.log(`Pulse dates: ${plan.timelineMatches.length} matched, ${changed.length} with date changes.`);
     changed.slice(0, 20).forEach(item => {
       console.log(`  ${item.projectName}: ${item.changes.map(change => `${change.label} ${change.current || "blank"} -> ${change.next || "blank"}`).join("; ")}`);
+    });
+  }
+
+  if (plan.contractStatusMatches.length) {
+    const changed = plan.contractStatusItems;
+    console.log(`Pulse contract statuses: ${plan.contractStatusMatches.length} accepted match(es), ${changed.length} with status changes.`);
+    changed.slice(0, 20).forEach(item => {
+      const match = plan.contractStatusMatches.find(candidate => String(candidate.projectId) === String(item.projectId)) || item;
+      console.log(`  ${match.projectName || item.projectId}: Contract ${item.current || "blank"} -> ${item.contractStatus}${item.reason ? ` (${item.reason})` : ""}`);
     });
   }
 
@@ -828,11 +953,13 @@ function pulseSyncStats(plan) {
     return ids;
   }, new Set());
   plan.timelineItems.forEach(item => taskProjectCount.add(String(item.projectId)));
+  plan.contractStatusItems.forEach(item => taskProjectCount.add(String(item.projectId)));
   const timelineCount = plan.timelineItems.reduce((total, item) => total + item.timelines.length, 0);
-  const recordsSeen = taskCount + plan.timelineMatches.length + plan.unmatched.length;
+  const contractStatusCount = plan.contractStatusItems.length;
+  const recordsSeen = taskCount + plan.timelineMatches.length + plan.contractStatusMatches.length + plan.unmatched.length;
   return {
     recordsSeen,
-    recordsWritten: taskCount + timelineCount,
+    recordsWritten: taskCount + timelineCount + contractStatusCount,
     projectCount: taskProjectCount.size
   };
 }
@@ -868,6 +995,10 @@ function applyPlanToD1(plan) {
     }
   }
 
+  for (const item of plan.contractStatusItems) {
+    appendContractStatusSql(lines, item);
+  }
+
   for (const sync of plan.taskSyncs) {
     appendSourceTaskSyncSql(lines, sync);
   }
@@ -876,6 +1007,29 @@ function applyPlanToD1(plan) {
   mkdirSync(path.dirname(SQL_OUTPUT_PATH), { recursive: true });
   writeFileSync(SQL_OUTPUT_PATH, lines.join("\n") + "\n", "utf8");
   applySqlFileToD1(SQL_OUTPUT_PATH);
+}
+
+function appendContractStatusSql(lines, item) {
+  const projectId = cleanCell(item.projectId);
+  const next = cleanCell(item.contractStatus);
+  if (!projectId || next !== "Accepted") return;
+
+  const previous = cleanCell(item.current);
+  const now = new Date().toISOString().slice(0, 16);
+  lines.push(
+    "INSERT OR IGNORE INTO project_controls (project_id, operating_state, blocked, override_daily, updated_at, updated_by) VALUES " +
+    `(${sqlString(projectId)}, 'Not Set', 0, 0, ${sqlString(now)}, 'SYNC');`
+  );
+  lines.push(
+    "UPDATE project_controls SET contract_status = " +
+    `${sqlString(next)}, updated_at = ${sqlString(now)}, updated_by = 'SYNC' ` +
+    `WHERE project_id = ${sqlString(projectId)} AND COALESCE(contract_status, '') <> ${sqlString(next)};`
+  );
+  lines.push(
+    "INSERT INTO project_control_history (project_id, changed_at, field, old_value, new_value, changed_by) SELECT " +
+    `${sqlString(projectId)}, ${sqlString(now)}, 'contractStatus', ${sqlString(previous)}, ${sqlString(next)}, 'SYNC' ` +
+    `WHERE ${sqlString(previous)} <> ${sqlString(next)};`
+  );
 }
 
 function applySyncRunToD1(source, payload) {

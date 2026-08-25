@@ -61,6 +61,7 @@ async function applyAction(db, body, actor, env) {
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
   if (body.action === "updateTimeline") return updateTimeline(db, body);
   if (body.action === "syncPulseTimelines") return syncPulseTimelines(db, body, actor);
+  if (body.action === "syncPulseContractStatuses") return syncPulseContractStatuses(db, body, actor);
   if (body.action === "setProjectPhase") return setProjectPhase(db, body);
   if (body.action === "addProject") return addProject(db, body, actor);
   if (body.action === "closeProject") return closeProject(db, body, actor);
@@ -374,6 +375,49 @@ async function syncPulseTimelines(db, body, actor) {
     recordsWritten: statements.length,
     projectCount: projectIds.length,
     message: `Updated ${statements.length} timeline date(s).`
+  }, actor);
+}
+
+async function syncPulseContractStatuses(db, body, actor) {
+  const items = normalizePulseContractStatusItems(body.items);
+  if (!items.length) throw new Error("No Pulse contract status matches were provided.");
+
+  const projectIds = [...new Set(items.map(item => item.projectId))];
+  const placeholders = projectIds.map(() => "?").join(",");
+  const existing = await db.prepare(`SELECT project_id, contract_status FROM project_controls WHERE project_id IN (${placeholders})`).bind(...projectIds).all();
+  const controlsByProject = mapBy(existing.results || [], "project_id");
+  const projectRows = await db.prepare(`SELECT id FROM projects WHERE id IN (${placeholders})`).bind(...projectIds).all();
+  const existingIds = new Set((projectRows.results || []).map(row => String(row.id)));
+  const missing = projectIds.filter(id => !existingIds.has(id));
+  if (missing.length) throw new Error(`Project not found for Pulse contract sync: ${missing.join(", ")}`);
+
+  const updatedAt = currentIsoMinute();
+  const statements = [];
+  items.forEach(item => {
+    const existingControl = controlsByProject.get(String(item.projectId)) || {};
+    const oldValue = normalizeText(existingControl.contract_status || "");
+    if (oldValue === item.contractStatus) return;
+
+    statements.push(
+      db.prepare("INSERT OR IGNORE INTO project_controls (project_id, operating_state, blocked, override_daily, updated_at, updated_by) VALUES (?, 'Not Set', 0, 0, ?, ?)")
+        .bind(item.projectId, updatedAt, actor.initials),
+      db.prepare("UPDATE project_controls SET contract_status = ?, updated_at = ?, updated_by = ? WHERE project_id = ?")
+        .bind(item.contractStatus, updatedAt, actor.initials, item.projectId),
+      db.prepare("INSERT INTO project_control_history (project_id, changed_at, field, old_value, new_value, changed_by) VALUES (?, ?, 'contractStatus', ?, ?, ?)")
+        .bind(item.projectId, updatedAt, oldValue, item.contractStatus, actor.initials)
+    );
+  });
+
+  if (!statements.length) return;
+  await db.batch(statements);
+  await upsertSyncRun(db, {
+    source: "pulse",
+    label: "Pulse",
+    status: "success",
+    recordsSeen: items.length,
+    recordsWritten: statements.length / 3,
+    projectCount: projectIds.length,
+    message: `Updated ${statements.length / 3} contract status(es).`
   }, actor);
 }
 
@@ -806,6 +850,16 @@ function normalizePulseTimelineItems(items) {
       })).filter(timeline => WORK_PHASES.includes(timeline.key))
     };
   }).filter(item => item.timelines.length);
+}
+
+function normalizePulseContractStatusItems(items) {
+  if (!Array.isArray(items)) throw new Error("Pulse contract status items must be an array.");
+  return items.slice(0, 100).map((item, index) => {
+    const projectId = required(item && item.projectId, `items[${index}].projectId`);
+    const contractStatus = normalizeText(required(item && item.contractStatus, `items[${index}].contractStatus`));
+    if (contractStatus !== "Accepted") throw new Error(`Invalid Pulse contract status: ${contractStatus}`);
+    return { projectId, contractStatus };
+  });
 }
 
 function normalizeSourceTaskSync(body) {

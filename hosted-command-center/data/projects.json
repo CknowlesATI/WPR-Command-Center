@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-25T12:27:03.416Z",
+  "lastUpdated": "2026-08-25T14:41:09.543Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -411,8 +411,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 17,
-      "overdueTasks": 9,
+      "openTasks": 16,
+      "overdueTasks": 8,
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
@@ -504,12 +504,6 @@
           "name": "Procore #4890: Need to adjust all Smurf tubes to be 2” in unit 4",
           "status": "todo",
           "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Project Handoff: Get CO approved for side channels",
-          "status": "todo",
-          "source": "Pulse",
           "externalUrl": ""
         },
         {
@@ -616,7 +610,7 @@
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
-        "contract": "Sent",
+        "contract": "Accepted",
         "deposit": "",
         "changeOrders": ""
       },
@@ -754,7 +748,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 17,
+      "openTasks": 18,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -779,6 +773,12 @@
         },
         {
           "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Install mud in hanger in primary sitting",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2990,7 +2990,7 @@
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
-        "contract": "",
+        "contract": "Accepted",
         "deposit": "",
         "changeOrders": ""
       },
