@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-24T12:26:21.588Z",
+  "lastUpdated": "2026-08-25T12:27:03.416Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1664,7 +1664,7 @@
       "name": "WPR Condo 101",
       "area": "Condos/Penthouse",
       "team": "Big-D Condos/Penthouse",
-      "health": "green",
+      "health": "red",
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
