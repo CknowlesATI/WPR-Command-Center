@@ -284,22 +284,20 @@ async function commandSyncAuto(args) {
     : [];
   const result = await syncToCommandCenter(tasks, replaceProjectIds, auth);
   const reviewResult = await syncProcoreReviewTasks(reviewTasks, auth, commandProjects);
+  const recorded = (result && result.recorded && result.recorded !== "success") ? result.recorded : "success";
+  const runPayload = {
+    status: recorded,
+    recordsSeen: rows.length,
+    recordsWritten: recorded === "success" ? tasks.length + reviewTasks.length : 0,
+    projectCount: new Set([...tasks.map(task => String(task.projectId)), ...reviewTasks.map(task => String(task.projectId))]).size,
+    message: recorded === "success"
+      ? `${tasks.length} mapped, ${reviewTasks.length} sent to review bucket.`
+      : ((result && result.message) || "Empty extract; replace/wipe skipped.")
+  };
   if (auth) {
-    await recordCommandCenterSyncRun("procore", {
-      status: "success",
-      recordsSeen: rows.length,
-      recordsWritten: tasks.length + reviewTasks.length,
-      projectCount: new Set([...tasks.map(task => String(task.projectId)), ...reviewTasks.map(task => String(task.projectId))]).size,
-      message: `${tasks.length} mapped, ${reviewTasks.length} sent to review bucket.`
-    }, auth);
+    await recordCommandCenterSyncRun("procore", runPayload, auth);
   } else {
-    applySyncRunToD1("procore", {
-      status: "success",
-      recordsSeen: rows.length,
-      recordsWritten: tasks.length + reviewTasks.length,
-      projectCount: new Set([...tasks.map(task => String(task.projectId)), ...reviewTasks.map(task => String(task.projectId))]).size,
-      message: `${tasks.length} mapped, ${reviewTasks.length} sent to review bucket.`
-    });
+    applySyncRunToD1("procore", runPayload);
   }
 
   console.log(`Rows extracted: ${rows.length}`);
@@ -641,17 +639,67 @@ async function syncToCommandCenter(tasks, replaceProjectIds, auth) {
   return json.result || {};
 }
 
+function dualWriteTaskSyncDecision(sync) {
+  const tasks = Array.isArray(sync && sync.tasks) ? sync.tasks : [];
+  const replaceProjectIds = [...new Set(((sync && sync.replaceProjectIds) || []).map(String).filter(Boolean))];
+  const raw = String((sync && (sync.sourceOpStatus || sync.syncStatus)) || "").trim().toLowerCase();
+  let sourceOpStatus = "";
+  if (["success", "failed", "skipped", "requested"].includes(raw)) sourceOpStatus = raw;
+  else if (raw) sourceOpStatus = "unknown";
+
+  if (sourceOpStatus === "failed" || sourceOpStatus === "skipped" || sourceOpStatus === "unknown") {
+    return {
+      skipTaskWrite: true,
+      recorded: sourceOpStatus,
+      message: (sync && sync.message) || (
+        sourceOpStatus === "skipped"
+          ? "Source operation skipped; task rows not mutated."
+          : "Source operation did not succeed; task rows not mutated."
+      )
+    };
+  }
+
+  if (tasks.length === 0 && replaceProjectIds.length > 0) {
+    // Honesty (CC-WO-2026-004): empty extract + replace must not wipe+success.
+    // Existing caller options on this path: --complete-missing sets replaceProjectIds
+    // (that is the wipe *cause*, not an empty-wipe opt-in). --allow-empty is extract-time
+    // (zero observation rows) and is not a D1 empty-replace opt-in. There is no existing
+    // D1 empty-wipe flag. Do not invent a new production empty-replace flag. Default: skip wipe+success.
+    return {
+      skipTaskWrite: true,
+      recorded: sourceOpStatus === "success" ? "skipped" : (sourceOpStatus || "skipped"),
+      message: (sync && sync.message) || "Empty extract; replace/wipe skipped."
+    };
+  }
+
+  return { skipTaskWrite: false, recorded: "success" };
+}
+
 function applySourceTasksToD1(sync) {
+  const decision = dualWriteTaskSyncDecision(sync);
+  if (decision.skipTaskWrite) {
+    return {
+      mutated: false,
+      recorded: decision.recorded,
+      appliedViaD1: false,
+      tasks: 0,
+      replaceProjectIds: Array.isArray(sync && sync.replaceProjectIds) ? sync.replaceProjectIds.length : 0,
+      message: decision.message
+    };
+  }
+
   const lines = [];
   if (sync.ensureReviewProject) appendReviewProjectSql(lines, sync.ensureReviewProject);
   appendSourceTaskSyncSql(lines, sync);
-  if (!lines.length) return { created: 0, updated: 0, skipped: 0, completedMissing: 0 };
+  if (!lines.length) return { created: 0, updated: 0, skipped: 0, completedMissing: 0, mutated: false, recorded: "success" };
 
   fs.mkdirSync(path.dirname(SQL_OUTPUT_PATH), { recursive: true });
   fs.writeFileSync(SQL_OUTPUT_PATH, lines.join("\n") + "\n", "utf8");
   applySqlFileToD1(SQL_OUTPUT_PATH);
   return {
     appliedViaD1: true,
+    mutated: true,
+    recorded: "success",
     tasks: sync.tasks.length,
     replaceProjectIds: sync.replaceProjectIds.length
   };
@@ -666,6 +714,9 @@ function appendReviewProjectSql(lines, project) {
 }
 
 function appendSourceTaskSyncSql(lines, sync) {
+  const decision = dualWriteTaskSyncDecision(sync);
+  if (decision.skipTaskWrite) return decision;
+
   const source = syncedTaskSource(sync.source);
   const replaceProjectIds = [...new Set((sync.replaceProjectIds || []).map(String).filter(Boolean))];
   const sourceValues = source.values.map(sqlString).join(", ");
