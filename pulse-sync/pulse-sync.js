@@ -146,22 +146,37 @@ async function main() {
             console.log(`Synced Pulse contract statuses for ${plan.contractStatusItems.length} project(s).`);
           }
 
+          let recorded = "success";
+          let recordedMessage = `Synced ${stats.recordsWritten} Pulse record(s).`;
           for (const taskSync of plan.taskSyncs) {
+            const decision = dualWriteTaskSyncDecision(taskSync);
+            if (decision.skipTaskWrite) {
+              recorded = decision.recorded;
+              recordedMessage = decision.message;
+              continue;
+            }
             await postUpdate("syncSourceTasks", taskSync, auth);
             console.log(`Synced ${taskSync.source} items: ${taskSync.tasks.length} task(s), ${taskSync.replaceProjectIds.length} project scope(s).`);
           }
 
           await recordCommandCenterSyncRun("pulse", {
-            status: "success",
+            status: recorded,
             ...stats,
-            message: `Synced ${stats.recordsWritten} Pulse record(s).`
+            recordsWritten: recorded === "success" ? stats.recordsWritten : 0,
+            message: recorded === "success" ? `Synced ${stats.recordsWritten} Pulse record(s).` : recordedMessage
           }, auth);
         } else {
-          applyPlanToD1(plan);
+          const planResult = applyPlanToD1(plan);
+          const recorded = (planResult && planResult.recorded && planResult.recorded !== "success")
+            ? planResult.recorded
+            : "success";
           applySyncRunToD1("pulse", {
-            status: "success",
+            status: recorded,
             ...stats,
-            message: `Synced ${stats.recordsWritten} Pulse record(s).`
+            recordsWritten: recorded === "success" ? stats.recordsWritten : 0,
+            message: recorded === "success"
+              ? `Synced ${stats.recordsWritten} Pulse record(s).`
+              : ((planResult && planResult.message) || "Empty extract; replace/wipe skipped.")
           });
         }
 
@@ -982,8 +997,44 @@ async function getAuthIfConfigured() {
   return { token: data.token, initials: data.initials || initials };
 }
 
+function dualWriteTaskSyncDecision(sync) {
+  const tasks = Array.isArray(sync && sync.tasks) ? sync.tasks : [];
+  const replaceProjectIds = [...new Set(((sync && sync.replaceProjectIds) || []).map(String).filter(Boolean))];
+  const raw = String((sync && (sync.sourceOpStatus || sync.syncStatus)) || "").trim().toLowerCase();
+  let sourceOpStatus = "";
+  if (["success", "failed", "skipped", "requested"].includes(raw)) sourceOpStatus = raw;
+  else if (raw) sourceOpStatus = "unknown";
+
+  if (sourceOpStatus === "failed" || sourceOpStatus === "skipped" || sourceOpStatus === "unknown") {
+    return {
+      skipTaskWrite: true,
+      recorded: sourceOpStatus,
+      message: (sync && sync.message) || (
+        sourceOpStatus === "skipped"
+          ? "Source operation skipped; task rows not mutated."
+          : "Source operation did not succeed; task rows not mutated."
+      )
+    };
+  }
+
+  if (tasks.length === 0 && replaceProjectIds.length > 0) {
+    // Honesty (CC-WO-2026-004): empty extract + replace must not wipe+success.
+    // Pulse has no --allow-empty / complete-missing D1 empty-wipe opt-in. Do not invent
+    // a new production empty-replace flag. Default: skip wipe+success.
+    return {
+      skipTaskWrite: true,
+      recorded: sourceOpStatus === "success" ? "skipped" : (sourceOpStatus || "skipped"),
+      message: (sync && sync.message) || "Empty extract; replace/wipe skipped."
+    };
+  }
+
+  return { skipTaskWrite: false, recorded: "success" };
+}
+
 function applyPlanToD1(plan) {
   const lines = [];
+  let recorded = "success";
+  let message = "";
 
   for (const item of plan.timelineItems) {
     for (const timeline of item.timelines) {
@@ -1000,13 +1051,25 @@ function applyPlanToD1(plan) {
   }
 
   for (const sync of plan.taskSyncs) {
+    const decision = dualWriteTaskSyncDecision(sync);
+    if (decision.skipTaskWrite) {
+      if (decision.recorded === "failed" || decision.recorded === "unknown") {
+        recorded = decision.recorded;
+        message = decision.message;
+      } else if (recorded === "success") {
+        recorded = decision.recorded;
+        message = decision.message;
+      }
+      continue;
+    }
     appendSourceTaskSyncSql(lines, sync);
   }
 
-  if (!lines.length) return;
+  if (!lines.length) return { mutated: false, recorded, appliedViaD1: false, message };
   mkdirSync(path.dirname(SQL_OUTPUT_PATH), { recursive: true });
   writeFileSync(SQL_OUTPUT_PATH, lines.join("\n") + "\n", "utf8");
   applySqlFileToD1(SQL_OUTPUT_PATH);
+  return { mutated: true, recorded, appliedViaD1: true, message };
 }
 
 function appendContractStatusSql(lines, item) {
@@ -1050,6 +1113,9 @@ function applySyncRunToD1(source, payload) {
 }
 
 function appendSourceTaskSyncSql(lines, sync) {
+  const decision = dualWriteTaskSyncDecision(sync);
+  if (decision.skipTaskWrite) return decision;
+
   const source = syncedTaskSource(sync.source);
   const replaceProjectIds = [...new Set((sync.replaceProjectIds || []).map(String).filter(Boolean))];
   const sourceValues = source.values.map(sqlString).join(", ");

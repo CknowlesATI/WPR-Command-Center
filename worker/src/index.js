@@ -67,7 +67,7 @@ async function applyAction(db, body, actor, env) {
   if (body.action === "closeProject") return closeProject(db, body, actor);
   if (body.action === "addTask") return addTask(db, body, actor, env);
   if (body.action === "updateTask") return updateTask(db, body, actor);
-  if (body.action === "syncSourceTasks") return syncSourceTasks(db, body, actor);
+  if (body.action === "syncSourceTasks") return syncSourceTasks(db, body, actor); // honesty gates inside syncSourceTasks
   if (body.action === "deleteTask") return deleteTask(db, body.taskId);
   if (body.action === "recordSyncRun") return recordSyncRun(db, body, actor);
   if (body.action === "addNotificationRecipient") return addNotificationRecipient(db, body, actor);
@@ -629,9 +629,55 @@ async function deleteTask(db, taskIdValue) {
   return deleteById(db, "tasks", taskId);
 }
 
+function normalizeSourceOpStatus(value) {
+  const status = String(value || "").trim().toLowerCase();
+  if (["success", "failed", "skipped", "requested"].includes(status)) return status;
+  if (!status) return "";
+  return "unknown";
+}
+
 async function syncSourceTasks(db, body, actor) {
   const { source, tasks, replaceProjectIds } = normalizeSourceTaskSync(body);
   if (!tasks.length && !replaceProjectIds.length) throw new Error("No synced source tasks were provided.");
+
+  // Honesty contract (CC-WO-2026-002): do not record source-refresh success on empty replace wipe,
+  // and do not ignore a failed/skipped/unknown source op. last_success_at CASE WHEN stays in upsertSyncRun.
+  const sourceOpStatus = normalizeSourceOpStatus(body && (body.sourceOpStatus || body.syncStatus));
+  const allowEmptyReplace = !!(body && body.allowEmptyReplace === true);
+  const emptyReplace = tasks.length === 0 && replaceProjectIds.length > 0;
+  const recordsSeen = Number.isFinite(Number(body && body.recordsSeen)) ? Math.max(0, Math.floor(Number(body.recordsSeen))) : tasks.length;
+  const projectCountHint = replaceProjectIds.length || new Set(tasks.map(task => task.projectId)).size;
+
+  if (sourceOpStatus === "failed" || sourceOpStatus === "skipped" || sourceOpStatus === "unknown") {
+    await upsertSyncRun(db, {
+      source: source.primary,
+      label: sourceLabel(source.primary),
+      status: sourceOpStatus,
+      recordsSeen,
+      recordsWritten: 0,
+      projectCount: projectCountHint,
+      message: (body && body.message) || (
+        sourceOpStatus === "skipped"
+          ? "Source operation skipped; task rows not mutated."
+          : "Source operation did not succeed; task rows not mutated."
+      )
+    }, actor);
+    return { mutated: false, recorded: sourceOpStatus };
+  }
+
+  if (emptyReplace && !(sourceOpStatus === "success" && allowEmptyReplace)) {
+    const recorded = sourceOpStatus === "success" ? "skipped" : (sourceOpStatus || "skipped");
+    await upsertSyncRun(db, {
+      source: source.primary,
+      label: sourceLabel(source.primary),
+      status: recorded,
+      recordsSeen,
+      recordsWritten: 0,
+      projectCount: replaceProjectIds.length,
+      message: (body && body.message) || "Empty extract; replace/wipe skipped. Pass allowEmptyReplace=true and sourceOpStatus=success to clear explicitly."
+    }, actor);
+    return { mutated: false, recorded };
+  }
 
   const projectIds = [...new Set([...replaceProjectIds, ...tasks.map(task => task.projectId)])];
   const placeholders = projectIds.map(() => "?").join(",");
