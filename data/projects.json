@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-26T12:29:28.074Z",
+  "lastUpdated": "2026-08-27T21:25:58.998Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -141,7 +141,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 16,
+      "openTasks": 15,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -190,12 +190,6 @@
         },
         {
           "name": "Install: L3 - Terrace: Has the camera wiring location been finalized and ready for install?",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Make changes for Ubiquity Door Stations. From AV Room to L1 Mudroom. And Mudroom to L3 Mudroom",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -748,7 +742,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 18,
+      "openTasks": 13,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -784,12 +778,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Lv2 Primary Bedroom - Install WB 21 (Pending Bedroom Back Box Proposal)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Lvl 1 AV Mech Room - Fiber junction box solution with Big-D",
           "status": "todo",
           "source": "Pulse",
@@ -802,31 +790,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Lvl 1 Bed 1 - Install WB 21 (Pending Bedroom Back Box Proposal)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Lvl 1 Bed 2 - Install WB 21 (Pending Bedroom Back Box Proposal)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Lvl 1 front door - stone needs cut for doorbell box",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Lvl 2 Bed 3 - Install WB 21 (Pending Bedroom Back Box Proposal)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Lvl 2 Bed 4 - Install WB 21 (Pending Bedroom Back Box Proposal)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2083,7 +2047,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 15,
+      "openTasks": 14,
       "overdueTasks": 3,
       "highPriorityTasks": 5,
       "risks": 0,
@@ -2134,12 +2098,6 @@
           "name": "Install: SERVICE CONDUIT - this is blocked and we don't have fiber to garage mech",
           "status": "todo",
           "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #1471: Unit #202 elevator closet the data port is not centered per RCP",
-          "status": "progress",
-          "source": "Procore",
           "externalUrl": ""
         },
         {
