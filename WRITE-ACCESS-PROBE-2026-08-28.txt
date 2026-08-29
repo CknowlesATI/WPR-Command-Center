@@ -1,4 +1,0 @@
-WRITE-ACCESS-PROBE
-Created by Bob as a temporary GitHub write check.
-Created: 2026-08-28 22:02 America/Denver
-This file should be deleted in the same check.
