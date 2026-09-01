@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-31T18:25:40.178Z",
+  "lastUpdated": "2026-09-01T15:45:21.991Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -401,13 +401,13 @@
       "name": "WPR Unit 4",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "amber",
+      "health": "green",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 16,
+      "openTasks": 15,
       "overdueTasks": 8,
-      "highPriorityTasks": 1,
+      "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -492,12 +492,6 @@
           "name": "Install: Splice speaker wiring in rooftop junction boxes",
           "status": "todo",
           "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4890: Need to adjust all Smurf tubes to be 2” in unit 4",
-          "status": "todo",
-          "source": "Procore",
           "externalUrl": ""
         },
         {
@@ -1823,7 +1817,7 @@
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
-        "contract": "Sent",
+        "contract": "Accepted",
         "deposit": "",
         "changeOrders": ""
       },
@@ -1954,7 +1948,7 @@
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
-        "contract": "",
+        "contract": "Accepted",
         "deposit": "",
         "changeOrders": ""
       },
@@ -2066,8 +2060,8 @@
           "source": "Pulse"
         },
         {
-          "severity": "green",
-          "label": "New",
+          "severity": "amber",
+          "label": "Due soon",
           "detail": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
           "dueDate": null,
           "source": "Procore"
@@ -2090,7 +2084,7 @@
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
-        "contract": "",
+        "contract": "Accepted",
         "deposit": "",
         "changeOrders": ""
       },
@@ -2265,7 +2259,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 15,
+      "openTasks": 16,
       "overdueTasks": 12,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2276,6 +2270,12 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "ATI: Parts needing removed from inventory (prewire)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "ATI: Update As-Built to reflect Kitchen Phone/Data (PD-103) is buried behind the millwork.",
           "status": "todo",
