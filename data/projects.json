@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-01T15:45:21.991Z",
+  "lastUpdated": "2026-09-02T15:36:05.786Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -401,13 +401,13 @@
       "name": "WPR Unit 4",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "green",
+      "health": "amber",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 15,
+      "openTasks": 16,
       "overdueTasks": 8,
-      "highPriorityTasks": 0,
+      "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -492,6 +492,12 @@
           "name": "Install: Splice speaker wiring in rooftop junction boxes",
           "status": "todo",
           "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4890: Need to adjust all Smurf tubes to be 2” in unit 4",
+          "status": "todo",
+          "source": "Procore",
           "externalUrl": ""
         },
         {
