@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-03T15:27:53.921Z",
+  "lastUpdated": "2026-09-04T15:25:38.948Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,7 +11,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 9,
+      "openTasks": 10,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -24,6 +24,12 @@
       "taskList": [
         {
           "name": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Review system design. According to Wade, there is no video distribution on this job",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -141,7 +147,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 15,
+      "openTasks": 18,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -231,6 +237,24 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Update As-Built to reflect LV1 Mudroom WAP wire is no longer blinded.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Update As-Built to reflect LV3 Kitchen Speaker wires are not blinded.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Update As-Built to reflect Primary Bath Speakers as installed not blind wire.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Wire and lable TVs BED 1,2,3 Primary and flex",
           "status": "todo",
           "source": "Pulse",
@@ -303,8 +327,8 @@
       "name": "WPR Unit 3",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "green",
-      "phase": "Trim",
+      "health": "pending",
+      "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
       "openTasks": 6,
@@ -368,7 +392,7 @@
           "label": "Trim",
           "start": "2026-03-09",
           "end": "2026-03-09",
-          "status": ""
+          "status": "complete"
         },
         {
           "key": "handover",
@@ -538,8 +562,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-09-14",
-          "end": "2026-09-14",
+          "start": "2026-10-19",
+          "end": "2026-10-19",
           "status": ""
         }
       ],
@@ -2067,7 +2091,7 @@
         },
         {
           "severity": "amber",
-          "label": "Due soon",
+          "label": "Needs action",
           "detail": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
           "dueDate": null,
           "source": "Procore"
