@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-04T15:25:38.948Z",
+  "lastUpdated": "2026-09-07T16:50:59.257Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -766,7 +766,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 13,
+      "openTasks": 14,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -777,6 +777,12 @@
         "changeOrders": "Pending"
       },
       "taskList": [
+        {
+          "name": "Admin: Look into backboxes on AV contract and in a separate approved proposal.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "Admin: Review plans 3/16/26 for changes (link in notes) - No green light until we get approval.",
           "status": "todo",
