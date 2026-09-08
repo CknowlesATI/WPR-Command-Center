@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-07T16:50:59.257Z",
+  "lastUpdated": "2026-09-08T15:38:57.131Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -12,7 +12,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 10,
-      "overdueTasks": 3,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -133,6 +133,13 @@
           "label": "Overdue task",
           "detail": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
           "dueDate": "2026-06-26",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Review system design. According to Wade, there is no video distribution on this job",
+          "dueDate": "2026-09-07",
           "source": "Pulse"
         }
       ],
