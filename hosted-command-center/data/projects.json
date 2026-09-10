@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-09T15:32:46.695Z",
+  "lastUpdated": "2026-09-10T15:28:22.465Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,8 +11,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 10,
-      "overdueTasks": 4,
+      "openTasks": 9,
+      "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -24,12 +24,6 @@
       "taskList": [
         {
           "name": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Admin: Review system design. According to Wade, there is no video distribution on this job",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -133,13 +127,6 @@
           "label": "Overdue task",
           "detail": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
           "dueDate": "2026-06-26",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Review system design. According to Wade, there is no video distribution on this job",
-          "dueDate": "2026-09-07",
           "source": "Pulse"
         }
       ],
@@ -1164,7 +1151,7 @@
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
-        "contract": "Sent",
+        "contract": "Accepted",
         "deposit": "",
         "changeOrders": ""
       },
@@ -1669,7 +1656,7 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 17,
+      "openTasks": 15,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1717,7 +1704,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Elevate subwoofer to connect sub port.",
+          "name": "Install: Add Power splitter off of rack fans Outlet For Allwest Modem.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1729,19 +1716,13 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Install Primary Bath DVC Speaker",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Install bed 1 Patio Camera",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Make TV connections And Lable",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Power down and cover rack",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1754,12 +1735,6 @@
         },
         {
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: RTV Locations - Crestron D30 (Sh.Cat6 IP Video) / PDU (network) / Tv (network & IR)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1985,9 +1960,9 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 10,
+      "openTasks": 11,
       "overdueTasks": 2,
-      "highPriorityTasks": 1,
+      "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -2040,6 +2015,12 @@
         },
         {
           "name": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
           "status": "todo",
           "source": "Procore",
           "externalUrl": ""
@@ -2103,9 +2084,16 @@
           "source": "Pulse"
         },
         {
-          "severity": "amber",
-          "label": "Needs action",
+          "severity": "red",
+          "label": "Critical aging",
           "detail": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
+          "dueDate": null,
+          "source": "Procore"
+        },
+        {
+          "severity": "amber",
+          "label": "Due soon",
+          "detail": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
           "dueDate": null,
           "source": "Procore"
         }
@@ -2308,7 +2296,7 @@
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
-        "contract": "",
+        "contract": "Accepted",
         "deposit": "",
         "changeOrders": ""
       },
