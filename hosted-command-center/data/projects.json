@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-14T17:14:06.064Z",
+  "lastUpdated": "2026-09-15T15:53:55.284Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -2524,7 +2524,7 @@
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
       "openTasks": 11,
-      "overdueTasks": 5,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2665,6 +2665,13 @@
           "label": "Overdue task",
           "detail": "Install: Head end wiring needs pulled into Mech Room once ladder tray is confirmed installed",
           "dueDate": "2026-08-29",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Evan (Big-D) reached out today. CRITICAL PATH schedule - the lockers are going to be installed in the next week (day needs verified",
+          "dueDate": "2026-09-14",
           "source": "Pulse"
         }
       ],
