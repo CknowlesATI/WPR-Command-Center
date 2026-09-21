@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-18T15:26:04.791Z",
+  "lastUpdated": "2026-09-21T17:24:41.987Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,7 +11,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 9,
+      "openTasks": 48,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -24,6 +24,240 @@
       "taskList": [
         {
           "name": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Driveway — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Entry — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Entry — Install Ubiquiti UACC-G4 Doorbell Pro PoE-Gang Box",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Entry — Install Ubiquiti UP-Chime (3)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Entry — Install Ubiquiti UVC-G4 Doorbell Pro PoE Kit",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Garage — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Mudroom — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Bedroom 3 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Crestron TSR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Future Automation PS80-SAM115",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install HD Anywhere XTND 4K (100) with TPC",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install HD Anywhere XTND Audio (300)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install JL Audio d108-GLOSS",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Leon Pr44UX-OS",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Samsung QN115QN90FF",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Sonance VX66R (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install Crestron TSR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install Future Automation PIC-H3",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install HD Anywhere XTND Audio (300)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install KEF LS50 Meta Black (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install Samsung QN75QN900FFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Dining — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install Crestron TSR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install Episode IRF-1",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install Future Automation PIC-H-CUSTOM",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install HD Anywhere XTND Audio (300)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install James Loudspeaker PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install Samsung QN85QN990HFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Hot Tub Terrace — Install Rockustics Cherry Bomb (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Hot Tub Terrace — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Kitchen — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Kitchen — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Living Room Terrace — Install Sonance MX66 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Living Room — Install James Loudspeaker PD42-4 (4)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -141,7 +375,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 18,
+      "openTasks": 56,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -160,6 +394,234 @@
         },
         {
           "name": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 1 — Install Future Automation PS40",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 1 — Install Sony K-55XR50",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 1 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 2 — Install Future Automation PS40",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 2 — Install Sony K-55XR50",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 2 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Driveway — Install Ubiquiti G6 Dome",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Front Entry — Install Ubiquiti G6 Dome",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Garage — Install Ubiquiti G6 Pro 360",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Garage — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Mudroom — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Future Automation PS40",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Sony K-55XR50",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 4 — Install Sony K-55XR50",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 4 — Install Strong SM-RR-T-L",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 4 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 5 — Install Sony K-55XR50",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 5 — Install Strong SM-RR-T-L",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 5 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Laundry — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Suite — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Suite — Install Sony K-65XR50",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Dining — Install James PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install HD Anywhere XTND Audio (100) eARC",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install James PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Sony K-75XR50",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Rockustics Cherry Bomb (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Ubiquiti G6 Dome",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Library — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install James PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Terrace — Install Ubiquiti G6 Dome",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -430,7 +892,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 16,
+      "openTasks": 31,
       "overdueTasks": 8,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -479,6 +941,96 @@
         },
         {
           "name": "Design: Get first order for Earthshade completed, so we can get discounted pricing",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 1 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 2 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Garage — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Mudroom — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Laundry — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Suite — Install Google TV Streamer (4K)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Suite — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Dining — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Google TV Streamer (4K)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install Google TV Streamer (4K)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install Ubiquiti U7-Pro-Max",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -623,8 +1175,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 9,
-      "overdueTasks": 5,
+      "openTasks": 32,
+      "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -641,13 +1193,157 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Final Room Checklist has been completed.",
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Driveway — Install Ubiquiti G6 Turret",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "Install: Lvl 1 - AV Mech - Missing Av Panel Brush Plate (look around onsite to see if you can find this)",
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Entry — Install Ubiquiti G4 Doorbell Pro PoE Kit",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Entry — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Garage — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Mudroom — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Samsung QN85QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Sonance VX66R (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Sitting — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Sitting — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Sitting — Install Samsung QN65QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Dining — Install James PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install James PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Samsung QN85QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Sonance MX66 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Library — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install James PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -678,12 +1374,6 @@
         },
         {
           "name": "Install: Tanner's List 5/18 - General item - Low voltage trim (verify all trim out locations have been terminamted and are ready for wall pl",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Unit 5 - LVL 2 - bedrooms entry - do we need to center this AP? Talk to Tanner (pic in notes)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -730,20 +1420,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Lvl 1 - AV Mech - Missing Av Panel Brush Plate (look around onsite to see if you can find this)",
-          "dueDate": "2026-04-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Unit 5 - LVL 2 - bedrooms entry - do we need to center this AP? Talk to Tanner (pic in notes)",
-          "dueDate": "2026-04-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Install: Tanner's List 5/18 - Garage - ATI - Clarify what boxes in the ceiling can be covered or patched (mark using tape)",
           "dueDate": "2026-05-21",
           "source": "Pulse"
@@ -767,8 +1443,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 14,
-      "overdueTasks": 6,
+      "openTasks": 54,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -786,6 +1462,258 @@
         },
         {
           "name": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 1 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 1 — Install Future Automation PS40",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 1 — Install Samsung QN55QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 2 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 2 — Install Future Automation PS40",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 2 — Install Samsung QN55QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Driveway — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Entry — Install Ubiquiti G6 Pro Entry",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Entry — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Garage — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Mudroom — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Future Automation PS40",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Samsung QN55QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 4 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 4 — Install Future Automation PS40",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 4 — Install Samsung QN55QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Samsung QN75QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Sanus WSSATM1-B2",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Sonos Arc Ultra",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Sonos Sub (Gen 4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Sitting — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Sitting — Install Future Automation PS40",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Sitting — Install Samsung QN55QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Dining — Install James PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install HD Anywhere XTND Audio (100) eARC",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install James PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Samsung QN65QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Rockustics Cherry Bomb (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install James PD42-4 (4)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -833,12 +1761,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Primary SITTING - install WB21 back box",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -852,12 +1774,6 @@
         },
         {
           "name": "Install: Splice speaker wiring in rooftop junction boxes",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Please stage the bin for this job",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -904,13 +1820,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Primary SITTING - install WB21 back box",
-          "dueDate": "2026-04-24",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Install: Lvl 1 front door - stone needs cut for doorbell box",
           "dueDate": "2026-05-22",
           "source": "Pulse"
@@ -927,13 +1836,6 @@
           "label": "Overdue task",
           "detail": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
           "dueDate": "2026-07-31",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Warehouse: Please stage the bin for this job",
-          "dueDate": "2026-09-11",
           "source": "Pulse"
         }
       ],
@@ -954,7 +1856,7 @@
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
-        "contract": "",
+        "contract": "Accepted",
         "deposit": "",
         "changeOrders": ""
       },
@@ -1159,7 +2061,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 10,
+      "openTasks": 43,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1190,6 +2092,204 @@
         },
         {
           "name": "Admin: Unit 8 level 1 bed 1 wap",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Driveway — Install Ubiquiti G6 PTZ",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Entry — Install Ubiquiti G6 Pro Entry",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Front Entry — Install Ubiquiti G6 PTZ",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Garage — Install Ubiquiti G6 Pro Entry",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Garage — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: L1 Mudroom — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Samsung QN85LS03FWFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Sonance VX66R (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Suite — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Suite — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Suite — Install Samsung QN85LS03FWFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Dining — Install James PD62 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install James PD62 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Samsung QN85LS03FWFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Sonance MX66 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Ubiquiti G6 PTZ",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Library (Bar) — Install Future Automation PS40",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Library (Bar) — Install Samsung QN50LS03FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install James PD62 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install Samsung QN85LS03FWFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: L3 Mudroom — Install Ubiquiti G6 Pro Entry",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1670,9 +2770,9 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 15,
+      "openTasks": 16,
       "overdueTasks": 4,
-      "highPriorityTasks": 0,
+      "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": "2026-08-14",
       "approvalsPayments": {
@@ -1770,6 +2870,12 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
+        },
+        {
+          "name": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -1830,6 +2936,13 @@
           "detail": "Install: Swap bed cam. To cam 102 at the panel",
           "dueDate": "2026-08-20",
           "source": "Pulse"
+        },
+        {
+          "severity": "green",
+          "label": "New",
+          "detail": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
+          "dueDate": null,
+          "source": "Procore"
         }
       ],
       "links": []
@@ -1843,7 +2956,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 8,
+      "openTasks": 42,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1861,7 +2974,211 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: AV Mech Room - ADD PICTURES OF SERVICE SMURF TUBE PRE-DRYWALL (USE DURING INSTALL) to Pulse Plans Folder",
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Samsung QN65LS03FWFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Samsung QN65LS03FWFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 3 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 3 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 3 — Install Samsung QN65LS03FWFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 3 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Dining — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install HD Anywhere XTND Audio (100) eARC",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Samsung QN85LS03FWFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Hot Tub Terrace — Install Sonance VXXT6R",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Kitchen — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Mudroom Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Pantry — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install HD Anywhere XTND Audio (100) eARC",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Samsung QN75LS03FWFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Sonance VX66R (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1974,9 +3291,9 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 13,
+      "openTasks": 35,
       "overdueTasks": 2,
-      "highPriorityTasks": 4,
+      "highPriorityTasks": 3,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -1993,6 +3310,144 @@
         },
         {
           "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bed 2 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bed 2 — Install Samsung QN55QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bed 2 — Install Snap One SM-RR-T-M",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bed 2 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bed 5 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Dining — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Samsung QN75QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Kitchen — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install James Loudspeaker PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install Samsung QN75QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Pantry — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Samsung QN65QN80FAFXZA",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2041,12 +3496,6 @@
         },
         {
           "name": "Procore #2678: LV lights are all blinking",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #3546: Roller Shade is out of drywall",
           "status": "todo",
           "source": "Procore",
           "externalUrl": ""
@@ -2119,20 +3568,13 @@
         {
           "severity": "red",
           "label": "Critical aging",
-          "detail": "Procore #3546: Roller Shade is out of drywall",
+          "detail": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
           "dueDate": null,
           "source": "Procore"
         },
         {
           "severity": "amber",
           "label": "Needs action",
-          "detail": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
-          "dueDate": null,
-          "source": "Procore"
-        },
-        {
-          "severity": "green",
-          "label": "New",
           "detail": "Procore #2678: LV lights are all blinking",
           "dueDate": null,
           "source": "Procore"
@@ -2149,9 +3591,9 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 14,
-      "overdueTasks": 4,
-      "highPriorityTasks": 5,
+      "openTasks": 35,
+      "overdueTasks": 2,
+      "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -2173,7 +3615,139 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: AV Mech Room - ADD PICTURES OF SERVICE SMURF TUBE PRE-DRYWALL (USE DURING INSTALL) to pulse plans folder",
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Dining Room — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install LG OLED77G6WUA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Sanus WSSATM1-B2",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Sonos Arc Ultra",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Hot Tub Terrace — Install Ubiquiti UVC-AI-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Kitchen — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install James Loudspeaker PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Mudroom — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Pantry — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Closet — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install LG OLED65G6WUA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Sanus WSSATM1-B2",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Sonos Arc Ultra",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Rear Terrace — Install Ubiquiti UVC-AI-Pro",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2197,20 +3771,14 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: SERVICE CONDUIT - this is blocked and we don't have fiber to garage mech",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Procore #4204: Finish Plywood, Metal, and Roller Shade",
-          "status": "todo",
+          "status": "progress",
           "source": "Procore",
           "externalUrl": ""
         },
         {
           "name": "Procore #4248: Lockable roller shade needed",
-          "status": "todo",
+          "status": "progress",
           "source": "Procore",
           "externalUrl": ""
         },
@@ -2222,7 +3790,7 @@
         },
         {
           "name": "Procore #4376: Finish fiber area better - all units",
-          "status": "todo",
+          "status": "progress",
           "source": "Procore",
           "externalUrl": ""
         },
@@ -2292,29 +3860,15 @@
         },
         {
           "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: SERVICE CONDUIT - this is blocked and we don't have fiber to garage mech",
-          "dueDate": "2026-08-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: AV Mech Room - ADD PICTURES OF SERVICE SMURF TUBE PRE-DRYWALL (USE DURING INSTALL) to pulse plans folder",
-          "dueDate": "2026-08-28",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
           "label": "Critical aging",
-          "detail": "Procore #4204: Finish Plywood, Metal, and Roller Shade",
+          "detail": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
           "dueDate": null,
           "source": "Procore"
         },
         {
           "severity": "red",
           "label": "Critical aging",
-          "detail": "Procore #4248: Lockable roller shade needed",
+          "detail": "Procore #4390: Motion sensor should be in corner",
           "dueDate": null,
           "source": "Procore"
         }
@@ -2330,7 +3884,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 16,
+      "openTasks": 82,
       "overdueTasks": 13,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2367,6 +3921,402 @@
         },
         {
           "name": "Admin: Primary Bath Small Ap Speakers - 3\" round retro (bezel) - will need requested for ordering from austin after contracted",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Crestron HR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Samsung QN65LS03HEFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Crestron CEN-GW1",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Crestron HR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Samsung QN65LS03HEFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 3 — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 3 — Install Crestron HR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 3 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 3 — Install Samsung QN65LS03HEFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 4 — Install Crestron CEN-GW1",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 4 — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 4 — Install Crestron HR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 4 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 4 — Install Samsung QN65LS03HEFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 4 — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 5 — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 5 — Install Crestron HR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 5 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 5 — Install Samsung QN55QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 5 — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Dining — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Crestron TSR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install JL Audio d108-GLOSS",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Leon Hz44UX-LR-OS",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Samsung QN85LS03HEFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install Crestron TSR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install James Loudspeaker PD42-4 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install Samsung QN75LS03HEFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Jr. Primary Suite — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Jr. Primary Suite — Install Crestron HR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Jr. Primary Suite — Install Future Automation UBL-EBF",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Jr. Primary Suite — Install Samsung QN55QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Jr. Primary Suite — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Kitchen — Install James Loudspeaker PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install Crestron TSR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install Future Automation PS80",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install James Loudspeaker PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install Leon Hz44UX-LR-OS",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install Samsung QN98QN90FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Mech. — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Owner's Closet — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Pantry — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Bath — Install James Loudspeaker SA63-7-MOD (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Closet — Install Ubiquiti U7-Pro",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Crestron TSR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Leon Hz44UX-LR",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Primary Suite — Install Samsung QN65LS03HEFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Rec Room — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Rec Room — Install Crestron TSR-310-B",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Rec Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Rec Room — Install James Loudspeaker PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Rec Room — Install Samsung QN85LS03HEFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Sauna — Install Sonance VXXT6R SST",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Study — Install James Loudspeaker PD42-4 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Terrace — Install Ubiquiti U7-Outdoor",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2523,7 +4473,7 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 11,
+      "openTasks": 40,
       "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2560,6 +4510,180 @@
         },
         {
           "name": "Admin: Wade, where are we at with the change order for the volume controls and touch panels? Do we have time to edit that C/O for a few more",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Fitness - B123 — Install Crestron DM-NVX-D30 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Fitness - B123 — Install Future Automation PS-SRK (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Fitness - B123 — Install Future Automation PS55 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Fitness - B123 — Install Samsung QN55QN80HAFXZA (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Fitness - B123 — Install Snap One WB-250-IPW-2 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Fitness - B123 — Install Sonance PS-C63RTLP (6)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Lockers - B118 — Install Sonance PS-C63RTLP (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Member Lounge - B114 — Install Sonance PS-C63RTLP (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Relaxation Suite - B121 — Install Sonance PS-C63RTLP (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Restroom - B110 — Install Sonance PS-C63RTLP",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Restroom - B111 — Install Sonance PS-C63RTLP",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Treatment Room - B120 — Install Sonance PS-C63RTLP (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Treatment Room - B122 — Install Sonance PS-C63RTLP (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Circulation - 106 — Install Sonance PS-C63RTLP (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Circulation - 108 — Install Sonance PS-C63RTLP (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Circulation - 113 — Install Sonance PS-C63RTLP",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Day lockers - 107 — Install Sonance PS-C63RTLP (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Entry Vestibule - 100 — Install Sonance PS-C63RTLP",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Main Lounge - 101 — Install Crestron DM-NVX-D30",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Main Lounge - 101 — Install Future Automation PS-SRK",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Main Lounge - 101 — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Main Lounge - 101 — Install Samsung QN75QN80HAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Main Lounge - 101 — Install Snap One WB-250-IPW-2",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Main Lounge - 101 — Install Sonance PS-C63RTLP (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Member Locker Area - 109 — Install Sonance PS-C63RTLP (18)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Men's Restroom - 110 — Install Sonance PS-C63RTLP (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Outdoor Lounge - 118 — Install James Loudspeaker VXQ68R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Ski Valet - 116 — Install Sonance PS-C63RTLP (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Women's Restroom - 111 — Install Sonance PS-C63RTLP (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2686,7 +4810,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 44,
+      "openTasks": 50,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2752,6 +4876,12 @@
           "externalUrl": ""
         },
         {
+          "name": "AV: BL - Main Mech: Run a new spare for projector control Currently using Sonos spare 1",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "AV: BL - Rack Room: Get a latch for the side of the 2-post",
           "status": "todo",
           "source": "Pulse",
@@ -2800,6 +4930,12 @@
           "externalUrl": ""
         },
         {
+          "name": "AV: LL - Batcave: Reconfigure Tv Devices so tv can sit flush against wall.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "AV: LL - Lap Pool: Install fisheye camera w/ recessed kit",
           "status": "todo",
           "source": "Pulse",
@@ -2818,19 +4954,25 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: LL - Yoga Area: Install owner provided TV (after mirror is installed)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "AV: LL Gym: Center TV on cabinet",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Fire: Install PTZ camera with recess kit",
+          "name": "AV: LL Gym: Lower tv so the backbox is not visible",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL Gym: Re attach tv to mount with proper spacers. It moves as you pull it out",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Fire: Clean up Tv wires Add plate or brush plate",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2848,7 +4990,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Garage: Battery Bunker: Check on network switch",
+          "name": "AV: ML - Fire: Troubleshoot audio return",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2866,13 +5008,25 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Master Suite: Install owner provided TV w/ soundbar",
+          "name": "AV: ML - Master Suite: Ensure master tv tv mount stays secured to FA backbox sucre clip",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
           "name": "AV: ML - Master Suite: Relable wiring on Sonos Port that used to be Lap Pool which is now Master Bed - audio cable and network",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Master Suite: Troubleshoot grey network cable for master bed apple tv.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Office: Configure TVs devices on versa plate so tv can sit closer to the wall",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2891,6 +5045,12 @@
         },
         {
           "name": "AV: ML - Outdoor Living: Remove WAP antennas and paint black",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - Outdoor Living: Swap Left and right speakers at 2 Post",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3019,7 +5179,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 0,
+      "openTasks": 1,
       "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3029,7 +5189,14 @@
         "deposit": "",
         "changeOrders": ""
       },
-      "taskList": [],
+      "taskList": [
+        {
+          "name": "Admin: Internal invoice for ATI and Linked Prewire",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
