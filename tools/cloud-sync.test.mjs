@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import vm from 'node:vm';
 import worker from '../worker/src/index.js';
 import { isDue } from './cloud-sync.mjs';
 const require = createRequire(import.meta.url);
-const { parseObservationPagination, readCompleteObservationList, buildProcoreTasks } = require('../procore-browser-sync/procore_browser_sync.js');
+const { parseObservationPagination, readCompleteObservationList, buildProcoreTasks, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom } = require('../procore-browser-sync/procore_browser_sync.js');
 
 function fixture() {
   const sql = new DatabaseSync(':memory:');
@@ -148,4 +149,23 @@ test('virtual grid is scrolled and overlapping visible rows are deduplicated', a
   }};
   const rows = await readCompleteObservationList(client,{timeout:100,'grid-wait-ms':1});
   assert.deepEqual(rows.map(r=>r.number),['1','2','3','4']);
+});
+
+test('source placeholders remain empty and multiline descriptions remain intact', () => {
+  const context = { document:{body:{innerText:'No.\n2824\nTitle\nRepair\nStatus\nInitiated\nLocation\nNo Location selected\nDistribution\nDescription\n--\nAttachments'}}, location:{href:'https://app.procore.com/webclients/host/companies/9207/projects/2884198/tools/observations/quality/details/23648272'} };
+  const first = vm.runInNewContext(`(${extractObservationDetailFromDom.toString()})()`,context);
+  assert.equal(first.location,'');
+  assert.equal(first.description,'');
+  context.document.body.innerText=context.document.body.innerText.replace('--','First sentence.\nSecond sentence.');
+  const second=vm.runInNewContext(`(${extractObservationDetailFromDom.toString()})()`,context);
+  assert.equal(second.description,'First sentence. Second sentence.');
+});
+
+test('custom observation types keep their own titles and stable links', () => {
+  const lines=['2824','Pre-Punch','Repair wires','KH','Kody Huot','ATI OF AMERICA','9/18/2026','2774','Deficiency','Move TV','BU','Blessing','ATI OF AMERICA','9/16/2026'];
+  const links=[{text:'Repair wires',href:'https://app.procore.com/webclients/host/companies/9207/projects/2884198/tools/observations/quality/details/23648272'},{text:'Move TV',href:'https://app.procore.com/webclients/host/companies/9207/projects/2884198/tools/observations/quality/details/23605947'}];
+  const rows=extractRowsFromCurrentObservationListDom(lines,links,[],'WPR');
+  assert.equal(rows.length,2);
+  assert.equal(rows[0].number,'2824');
+  assert.equal(rows[1].detailUrl,links[1].href);
 });

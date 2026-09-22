@@ -1619,7 +1619,7 @@ function extractObservationDetailFromDom() {
   const valueAfter = label => {
     const index = lines.findIndex(line => line.toLowerCase() === label.toLowerCase());
     const value = index === -1 ? "" : lines[index + 1] || "";
-    if (value === "--" || value === "Loading" || labels.has(value)) return "";
+    if (value === "--" || value === "No Location selected" || value === "Loading" || labels.has(value)) return "";
     return value;
   };
   const statusFromText = () => {
@@ -1641,7 +1641,8 @@ function extractObservationDetailFromDom() {
   const locationLoaded = locationIndex !== -1 && locationRaw !== "Loading" && locationRaw !== "Distribution";
   const descriptionIndex = lines.findIndex(line => line.toLowerCase() === "description");
   const attachmentIndex = lines.findIndex((line, index) => index > descriptionIndex && /^(attachments|activity feed|related items|emails)$/i.test(line));
-  const description = descriptionIndex === -1 ? "" : lines.slice(descriptionIndex + 1, attachmentIndex === -1 ? descriptionIndex + 1 : attachmentIndex).join(" ");
+  const descriptionText = descriptionIndex === -1 ? "" : lines.slice(descriptionIndex + 1, attachmentIndex === -1 ? lines.length : attachmentIndex).join(" ");
+  const description = descriptionText === "--" ? "" : descriptionText;
   return {
     project: (text.match(/(\d+\s+-\s+WPR[^\n]+)/) || [])[1] || "",
     number,
@@ -1806,4 +1807,4 @@ if (require.main === module) main().catch(async error => {
   process.exitCode = 1;
 });
 
-module.exports = { buildProcoreTasks, normalizeProcoreTask, assertUsableProcoreRows, readCompleteObservationList, parseObservationPagination };
+module.exports = { buildProcoreTasks, normalizeProcoreTask, assertUsableProcoreRows, readCompleteObservationList, parseObservationPagination, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom };

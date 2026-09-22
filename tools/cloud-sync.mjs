@@ -71,7 +71,20 @@ export async function main() {
   const result = await runChild(source, mode);
   if (!result.ok) {
     if (mode === 'sync') await recordFailure(source);
-    summary(`${source}: FAILED. Source login, complete extraction, or API validation did not finish. Raw source output was withheld from public logs.`);
+    const reasons = [
+      ['Could not find an installed Chrome', 'Browser executable unavailable'],
+      ['Chrome did not open a control port', 'Browser startup failed'],
+      ['No debuggable Chrome page', 'Browser control unavailable'],
+      ['Timed out waiting for Procore login', 'Unattended Procore login did not finish'],
+      ['login did not complete', 'Unattended Procore login did not finish'],
+      ['list completeness could not be verified', 'Observation list count could not be verified'],
+      ['grid stopped before', 'Virtual grid extraction incomplete'],
+      ['grid scroll container', 'Virtual grid scroll control unavailable'],
+      ['missing or duplicate observation links', 'Observation links failed validation'],
+      ['Timed out waiting for Procore observation detail', 'Observation detail did not finish loading'],
+      ['Command Center', 'Command Center request or validation failed'],
+    ].filter(([pattern]) => result.output.includes(pattern)).map(([,label]) => label);
+    summary(`${source}: FAILED. ${[...new Set(reasons)].join('; ') || 'Source extraction did not complete'}. Raw source output was withheld from public logs.`);
     throw new Error('Hosted source run failed.');
   }
   const countLines = result.output.split(/\r?\n/).filter(line => /^(Verified complete Procore list: \d+\/\d+|Verified Procore extraction: \d+ open ATI observations; \d+ mapped; \d+ require review\.|pulse tasks: \d+ item\(s\), \d+ project scope\(s\)\.|Pulse PM Contracts dates: \d+ dashboard row\(s\) fetched\.|Pulse API to-dos: \d+ Pulse project\(s\), \d+ matched, \d+ to-do item\(s\)\.)$/.test(line));
