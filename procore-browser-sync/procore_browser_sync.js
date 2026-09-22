@@ -491,6 +491,11 @@ function inferCommandProject(row, commandProjects) {
   if (String(row.project || "").includes("825104")) return byName.get("skier services") || null;
   const unitNumber = inferUnitNumber(row);
   if (unitNumber >= 1 && unitNumber <= 12) return byName.get(`wpr unit ${unitNumber}`) || null;
+  // The verified five-plex source also uses condo numbers at the start of titles.
+  if (String(row.procoreProjectId) === "2884198") {
+    const condo = String(row.title || "").match(/^(101|102|201|202)\b/);
+    if (condo) return byName.get(`wpr condo ${condo[1]}`) || null;
+  }
   if (/penthouse|unit\s*#?300|level\s*03/.test(haystack)) return byName.get("wpr condo penthouse") || null;
   if (/unit\s+201\/202>[^>]*\bb\d{3}\b|\bunit\s*#?202\b/.test(haystack)) return byName.get("wpr condo 202") || null;
   if (/unit\s+201\/202>[^>]*\ba\d{3}\b|\bunit\s*#?201\b(?!\/)/.test(haystack)) return byName.get("wpr condo 201") || null;
@@ -500,25 +505,21 @@ function inferCommandProject(row, commandProjects) {
 }
 
 function inferUnitNumber(row) {
-  const projectText = String(row.project || "");
+  // A specific child location is authoritative; a parent like "Units 3&4"
+  // describes the building and must not invalidate its "Unit 4" child.
+  const locationUnits = [...new Set(String(row.location || "").split(">").map(segment => {
+    const match = segment.trim().match(/^(?:Townhome\s+)?Unit\s*#?\s*(\d{1,2})$/i);
+    return match ? Number(match[1]) : 0;
+  }).filter(number => number >= 1 && number <= 12))];
+  if (locationUnits.length === 1) return locationUnits[0];
+  if (locationUnits.length > 1) return null;
   const text = `${row.location || ""} ${row.title || ""} ${row.description || ""}`;
   if (/\bunits?\s*#?\s*\d{1,2}\s*(?:[,/&-]|\band\b)/i.test(text)) return null;
   const matches = [...text.matchAll(/\bunit\s*#?\s*(\d{1,3})\b/gi)].map(match => Number(match[1]));
   const smallUnits = [...new Set(matches.filter(value => value >= 1 && value <= 12))];
   if (smallUnits.length === 1) return smallUnits[0];
   if (smallUnits.length > 1) return null;
-  if (/823140/.test(projectText)) {
-    const fromLocation = [...text.matchAll(/(?:^|[^0-9])([1-6])(?:[^0-9]|$)/g)].map(match => Number(match[1])).find(Boolean);
-    return fromLocation || null;
-  }
-  if (/824124/.test(projectText)) {
-    const fromLocation = [...text.matchAll(/(?:^|[^0-9])([78])(?:[^0-9]|$)/g)].map(match => Number(match[1])).find(Boolean);
-    return fromLocation || null;
-  }
-  if (/825106/.test(projectText)) {
-    const fromLocation = [...text.matchAll(/(?:^|[^0-9])(9|10|11|12)(?:[^0-9]|$)/g)].map(match => Number(match[1])).find(Boolean);
-    return fromLocation || null;
-  }
+  // Building, floor, and dimension numbers alone are not unit identifiers.
   return null;
 }
 

@@ -129,6 +129,21 @@ test('condo room letters do not move first-floor observations to second-floor co
   }
 });
 
+test('specific unit locations override building ranges without guessing from building numbers', () => {
+  const projects = [2,3,4].map(id=>({id:String(id),name:`WPR Unit ${id}`}));
+  const rows = [
+    {location:'Townhome Building 2 (Units 3&4 )>Unit 4>LEVEL 3',title:'Repair'},
+    {location:'Townhome Building 1 (Units 1&2)>Townhome Unit 2>LEVEL 2',title:'Repair'},
+    {location:'',project:'823140 - WPR',title:'Missing Roller Shades - BLD 2'},
+    {location:'Townhome Building 1&2 (Units 1,2,3,&4)',title:'Building 1 roller shade missing'}
+  ];
+  const result=buildProcoreTasks(rows,projects);
+  assert.deepEqual(result.tasks.map(t=>t.projectId),['4','2']);
+  assert.equal(result.skipped.length,2);
+  const condo=buildProcoreTasks([{procoreProjectId:'2884198',title:'101 Primary Bed - adjust TV',location:''}], [{id:'101',name:'WPR Condo 101'}]);
+  assert.equal(condo.tasks[0]?.projectId,'101');
+});
+
 function listClient(pages) {
   let page = 0;
   return { async send(method, {expression}) {

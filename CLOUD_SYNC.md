@@ -7,7 +7,7 @@ scheduler, or locally authenticated Wrangler session.
 
 ## Activation gate
 
-Automatic collectors are disabled unless the repository variable
+Automatic collectors are enabled as of September 22, 2026. The repository variable
 `CLOUD_SYNC_ENABLED` is exactly `true`. Manual workflow runs default to
 `verify`, which reads sources and maps observations without writing data or
 freshness status. Do not enable the variable until both verification and live
@@ -67,19 +67,24 @@ review bucket instead of guessed.
 9. Confirm a scheduled run while the local runner is disabled; retain rollback
    instructions and record the cloud run URLs before retiring the local task.
 
-Until those steps pass, the migration is not complete and the existing local
-runner remains the operational fallback. Do not describe this staged workflow
-as an active replacement.
+The local Windows task `WPR Pulse Sync` is disabled following successful cloud
+verification and live writes. Final timer-driven acceptance is in progress.
 
 ## Verified results (September 22, 2026)
 
-- All 14 cloud safeguards tests, control rules, and hosted data validation pass.
+- All 15 cloud safeguards tests, control rules, and hosted data validation pass.
 - Pulse read-only hosted verification: run `35727187431` passed.
 - Pulse live hosted sync: run `35728067955` passed. The live API confirmed
   `CLOUD` success at `2026-09-22T12:37:59.712Z`, 655 records across 21 projects.
   All 10 manual items were unchanged.
-- Procore hosted verification is still in progress. Automatic source collectors
-  remain disabled pending full Procore validation and schedule acceptance.
+- Procore read-only hosted verification: run `35729097924` passed. It read all
+  149 observations across five source lists (79, 43, 13, 10, and 4).
+- Procore live hosted sync with observation identity checks: run `35729965697`
+  passed on a fresh hosted browser. The live API confirmed `CLOUD` success at
+  `2026-09-22T13:05:56.890Z`, 24 open ATI observations (7 mapped, 17 retained in
+  the review bucket). Manual content was unchanged.
+- Both sources were queued for automatic acceptance with the local Windows
+  sync task disabled. Timer-driven verification remains pending.
 
 ## Rollback and operations
 
@@ -89,3 +94,8 @@ Manual dispatch is available for diagnosis. Do not run local and hosted writers
 simultaneously during cutover. Review failed Actions runs and Command Center
 source freshness; Procore MFA/SSO challenges may require interactive intervention
 or migration to official API access.
+
+To restore the prior local schedule after stopping cloud collectors, run
+`Enable-ScheduledTask -TaskName 'WPR Pulse Sync'` on the original Windows host.
+This rollback requires that host to remain available. The pre-cutover database
+backup is kept locally in ignored `tmp/cloud-precutover.sql`.
