@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-21T17:24:41.987Z",
+  "lastUpdated": "2026-09-22T15:56:11.253Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -375,8 +375,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 56,
-      "overdueTasks": 4,
+      "openTasks": 58,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -717,7 +717,19 @@
           "externalUrl": ""
         },
         {
+          "name": "Procore #3378: Missing Roller Shades - BLD 2",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
           "name": "Warehouse: ATI C/O Revision 5 - Return parts back to stock",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Please stage the bin for this job.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -780,6 +792,13 @@
           "label": "Overdue task",
           "detail": "Install: Wire and lable TVs BED 1,2,3 Primary and flex",
           "dueDate": "2026-09-11",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Warehouse: Please stage the bin for this job.",
+          "dueDate": "2026-09-21",
           "source": "Pulse"
         }
       ],
@@ -1850,7 +1869,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 19,
+      "openTasks": 82,
       "overdueTasks": 8,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1887,6 +1906,270 @@
         },
         {
           "name": "Admin: Lvl 3 Flex Room - will need horizontal adapter for mounting TV at install",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 1 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Bedroom 2 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Driveway — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Entry — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Entry — Install Ubiquiti UP-Chime (3)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Entry — Install Ubiquiti UVC-G4 Doorbell Pro PoE Kit",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Garage — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Mudroom — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Bedroom 3 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Bedroom 3 — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Bedroom 3 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Bedroom 3 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Bedroom 4 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Bedroom 4 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Bedroom 4 — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Bedroom 4 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Samsung QN75QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Family Room — Install Sonance VX66R (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Closet — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Sitting — Install Sonance VX66 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: Primary Suite — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Dining — Install James Loudspeaker PD62 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install James Loudspeaker PD62 (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install Samsung QN75QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Flex — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Hot Tub Terrace — Install Sonance MX66 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Hot Tub Terrace — Install Ubiquiti G6 Turret",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Kitchen — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 3: Living Room — Install James Loudspeaker PD62 (4)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1971,6 +2254,120 @@
         },
         {
           "name": "Install: Walk unit and mark up plan accordingly. Install cover plates where needed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Bedroom 3 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Bedroom 3 — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Bedroom 3 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Bedroom 3 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Bedroom 4 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Bedroom 4 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Bedroom 4 — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Bedroom 4 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Family Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Family Room — Install Samsung QN75QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Family Room — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Family Room — Install Sonance VX66R (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Primary Sitting — Install Sonance VX66 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Primary Suite — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Primary Suite — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Primary Suite — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Primary Suite — Install Snap One WattBox IP Wi-Fi (2 outlets)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2770,9 +3167,9 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 16,
+      "openTasks": 19,
       "overdueTasks": 4,
-      "highPriorityTasks": 1,
+      "highPriorityTasks": 4,
       "risks": 0,
       "nextHandoff": "2026-08-14",
       "approvalsPayments": {
@@ -2836,12 +3233,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Power down and cover rack",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -2849,6 +3240,12 @@
         },
         {
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Shorten Pendant Speaker Wires - no loops",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2869,6 +3266,24 @@
           "name": "Install: Turn auto reboot back on in rack PDU 1 once rack is up and running stable.",
           "status": "todo",
           "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #2678: LV lights are all blinking",
+          "status": "todo",
+          "source": "Procore",
           "externalUrl": ""
         },
         {
@@ -2938,9 +3353,16 @@
           "source": "Pulse"
         },
         {
-          "severity": "green",
-          "label": "New",
-          "detail": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
+          "severity": "red",
+          "label": "Critical aging",
+          "detail": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
+          "dueDate": null,
+          "source": "Procore"
+        },
+        {
+          "severity": "red",
+          "label": "Critical aging",
+          "detail": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
           "dueDate": null,
           "source": "Procore"
         }
@@ -3287,13 +3709,13 @@
       "name": "WPR Condo 201",
       "area": "Condos/Penthouse",
       "team": "Big-D Condos/Penthouse",
-      "health": "amber",
+      "health": "green",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 35,
+      "openTasks": 31,
       "overdueTasks": 2,
-      "highPriorityTasks": 3,
+      "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -3483,30 +3905,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #2678: LV lights are all blinking",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4877: Similar to unit 4 lvl 3, need to add a single Smurf tube from tv down directly below to the right of the outlet below the tv.",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
           "name": "This is a test",
           "status": "todo",
           "source": "Command Center",
@@ -3557,27 +3955,6 @@
           "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "dueDate": "2026-08-19",
           "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Critical aging",
-          "detail": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
-          "dueDate": null,
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Critical aging",
-          "detail": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
-          "dueDate": null,
-          "source": "Procore"
-        },
-        {
-          "severity": "amber",
-          "label": "Needs action",
-          "detail": "Procore #2678: LV lights are all blinking",
-          "dueDate": null,
-          "source": "Procore"
         }
       ],
       "links": []
@@ -3587,13 +3964,13 @@
       "name": "WPR Condo 202",
       "area": "Condos/Penthouse",
       "team": "Big-D Condos/Penthouse",
-      "health": "amber",
+      "health": "green",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 35,
+      "openTasks": 28,
       "overdueTasks": 2,
-      "highPriorityTasks": 2,
+      "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -3769,48 +4146,6 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
-        },
-        {
-          "name": "Procore #4204: Finish Plywood, Metal, and Roller Shade",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4248: Lockable roller shade needed",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4275: No action needed. Tell us what the cover plate is covering.",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4376: Finish fiber area better - all units",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4390: Motion sensor should be in corner",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #893: A/V complete in AV room",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -3857,20 +4192,6 @@
           "detail": "Admin: Follow up with Solus on wall plates (white arch matte .. beveled edge) Also verify that Helix is following this direction for outlets",
           "dueDate": "2026-08-17",
           "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Critical aging",
-          "detail": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
-          "dueDate": null,
-          "source": "Procore"
-        },
-        {
-          "severity": "red",
-          "label": "Critical aging",
-          "detail": "Procore #4390: Motion sensor should be in corner",
-          "dueDate": null,
-          "source": "Procore"
         }
       ],
       "links": []
@@ -4473,8 +4794,8 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 40,
-      "overdueTasks": 6,
+      "openTasks": 39,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4689,12 +5010,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Evan (Big-D) reached out today. CRITICAL PATH schedule - the lockers are going to be installed in the next week (day needs verified",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -4789,13 +5104,6 @@
           "label": "Overdue task",
           "detail": "Install: Head end wiring needs pulled into Mech Room once ladder tray is confirmed installed",
           "dueDate": "2026-08-29",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Evan (Big-D) reached out today. CRITICAL PATH schedule - the lockers are going to be installed in the next week (day needs verified",
-          "dueDate": "2026-09-14",
           "source": "Pulse"
         }
       ],
@@ -5179,7 +5487,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 1,
+      "openTasks": 0,
       "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5189,14 +5497,7 @@
         "deposit": "",
         "changeOrders": ""
       },
-      "taskList": [
-        {
-          "name": "Admin: Internal invoice for ATI and Linked Prewire",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        }
-      ],
+      "taskList": [],
       "timelines": [
         {
           "key": "prewire",
