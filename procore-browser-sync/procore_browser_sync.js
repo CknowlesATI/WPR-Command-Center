@@ -1325,7 +1325,8 @@ async function readCompleteObservationList(client, args) {
       if (args.diagnostic) {
         const diagnostic = await client.send("Runtime.evaluate", { expression: `location.pathname.includes('/observations/') ? ({ text: document.body.innerText, buttons: [...document.querySelectorAll('button')].map(b => ({ text:b.innerText, label:b.getAttribute('aria-label'), title:b.getAttribute('title'), disabled:b.disabled })) }) : ({ error:'Not an observation page' })`, returnByValue: true });
         fs.mkdirSync(path.join(ROOT,'tmp'),{recursive:true});
-        fs.writeFileSync(path.join(ROOT,'tmp','procore-list-diagnostic.json'),JSON.stringify(diagnostic.result.value,null,2));
+        const links = await client.send("Runtime.evaluate", { expression: `Array.from(document.querySelectorAll('a[href*="/observations/"]')).map(a=>({text:a.textContent.trim(),href:a.href}))`, returnByValue: true });
+        fs.writeFileSync(path.join(ROOT,'tmp','procore-list-diagnostic.json'),JSON.stringify({ ...diagnostic.result.value, pagination, pageRows, links:links.result.value },null,2));
       }
       throw new Error("Procore list completeness could not be verified; existing data was preserved.");
     }
@@ -1509,18 +1510,19 @@ function extractRowsFromDom() {
 }
 
 function extractRowsFromCurrentObservationListDom(lines, itemLinks, pdfLinks, project) {
-  const types = new Set(["QC Field Observation", "Architect/Engineer/Consultant", "Non-Conformance", "Deficiency", "Work to Complete", "Trade Damage", "Commissioning", "Commissioning - Commissioning"]);
   const companies = new Set(["ATI OF AMERICA", "BIG-D SIGNATURE - PC", "HELIX ELECTRIC OF UTAH LLC", "WALLBOARD SPECIALTIES", "IRON HORSE CONCRETE & CONSTRUCTION"]);
   const isDate = s => /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s || "");
   const starts = [];
   for (let i = 0; i < lines.length; i += 1) {
-    if (/^\d+$/.test(lines[i] || "") && types.has(lines[i + 1] || "")) starts.push(i);
+    // Custom observation types (for example Pre-Punch) must not drop rows or
+    // shift link-to-number alignment. Anchor each boundary to a real title link.
+    if (/^\d+$/.test(lines[i] || "") && itemLinks.some(link => lines.slice(i + 2, i + 5).includes(link.text))) starts.push(i);
   }
 
   return starts.map((start, idx) => {
     const end = starts[idx + 1] || lines.length;
     const seg = lines.slice(start, end);
-    const link = itemLinks[idx] || {};
+    const link = itemLinks.find(link => seg.includes(link.text)) || {};
     const detailUrl = link.href || "";
     const itemId = (detailUrl.match(/details\/(\d+)/) || detailUrl.match(/items\/(\d+)/) || [])[1] || "";
     const procoreProjectId = (detailUrl.match(/projects\/(\d+)/) || [])[1] || "";
