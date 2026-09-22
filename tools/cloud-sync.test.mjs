@@ -7,7 +7,16 @@ import vm from 'node:vm';
 import worker from '../worker/src/index.js';
 import { isDue } from './cloud-sync.mjs';
 const require = createRequire(import.meta.url);
-const { parseObservationPagination, readCompleteObservationList, buildProcoreTasks, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom } = require('../procore-browser-sync/procore_browser_sync.js');
+const { parseObservationPagination, readCompleteObservationList, buildProcoreTasks, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom, observationDetailMatches } = require('../procore-browser-sync/procore_browser_sync.js');
+
+test('detail navigation rejects stale or misaligned observation content', () => {
+  const expected = {number:'2824',detailUrl:'https://app.procore.com/webclients/host/companies/9207/projects/2884198/tools/observations/quality/details/23648272'};
+  const detail = {number:'2824',itemUrl:'https://app.procore.com/2884198/project/observations/items/23648272'};
+  assert.equal(observationDetailMatches(detail, expected), true);
+  assert.equal(observationDetailMatches({...detail,number:'2774'}, expected), false);
+  assert.equal(observationDetailMatches({...detail,itemUrl:detail.itemUrl.replace('23648272','23605947')}, expected), false);
+  assert.equal(observationDetailMatches({...detail,itemUrl:''}, expected), false);
+});
 
 function fixture() {
   const sql = new DatabaseSync(':memory:');

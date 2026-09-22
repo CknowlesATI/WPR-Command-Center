@@ -1443,7 +1443,7 @@ async function readObservationDetailWithRetry(client, row, args = {}) {
     try {
       await client.send("Page.navigate", { url: detailUrl });
       await waitForPageReadyCdp(client, Number(args["detail-page-timeout"] || DEFAULT_PAGE_TIMEOUT_MS)).catch(() => {});
-      return await waitForObservationDetailCdp(client, Number(args["detail-timeout"] || DEFAULT_PAGE_TIMEOUT_MS));
+      return await waitForObservationDetailCdp(client, Number(args["detail-timeout"] || DEFAULT_PAGE_TIMEOUT_MS), row);
     } catch (error) {
       lastError = error;
       console.error(`Procore detail #${row.number || "unknown"} attempt ${attempt}/${attempts} failed: ${error.message}`);
@@ -1453,12 +1453,23 @@ async function readObservationDetailWithRetry(client, row, args = {}) {
   throw lastError || new Error(`Could not read Procore detail #${row.number || "unknown"}.`);
 }
 
-async function waitForObservationDetailCdp(client, timeoutMs) {
+function observationDetailMatches(detail, expected) {
+  const identity = url => {
+    const value = String(url || "");
+    const project = (value.match(/projects\/(\d+)/) || value.match(/app\.procore\.com\/(\d+)\/project/) || [])[1];
+    const item = (value.match(/details\/(\d+)/) || value.match(/items\/(\d+)/) || [])[1];
+    return project && item ? `${project}/${item}` : "";
+  };
+  const expectedId = identity(expected.detailUrl || expected.itemUrl);
+  return Boolean(expectedId && identity(detail.detailUrl || detail.itemUrl) === expectedId && String(detail.number) === String(expected.number));
+}
+
+async function waitForObservationDetailCdp(client, timeoutMs, expected) {
   const start = Date.now();
   let detail = {};
   while (Date.now() - start < timeoutMs) {
     detail = await extractObservationDetailFromCdp(client);
-    if (detail.status && !detail.loading) return detail;
+    if (detail.status && !detail.loading && observationDetailMatches(detail, expected)) return detail;
     await delay(1000);
   }
   const state = await pageStateCdp(client).catch(() => ({ url: "", title: "", text: "" }));
@@ -1815,4 +1826,4 @@ if (require.main === module) main().catch(async error => {
   process.exitCode = 1;
 });
 
-module.exports = { buildProcoreTasks, normalizeProcoreTask, assertUsableProcoreRows, readCompleteObservationList, parseObservationPagination, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom };
+module.exports = { buildProcoreTasks, normalizeProcoreTask, assertUsableProcoreRows, readCompleteObservationList, parseObservationPagination, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom, observationDetailMatches };
