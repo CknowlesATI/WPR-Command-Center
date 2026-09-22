@@ -3896,7 +3896,7 @@ function requestSourceSync(source) {
     projectCount: current.projectCount || 0,
     message: `${label} sync requested from Command Center.`
   }).then(() => {
-    showSyncBanner("warning", `${label} sync requested. Run the ${label} sync routine to refresh live project data.`);
+    showSyncBanner("warning", `${label} sync queued. The cloud service checks for requests about every 30 minutes; updates may take longer when the service is busy. This computer can be closed.`);
   }).catch(error => {
     console.error(`${label} sync request failed:`, error);
     showSyncBanner("error", error.message || `${label} sync request could not be recorded.`);
