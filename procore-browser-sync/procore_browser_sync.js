@@ -34,9 +34,11 @@ function loadEnvFile(filePath) {
   });
 }
 
-loadEnvFile(ROOT_ENV_PATH);
-loadEnvFile(PULSE_ENV_PATH);
-loadEnvFile(LOCAL_ENV_PATH);
+if (require.main === module) {
+  loadEnvFile(ROOT_ENV_PATH);
+  loadEnvFile(PULSE_ENV_PATH);
+  loadEnvFile(LOCAL_ENV_PATH);
+}
 
 function env(name, fallback = "") {
   return process.env[name] || fallback;
@@ -278,12 +280,28 @@ async function commandSyncAuto(args) {
   const reviewTasks = skipped.map(item => normalizeProcoreReviewTask(item.row, item.reason));
   const outDir = path.resolve(args["out-dir"] || path.join(__dirname, "output", "sync-auto"));
   const files = writeReviewFiles(rows, outDir);
+  if (args["dry-run"]) {
+    console.log(`Verified Procore extraction: ${rows.length} open ATI observations; ${tasks.length} mapped; ${reviewTasks.length} require review.`);
+    return;
+  }
   const auth = await getCommandCenterAuthIfConfigured();
   const replaceProjectIds = args["complete-missing"] === true
     ? [...new Set([...tasks.map(task => String(task.projectId)), ...currentSourceProjectIds(commandProjects, "procore")])]
     : [];
-  const result = await syncToCommandCenter(tasks, replaceProjectIds, auth);
-  const reviewResult = await syncProcoreReviewTasks(reviewTasks, auth, commandProjects);
+  let result, reviewResult;
+  if (auth?.syncOnly) {
+    if (!rows.length) throw new Error("Empty Procore extract requires review; existing data was preserved.");
+    const review = await requestJson(commandCenterApiUrl(), { method: "POST", headers: commandCenterHeaders(auth), body: JSON.stringify({ action: "ensureProcoreReviewProject" }) });
+    const reviewId = review.result?.id;
+    if (!reviewId) throw new Error("Review project could not be resolved.");
+    // Replace mapped and unmapped observations together so a partial write cannot
+    // report success or delete observations moved between project scopes.
+    result = await syncToCommandCenter([...tasks, ...reviewTasks.map(task => ({ ...task, projectId: reviewId }))], [...new Set([...replaceProjectIds, reviewId])], auth);
+    reviewResult = { includedInSnapshot: reviewTasks.length };
+  } else {
+    result = await syncToCommandCenter(tasks, replaceProjectIds, auth);
+    reviewResult = await syncProcoreReviewTasks(reviewTasks, auth, commandProjects);
+  }
   const recorded = (result && result.recorded && result.recorded !== "success") ? result.recorded : "success";
   const runPayload = {
     status: recorded,
@@ -391,7 +409,9 @@ async function runAutoExtractionRowsOnce(args) {
       await client.send("Page.navigate", { url });
       await waitForPageReadyCdp(client, Number(args["page-timeout"] || DEFAULT_PAGE_TIMEOUT_MS)).catch(() => {});
       const projectId = procoreProjectIdFromUrl(url);
-      let rows = await waitForRowsCdp(client, Number(args.timeout || DEFAULT_PAGE_TIMEOUT_MS));
+      let rows = args["require-complete-list"]
+        ? await readCompleteObservationList(client, args)
+        : await waitForRowsCdp(client, Number(args.timeout || DEFAULT_PAGE_TIMEOUT_MS));
       if (!args.quiet) console.log(`Rows found before detail check: ${rows.length}`);
       rows = await enrichRowsFromDetailsCdp(client, rows, { ...args, procoreProjectId: projectId });
       assertUsableProcoreRows(rows, args, url);
@@ -472,10 +492,10 @@ function inferCommandProject(row, commandProjects) {
   const unitNumber = inferUnitNumber(row);
   if (unitNumber >= 1 && unitNumber <= 12) return byName.get(`wpr unit ${unitNumber}`) || null;
   if (/penthouse|unit\s*#?300|level\s*03/.test(haystack)) return byName.get("wpr condo penthouse") || null;
-  if (/unit\s+201\/202>[^>]*\bb\d{3}\b|>[^>]*\bb\d{3}\b|\bunit\s*#?202\b/.test(haystack)) return byName.get("wpr condo 202") || null;
-  if (/unit\s+201\/202>[^>]*\ba\d{3}\b|>[^>]*\ba\d{3}\b|\bunit\s*#?201\b(?!\/)/.test(haystack)) return byName.get("wpr condo 201") || null;
-  if (/unit\s+101\/102>[^>]*\bb\d{3}\b|>[^>]*\bb\d{3}\b|\bunit\s*#?102\b/.test(haystack)) return byName.get("wpr condo 102") || null;
-  if (/unit\s+101\/102>[^>]*\ba\d{3}\b|>[^>]*\ba\d{3}\b|\bunit\s*#?101\b(?!\/)/.test(haystack)) return byName.get("wpr condo 101") || null;
+  if (/unit\s+201\/202>[^>]*\bb\d{3}\b|\bunit\s*#?202\b/.test(haystack)) return byName.get("wpr condo 202") || null;
+  if (/unit\s+201\/202>[^>]*\ba\d{3}\b|\bunit\s*#?201\b(?!\/)/.test(haystack)) return byName.get("wpr condo 201") || null;
+  if (/unit\s+101\/102>[^>]*\bb\d{3}\b|\bunit\s*#?102\b/.test(haystack)) return byName.get("wpr condo 102") || null;
+  if (/unit\s+101\/102>[^>]*\ba\d{3}\b|\bunit\s*#?101\b(?!\/)/.test(haystack)) return byName.get("wpr condo 101") || null;
   return null;
 }
 
@@ -860,6 +880,8 @@ async function syncProcoreReviewTasks(tasks, auth, commandProjects) {
 }
 
 async function getCommandCenterAuthIfConfigured() {
+  if (env("COMMAND_CENTER_SYNC_TOKEN")) return { token: env("COMMAND_CENTER_SYNC_TOKEN"), initials: "CLOUD", syncOnly: true };
+  if (env("GITHUB_ACTIONS") === "true") throw new Error("Cloud sync credential is missing; direct database fallback is disabled.");
   const session = env("COMMAND_CENTER_SESSION");
   const initials = env("COMMAND_CENTER_INITIALS", "SYNC");
   if (session) return { token: session, initials };
@@ -933,7 +955,7 @@ function applySyncRunToD1(source, payload) {
 function commandCenterHeaders(auth) {
   return {
     "Content-Type": "application/json",
-    "x-command-center-session": auth.token,
+    [auth.syncOnly ? "x-command-center-sync-token" : "x-command-center-session"]: auth.token,
     "x-command-center-initials": auth.initials
   };
 }
@@ -1007,6 +1029,7 @@ async function startDebugChrome(args) {
     `--user-data-dir=${profileDir}`,
     `--remote-debugging-port=${port}`,
     "--no-first-run",
+    ...(args.headless || env("GITHUB_ACTIONS") === "true" ? ["--headless=new", "--disable-gpu", "--window-size=1920,1080"] : []),
     startUrl
   ], {
     detached: true,
@@ -1266,6 +1289,71 @@ async function extractRowsFromCdp(client) {
     returnByValue: true
   });
   return JSON.parse(result.result.value || "[]");
+}
+
+function parseObservationPagination(text) {
+  const match = String(text).match(/\b([\d,]+)\s*[-–]\s*([\d,]+)\s+of\s+([\d,]+)\b/i);
+  if (!match) {
+    // The current Procore grid renders all rows and exposes a footer count.
+    // Require the DOM extraction count to match this count before accepting it.
+    const footer = String(text).match(/(?:^|\n)Rows:\s*([\d,]+)(?:\n|$)/);
+    const total = footer ? Number(footer[1].replace(/,/g, "")) : 0;
+    return total > 0 ? { start: 1, end: total, total } : null;
+  }
+  const [start, end, total] = match.slice(1).map(value => Number(value.replace(/,/g, "")));
+  if (start < 1 || end < start || total < end) return null;
+  return { start, end, total };
+}
+
+async function readCompleteObservationList(client, args) {
+  const rows = new Map();
+  let previousEnd = 0;
+  let expectedTotal = null;
+  for (let page = 0; page < 100; page++) {
+    const timeout = Number(args.timeout || DEFAULT_PAGE_TIMEOUT_MS);
+    const deadline = Date.now() + timeout;
+    let pagination, pageRows;
+    while (Date.now() < deadline) {
+      const stateResult = await client.send("Runtime.evaluate", { expression: "({ text: document.body ? document.body.innerText : '' })", returnByValue: true });
+      const state = stateResult.result.value;
+      pagination = parseObservationPagination(state.text);
+      pageRows = await extractRowsFromCdp(client);
+      if (pagination && pagination.end > previousEnd && pageRows.length === pagination.end - pagination.start + 1) break;
+      await delay(500);
+    }
+    if (!pagination || pagination.end <= previousEnd || pageRows.length !== pagination.end - pagination.start + 1) {
+      if (args.diagnostic) {
+        const diagnostic = await client.send("Runtime.evaluate", { expression: `location.pathname.includes('/observations/') ? ({ text: document.body.innerText, buttons: [...document.querySelectorAll('button')].map(b => ({ text:b.innerText, label:b.getAttribute('aria-label'), title:b.getAttribute('title'), disabled:b.disabled })) }) : ({ error:'Not an observation page' })`, returnByValue: true });
+        fs.mkdirSync(path.join(ROOT,'tmp'),{recursive:true});
+        fs.writeFileSync(path.join(ROOT,'tmp','procore-list-diagnostic.json'),JSON.stringify(diagnostic.result.value,null,2));
+      }
+      throw new Error("Procore list completeness could not be verified; existing data was preserved.");
+    }
+    if (pagination.start !== previousEnd + 1 || (expectedTotal !== null && pagination.total !== expectedTotal)) throw new Error("Procore pagination changed or skipped rows during extraction.");
+    expectedTotal = pagination.total;
+    for (const row of pageRows) {
+      const key = row.detailUrl || row.itemUrl;
+      if (!key || rows.has(key)) throw new Error("Procore list contains missing or duplicate observation links.");
+      rows.set(key, row);
+    }
+    previousEnd = pagination.end;
+    if (pagination.end === pagination.total) {
+      if (rows.size !== expectedTotal) throw new Error("Procore observation count mismatch.");
+      console.log(`Verified complete Procore list: ${rows.size}/${expectedTotal}`);
+      return [...rows.values()];
+    }
+    const result = await client.send("Runtime.evaluate", {
+      expression: `(() => {
+        const buttons = [...document.querySelectorAll('button')].filter(b => b.getClientRects().length && !b.disabled && b.getAttribute('aria-disabled') !== 'true');
+        const next = buttons.filter(b => /^(next|next page|go to next page)$/i.test((b.getAttribute('aria-label') || b.getAttribute('title') || b.innerText || '').trim()));
+        if (next.length !== 1) return false;
+        next[0].click(); return true;
+      })()`, returnByValue: true
+    });
+    if (!result.result.value) throw new Error("Procore next-page control could not be identified safely.");
+    await delay(1000);
+  }
+  throw new Error("Procore pagination limit reached.");
 }
 
 async function enrichRowsFromDetailsCdp(client, rows, args = {}) {
@@ -1655,13 +1743,15 @@ async function main() {
   throw new Error(`Unknown command: ${command}`);
 }
 
-main().catch(async error => {
+if (require.main === module) main().catch(async error => {
   console.error(`Procore browser sync failed: ${error.message}`);
   const command = (process.argv.slice(2).find(value => !value.startsWith("--")) || "").trim();
-  if (command === "sync-auto") {
+  if (command === "sync-auto" && !parseArgs(process.argv.slice(2))["dry-run"]) {
     await reportProcoreSyncFailure(error).catch(reportError => {
       console.error(`Procore sync failure could not be reported: ${reportError.message}`);
     });
   }
   process.exitCode = 1;
 });
+
+module.exports = { buildProcoreTasks, normalizeProcoreTask, assertUsableProcoreRows, readCompleteObservationList, parseObservationPagination };

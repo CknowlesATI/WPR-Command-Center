@@ -1,0 +1,84 @@
+name: Cloud source sync
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Source to run
+        type: choice
+        options: [both, pulse, procore]
+        default: both
+      mode:
+        description: Read-only verification or live sync
+        type: choice
+        options: [verify, sync]
+        default: verify
+  schedule:
+    - cron: '17,47 * * * *'
+
+permissions:
+  contents: read
+concurrency:
+  group: cloud-source-sync
+  cancel-in-progress: false
+
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      pulse: ${{ steps.select.outputs.pulse }}
+      procore: ${{ steps.select.outputs.procore }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate sync safeguards
+        run: node --test tools/cloud-sync.test.mjs
+      - id: select
+        env:
+          SELECTED_SOURCE: ${{ inputs.source || 'both' }}
+          CLOUD_SYNC_ENABLED: ${{ vars.CLOUD_SYNC_ENABLED }}
+        run: node tools/cloud-sync.mjs check
+  pulse:
+    needs: select
+    if: needs.select.outputs.pulse == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Run Pulse collector
+        env:
+          PULSE_EMAIL: ${{ secrets.PULSE_EMAIL }}
+          PULSE_PASSWORD: ${{ secrets.PULSE_PASSWORD }}
+          COMMAND_CENTER_SYNC_TOKEN: ${{ secrets.COMMAND_CENTER_SYNC_TOKEN }}
+          SYNC_MODE: ${{ inputs.mode || 'sync' }}
+        run: node tools/cloud-sync.mjs pulse "$SYNC_MODE"
+  procore:
+    needs: select
+    if: needs.select.outputs.procore == 'true'
+    runs-on: windows-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Run Procore collector
+        env:
+          PROCORE_EMAIL: ${{ secrets.PROCORE_EMAIL }}
+          PROCORE_PASSWORD: ${{ secrets.PROCORE_PASSWORD }}
+          PROCORE_COMPANY_ID: ${{ secrets.PROCORE_COMPANY_ID }}
+          PROCORE_OBSERVATIONS_URLS: ${{ secrets.PROCORE_OBSERVATIONS_URLS }}
+          COMMAND_CENTER_SYNC_TOKEN: ${{ secrets.COMMAND_CENTER_SYNC_TOKEN }}
+          SYNC_MODE: ${{ inputs.mode || 'sync' }}
+        run: node tools/cloud-sync.mjs procore $env:SYNC_MODE

@@ -537,7 +537,7 @@ async function loginToPulse() {
 }
 
 async function requestJson(url, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetch(url, { signal: AbortSignal.timeout(60000), ...options });
   const text = await response.text();
   let json = null;
   if (text) {
@@ -574,17 +574,19 @@ function rowsFrom(value) {
 
 async function fetchPulseProjects(token) {
   const all = [];
+  let complete = false;
   const limit = 100;
   for (let page = 1; page <= 50; page += 1) {
     const json = await pulseGet(token, `/api/pulse-projects?page=${page}&limit=${limit}`);
     const rows = rowsFrom(json);
     all.push(...rows);
-    if (!rows.length) break;
+    if (!rows.length) { complete = true; break; }
     const total = Number(json && (json.total || json.count || json.totalRows || json.total_rows));
-    if (total && all.length >= total) break;
+    if (total && all.length >= total) { complete = true; break; }
     const totalPages = Number(json && (json.totalPages || json.total_pages || json.pages));
-    if (totalPages && page >= totalPages) break;
+    if (totalPages && page >= totalPages) { complete = true; break; }
   }
+  if (!complete) throw new Error("Pulse project pagination did not finish; no snapshot will be written.");
   return uniqueBy(all, project => String(project.id || project.project_id || ""));
 }
 
@@ -924,7 +926,7 @@ async function postUpdate(action, payload, auth) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-command-center-session": auth.token,
+      [auth.syncOnly ? "x-command-center-sync-token" : "x-command-center-session"]: auth.token,
       "x-command-center-initials": auth.initials
     },
     body: JSON.stringify({ action, ...payload })
@@ -980,6 +982,8 @@ function pulseSyncStats(plan) {
 }
 
 async function getAuthIfConfigured() {
+  if (process.env.COMMAND_CENTER_SYNC_TOKEN) return { token: process.env.COMMAND_CENTER_SYNC_TOKEN, initials: "CLOUD", syncOnly: true };
+  if (process.env.GITHUB_ACTIONS === "true" && command === "sync") throw new Error("Cloud sync credential is missing; direct database fallback is disabled.");
   const session = process.env.COMMAND_CENTER_SESSION || "";
   const initials = process.env.COMMAND_CENTER_INITIALS || "SYNC";
   if (session) return { token: session, initials };

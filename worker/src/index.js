@@ -2,7 +2,7 @@ const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET,POST,OPTIONS",
-  "access-control-allow-headers": "content-type,x-command-center-token,x-command-center-session,x-command-center-initials"
+  "access-control-allow-headers": "content-type,x-command-center-token,x-command-center-session,x-command-center-initials,x-command-center-sync-token"
 };
 
 const SESSION_DAYS = 183;
@@ -44,7 +44,8 @@ export default {
         const body = await request.json();
         if (body.action === "authorize") return json(await createSession(body, env));
         const actor = await authorizeWrite(request, env);
-        await applyAction(env.DB, body, actor, env);
+        const result = await applyAction(env.DB, body, actor, env);
+        if (actor.syncOnly) return json({ ok: true, result: result || null });
         return json({ ok: true, data: await getAllData(env.DB), settings: await getSettings(env.DB, env) });
       }
 
@@ -57,6 +58,10 @@ export default {
 
 async function applyAction(db, body, actor, env) {
   if (!body || typeof body !== "object") throw new Error("Missing request body");
+  if (actor.syncOnly && !["syncPulseTimelines", "syncPulseContractStatuses", "syncSourceTasks", "recordSyncRun", "ensureProcoreReviewProject"].includes(body.action)) {
+    throw Object.assign(new Error("The sync credential cannot perform this action."), { status: 403 });
+  }
+  if (body.action === "ensureProcoreReviewProject") return ensureProcoreReviewProject(db);
 
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
   if (body.action === "updateTimeline") return updateTimeline(db, body);
@@ -134,6 +139,15 @@ async function getAllData(db) {
       control: toControl(project.id, controlsByProject.get(String(project.id)))
     };
   });
+}
+
+async function ensureProcoreReviewProject(db) {
+  const existing = await db.prepare("SELECT id FROM projects WHERE name = ? LIMIT 1").bind("Procore Observation Review").first();
+  if (existing) return { id: String(existing.id) };
+  const id = "procore-observation-review";
+  await db.prepare("INSERT INTO projects (id, name, project_group, segment, external_team, percent) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING")
+    .bind(id, "Procore Observation Review", "Review", "Unmapped Procore", "Procore", 0).run();
+  return { id };
 }
 
 function buildTaskSignals(tasks) {
@@ -367,6 +381,7 @@ async function syncPulseTimelines(db, body, actor) {
 
   if (!statements.length) throw new Error("No valid Pulse dates were provided.");
   await db.batch(statements);
+  if (actor.syncOnly) return { mutated: true, recordsWritten: statements.length };
   await upsertSyncRun(db, {
     source: "pulse",
     label: "Pulse",
@@ -410,6 +425,7 @@ async function syncPulseContractStatuses(db, body, actor) {
 
   if (!statements.length) return;
   await db.batch(statements);
+  if (actor.syncOnly) return { mutated: true, recordsWritten: statements.length / 3 };
   await upsertSyncRun(db, {
     source: "pulse",
     label: "Pulse",
@@ -721,6 +737,7 @@ async function syncSourceTasks(db, body, actor) {
   });
 
   await db.batch(statements);
+  if (actor.syncOnly) return { mutated: true, recorded: "success", recordsWritten: tasks.length };
   await upsertSyncRun(db, {
     source: source.primary,
     label: source.primary === "procore" ? "Procore" : "Pulse",
@@ -784,6 +801,11 @@ async function createSession(body, env) {
 }
 
 async function authorizeWrite(request, env) {
+  const syncToken = request.headers.get("x-command-center-sync-token");
+  if (syncToken !== null) {
+    if (!env.SYNC_TOKEN || syncToken.length < 32 || syncToken !== env.SYNC_TOKEN) throw unauthorized("Sync access is not authorized.");
+    return { initials: "CLOUD", syncOnly: true };
+  }
   const expectedCode = normalizeText(env.ACCESS_CODE || env.WRITE_TOKEN || "");
   if (!expectedCode) throw unauthorized("Command Center write access is not configured.");
 
@@ -910,6 +932,7 @@ function normalizePulseContractStatusItems(items) {
 
 function normalizeSourceTaskSync(body) {
   const source = normalizeSyncedTaskSource(body.source);
+  if (!Array.isArray(body.tasks) || body.tasks.length > 1000) throw new Error("A complete task snapshot of at most 1000 rows is required.");
   const tasks = Array.isArray(body.tasks) ? body.tasks.slice(0, 1000).map((task, index) => ({
     id: normalizeSyncedTaskId(source.primary, required(task && task.id, `tasks[${index}].id`)),
     projectId: required(task && task.projectId, `tasks[${index}].projectId`),
