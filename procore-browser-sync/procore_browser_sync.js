@@ -1298,7 +1298,7 @@ function parseObservationPagination(text) {
     // Require the DOM extraction count to match this count before accepting it.
     const footer = String(text).match(/(?:^|\n)Rows:\s*([\d,]+)(?:\n|$)/);
     const total = footer ? Number(footer[1].replace(/,/g, "")) : 0;
-    return total > 0 ? { start: 1, end: total, total } : null;
+    return total > 0 ? { start: 1, end: total, total, virtual: true } : null;
   }
   const [start, end, total] = match.slice(1).map(value => Number(value.replace(/,/g, "")));
   if (start < 1 || end < start || total < end) return null;
@@ -1318,6 +1318,9 @@ async function readCompleteObservationList(client, args) {
       const state = stateResult.result.value;
       pagination = parseObservationPagination(state.text);
       pageRows = await extractRowsFromCdp(client);
+      if (pagination?.virtual && pageRows.length) {
+        return readVirtualObservationGrid(client, pageRows, pagination.total, args);
+      }
       if (pagination && pagination.end > previousEnd && pageRows.length === pagination.end - pagination.start + 1) break;
       await delay(500);
     }
@@ -1355,6 +1358,53 @@ async function readCompleteObservationList(client, args) {
     await delay(1000);
   }
   throw new Error("Procore pagination limit reached.");
+}
+
+async function readVirtualObservationGrid(client, firstRows, total, args) {
+  const rows = new Map();
+  let visible = firstRows;
+  let stagnant = 0;
+  for (let step = 0; step < 200; step++) {
+    const before = rows.size;
+    const seen = new Set();
+    for (const row of visible) {
+      const key = row.detailUrl || row.itemUrl;
+      if (!key || seen.has(key)) throw new Error("Procore grid contains missing or duplicate observation links.");
+      seen.add(key);
+      rows.set(key, row);
+    }
+    if (rows.size > total) throw new Error("Procore grid count changed during extraction.");
+    if (rows.size === total) {
+      console.log(`Verified complete Procore list: ${rows.size}/${total}`);
+      return [...rows.values()];
+    }
+    stagnant = rows.size === before ? stagnant + 1 : 0;
+    if (stagnant >= 4) throw new Error(`Procore virtual grid stopped before all ${total} observations were read.`);
+    const scrolled = await client.send("Runtime.evaluate", {
+      expression: `(() => {
+        const link = document.querySelector('a[href*="/observations/quality/details/"]');
+        let element = link;
+        while (element) {
+          const style = getComputedStyle(element);
+          if (element.clientHeight > 100 && element.scrollHeight > element.clientHeight + 10 && /(auto|scroll)/.test(style.overflowY)) {
+            element.scrollTop += Math.max(100, Math.floor(element.clientHeight * 0.65));
+            return true;
+          }
+          element = element.parentElement;
+        }
+        const root = document.scrollingElement;
+        if (root && root.scrollHeight > root.clientHeight) { root.scrollTop += Math.floor(root.clientHeight * 0.65); return true; }
+        return false;
+      })()`, returnByValue:true
+    });
+    if (!scrolled.result.value) throw new Error("Procore grid scroll container could not be identified.");
+    await delay(Number(args["grid-wait-ms"] || 500));
+    const state = await client.send("Runtime.evaluate", {expression:"document.body.innerText",returnByValue:true});
+    const count = parseObservationPagination(state.result.value);
+    if (!count?.virtual || count.total !== total) throw new Error("Procore grid count changed during extraction.");
+    visible = await extractRowsFromCdp(client);
+  }
+  throw new Error("Procore grid scroll limit reached.");
 }
 
 async function enrichRowsFromDetailsCdp(client, rows, args = {}) {

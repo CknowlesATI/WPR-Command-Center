@@ -100,7 +100,7 @@ test('observation pagination requires an explicit valid range', () => {
   assert.deepEqual(parseObservationPagination('101 - 200 of 1,202'), {start:101,end:200,total:1202});
   assert.equal(parseObservationPagination('Loading observations'), null);
   assert.equal(parseObservationPagination('1-44 of 43'), null);
-  assert.deepEqual(parseObservationPagination('Observations\nRows: 43\nTerms'), {start:1,end:43,total:43});
+  assert.deepEqual(parseObservationPagination('Observations\nRows: 43\nTerms'), {start:1,end:43,total:43,virtual:true});
 });
 
 test('project mapping preserves stable IDs and routes ambiguous observations to review', () => {
@@ -134,4 +134,18 @@ test('complete-list reader follows pages and rejects duplicate or partial rows',
   await assert.rejects(readCompleteObservationList(listClient([{text:'1-2 of 2',rows:[row(1),row(1)]}]),{timeout:100}), /duplicate/);
   await assert.rejects(readCompleteObservationList(listClient([{text:'1-2 of 2',rows:[row(1)]}]),{timeout:1}), /completeness/);
   await assert.rejects(readCompleteObservationList(listClient([{text:'Loading',rows:[]}]),{timeout:1}), /completeness/);
+});
+
+test('virtual grid is scrolled and overlapping visible rows are deduplicated', async () => {
+  const row = id => ({detailUrl:`https://app.procore.com/details/${id}`,number:String(id)});
+  const pages = [[row(1),row(2)],[row(2),row(3)],[row(3),row(4)]];
+  let page = 0;
+  const client = { async send(method, {expression}) {
+    if (expression.includes('element.scrollTop')) { page++; return {result:{value:page < pages.length}}; }
+    if (expression.includes('extractRowsFromCurrentObservationListDom')) return {result:{value:JSON.stringify(pages[page])}};
+    if (expression === 'document.body.innerText') return {result:{value:'Rows: 4'}};
+    return {result:{value:{text:'Rows: 4'}}};
+  }};
+  const rows = await readCompleteObservationList(client,{timeout:100,'grid-wait-ms':1});
+  assert.deepEqual(rows.map(r=>r.number),['1','2','3','4']);
 });
