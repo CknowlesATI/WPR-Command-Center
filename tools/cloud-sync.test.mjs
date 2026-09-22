@@ -168,4 +168,6 @@ test('custom observation types keep their own titles and stable links', () => {
   assert.equal(rows.length,2);
   assert.equal(rows[0].number,'2824');
   assert.equal(rows[1].detailUrl,links[1].href);
+  const duplicateTitleRows=extractRowsFromCurrentObservationListDom(lines.map(line=>line==='Move TV'?'Repair wires':line),links.map(link=>({...link,text:'Repair wires'})),[],'WPR');
+  assert.equal(duplicateTitleRows[1].detailUrl,links[1].href);
 });

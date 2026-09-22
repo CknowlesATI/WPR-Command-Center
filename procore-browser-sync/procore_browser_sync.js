@@ -1489,9 +1489,10 @@ async function waitForRowsCdp(client, timeoutMs) {
 
 function extractRowsFromDom() {
   const lines = (document.body.innerText || "").split(/\n+/).map(s => s.trim()).filter(Boolean);
-  const itemLinks = [...document.querySelectorAll('a[href*="/project/observations/items/"]:not([href$=".pdf"]),a[href*="/tools/observations/quality/details/"]')]
+  const rawItemLinks = [...document.querySelectorAll('a[href*="/project/observations/items/"]:not([href$=".pdf"]),a[href*="/tools/observations/quality/details/"]')]
     .map(a => ({ href: a.href, text: a.textContent.trim().replace(/\s+/g, " ") }))
     .filter(a => a.text && !a.text.match(/^(Export|General|Related Items|Emails|Quality Observations)$/i));
+  const itemLinks = [...new Map(rawItemLinks.map(link => [link.href, link])).values()];
   const pdfLinks = [...document.querySelectorAll('a[href*="/project/observations/items/"][href$=".pdf"]')].map(a => a.href);
   const detailLinks = [...document.querySelectorAll('a[href*="/tools/observations/quality/details/"]')].map(a => a.href);
   const statuses = new Set(["Closed", "Initiated", "Ready For Review", "Not Accepted", "Accepted", "Work Required"]);
@@ -1572,7 +1573,9 @@ function extractRowsFromCurrentObservationListDom(lines, itemLinks, pdfLinks, pr
   return starts.map((start, idx) => {
     const end = starts[idx + 1] || lines.length;
     const seg = lines.slice(start, end);
-    const link = itemLinks.find(link => seg.includes(link.text)) || {};
+    // DOM order aligns each numbered row with its link. Titles are not unique:
+    // two observations can legitimately have identical titles.
+    const link = itemLinks[idx] || {};
     const detailUrl = link.href || "";
     const itemId = (detailUrl.match(/details\/(\d+)/) || detailUrl.match(/items\/(\d+)/) || [])[1] || "";
     const procoreProjectId = (detailUrl.match(/projects\/(\d+)/) || [])[1] || "";
