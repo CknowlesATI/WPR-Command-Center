@@ -1413,6 +1413,7 @@ async function enrichRowsFromDetailsCdp(client, rows, args = {}) {
 
   const byKey = new Map(rows.map(row => [row.detailUrl || row.itemUrl || row.number, row]));
   const limit = Number(args["detail-limit"] || needsDetails.length);
+  let completedDetails = 0;
   for (const row of needsDetails.slice(0, limit)) {
     if (!args.quiet) console.log(`Reading Procore detail #${row.number || "unknown"}`);
     const detail = await readObservationDetailWithRetry(client, row, args);
@@ -1426,6 +1427,10 @@ async function enrichRowsFromDetailsCdp(client, rows, args = {}) {
       pdfUrl: row.pdfUrl || detail.pdfUrl,
       procoreProjectId: row.procoreProjectId || args.procoreProjectId || detail.procoreProjectId
     });
+    completedDetails++;
+    if (completedDetails % 25 === 0 || completedDetails === Math.min(limit, needsDetails.length)) {
+      console.log(`Read Procore details: ${completedDetails}/${Math.min(limit, needsDetails.length)}`);
+    }
   }
   return [...byKey.values()];
 }

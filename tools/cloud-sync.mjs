@@ -3,6 +3,7 @@ import { appendFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const apiUrl = 'https://wpr-command-center-api.wpr-command-center.workers.dev';
+const safeProgress = /^(Verified complete Procore list: \d+\/\d+|Read Procore details: \d+\/\d+|Verified Procore extraction: \d+ open ATI observations; \d+ mapped; \d+ require review\.|pulse tasks: \d+ item\(s\), \d+ project scope\(s\)\.|Pulse PM Contracts dates: \d+ dashboard row\(s\) fetched\.|Pulse API to-dos: \d+ Pulse project\(s\), \d+ matched, \d+ to-do item\(s\)\.)$/;
 export function isDue(source, now = Date.now()) {
   if (!source || source.status === 'requested') return true;
   const lastAttempt = Date.parse(source.lastAttemptAt);
@@ -35,7 +36,13 @@ async function runChild(source, mode) {
     let output = '';
     const timer = setTimeout(() => child.kill(), 45 * 60 * 1000);
     const collect = chunk => { output = (output + chunk.toString()).slice(-200000); };
-    child.stdout.on('data', collect);
+    let pendingLine = '';
+    child.stdout.on('data', chunk => {
+      collect(chunk);
+      const lines = (pendingLine + chunk.toString()).split(/\r?\n/);
+      pendingLine = lines.pop().slice(-1000);
+      lines.filter(line => safeProgress.test(line)).forEach(summary);
+    });
     child.stderr.on('data', collect);
     child.on('error', () => { clearTimeout(timer); resolve({ ok: false, output: '' }); });
     child.on('close', code => { clearTimeout(timer); resolve({ ok: code === 0, output }); });
@@ -87,8 +94,6 @@ export async function main() {
     summary(`${source}: FAILED. ${[...new Set(reasons)].join('; ') || 'Source extraction did not complete'}. Raw source output was withheld from public logs.`);
     throw new Error('Hosted source run failed.');
   }
-  const countLines = result.output.split(/\r?\n/).filter(line => /^(Verified complete Procore list: \d+\/\d+|Verified Procore extraction: \d+ open ATI observations; \d+ mapped; \d+ require review\.|pulse tasks: \d+ item\(s\), \d+ project scope\(s\)\.|Pulse PM Contracts dates: \d+ dashboard row\(s\) fetched\.|Pulse API to-dos: \d+ Pulse project\(s\), \d+ matched, \d+ to-do item\(s\)\.)$/.test(line));
-  countLines.forEach(summary);
   if (mode === 'sync') {
     const after = await readLive();
     const status = after.settings.sources.find(s => s.source === source);

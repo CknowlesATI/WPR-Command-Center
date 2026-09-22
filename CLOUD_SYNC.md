@@ -22,9 +22,9 @@ Required encrypted repository secrets:
 - `COMMAND_CENTER_SYNC_TOKEN`: a new random token of at least 32 characters,
   matching the Worker's `SYNC_TOKEN` secret.
 
-Credential transfer requires Christen's explicit approval following the
-automatic approval-review block. No credential transfer has been authorized by
-this document. Never commit credentials, browser profiles, raw source extracts,
+Christen explicitly authorized encrypted credential transfer and cloud tests on
+September 22, 2026. The secrets above are installed; the Worker uses a dedicated
+sync-only token. Never commit credentials, browser profiles, raw source extracts,
 or sensitive page text. Workflow logs contain counts and run status only.
 Trusted workflow modifications can access the repository secrets.
 
@@ -70,6 +70,16 @@ review bucket instead of guessed.
 Until those steps pass, the migration is not complete and the existing local
 runner remains the operational fallback. Do not describe this staged workflow
 as an active replacement.
+
+## Verified results (September 22, 2026)
+
+- All 14 cloud safeguards tests, control rules, and hosted data validation pass.
+- Pulse read-only hosted verification: run `35727187431` passed.
+- Pulse live hosted sync: run `35728067955` passed. The live API confirmed
+  `CLOUD` success at `2026-09-22T12:37:59.712Z`, 655 records across 21 projects.
+  All 10 manual items were unchanged.
+- Procore hosted verification is still in progress. Automatic source collectors
+  remain disabled pending full Procore validation and schedule acceptance.
 
 ## Rollback and operations
 
