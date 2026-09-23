@@ -30,11 +30,14 @@ Trusted workflow modifications can access the repository secrets.
 
 ## Behavior
 
-The cloud scheduler checks at minutes 17 and 47 each hour. It runs a source if
+The cloud scheduler is configured for minutes 17 and 47 each hour. It runs a source if
 requested from Command Center or if the last success is at least six hours old.
 Failed sources retry at most hourly. Pulse and Procore use separate jobs so one
 failure does not suppress the other. A single concurrency group prevents two
-hosted sync workflows overlapping. GitHub scheduling can be delayed; public
+hosted sync workflows overlapping. Observed GitHub scheduling delays on September
+22–23 were several hours, so neither the check interval nor the six-hour refresh
+threshold is a guaranteed turnaround time. The UI reports requests as queued
+until a real success is recorded. Public
 repository schedules can be disabled after 60 days without repository activity.
 Source freshness in Command Center must remain the authority for actual data
 age, not a successful website publication.
@@ -63,16 +66,18 @@ review bucket instead of guessed.
 5. Compare extracted source counts/IDs and project mappings against live data.
 6. Run `mode=sync` and confirm new `CLOUD` timestamps and preserved manual data.
 7. Repeat with a fresh hosted browser profile to test unattended login.
-8. Enable the schedule and test a Command Center Request Sync end to end.
+8. Enable the schedule, queue source requests, and verify scheduled pickup.
 9. Confirm a scheduled run while the local runner is disabled; retain rollback
    instructions and record the cloud run URLs before retiring the local task.
 
 The local Windows task `WPR Pulse Sync` is disabled following successful cloud
-verification and live writes. Final timer-driven acceptance is in progress.
+verification and live writes. Timer-driven acceptance passed on September 23.
+The Codex heartbeat `weekly-pulse-timeline-sync-check` (Weekly Source Sync Check)
+is also paused so it cannot launch a competing local source write.
 
-## Verified results (September 22, 2026)
+## Verified results (September 22–23, 2026)
 
-- All 15 cloud safeguards tests, control rules, and hosted data validation pass.
+- All 16 cloud safeguards tests, control rules, and hosted data validation pass.
 - Pulse read-only hosted verification: run `35727187431` passed.
 - Pulse live hosted sync: run `35728067955` passed. The live API confirmed
   `CLOUD` success at `2026-09-22T12:37:59.712Z`, 655 records across 21 projects.
@@ -84,7 +89,21 @@ verification and live writes. Final timer-driven acceptance is in progress.
   `2026-09-22T13:05:56.890Z`, 24 open ATI observations (7 mapped, 17 retained in
   the review bucket). Manual content was unchanged.
 - Both sources were queued for automatic acceptance with the local Windows
-  sync task disabled. Timer-driven verification remains pending.
+  sync task disabled. Scheduled run
+  [35759817264](https://github.com/CknowlesATI/WPR-Command-Center/actions/runs/35759817264)
+  passed after picking up the requests. The queue was set through the backend
+  for this test; no interactive editor login was required.
+- Repeated scheduled run
+  [35859195011](https://github.com/CknowlesATI/WPR-Command-Center/actions/runs/35859195011)
+  passed both hosted collectors on September 23. Pulse confirmed 656 records
+  across 21 projects at `2026-09-23T12:14:44.538Z`. Procore confirmed all five
+  complete lists and 24 open ATI records at `2026-09-23T12:21:09.909Z`.
+- Corrected project mapping now places 19 Procore items into specific projects.
+  Five remain in the review bucket because the source does not establish a
+  specific unit confidently. Explicit child unit locations take precedence over
+  parent building ranges; building and floor numbers alone are never unit IDs.
+- All 10 manual items remained identical to the pre-cutover baseline after the
+  overnight scheduled runs. The Windows task was confirmed disabled again.
 
 ## Rollback and operations
 
