@@ -359,6 +359,8 @@
   .source-list-row .source-chip { flex-shrink: 0; margin-right: 8px; }
   .source-list-search { width: 100%; padding: 10px; margin: 12px 0; border: 1px solid var(--border); border-radius: 6px; font: inherit; }
   .source-list-count { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .source-project-heading { display: flex; justify-content: space-between; gap: 12px; margin: 12px 0 0; padding: 10px; background: #edf2f7; border-radius: 6px; font-size: 14px; }
+  .source-project-heading span { color: var(--muted); font-size: 12px; font-weight: 600; }
   .freshness-pill.stale { border-left-color: var(--amber); }
   .freshness-pill.failed { border-left-color: var(--red); }
   .freshness-pill.requested { border-left-color: var(--amber); }
@@ -2656,7 +2658,7 @@ function renderOverviewModal() {
     const freshness = sourceStatuses().find(item => item.source === source);
     target.innerHTML = `<div class="overview-backdrop" data-overview-close>
       <section class="overview-dialog source-dialog" role="dialog" aria-modal="true" aria-labelledby="overviewTitle">
-        <div class="overview-head"><div><h2 id="overviewTitle">${title}</h2><span>Open items across all projects · Urgent and overdue first</span></div><button class="secondary-button" type="button" data-overview-close>Close</button></div>
+        <div class="overview-head"><div><h2 id="overviewTitle">${title}</h2><span>Grouped by project · Urgent and overdue first within each project</span></div><button class="secondary-button" type="button" data-overview-close>Close</button></div>
         <div class="freshness-meta">${freshness ? escapeHtml(`${freshnessStateLabel(freshness)} · ${freshnessTiming(freshness)}`) : ""}${source === "procore" && freshness?.message ? `<br>${escapeHtml(freshness.message)}` : ""}</div>
         <input class="source-list-search" id="sourceListSearch" type="search" aria-label="Search ${title}" placeholder="Search item, project, or assignee" value="${escapeAttribute(state.sourceQuery)}">
         <div class="source-list-count" id="sourceListCount" aria-live="polite"></div>
@@ -2712,21 +2714,29 @@ function sourceOverviewItems() {
     .filter(task => task.status !== "done" && taskSourceGroup(task.source) === state.overviewKey)
     .map(task => ({project, task})))
     .filter(({project, task}) => !query || `${project.name} ${task.name} ${task.assignee || ""} ${task.sourceState || ""}`.toLowerCase().includes(query))
-    .sort((a, b) => rank(a.task) - rank(b.task) || (a.task.dueDate || "9999").localeCompare(b.task.dueDate || "9999") || a.project.name.localeCompare(b.project.name) || a.task.name.localeCompare(b.task.name));
+    .sort((a, b) => a.project.name.localeCompare(b.project.name, undefined, {numeric: true}) || String(a.project.id).localeCompare(String(b.project.id)) || rank(a.task) - rank(b.task) || (a.task.dueDate || "9999").localeCompare(b.task.dueDate || "9999") || a.task.name.localeCompare(b.task.name));
 }
 
 function renderSourceItems() {
   const items = sourceOverviewItems();
   const projectCount = new Set(items.map(item => item.project.id)).size;
   document.getElementById("sourceListCount").textContent = `${items.length} open item${items.length === 1 ? "" : "s"} · ${projectCount} project${projectCount === 1 ? "" : "s"}`;
-  document.getElementById("sourceItemList").innerHTML = items.length ? items.map(({project, task}) => `
+  const groups = new Map();
+  items.forEach(item => {
+    if (!groups.has(item.project.id)) groups.set(item.project.id, {project: item.project, items: []});
+    groups.get(item.project.id).items.push(item);
+  });
+  document.getElementById("sourceItemList").innerHTML = items.length ? [...groups.values()].map(group => `
+    <section class="source-project-group" aria-label="${escapeAttribute(group.project.name)}">
+    <h3 class="source-project-heading">${escapeHtml(group.project.name)}<span>${group.items.length} item${group.items.length === 1 ? "" : "s"}</span></h3>
+    ${group.items.map(({project, task}) => `
     <div class="source-list-row">
       <button class="overview-row" type="button" data-overview-project="${escapeAttribute(project.id)}" data-source-project="true" aria-label="${escapeAttribute(`${task.name} — open ${project.name}`)}">
         <div><div class="overview-title">${escapeHtml(task.name)}</div>
         <div class="overview-meta">${escapeHtml(project.name)} · ${escapeHtml(sourceStateLabel(task))}${task.priority ? ` · ${escapeHtml(taskPriorityLabel(task.priority))}` : ""}${task.dueDate ? ` · Due ${escapeHtml(formatDate(task.dueDate))}` : ""}${task.assignee ? ` · ${escapeHtml(task.assignee)}` : ""}</div></div>
       </button>
       ${renderTaskSource(task)}
-    </div>`).join("") : `<div class="empty">${state.sourceQuery ? "No items match your search." : "No open items are assigned to projects for this source."}</div>`;
+    </div>`).join("")}</section>`).join("") : `<div class="empty">${state.sourceQuery ? "No items match your search." : "No open items are assigned to projects for this source."}</div>`;
 }
 
 function formatOverviewCount(count, label) {
