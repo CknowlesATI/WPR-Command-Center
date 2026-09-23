@@ -351,6 +351,14 @@
   }
 
   .freshness-pill.good { border-left-color: var(--green); }
+  .freshness-open { display: grid; gap: 3px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; font: inherit; }
+  .freshness-open:hover .freshness-title strong { text-decoration: underline; }
+  .freshness-open:focus-visible { outline: 2px solid #2563eb; outline-offset: 4px; }
+  .source-list-row { display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); padding: 8px 0; }
+  .source-list-row .overview-row { flex: 1; min-width: 0; border: 0; margin: 0; }
+  .source-list-row .source-chip { flex-shrink: 0; margin-right: 8px; }
+  .source-list-search { width: 100%; padding: 10px; margin: 12px 0; border: 1px solid var(--border); border-radius: 6px; font: inherit; }
+  .source-list-count { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
   .freshness-pill.stale { border-left-color: var(--amber); }
   .freshness-pill.failed { border-left-color: var(--red); }
   .freshness-pill.requested { border-left-color: var(--amber); }
@@ -1413,6 +1421,12 @@
     font-weight: 650;
   }
 
+  .overview-dialog.source-dialog { width: min(760px, 100%); display: flex; flex-direction: column; }
+  .source-dialog .overview-list { min-height: 0; max-height: none; }
+  .source-dialog > .freshness-meta, .source-dialog > .source-list-count { margin: 8px 16px 0; }
+  .source-dialog .source-list-search { width: calc(100% - 32px); margin: 12px 16px 0; flex-shrink: 0; }
+  .source-list-row .overview-row:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
+
   .overview-count {
     border-radius: 999px;
     background: var(--blue-bg);
@@ -1908,6 +1922,7 @@ const state = {
   attentionExpanded: false,
   addProjectOpen: false,
   overviewKey: "",
+  sourceQuery: "",
   expandedProjects: new Set(),
   expandedClosedItems: new Set(),
   closingProjects: new Set(),
@@ -2380,12 +2395,15 @@ function renderSourceFreshness() {
   const sources = sourceStatuses();
   panel.innerHTML = sources.map(item => `
     <article class="freshness-pill ${freshnessClass(item)}">
+      <button class="freshness-open" type="button" data-source-list="${escapeAttribute(item.source)}" aria-haspopup="dialog" aria-label="View ${escapeAttribute(item.label)} ${item.source === "procore" ? "observations" : "to-dos"}">
       <div class="freshness-title">
         <strong>${escapeHtml(item.label)}</strong>
         <span>${escapeHtml(freshnessStateLabel(item))}</span>
       </div>
       <div class="freshness-meta">${escapeHtml(freshnessTiming(item))}</div>
       <div class="freshness-meta">${item.recordsWritten} written · ${item.projectCount} project${item.projectCount === 1 ? "" : "s"}</div>
+      <div class="freshness-meta">View ${item.source === "procore" ? "observations" : "to-dos"} →</div>
+      </button>
       ${sourceNeedsSyncRequest(item) ? `
         <div class="freshness-actions">
           <button class="secondary-button" type="button" data-request-sync="${escapeAttribute(item.source)}" ${state.saving ? "disabled" : ""}>Request Sync</button>
@@ -2632,6 +2650,21 @@ function renderKpis() {
 function renderOverviewModal() {
   const target = document.getElementById("overviewModal");
   if (!target) return;
+  if (["pulse", "procore"].includes(state.overviewKey)) {
+    const source = state.overviewKey;
+    const title = source === "pulse" ? "Pulse To-Dos" : "Procore Observations";
+    const freshness = sourceStatuses().find(item => item.source === source);
+    target.innerHTML = `<div class="overview-backdrop" data-overview-close>
+      <section class="overview-dialog source-dialog" role="dialog" aria-modal="true" aria-labelledby="overviewTitle">
+        <div class="overview-head"><div><h2 id="overviewTitle">${title}</h2><span>Open items across all projects · Urgent and overdue first</span></div><button class="secondary-button" type="button" data-overview-close>Close</button></div>
+        <div class="freshness-meta">${freshness ? escapeHtml(`${freshnessStateLabel(freshness)} · ${freshnessTiming(freshness)}`) : ""}${source === "procore" && freshness?.message ? `<br>${escapeHtml(freshness.message)}` : ""}</div>
+        <input class="source-list-search" id="sourceListSearch" type="search" aria-label="Search ${title}" placeholder="Search item, project, or assignee" value="${escapeAttribute(state.sourceQuery)}">
+        <div class="source-list-count" id="sourceListCount" aria-live="polite"></div>
+        <div class="overview-list" id="sourceItemList"></div>
+      </section></div>`;
+    renderSourceItems();
+    return;
+  }
   const config = KPI_OVERVIEWS[state.overviewKey];
   if (!config) {
     target.innerHTML = "";
@@ -2669,6 +2702,31 @@ function renderOverviewRow(item, config) {
       <span class="overview-count">${escapeHtml(formatOverviewCount(count, config.countLabel))}</span>
     </button>
   `;
+}
+
+function sourceOverviewItems() {
+  const query = state.sourceQuery.trim().toLowerCase();
+  const today = new Date().toLocaleDateString("en-CA");
+  const rank = task => ["needs-action", "critical-aging", "high", "urgent"].includes(task.priority) ? 0 : task.dueDate && task.dueDate < today ? 1 : 2;
+  return state.projects.flatMap(project => project.taskList
+    .filter(task => task.status !== "done" && taskSourceGroup(task.source) === state.overviewKey)
+    .map(task => ({project, task})))
+    .filter(({project, task}) => !query || `${project.name} ${task.name} ${task.assignee || ""} ${task.sourceState || ""}`.toLowerCase().includes(query))
+    .sort((a, b) => rank(a.task) - rank(b.task) || (a.task.dueDate || "9999").localeCompare(b.task.dueDate || "9999") || a.project.name.localeCompare(b.project.name) || a.task.name.localeCompare(b.task.name));
+}
+
+function renderSourceItems() {
+  const items = sourceOverviewItems();
+  const projectCount = new Set(items.map(item => item.project.id)).size;
+  document.getElementById("sourceListCount").textContent = `${items.length} open item${items.length === 1 ? "" : "s"} · ${projectCount} project${projectCount === 1 ? "" : "s"}`;
+  document.getElementById("sourceItemList").innerHTML = items.length ? items.map(({project, task}) => `
+    <div class="source-list-row">
+      <button class="overview-row" type="button" data-overview-project="${escapeAttribute(project.id)}" data-source-project="true" aria-label="${escapeAttribute(`${task.name} — open ${project.name}`)}">
+        <div><div class="overview-title">${escapeHtml(task.name)}</div>
+        <div class="overview-meta">${escapeHtml(project.name)} · ${escapeHtml(sourceStateLabel(task))}${task.priority ? ` · ${escapeHtml(taskPriorityLabel(task.priority))}` : ""}${task.dueDate ? ` · Due ${escapeHtml(formatDate(task.dueDate))}` : ""}${task.assignee ? ` · ${escapeHtml(task.assignee)}` : ""}</div></div>
+      </button>
+      ${renderTaskSource(task)}
+    </div>`).join("") : `<div class="empty">${state.sourceQuery ? "No items match your search." : "No open items are assigned to projects for this source."}</div>`;
 }
 
 function formatOverviewCount(count, label) {
@@ -3609,6 +3667,14 @@ document.getElementById("filters").addEventListener("click", event => {
 });
 
 document.addEventListener("click", event => {
+  const sourceListButton = event.target.closest("[data-source-list]");
+  if (sourceListButton) {
+    state.overviewKey = sourceListButton.dataset.sourceList;
+    state.sourceQuery = "";
+    renderOverviewModal();
+    document.getElementById("sourceListSearch").focus();
+    return;
+  }
   if (event.target.closest("#homeResetButton")) {
     window.location.reload();
     return;
@@ -3630,12 +3696,17 @@ document.addEventListener("click", event => {
   const overviewProject = event.target.closest("[data-overview-project]");
   if (overviewProject) {
     const projectId = String(overviewProject.dataset.overviewProject);
+    if (overviewProject.hasAttribute("data-source-project")) {
+      state.query = "";
+      state.filter = "all";
+      document.getElementById("searchInput").value = "";
+    }
     state.expandedProjects.add(projectId);
     state.overviewKey = "";
-    renderProjects();
-    renderOverviewModal();
+    render();
     const card = document.querySelector(`[data-project-card="${cssEscape(projectId)}"]`);
     if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (card) card.querySelector("button")?.focus({ preventScroll: true });
     return;
   }
 
@@ -3810,6 +3881,30 @@ document.addEventListener("click", event => {
   if (state.expandedProjects.has(id)) state.expandedProjects.delete(id);
   else state.expandedProjects.add(id);
   renderProjects();
+});
+
+document.addEventListener("input", event => {
+  if (event.target.id !== "sourceListSearch") return;
+  state.sourceQuery = event.target.value;
+  renderSourceItems();
+});
+
+document.addEventListener("keydown", event => {
+  if (!state.overviewKey) return;
+  const dialog = document.querySelector("#overviewModal [role=dialog]");
+  if (!dialog) return;
+  if (event.key === "Escape") {
+    const source = state.overviewKey;
+    state.overviewKey = "";
+    renderOverviewModal();
+    document.querySelector(`[data-source-list="${cssEscape(source)}"], [data-kpi-key="${cssEscape(source)}"]`)?.focus();
+  }
+  if (event.key === "Tab") {
+    const controls = [...dialog.querySelectorAll("button, input, a[href]")];
+    const first = controls[0], last = controls[controls.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+  }
 });
 
 document.addEventListener("change", event => {
