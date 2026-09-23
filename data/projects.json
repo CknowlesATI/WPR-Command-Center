@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-22T15:56:11.253Z",
+  "lastUpdated": "2026-09-23T15:45:56.683Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -375,8 +375,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 58,
-      "overdueTasks": 5,
+      "openTasks": 60,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -717,19 +717,31 @@
           "externalUrl": ""
         },
         {
-          "name": "Procore #3378: Missing Roller Shades - BLD 2",
+          "name": "Procore #3438: Install motion sensor",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #3466: Roller Shade needs to hide the white",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #3483: Shade Box Not Level",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #3546: Roller Shade is out of drywall",
           "status": "progress",
           "source": "Procore",
           "externalUrl": ""
         },
         {
           "name": "Warehouse: ATI C/O Revision 5 - Return parts back to stock",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Please stage the bin for this job.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -793,13 +805,6 @@
           "detail": "Install: Wire and lable TVs BED 1,2,3 Primary and flex",
           "dueDate": "2026-09-11",
           "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Warehouse: Please stage the bin for this job.",
-          "dueDate": "2026-09-21",
-          "source": "Pulse"
         }
       ],
       "links": []
@@ -813,9 +818,9 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 6,
+      "openTasks": 12,
       "overdueTasks": 1,
-      "highPriorityTasks": 0,
+      "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -859,6 +864,42 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
+        },
+        {
+          "name": "Procore #4204: Finish Plywood, Metal, and Roller Shade",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4248: Lockable roller shade needed",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4275: No action needed. Tell us what the cover plate is covering.",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4376: Finish fiber area better - all units",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4390: Motion sensor should be in corner",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -898,6 +939,20 @@
           "detail": "Admin: Unit 3 - Observation #2027: QC - FIELD OBSERVATION - Doorbell Wrong Location",
           "dueDate": "2025-11-19",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Critical aging",
+          "detail": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
+          "dueDate": null,
+          "source": "Procore"
+        },
+        {
+          "severity": "red",
+          "label": "Critical aging",
+          "detail": "Procore #4390: Motion sensor should be in corner",
+          "dueDate": null,
+          "source": "Procore"
         }
       ],
       "links": []
@@ -911,7 +966,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 31,
+      "openTasks": 33,
       "overdueTasks": 8,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -1091,6 +1146,18 @@
           "externalUrl": ""
         },
         {
+          "name": "Procore #4715: Smurf tube needed for future speaker locations 4” aff from tv back box (review with Tanner)",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #4877: Similar to unit 4 lvl 3, need to add a single Smurf tube from tv down directly below to the right of the outlet below the tv.",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
           "name": "Procore #4890: Need to adjust all Smurf tubes to be 2” in unit 4",
           "status": "todo",
           "source": "Procore",
@@ -1194,7 +1261,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 32,
+      "openTasks": 33,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1273,6 +1340,12 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Bed Splice primary sitting room tv. RTV WIRE",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3167,9 +3240,9 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 19,
+      "openTasks": 20,
       "overdueTasks": 4,
-      "highPriorityTasks": 4,
+      "highPriorityTasks": 5,
       "risks": 0,
       "nextHandoff": "2026-08-14",
       "approvalsPayments": {
@@ -3282,6 +3355,12 @@
         },
         {
           "name": "Procore #2678: LV lights are all blinking",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #2774: 101 Primary Bed - Make sure TV is 12\" above top of fireplace",
           "status": "todo",
           "source": "Procore",
           "externalUrl": ""
@@ -5118,7 +5197,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 50,
+      "openTasks": 51,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5137,6 +5216,12 @@
         },
         {
           "name": "AV: Admin: Relabel Equipment accordingly. (See Notes)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Admin: Send Nate project summary for ATI",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
