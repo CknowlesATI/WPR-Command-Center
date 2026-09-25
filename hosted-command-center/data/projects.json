@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-24T16:07:32.323Z",
+  "lastUpdated": "2026-09-25T16:07:53.686Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1201,8 +1201,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-10-19",
-          "end": "2026-10-19",
+          "start": "2026-11-10",
+          "end": "2026-11-10",
           "status": ""
         }
       ],
@@ -1261,7 +1261,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 33,
+      "openTasks": 34,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1466,6 +1466,12 @@
         },
         {
           "name": "Install: Tanner's List 5/18 - General item - Low voltage trim (verify all trim out locations have been terminamted and are ready for wall pl",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Parts Shuffle/BackOrder: From Stock (1ea) Innovolt INV-2000 - PO#1237 Receive to the Job - Physically back to stock.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1942,7 +1948,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 82,
+      "openTasks": 83,
       "overdueTasks": 8,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1953,6 +1959,120 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "AI Duplicate?: Bedroom 3 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Bedroom 3 — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Bedroom 3 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Bedroom 3 — Install Ubiquiti U7-Pro-Max",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Bedroom 4 — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Bedroom 4 — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Bedroom 4 — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Bedroom 4 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Family Room — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Family Room — Install Future Automation PS65",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Family Room — Install Samsung QN75QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Family Room — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Family Room — Install Sonance VX66R (4)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Primary Bath — Install Sonance VX66R (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Primary Sitting — Install Sonance VX66 (2)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Primary Suite — Install Apple TV 4K (128G)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Primary Suite — Install Future Automation PS55",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Primary Suite — Install Samsung QN65QN80FAFXZA",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AI Duplicate?: Primary Suite — Install Snap One WattBox IP Wi-Fi (2 outlets)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "Admin: All bedrooms will be getting WB boxes. Need sizes and approval",
           "status": "todo",
@@ -2248,6 +2368,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Finance: Confirm James Loudspeaker PD62 are correct for ordering",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -2327,120 +2453,6 @@
         },
         {
           "name": "Install: Walk unit and mark up plan accordingly. Install cover plates where needed.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Bedroom 3 — Install Apple TV 4K (128G)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Bedroom 3 — Install Samsung QN65QN80FAFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Bedroom 3 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Bedroom 3 — Install Ubiquiti U7-Pro-Max",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Bedroom 4 — Install Apple TV 4K (128G)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Bedroom 4 — Install Future Automation PS55",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Bedroom 4 — Install Samsung QN65QN80FAFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Bedroom 4 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Family Room — Install Apple TV 4K (128G)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Family Room — Install Future Automation PS65",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Family Room — Install Samsung QN75QN80FAFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Family Room — Install Snap One WattBox IP Wi-Fi (2 outlets)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Family Room — Install Sonance VX66R (4)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Primary Bath — Install Sonance VX66R (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Primary Sitting — Install Sonance VX66 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Primary Suite — Install Apple TV 4K (128G)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Primary Suite — Install Future Automation PS55",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Primary Suite — Install Samsung QN65QN80FAFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Primary Suite — Install Snap One WattBox IP Wi-Fi (2 outlets)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2531,7 +2543,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 43,
+      "openTasks": 44,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2760,6 +2772,12 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 3: L3 Mudroom — Install Ubiquiti G6 Pro Entry",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Finance: Confirm James Loudspeaker PD62 are correct for ordering",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
