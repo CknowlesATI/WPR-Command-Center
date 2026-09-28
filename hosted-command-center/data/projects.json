@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-25T16:07:53.686Z",
+  "lastUpdated": "2026-09-28T18:56:28.885Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1948,8 +1948,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 83,
-      "overdueTasks": 8,
+      "openTasks": 84,
+      "overdueTasks": 9,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2099,6 +2099,12 @@
         },
         {
           "name": "Admin: Lvl 3 Flex Room - will need horizontal adapter for mounting TV at install",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2544,7 +2550,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 44,
-      "overdueTasks": 4,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2876,6 +2882,13 @@
           "label": "Overdue task",
           "detail": "Install: Lvl 3 WestTerrace - Land speaker wire (2) in planter boxes once the planter boxes have been installed.",
           "dueDate": "2026-06-12",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Finance: Confirm James Loudspeaker PD62 are correct for ordering",
+          "dueDate": "2026-09-25",
           "source": "Pulse"
         }
       ],
@@ -3258,9 +3271,9 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 20,
+      "openTasks": 19,
       "overdueTasks": 4,
-      "highPriorityTasks": 5,
+      "highPriorityTasks": 4,
       "risks": 0,
       "nextHandoff": "2026-08-14",
       "approvalsPayments": {
@@ -3360,19 +3373,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
           "name": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #2678: LV lights are all blinking",
           "status": "todo",
           "source": "Procore",
           "externalUrl": ""
@@ -3385,6 +3386,12 @@
         },
         {
           "name": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #2943: 101 speakers- are there white covers for these?",
           "status": "todo",
           "source": "Procore",
           "externalUrl": ""
@@ -3452,14 +3459,14 @@
         {
           "severity": "red",
           "label": "Critical aging",
-          "detail": "Procore #2552: Unit 101 Primary Suite - Need to Install CO Detector",
+          "detail": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
           "dueDate": null,
           "source": "Procore"
         },
         {
           "severity": "red",
           "label": "Critical aging",
-          "detail": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
+          "detail": "Procore #2774: 101 Primary Bed - Make sure TV is 12\" above top of fireplace",
           "dueDate": null,
           "source": "Procore"
         }
@@ -5215,7 +5222,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 50,
+      "openTasks": 48,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5431,13 +5438,13 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Office: Configure TVs devices on versa plate so tv can sit closer to the wall",
+          "name": "AV: ML - Office Deck: Configure TVs devices on versa plate so tv can sit closer to the wall",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Office: Deck: remove WAP antennas and paint black",
+          "name": "AV: ML - Office Deck: Deck: remove WAP antennas and paint black",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5492,18 +5499,6 @@
         },
         {
           "name": "AV: Techs Priority List: Transfer Sonos to customer account or default Ports and Amps if no account created by end of install.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: UL - Loft: Install Starlink modem in mech room",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: UL - Loft: Install Starlink on roof as designated by builder",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
