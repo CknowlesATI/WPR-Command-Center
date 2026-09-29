@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-28T18:56:28.885Z",
+  "lastUpdated": "2026-09-29T17:15:08.726Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -2995,7 +2995,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 7,
+      "openTasks": 9,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3006,6 +3006,12 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "Install: Allwest modem – photos of connections (any unit)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
@@ -3044,6 +3050,12 @@
         },
         {
           "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Unit 10 – Locate and uncover buried sprinkler wire and 3PC wires",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3271,9 +3283,9 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 19,
+      "openTasks": 18,
       "overdueTasks": 4,
-      "highPriorityTasks": 4,
+      "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": "2026-08-14",
       "approvalsPayments": {
@@ -3331,6 +3343,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Install speaker grill in Master Closet",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Make TV connections And Lable",
           "status": "todo",
           "source": "Pulse",
@@ -3373,12 +3391,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
           "name": "Procore #2774: 101 Primary Bed - Make sure TV is 12\" above top of fireplace",
           "status": "todo",
           "source": "Procore",
@@ -3386,12 +3398,6 @@
         },
         {
           "name": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
-          "status": "todo",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #2943: 101 speakers- are there white covers for these?",
           "status": "todo",
           "source": "Procore",
           "externalUrl": ""
@@ -3459,14 +3465,14 @@
         {
           "severity": "red",
           "label": "Critical aging",
-          "detail": "Procore #2585: Pre-Punch - Unit 101 - Powder Room - Properly Locate Flood Sensor",
+          "detail": "Procore #2774: 101 Primary Bed - Make sure TV is 12\" above top of fireplace",
           "dueDate": null,
           "source": "Procore"
         },
         {
-          "severity": "red",
-          "label": "Critical aging",
-          "detail": "Procore #2774: 101 Primary Bed - Make sure TV is 12\" above top of fireplace",
+          "severity": "amber",
+          "label": "Needs action",
+          "detail": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
           "dueDate": null,
           "source": "Procore"
         }
@@ -5222,8 +5228,8 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 48,
-      "overdueTasks": 3,
+      "openTasks": 44,
+      "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5264,7 +5270,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: BL - Gun Display: Install camera",
+          "name": "AV: BL - Gun Display: Install discrete camera at entrance",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5306,12 +5312,6 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: BL - Safe Room: Install camera w/ white flat back plate",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "AV: BL - Staff Entry: Install camera (pending rock work)",
           "status": "todo",
           "source": "Pulse",
@@ -5324,25 +5324,19 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: BL Safe Room Storage: Remove camera back-box",
+          "name": "AV: LL - Batcave/Mancave: Entry: Remove camera back-box and install flat black plate",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "AV: LL - Batcave: Entry: Remove camera back-box and install flat black plate",
+          "name": "AV: LL - Batcave/Mancave: Install X2 cameras on East Wall",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "AV: LL - Batcave: Install X2 cameras (this is based on a pending change order)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: LL - Batcave: Reconfigure Tv Devices so tv can sit flush against wall.",
+          "name": "AV: LL - Batcave/Mancave: Reconfigure Tv Devices so tv can sit flush against wall.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5354,7 +5348,19 @@
           "externalUrl": ""
         },
         {
+          "name": "AV: LL - Outdoor Living: Find a way to secure the TV to the back-box so it doesn't get pulled out by the wind",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "AV: LL - Outdoor Living: Remove WAP antennas and paint black",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL - Theater: Run an audio calibration",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5366,7 +5372,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: LL Gym: Center TV on cabinet",
+          "name": "AV: LL Gym: Look into centering the TV on cabinet",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5390,7 +5396,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Fire: Install owner provided TV",
+          "name": "AV: ML - Fire: Finalize TV Installation",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5420,19 +5426,13 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Master Suite: Ensure master tv tv mount stays secured to FA backbox sucre clip",
+          "name": "AV: ML - Master Suite: Ensure master tv tv mount stays secured to FA backbox secure clip",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Master Suite: Relable wiring on Sonos Port that used to be Lap Pool which is now Master Bed - audio cable and network",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: ML - Master Suite: Troubleshoot grey network cable for master bed apple tv.",
+          "name": "AV: ML - Master Suite: Relabel audio and network wiring in the rack on Sonos Port that used to be Lap Pool which is now Master Bed",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5450,7 +5450,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Outdoor Living: Install owner provided TV",
+          "name": "AV: ML - Outdoor Living: Find a way to secure the TV to the back-box so it doesn't get pulled out by the wind",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5468,6 +5468,12 @@
           "externalUrl": ""
         },
         {
+          "name": "AV: ML - Outdoor Living: Verify TV operation",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "AV: Punch List: ML/LL: ML Deck WAP was relocated to the Lap Pool. Need to update the name of this WAP in Ubiquiti",
           "status": "todo",
           "source": "Pulse",
@@ -5475,12 +5481,6 @@
         },
         {
           "name": "AV: Punch List: ML: Deck- Add new WAP to Ubiquiti system",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: Techs Priority List: Label Master Bathroom Mirror tv spares",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5499,24 +5499,6 @@
         },
         {
           "name": "AV: Techs Priority List: Transfer Sonos to customer account or default Ports and Amps if no account created by end of install.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Transfer Test: This is transfer test one",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Transfer Test: Transfer test three",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Transfer Test: Transfer test two",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5558,13 +5540,6 @@
           "label": "Overdue task",
           "detail": "AV: Admin: Update Solar System Network drawings",
           "dueDate": "2026-06-05",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Transfer Test: This is transfer test one",
-          "dueDate": "2026-07-29",
           "source": "Pulse"
         }
       ],
