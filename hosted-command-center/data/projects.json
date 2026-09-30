@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-29T17:15:08.726Z",
+  "lastUpdated": "2026-09-30T17:13:16.798Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -287,7 +287,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -681,7 +681,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -854,7 +854,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1140,7 +1140,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1261,7 +1261,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 34,
+      "openTasks": 30,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1333,18 +1333,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Sonance VX66R (4)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Bath — Install Sonance VX66R (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Bed Splice primary sitting room tv. RTV WIRE",
           "status": "todo",
           "source": "Pulse",
@@ -1411,19 +1399,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Sonance VX66R (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Ubiquiti U7-Pro-Max",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 3: L3 Library — Install Sonance VX66R (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1453,7 +1429,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1871,7 +1847,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2452,7 +2428,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2546,7 +2522,7 @@
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
       "health": "green",
-      "phase": "Pre-Wire",
+      "phase": "Trim",
       "startDate": null,
       "endDate": null,
       "openTasks": 44,
@@ -2819,7 +2795,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice speaker wiring in rooftop junction boxes",
+          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2831,14 +2807,14 @@
           "label": "Pre-Wire",
           "start": "2025-07-23",
           "end": "2025-07-23",
-          "status": "active"
+          "status": "complete"
         },
         {
           "key": "trim",
           "label": "Trim",
           "start": "2026-03-23",
           "end": "2026-03-23",
-          "status": ""
+          "status": "active"
         },
         {
           "key": "handover",
@@ -3470,8 +3446,8 @@
           "source": "Procore"
         },
         {
-          "severity": "amber",
-          "label": "Needs action",
+          "severity": "red",
+          "label": "Critical aging",
           "detail": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
           "dueDate": null,
           "source": "Procore"
@@ -5228,7 +5204,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 44,
+      "openTasks": 33,
       "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5276,37 +5252,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: BL - Main Mech: Clean up wiring",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: BL - Main Mech: Elevator Panel phone connection",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: BL - Main Mech: Lutron Processor Panel: Verify blue Cat6 3PC wire for network connection. Update 2-Post I/O sheet",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: BL - Main Mech: Run a new spare for projector control Currently using Sonos spare 1",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "AV: BL - Rack Room: Get a latch for the side of the 2-post",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: BL - Rack Room: Move speaker wiring in rack for Lap Pool to distribution amp for Pool speakers",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5354,12 +5300,6 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: LL - Outdoor Living: Remove WAP antennas and paint black",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "AV: LL - Theater: Run an audio calibration",
           "status": "todo",
           "source": "Pulse",
@@ -5385,24 +5325,6 @@
         },
         {
           "name": "AV: LL Gym: Re attach tv to mount with proper spacers. It moves as you pull it out",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: ML - Fire: Clean up Tv wires Add plate or brush plate",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: ML - Fire: Finalize TV Installation",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: ML - Fire: Remove WAP antennas and paint black",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5444,19 +5366,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Office Deck: Deck: remove WAP antennas and paint black",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "AV: ML - Outdoor Living: Find a way to secure the TV to the back-box so it doesn't get pulled out by the wind",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: ML - Outdoor Living: Remove WAP antennas and paint black",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
