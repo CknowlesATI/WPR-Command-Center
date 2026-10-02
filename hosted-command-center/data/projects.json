@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-01T17:42:22.724Z",
+  "lastUpdated": "2026-10-02T17:01:35.824Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,7 +11,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 48,
+      "openTasks": 49,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -305,6 +305,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Unit Walkthrough",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "This is a test",
           "status": "todo",
           "source": "Command Center",
@@ -375,7 +381,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 60,
+      "openTasks": 63,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -657,6 +663,18 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Level 3: Adjust pendant speaker so that it's square with the beams",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Primary Suite: Follow-up with electricians regarding the TV back-box outlet",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -670,6 +688,12 @@
         },
         {
           "name": "Install: Reminder, Turn on \"Auto Reboot\" On PDU 1. When the network is up an running.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Review room-by-room installation to-dos and check off accordingly",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -818,7 +842,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 12,
+      "openTasks": 14,
       "overdueTasks": 1,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -831,6 +855,12 @@
       "taskList": [
         {
           "name": "Admin: Unit 3 - Observation #2027: QC - FIELD OBSERVATION - Doorbell Wrong Location",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Clean up A/V panel wiring and put cover on",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -855,6 +885,12 @@
         },
         {
           "name": "Install: Splice roof-top speaker splice points",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: There are two observations open, please address accordingly",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -966,7 +1002,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 33,
+      "openTasks": 35,
       "overdueTasks": 8,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -1110,7 +1146,19 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Close open observation",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Full site walk",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1261,7 +1309,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 30,
+      "openTasks": 34,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1272,6 +1320,18 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "ATI PM: Christen, I need to have rack surveys for Unit 5 and the other upcoming WPR's",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "ATI PM: Christen, The Sonos will need to be transferred to the new customer. As well as the Apple TV's",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "Admin: Unit 5 - Lvl 2 - Family - WB box is not centered, need horizontal adapter for tv mount at install (pic in notes)",
           "status": "todo",
@@ -1411,6 +1471,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Check on TV back-box relocation progress",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -1442,6 +1508,12 @@
         },
         {
           "name": "Install: Tanner's List 5/18 - General item - Low voltage trim (verify all trim out locations have been terminamted and are ready for wall pl",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: Family and Flex PDUs do not match in System and Domotz",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1517,7 +1589,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 54,
+      "openTasks": 55,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1847,6 +1919,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Site walk",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
@@ -1924,7 +2002,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 84,
+      "openTasks": 85,
       "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2428,6 +2506,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Site walk",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
@@ -2525,7 +2609,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 44,
+      "openTasks": 46,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2765,7 +2849,19 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Bed 1: Cut in LV1 and install blank plate",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: LVL 3 Mudroom: Install door contact",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3101,7 +3197,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 5,
+      "openTasks": 6,
       "overdueTasks": 0,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -3112,6 +3208,12 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "Install: Close open observation",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
@@ -3259,7 +3361,7 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 19,
+      "openTasks": 23,
       "overdueTasks": 4,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -3295,7 +3397,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Admin: Update As-builts - Primary Closet change from 2 speakers to 1 DVC (once the work has been completed)",
+          "name": "Admin: Markup Drawings - Primary Closet change from 2 speakers to 1 DVC",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3313,6 +3415,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Clean up Pendant Speaker Wires.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Condo 101 Master Bed TV – move TV up as far as possible",
           "status": "todo",
           "source": "Pulse",
@@ -3320,6 +3428,18 @@
         },
         {
           "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Garage Mech Room: Need to determine how wiring is going to be managed. Follow-up with SIGIL regarding this",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Install Starlink on Penthouse rooftop",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3344,6 +3464,12 @@
         },
         {
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Run conduit and wiring for Starlink",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3433,15 +3559,15 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: Update As-builts - Primary Closet change from 2 speakers to 1 DVC (once the work has been completed)",
-          "dueDate": "2026-07-17",
+          "detail": "Install: Swap bed cam. To cam 102 at the panel",
+          "dueDate": "2026-08-20",
           "source": "Pulse"
         },
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Swap bed cam. To cam 102 at the panel",
-          "dueDate": "2026-08-20",
+          "detail": "Install: Install speaker grill in Master Closet",
+          "dueDate": "2026-10-01",
           "source": "Pulse"
         },
         {
@@ -3470,7 +3596,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 42,
+      "openTasks": 43,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3704,6 +3830,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Follow-up w/ Electricians regarding outlets in TV back-boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Living Room - We can not do blind wire at TV locations, this will need a single gang box and will get trimmed out with a wall plate",
           "status": "todo",
           "source": "Pulse",
@@ -3805,7 +3937,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 31,
+      "openTasks": 32,
       "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3817,7 +3949,7 @@
       },
       "taskList": [
         {
-          "name": "ATI: Update As-Built to reflect WAP-101 in Bedroom 1 closet",
+          "name": "ATI: Update Redlines to reflect WAP-101 in Bedroom 1 closet",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3979,6 +4111,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Follow-up with electricians regarding outlets in TV back-boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Living Room - Sub location needs power (either move sub or get them to move power)",
           "status": "todo",
           "source": "Pulse",
@@ -4060,8 +4198,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 28,
-      "overdueTasks": 2,
+      "openTasks": 30,
+      "overdueTasks": 1,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4228,6 +4366,18 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Follow-up with electricians regarding the outlets in the TV back-boxes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Living Room Fireplace: Trim out wiring that was suppose to be \"buried\"",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -4277,13 +4427,6 @@
           "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "dueDate": "2026-01-23",
           "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Follow up with Solus on wall plates (white arch matte .. beveled edge) Also verify that Helix is following this direction for outlets",
-          "dueDate": "2026-08-17",
-          "source": "Pulse"
         }
       ],
       "links": []
@@ -4297,8 +4440,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 82,
-      "overdueTasks": 13,
+      "openTasks": 83,
+      "overdueTasks": 11,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4315,7 +4458,7 @@
           "externalUrl": ""
         },
         {
-          "name": "ATI: Update As-Built to reflect Kitchen Phone/Data (PD-103) is buried behind the millwork.",
+          "name": "ATI: Update Redline to reflect Kitchen Phone/Data (PD-103) is buried behind the millwork.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4799,6 +4942,12 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
+        },
+        {
+          "name": "Install: Walk through the project for verification of wiring and project status.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -4886,7 +5035,7 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 39,
+      "openTasks": 40,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5108,6 +5257,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Follow-up regarding Main Lounge Speaker",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Get network switch from Clint MacKay (WPR IT) to add to our rack",
           "status": "todo",
           "source": "Pulse",
@@ -5210,7 +5365,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 24,
+      "openTasks": 21,
       "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5300,19 +5455,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Fire: Troubleshoot audio return",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "AV: ML - Garage: Label solar system network wiring",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: ML - Garage: Mudroom Entry: reinstall camera",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5325,12 +5468,6 @@
         },
         {
           "name": "AV: ML - Master Suite: Relabel audio and network wiring in the rack on Sonos Port that used to be Lap Pool which is now Master Bed",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: ML - Outdoor Living: Swap Left and right speakers at 2 Post",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
