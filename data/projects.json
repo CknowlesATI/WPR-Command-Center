@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-02T17:01:35.824Z",
+  "lastUpdated": "2026-10-05T19:55:39.819Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1002,8 +1002,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 35,
-      "overdueTasks": 8,
+      "openTasks": 34,
+      "overdueTasks": 7,
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
@@ -1013,12 +1013,6 @@
         "changeOrders": "None"
       },
       "taskList": [
-        {
-          "name": "Admin: AV Deposit has been paid",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Admin: As-builts turned into design 5/20/26",
           "status": "todo",
@@ -1258,13 +1252,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: AV Deposit has been paid",
-          "dueDate": "2026-02-27",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Admin: Unit 4 - Lvl 3 - Flex - will need horizontal adapter for tv mount with where the WB was placed on the wall (see pic in notes)",
           "dueDate": "2026-03-06",
           "source": "Pulse"
@@ -1295,6 +1282,13 @@
           "label": "Overdue task",
           "detail": "Project Handoff: Get lead time on fabric to Justin and Nate owens",
           "dueDate": "2026-07-31",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Design: Follow up with Earth Shades on Turn around",
+          "dueDate": "2026-08-03",
           "source": "Pulse"
         }
       ],
@@ -1589,8 +1583,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 55,
-      "overdueTasks": 4,
+      "openTasks": 54,
+      "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1600,12 +1594,6 @@
         "changeOrders": "Pending"
       },
       "taskList": [
-        {
-          "name": "Admin: Review plans 3/16/26 for changes (link in notes) - No green light until we get approval.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
           "status": "todo",
@@ -1965,13 +1953,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: Review plans 3/16/26 for changes (link in notes) - No green light until we get approval.",
-          "dueDate": "2026-03-19",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Install: Lvl 1 front door - stone needs cut for doorbell box",
           "dueDate": "2026-05-22",
           "source": "Pulse"
@@ -2002,8 +1983,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 85,
-      "overdueTasks": 10,
+      "openTasks": 83,
+      "overdueTasks": 8,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2128,12 +2109,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Admin: All bedrooms will be getting WB boxes. Need sizes and approval",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Admin: Eliminate all security wiring? Bury? what are we doing with the panel? (I will discuss on 2/20 from Landon)",
           "status": "todo",
           "source": "Pulse",
@@ -2141,12 +2116,6 @@
         },
         {
           "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Admin: Lvl 3 - Living - verify with Landon we are blind wiring the tv location or putting up single gang box",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2565,22 +2534,8 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: All bedrooms will be getting WB boxes. Need sizes and approval",
-          "dueDate": "2026-02-20",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Admin: Eliminate all security wiring? Bury? what are we doing with the panel? (I will discuss on 2/20 from Landon)",
           "dueDate": "2026-02-20",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Lvl 3 - Living - verify with Landon we are blind wiring the tv location or putting up single gang box",
-          "dueDate": "2026-02-27",
           "source": "Pulse"
         },
         {
@@ -2595,6 +2550,20 @@
           "label": "Overdue task",
           "detail": "Install: PENDING APPROVAL - Bedroom 1,2,3,4 will get WB26 Tv back boxes (for 65\" Tvs)",
           "dueDate": "2026-06-12",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Lvl 3 WestTerrace - Land speaker wire (2) in planter boxes once the planter boxes have been installed.",
+          "dueDate": "2026-07-03",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Lvl 2 Bed 3 - (Pending Bedroom Back Box Proposal) we don’t have enough depth for the WB26, we only have 2.25” of depth. Need a solu",
+          "dueDate": "2026-07-24",
           "source": "Pulse"
         }
       ],
@@ -5035,8 +5004,8 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 40,
-      "overdueTasks": 5,
+      "openTasks": 39,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5046,12 +5015,6 @@
         "changeOrders": "Pending"
       },
       "taskList": [
-        {
-          "name": "Admin: (2) WB21 back boxes have been pulled from stock for the LL Fitness area. (1) WB31 pulled from stock for ML Member Lounge. These are o",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Admin: Need Current AV system C/O approved 0515 2.1",
           "status": "todo",
@@ -5328,13 +5291,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: (2) WB21 back boxes have been pulled from stock for the LL Fitness area. (1) WB31 pulled from stock for ML Member Lounge. These are o",
-          "dueDate": "2026-06-19",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Admin: Use RCP for Speaker Grills (Round or Square) - we will need to order accordingly (possible C/O)",
           "dueDate": "2026-06-19",
           "source": "Pulse"
@@ -5365,7 +5321,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 21,
+      "openTasks": 20,
       "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5456,12 +5412,6 @@
         },
         {
           "name": "AV: ML - Garage: Label solar system network wiring",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: ML - Master Suite: Ensure master tv tv mount stays secured to FA backbox secure clip",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
