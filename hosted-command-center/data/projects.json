@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-05T19:55:39.819Z",
+  "lastUpdated": "2026-10-06T17:35:35.645Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -12,7 +12,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 49,
-      "overdueTasks": 3,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -368,6 +368,13 @@
           "detail": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
           "dueDate": "2026-06-26",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Unit Walkthrough",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -382,7 +389,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 63,
-      "overdueTasks": 4,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -829,6 +836,20 @@
           "detail": "Install: Wire and lable TVs BED 1,2,3 Primary and flex",
           "dueDate": "2026-09-11",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Primary Suite: Follow-up with electricians regarding the TV back-box outlet",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Review room-by-room installation to-dos and check off accordingly",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -843,7 +864,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 14,
-      "overdueTasks": 1,
+      "overdueTasks": 2,
       "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
@@ -978,6 +999,13 @@
         },
         {
           "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: There are two observations open, please address accordingly",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
           "label": "Critical aging",
           "detail": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
           "dueDate": null,
@@ -1003,7 +1031,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 34,
-      "overdueTasks": 7,
+      "overdueTasks": 8,
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
@@ -1299,12 +1327,12 @@
       "name": "WPR Unit 5",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "pending",
+      "health": "red",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
       "openTasks": 34,
-      "overdueTasks": 3,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1544,8 +1572,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-09-14",
+          "end": "2026-09-14",
           "status": ""
         }
       ],
@@ -1570,6 +1598,27 @@
           "detail": "Install: Tanner's List 5/18 - General item - Low voltage trim (verify all trim out locations have been terminamted and are ready for wall pl",
           "dueDate": "2026-05-21",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "ATI PM: Christen, I need to have rack surveys for Unit 5 and the other upcoming WPR's",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Check on TV back-box relocation progress",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Rack Build: Family and Flex PDUs do not match in System and Domotz",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -1579,12 +1628,12 @@
       "name": "WPR Unit 6",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "pending",
+      "health": "red",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
       "openTasks": 54,
-      "overdueTasks": 3,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1944,8 +1993,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-09-14",
+          "end": "2026-09-14",
           "status": ""
         }
       ],
@@ -1970,6 +2019,13 @@
           "detail": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
           "dueDate": "2026-07-31",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Site walk",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -1979,12 +2035,12 @@
       "name": "WPR Unit 7",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "green",
+      "health": "red",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
       "openTasks": 83,
-      "overdueTasks": 8,
+      "overdueTasks": 9,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2518,8 +2574,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-10-05",
+          "end": "2026-10-05",
           "status": ""
         }
       ],
@@ -2574,12 +2630,12 @@
       "name": "WPR Unit 8",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "green",
+      "health": "red",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
       "openTasks": 46,
-      "overdueTasks": 5,
+      "overdueTasks": 7,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2891,8 +2947,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-10-05",
+          "end": "2026-10-05",
           "status": ""
         }
       ],
@@ -2930,6 +2986,13 @@
           "label": "Overdue task",
           "detail": "Finance: Confirm James Loudspeaker PD62 are correct for ordering",
           "dueDate": "2026-09-25",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Bed 1: Cut in LV1 and install blank plate",
+          "dueDate": "2026-10-05",
           "source": "Pulse"
         }
       ],
@@ -3331,7 +3394,7 @@
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
       "openTasks": 23,
-      "overdueTasks": 4,
+      "overdueTasks": 8,
       "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": "2026-08-14",
@@ -3541,17 +3604,17 @@
         },
         {
           "severity": "red",
-          "label": "Critical aging",
-          "detail": "Procore #2774: 101 Primary Bed - Make sure TV is 12\" above top of fireplace",
-          "dueDate": null,
-          "source": "Procore"
+          "label": "Overdue task",
+          "detail": "Admin: Markup Drawings - Primary Closet change from 2 speakers to 1 DVC",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
         },
         {
           "severity": "red",
-          "label": "Critical aging",
-          "detail": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
-          "dueDate": null,
-          "source": "Procore"
+          "label": "Overdue task",
+          "detail": "Install: Garage Mech Room: Need to determine how wiring is going to be managed. Follow-up with SIGIL regarding this",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -3566,7 +3629,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 43,
-      "overdueTasks": 4,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -3893,6 +3956,13 @@
           "detail": "Install: Living Room - We can not do blind wire at TV locations, this will need a single gang box and will get trimmed out with a wall plate",
           "dueDate": "2026-08-21",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Follow-up w/ Electricians regarding outlets in TV back-boxes",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -3907,7 +3977,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 32,
-      "overdueTasks": 2,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4154,6 +4224,20 @@
           "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "dueDate": "2026-08-19",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "ATI: Update Redlines to reflect WAP-101 in Bedroom 1 closet",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Follow-up with electricians regarding outlets in TV back-boxes",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -4168,7 +4252,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 30,
-      "overdueTasks": 1,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4396,6 +4480,27 @@
           "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "dueDate": "2026-01-23",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Admin: Follow up with Solus on wall plates (white arch matte .. beveled edge) Also verify that Helix is following this direction for outlets",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Follow-up with electricians regarding the outlets in the TV back-boxes",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Living Room Fireplace: Trim out wiring that was suppose to be \"buried\"",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -4410,7 +4515,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 83,
-      "overdueTasks": 11,
+      "overdueTasks": 14,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5005,7 +5110,7 @@
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
       "openTasks": 39,
-      "overdueTasks": 4,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5307,6 +5412,13 @@
           "label": "Overdue task",
           "detail": "Install: Head end wiring needs pulled into Mech Room once ladder tray is confirmed installed",
           "dueDate": "2026-08-29",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Follow-up regarding Main Lounge Speaker",
+          "dueDate": "2026-10-05",
           "source": "Pulse"
         }
       ],
