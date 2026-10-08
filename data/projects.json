@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-06T17:35:35.645Z",
+  "lastUpdated": "2026-10-08T18:46:41.927Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -2039,8 +2039,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 83,
-      "overdueTasks": 9,
+      "openTasks": 82,
+      "overdueTasks": 8,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2453,12 +2453,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Finance: Confirm James Loudspeaker PD62 are correct for ordering",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -2635,8 +2629,8 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 46,
-      "overdueTasks": 7,
-      "highPriorityTasks": 0,
+      "overdueTasks": 5,
+      "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -2868,12 +2862,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Finance: Confirm James Loudspeaker PD62 are correct for ordering",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Bed 1: Cut in LV1 and install blank plate",
           "status": "todo",
           "source": "Pulse",
@@ -2881,12 +2869,6 @@
         },
         {
           "name": "Install: Final Room Checklist has been completed.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: LVL 3 Mudroom: Install door contact",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2919,6 +2901,18 @@
           "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Unit 8 turnover Friday 10/9 - TV Back Boxes - Big D request to cover up \"holes\"",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #1062: Missing water bug Unit 8 l3 powder",
+          "status": "todo",
+          "source": "Procore",
           "externalUrl": ""
         }
       ],
@@ -2984,16 +2978,16 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Finance: Confirm James Loudspeaker PD62 are correct for ordering",
-          "dueDate": "2026-09-25",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Install: Bed 1: Cut in LV1 and install blank plate",
           "dueDate": "2026-10-05",
           "source": "Pulse"
+        },
+        {
+          "severity": "green",
+          "label": "New",
+          "detail": "Procore #1062: Missing water bug Unit 8 l3 powder",
+          "dueDate": null,
+          "source": "Procore"
         }
       ],
       "links": []
@@ -3394,8 +3388,8 @@
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
       "openTasks": 23,
-      "overdueTasks": 8,
-      "highPriorityTasks": 2,
+      "overdueTasks": 9,
+      "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": "2026-08-14",
       "approvalsPayments": {
@@ -3538,7 +3532,7 @@
         },
         {
           "name": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
-          "status": "todo",
+          "status": "progress",
           "source": "Procore",
           "externalUrl": ""
         }
@@ -4251,8 +4245,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 30,
-      "overdueTasks": 4,
+      "openTasks": 29,
+      "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4262,12 +4256,6 @@
         "changeOrders": ""
       },
       "taskList": [
-        {
-          "name": "Admin: Follow up with Solus on wall plates (white arch matte .. beveled edge) Also verify that Helix is following this direction for outlets",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "status": "todo",
@@ -4479,13 +4467,6 @@
           "label": "Overdue task",
           "detail": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "dueDate": "2026-01-23",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Admin: Follow up with Solus on wall plates (white arch matte .. beveled edge) Also verify that Helix is following this direction for outlets",
-          "dueDate": "2026-10-05",
           "source": "Pulse"
         },
         {
@@ -5109,7 +5090,7 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 39,
+      "openTasks": 40,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5343,6 +5324,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Need Speaker Grills staged and labelled by room (square and round)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -5433,8 +5420,8 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 20,
-      "overdueTasks": 2,
+      "openTasks": 22,
+      "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5475,31 +5462,37 @@
           "externalUrl": ""
         },
         {
+          "name": "AV: BL - Gun Display: Wiring/HDMI to new TV location",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "AV: BL - Rack Room: Get a latch for the side of the 2-post",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "AV: LL - Batcave/Mancave: Entry: Remove camera back-box and install flat black plate",
+          "name": "AV: BL - Rack Room: Move Allwest Modem and Power box into the closet",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "AV: LL - Batcave/Mancave: Install X2 cameras on East Wall",
+          "name": "AV: LL - Batcave: Entry: Remove camera back-box and install flat black plate",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: LL - Batcave: Install X2 cameras on East Wall",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
           "name": "AV: LL - Theater: Run an audio calibration",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: LL - Theater: Straighten projector with screen (it's twisted to the left)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5523,13 +5516,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: ML - Garage: Label solar system network wiring",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: ML - Master Suite: Relabel audio and network wiring in the rack on Sonos Port that used to be Lap Pool which is now Master Bed",
+          "name": "AV: Punch List: Gun Display AP Offline",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5542,6 +5529,12 @@
         },
         {
           "name": "AV: Punch List: ML: Deck- Add new WAP to Ubiquiti system",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: Punch List: U7 Pro Outdoor AP Offline, Location?",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5560,6 +5553,12 @@
         },
         {
           "name": "AV: Techs Priority List: Transfer Sonos to customer account or default Ports and Amps if no account created by end of install.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: UL - Loft: Prep shielded cat6 for Starlink connection",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5601,6 +5600,13 @@
           "label": "Overdue task",
           "detail": "AV: Admin: Update Solar System Network drawings",
           "dueDate": "2026-06-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "AV: LL - Batcave: Install X2 cameras on East Wall",
+          "dueDate": "2026-10-07",
           "source": "Pulse"
         }
       ],
