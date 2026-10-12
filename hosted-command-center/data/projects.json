@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-09T18:17:12.180Z",
+  "lastUpdated": "2026-10-12T21:12:11.746Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1632,7 +1632,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 54,
+      "openTasks": 55,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1963,6 +1963,12 @@
         },
         {
           "name": "Install: Splice roof-top speaker splice points",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Please stage the bin for this job",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2628,8 +2634,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 46,
-      "overdueTasks": 5,
+      "openTasks": 47,
+      "overdueTasks": 6,
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
@@ -2914,6 +2920,12 @@
           "status": "todo",
           "source": "Procore",
           "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: The rack computer, router, switch, nvr, ap's, door stations and camera's are live",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -2983,11 +2995,11 @@
           "source": "Pulse"
         },
         {
-          "severity": "amber",
-          "label": "Due soon",
-          "detail": "Procore #1062: Missing water bug Unit 8 l3 powder",
-          "dueDate": null,
-          "source": "Procore"
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Unit 8 turnover Friday 10/9 - TV Back Boxes - Big D request to cover up \"holes\"",
+          "dueDate": "2026-10-09",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -5428,7 +5440,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 23,
-      "overdueTasks": 6,
+      "overdueTasks": 9,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
