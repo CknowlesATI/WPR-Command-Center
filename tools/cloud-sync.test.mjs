@@ -175,6 +175,45 @@ test('virtual grid is scrolled and overlapping visible rows are deduplicated', a
   assert.deepEqual(rows.map(r=>r.number),['1','2','3','4']);
 });
 
+test('virtual grid waits through delayed and partial rendering without scrolling past rows', async () => {
+  const row = id => ({detailUrl:`https://app.procore.com/details/${id}`,number:String(id)});
+  let scrolls = 0, reads = 0;
+  const client = { async send(method, {expression}) {
+    if (expression.includes('element.scrollTop')) {
+      scrolls++;
+      assert.ok(scrolls <= 2, 'must not scroll past a loading window');
+      if (scrolls === 2) assert.ok(reads >= 8, 'partial window must settle before scrolling');
+      return {result:{value:true}};
+    }
+    if (expression.includes('extractRowsFromCurrentObservationListDom')) {
+      if (!scrolls) return {result:{value:JSON.stringify([row(1)])}};
+      reads++;
+      const ids = scrolls === 2 ? [4] : reads < 6 ? [1] : reads === 6 ? [2] : [2,3];
+      return {result:{value:JSON.stringify(ids.map(row))}};
+    }
+    if (expression === 'document.body.innerText') return {result:{value:'Rows: 4'}};
+    return {result:{value:{text:'Rows: 4'}}};
+  }};
+  const result = await readCompleteObservationList(client,{timeout:100,'grid-wait-ms':1,'grid-load-timeout-ms':1000});
+  assert.deepEqual(result.map(r=>r.number),['1','2','3','4']);
+  assert.equal(scrolls,2);
+});
+
+test('virtual grid fails closed on a stalled, changed, or duplicate list', async () => {
+  const row = {detailUrl:'https://app.procore.com/details/1',number:'1'};
+  for (const mode of ['stalled','changed','duplicate']) {
+    let scrolls = 0;
+    const client = { async send(method, {expression}) {
+      if (expression.includes('element.scrollTop')) { scrolls++; return {result:{value:true}}; }
+      if (expression.includes('extractRowsFromCurrentObservationListDom')) return {result:{value:JSON.stringify(mode === 'duplicate' && scrolls ? [row,row] : [row])}};
+      if (expression === 'document.body.innerText') return {result:{value:mode === 'changed' ? 'Rows: 3' : 'Rows: 2'}};
+      return {result:{value:{text:'Rows: 2'}}};
+    }};
+    await assert.rejects(readCompleteObservationList(client,{timeout:100,'grid-wait-ms':1,'grid-load-timeout-ms':20}), /stopped before|count changed|duplicate/);
+    assert.equal(scrolls,1,'a stalled viewport must not trigger more scrolling');
+  }
+});
+
 test('source placeholders remain empty and multiline descriptions remain intact', () => {
   const context = { document:{body:{innerText:'No.\n2824\nTitle\nRepair\nStatus\nInitiated\nLocation\nNo Location selected\nDistribution\nDescription\n--\nAttachments'}}, location:{href:'https://app.procore.com/webclients/host/companies/9207/projects/2884198/tools/observations/quality/details/23648272'} };
   const first = vm.runInNewContext(`(${extractObservationDetailFromDom.toString()})()`,context);

@@ -1364,23 +1364,26 @@ async function readCompleteObservationList(client, args) {
 async function readVirtualObservationGrid(client, firstRows, total, args) {
   const rows = new Map();
   let visible = firstRows;
-  let stagnant = 0;
-  for (let step = 0; step < 200; step++) {
-    const before = rows.size;
+  const waitMs = Math.max(1, Number(args["grid-wait-ms"] || 1500));
+  const loadTimeoutMs = Math.max(waitMs, Number(args["grid-load-timeout-ms"] || 15000));
+  function collect(sample) {
     const seen = new Set();
-    for (const row of visible) {
+    for (const row of sample) {
       const key = row.detailUrl || row.itemUrl;
       if (!key || seen.has(key)) throw new Error("Procore grid contains missing or duplicate observation links.");
       seen.add(key);
       rows.set(key, row);
     }
     if (rows.size > total) throw new Error("Procore grid count changed during extraction.");
+    return JSON.stringify([...seen].sort());
+  }
+  for (let step = 0; step < 200; step++) {
+    collect(visible);
     if (rows.size === total) {
       console.log(`Verified complete Procore list: ${rows.size}/${total}`);
       return [...rows.values()];
     }
-    stagnant = rows.size === before ? stagnant + 1 : 0;
-    if (stagnant >= 4) throw new Error(`Procore virtual grid stopped before all ${total} observations were read.`);
+    const before = rows.size;
     const scrolled = await client.send("Runtime.evaluate", {
       expression: `(() => {
         const link = document.querySelector('a[href*="/observations/quality/details/"]');
@@ -1399,11 +1402,22 @@ async function readVirtualObservationGrid(client, firstRows, total, args) {
       })()`, returnByValue:true
     });
     if (!scrolled.result.value) throw new Error("Procore grid scroll container could not be identified.");
-    await delay(Number(args["grid-wait-ms"] || 500));
-    const state = await client.send("Runtime.evaluate", {expression:"document.body.innerText",returnByValue:true});
-    const count = parseObservationPagination(state.result.value);
-    if (!count?.virtual || count.total !== total) throw new Error("Procore grid count changed during extraction.");
-    visible = await extractRowsFromCdp(client);
+    // Hold this scroll position until new rows arrive and the rendered window
+    // settles. Scrolling again through loading placeholders can skip rows forever.
+    const deadline = Date.now() + loadTimeoutMs;
+    let previousKeys = "";
+    let ready = false;
+    do {
+      await delay(waitMs);
+      const state = await client.send("Runtime.evaluate", {expression:"document.body.innerText",returnByValue:true});
+      const count = parseObservationPagination(state.result.value);
+      if (!count?.virtual || count.total !== total) throw new Error("Procore grid count changed during extraction.");
+      visible = await extractRowsFromCdp(client);
+      const keys = collect(visible);
+      ready = rows.size === total || (rows.size > before && visible.length > 0 && keys === previousKeys);
+      previousKeys = keys;
+    } while (!ready && Date.now() < deadline);
+    if (!ready) throw new Error(`Procore virtual grid stopped before all ${total} observations were read (${rows.size}/${total}); rows did not finish loading.`);
   }
   throw new Error("Procore grid scroll limit reached.");
 }
