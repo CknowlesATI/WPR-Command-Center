@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-12T21:12:11.746Z",
+  "lastUpdated": "2026-10-13T19:11:27.460Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -389,7 +389,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 63,
-      "overdueTasks": 6,
+      "overdueTasks": 7,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -864,7 +864,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 14,
-      "overdueTasks": 2,
+      "overdueTasks": 3,
       "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
@@ -1006,6 +1006,13 @@
         },
         {
           "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Clean up A/V panel wiring and put cover on",
+          "dueDate": "2026-10-12",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
           "label": "Critical aging",
           "detail": "Procore #4388: Fire caulk/sealant needed for penetration through demising wall",
           "dueDate": null,
@@ -1031,7 +1038,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 34,
-      "overdueTasks": 8,
+      "overdueTasks": 9,
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
@@ -1632,7 +1639,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 55,
+      "openTasks": 54,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1963,12 +1970,6 @@
         },
         {
           "name": "Install: Splice roof-top speaker splice points",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Please stage the bin for this job",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5439,7 +5440,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 23,
+      "openTasks": 24,
       "overdueTasks": 9,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5470,6 +5471,12 @@
         },
         {
           "name": "AV: BL - Gun Display: Install 10U rack w/ all related equipment",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Gun Display: Swap out black camera back plate to white",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
