@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-13T19:11:27.460Z",
+  "lastUpdated": "2026-10-14T17:00:33.683Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -2635,7 +2635,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 47,
+      "openTasks": 48,
       "overdueTasks": 6,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -2920,6 +2920,12 @@
           "name": "Procore #1062: Missing water bug Unit 8 l3 powder",
           "status": "todo",
           "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: Missing equipment.",
+          "status": "todo",
+          "source": "Pulse",
           "externalUrl": ""
         },
         {
@@ -3402,7 +3408,7 @@
       "endDate": "2026-09-01",
       "openTasks": 23,
       "overdueTasks": 9,
-      "highPriorityTasks": 1,
+      "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": "2026-08-14",
       "approvalsPayments": {
@@ -3539,7 +3545,7 @@
         },
         {
           "name": "Procore #2774: 101 Primary Bed - Make sure TV is 12\" above top of fireplace",
-          "status": "todo",
+          "status": "progress",
           "source": "Procore",
           "externalUrl": ""
         },
@@ -5440,7 +5446,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 24,
+      "openTasks": 25,
       "overdueTasks": 9,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5537,6 +5543,12 @@
         },
         {
           "name": "AV: ML - Garage: Rearrange network connections on the two switches",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: ML - His Office: Make sure that the data port under tue credenza is functioning",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
