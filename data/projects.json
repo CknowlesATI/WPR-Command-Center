@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-14T17:00:33.683Z",
+  "lastUpdated": "2026-10-15T16:48:30.570Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -3989,7 +3989,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 32,
+      "openTasks": 29,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -4043,12 +4043,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Dining — Install James Loudspeaker PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Apple TV 4K (128G)",
           "status": "todo",
           "source": "Pulse",
@@ -4061,31 +4055,13 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install James Loudspeaker PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Samsung QN75QN80FAFXZA",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install James Loudspeaker PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Kitchen — Install James Loudspeaker PD42-4 (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4103,12 +4079,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install James Loudspeaker PD42-4 (4)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install Samsung QN75QN80FAFXZA",
           "status": "todo",
           "source": "Pulse",
@@ -4116,12 +4086,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Pantry — Install Ubiquiti U7-Pro-Max",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Primary Bath — Install Sonance VX66R (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4169,6 +4133,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Kitchen Patio: Install two black outdoor blank plates on wiring locations",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Living Room - Sub location needs power (either move sub or get them to move power)",
           "status": "todo",
           "source": "Pulse",
@@ -4182,6 +4152,18 @@
         },
         {
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: TV Locations w/ no back-box: Trim out wiring with two network jacks using blue and grey Cat6 wires. Blue on bottom.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "PM: Christen, we need rack surveys on Unit 8, Condo 201",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
