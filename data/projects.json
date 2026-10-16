@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-15T16:48:30.570Z",
+  "lastUpdated": "2026-10-16T16:30:40.251Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1339,7 +1339,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 34,
-      "overdueTasks": 6,
+      "overdueTasks": 7,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2636,7 +2636,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 48,
-      "overdueTasks": 6,
+      "overdueTasks": 7,
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
@@ -3989,7 +3989,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 29,
+      "openTasks": 32,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -4008,6 +4008,18 @@
         },
         {
           "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Any chance tomorrow morning, we can get blessing to put in a blank black bottom plate on your TV bac",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Equipment Installation Tracker - Lvl 1: Back box bottom plate needed in the primary bedroom in 201.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4163,7 +4175,13 @@
           "externalUrl": ""
         },
         {
-          "name": "PM: Christen, we need rack surveys on Unit 8, Condo 201",
+          "name": "Install: Test",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: Pro Max 48 PoE Switch pulled from stock",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
