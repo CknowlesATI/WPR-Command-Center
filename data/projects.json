@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-16T16:30:40.251Z",
+  "lastUpdated": "2026-10-19T18:39:45.246Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,8 +11,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 49,
-      "overdueTasks": 4,
+      "openTasks": 47,
+      "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -269,12 +269,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Lvl 1 - AV Mech - missing AV panel cover (see if we can find this onsite somewhere",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -300,12 +294,6 @@
         },
         {
           "name": "Install: Unit 1 - Level 2 - observation 2415 - Av not to right dimension, does not line up (THE REQUEST IS THAT IT NEEDS TO BE CENTERED ON T",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Unit Walkthrough",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -358,22 +346,8 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Lvl 1 - AV Mech - missing AV panel cover (see if we can find this onsite somewhere",
-          "dueDate": "2026-04-20",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
           "dueDate": "2026-06-26",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Unit Walkthrough",
-          "dueDate": "2026-10-05",
           "source": "Pulse"
         }
       ],
@@ -1338,8 +1312,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 34,
-      "overdueTasks": 7,
+      "openTasks": 33,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1500,12 +1474,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Check on TV back-box relocation progress",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -1616,15 +1584,15 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Check on TV back-box relocation progress",
+          "detail": "Rack Build: Family and Flex PDUs do not match in System and Domotz",
           "dueDate": "2026-10-05",
           "source": "Pulse"
         },
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Rack Build: Family and Flex PDUs do not match in System and Domotz",
-          "dueDate": "2026-10-05",
+          "detail": "Warehouse: Parts Shuffle/BackOrder: From Stock (1ea) Innovolt INV-2000 - PO#1237 Receive to the Job - Physically back to stock.",
+          "dueDate": "2026-10-15",
           "source": "Pulse"
         }
       ],
@@ -3989,8 +3957,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 32,
-      "overdueTasks": 4,
+      "openTasks": 33,
+      "overdueTasks": 9,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4133,6 +4101,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Bunkroom: install plate",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -4250,6 +4224,20 @@
           "label": "Overdue task",
           "detail": "Install: Follow-up with electricians regarding outlets in TV back-boxes",
           "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Equipment Installation Tracker - Lvl 1: Any chance tomorrow morning, we can get blessing to put in a blank black bottom plate on your TV bac",
+          "dueDate": "2026-10-16",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Equipment Installation Tracker - Lvl 1: Back box bottom plate needed in the primary bedroom in 201.",
+          "dueDate": "2026-10-16",
           "source": "Pulse"
         }
       ],
@@ -5109,8 +5097,8 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 40,
-      "overdueTasks": 6,
+      "openTasks": 39,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5343,12 +5331,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Need Speaker Grills staged and labelled by room (square and round)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -5426,13 +5408,6 @@
           "detail": "Install: Follow-up regarding Main Lounge Speaker",
           "dueDate": "2026-10-05",
           "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Need Speaker Grills staged and labelled by room (square and round)",
-          "dueDate": "2026-10-08",
-          "source": "Pulse"
         }
       ],
       "links": []
@@ -5447,7 +5422,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 25,
-      "overdueTasks": 9,
+      "overdueTasks": 13,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
