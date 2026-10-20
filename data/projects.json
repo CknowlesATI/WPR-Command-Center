@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-19T18:39:45.246Z",
+  "lastUpdated": "2026-10-20T16:46:37.908Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -358,7 +358,7 @@
       "name": "WPR Unit 2",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "green",
+      "health": "red",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
@@ -2603,7 +2603,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 48,
+      "openTasks": 47,
       "overdueTasks": 7,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -2892,12 +2892,6 @@
         },
         {
           "name": "Rack Build: Missing equipment.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Rack Build: The rack computer, router, switch, nvr, ap's, door stations and camera's are live",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3958,7 +3952,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 33,
-      "overdueTasks": 9,
+      "overdueTasks": 11,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
