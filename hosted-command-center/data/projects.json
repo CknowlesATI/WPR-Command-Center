@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-20T16:46:37.908Z",
+  "lastUpdated": "2026-10-21T17:03:10.352Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -837,7 +837,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 14,
+      "openTasks": 10,
       "overdueTasks": 3,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -894,30 +894,6 @@
           "name": "Install: Was primary closet",
           "status": "todo",
           "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4204: Finish Plywood, Metal, and Roller Shade",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4248: Lockable roller shade needed",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4275: No action needed. Tell us what the cover plate is covering.",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4376: Finish fiber area better - all units",
-          "status": "progress",
-          "source": "Procore",
           "externalUrl": ""
         },
         {
@@ -1011,7 +987,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 34,
+      "openTasks": 33,
       "overdueTasks": 9,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -1197,15 +1173,9 @@
           "externalUrl": ""
         },
         {
-          "name": "Procore #4715: Smurf tube needed for future speaker locations 4” aff from tv back box (review with Tanner)",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #4877: Similar to unit 4 lvl 3, need to add a single Smurf tube from tv down directly below to the right of the outlet below the tv.",
-          "status": "progress",
-          "source": "Procore",
+          "name": "Install: We need to get one pair of wire to each garage door opener next to the mudroom. This is for Control.",
+          "status": "todo",
+          "source": "Pulse",
           "externalUrl": ""
         },
         {
@@ -2603,7 +2573,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 47,
+      "openTasks": 48,
       "overdueTasks": 7,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -2888,6 +2858,12 @@
           "name": "Procore #1062: Missing water bug Unit 8 l3 powder",
           "status": "todo",
           "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: Austin, Please order 10 - 20' 18 guage extension cords. For WPR Townhomes & Condos",
+          "status": "todo",
+          "source": "Pulse",
           "externalUrl": ""
         },
         {
@@ -3368,7 +3344,7 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 23,
+      "openTasks": 24,
       "overdueTasks": 9,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3387,6 +3363,12 @@
         },
         {
           "name": "ATI: Trim Phone/Data wires in Primary Suite.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: ATI: Reconcile parts for final billing.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3512,7 +3494,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Procore #2824: Eric - Unit 101 - 9/17 - 13. Wires need to be aesthetically shortened",
+          "name": "Procore #2824: 101 - Livingroom - Wires need to be aesthetically shortened",
           "status": "progress",
           "source": "Procore",
           "externalUrl": ""
