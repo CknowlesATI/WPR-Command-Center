@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-21T17:03:10.352Z",
+  "lastUpdated": "2026-10-22T17:02:09.342Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -837,7 +837,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 10,
+      "openTasks": 9,
       "overdueTasks": 3,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -874,12 +874,6 @@
         },
         {
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -987,7 +981,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 33,
+      "openTasks": 32,
       "overdueTasks": 9,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -1167,12 +1161,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice roof-top speaker splice points",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: We need to get one pair of wire to each garage door opener next to the mudroom. This is for Control.",
           "status": "todo",
           "source": "Pulse",
@@ -1282,7 +1270,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 33,
+      "openTasks": 29,
       "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1396,12 +1384,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 3: L3 Dining — Install James PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Apple TV 4K (128G)",
           "status": "todo",
           "source": "Pulse",
@@ -1409,12 +1391,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Future Automation PS65",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install James PD42-4 (4)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1438,12 +1414,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install James PD42-4 (4)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -1457,12 +1427,6 @@
         },
         {
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1577,7 +1541,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 54,
+      "openTasks": 53,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1902,12 +1866,6 @@
         },
         {
           "name": "Install: Site walk",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2574,7 +2532,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 48,
-      "overdueTasks": 7,
+      "overdueTasks": 8,
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
