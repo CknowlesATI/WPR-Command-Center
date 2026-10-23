@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-22T17:02:09.342Z",
+  "lastUpdated": "2026-10-23T16:54:45.352Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -362,7 +362,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 63,
+      "openTasks": 62,
       "overdueTasks": 7,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -681,12 +681,6 @@
         },
         {
           "name": "Install: Sonos Will need to be turned over to the customer",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1942,7 +1936,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 82,
+      "openTasks": 81,
       "overdueTasks": 8,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2429,12 +2423,6 @@
         },
         {
           "name": "Install: Site walk",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Splice roof-top speaker splice points",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3302,8 +3290,8 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 24,
-      "overdueTasks": 9,
+      "openTasks": 23,
+      "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": "2026-08-14",
@@ -3450,12 +3438,6 @@
           "status": "progress",
           "source": "Procore",
           "externalUrl": ""
-        },
-        {
-          "name": "Procore #2824: 101 - Livingroom - Wires need to be aesthetically shortened",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -3543,7 +3525,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 43,
+      "openTasks": 44,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3789,6 +3771,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Primary Bathroom: Reinstall the lighting keypad in the Primary Bathroom.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -3838,8 +3826,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-12-07",
+          "end": "2026-12-07",
           "status": ""
         }
       ],
@@ -4126,8 +4114,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-11-09",
+          "end": "2026-11-09",
           "status": ""
         }
       ],
@@ -4397,8 +4385,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-11-09",
+          "end": "2026-11-09",
           "status": ""
         }
       ],
@@ -4971,8 +4959,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-12-07",
+          "end": "2026-12-07",
           "status": ""
         }
       ],
