@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-23T16:54:45.352Z",
+  "lastUpdated": "2026-10-26T18:37:12.947Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1535,7 +1535,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 53,
+      "openTasks": 54,
       "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1860,6 +1860,12 @@
         },
         {
           "name": "Install: Site walk",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: ATI C/O 4.4 Frame TV 10/21/26: Return parts back to stock",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2519,7 +2525,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 48,
+      "openTasks": 50,
       "overdueTasks": 8,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -2530,6 +2536,12 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "Admin: ATI: Please look into possible duplicate back boxes contracted between AV System Proposal & AV Prewire Additions Proposal.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "status": "todo",
@@ -2808,6 +2820,12 @@
         },
         {
           "name": "Rack Build: Austin, Please order 10 - 20' 18 guage extension cords. For WPR Townhomes & Condos",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: Finish Domotz for Cameras and APs",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3290,7 +3308,7 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 23,
+      "openTasks": 22,
       "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3432,12 +3450,6 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
-        },
-        {
-          "name": "Procore #2774: 101 Primary Bed - Make sure TV is 12\" above top of fireplace",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -3526,7 +3538,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 44,
-      "overdueTasks": 5,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -3865,6 +3877,13 @@
           "label": "Overdue task",
           "detail": "Install: Follow-up w/ Electricians regarding outlets in TV back-boxes",
           "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Primary Bathroom: Reinstall the lighting keypad in the Primary Bathroom.",
+          "dueDate": "2026-10-23",
           "source": "Pulse"
         }
       ],
@@ -5343,8 +5362,8 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 25,
-      "overdueTasks": 13,
+      "openTasks": 24,
+      "overdueTasks": 12,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5458,12 +5477,6 @@
         },
         {
           "name": "AV: Punch List: CAM-218 Errors",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: Punch List: Do you by chance have rack ears for a 2U Unifi NVR?",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
