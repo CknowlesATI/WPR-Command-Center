@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-26T18:37:12.947Z",
+  "lastUpdated": "2026-10-27T17:52:42.253Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -2526,7 +2526,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 50,
-      "overdueTasks": 8,
+      "overdueTasks": 7,
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
@@ -2819,12 +2819,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Rack Build: Austin, Please order 10 - 20' 18 guage extension cords. For WPR Townhomes & Condos",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Rack Build: Finish Domotz for Cameras and APs",
           "status": "todo",
           "source": "Pulse",
@@ -2832,6 +2826,12 @@
         },
         {
           "name": "Rack Build: Missing equipment.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Can we get the Security equipment staged for tomorrow, please",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5038,7 +5038,7 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 39,
+      "openTasks": 34,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5104,25 +5104,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Fitness - B123 — Install Sonance PS-C63RTLP (6)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Lockers - B118 — Install Sonance PS-C63RTLP (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Member Lounge - B114 — Install Sonance PS-C63RTLP (4)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Relaxation Suite - B121 — Install Sonance PS-C63RTLP (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5135,18 +5117,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Restroom - B111 — Install Sonance PS-C63RTLP",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Treatment Room - B120 — Install Sonance PS-C63RTLP (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Treatment Room - B122 — Install Sonance PS-C63RTLP (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
