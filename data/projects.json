@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-27T17:52:42.253Z",
+  "lastUpdated": "2026-10-28T18:17:08.402Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,7 +11,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 47,
+      "openTasks": 48,
       "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -22,6 +22,12 @@
         "changeOrders": "None"
       },
       "taskList": [
+        {
+          "name": "ATI PM: Leon: PR44UX-OS - Specifics see notes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
           "status": "todo",
@@ -1265,7 +1271,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 29,
-      "overdueTasks": 6,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1515,13 +1521,6 @@
           "detail": "Rack Build: Family and Flex PDUs do not match in System and Domotz",
           "dueDate": "2026-10-05",
           "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Warehouse: Parts Shuffle/BackOrder: From Stock (1ea) Innovolt INV-2000 - PO#1237 Receive to the Job - Physically back to stock.",
-          "dueDate": "2026-10-15",
-          "source": "Pulse"
         }
       ],
       "links": []
@@ -1536,7 +1535,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 54,
-      "overdueTasks": 4,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1928,6 +1927,13 @@
           "label": "Overdue task",
           "detail": "Install: Site walk",
           "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Warehouse: ATI C/O 4.4 Frame TV 10/21/26: Return parts back to stock",
+          "dueDate": "2026-10-27",
           "source": "Pulse"
         }
       ],
@@ -2525,7 +2531,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 50,
+      "openTasks": 49,
       "overdueTasks": 7,
       "highPriorityTasks": 1,
       "risks": 0,
@@ -2801,12 +2807,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Splice roof-top speaker splice points",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Unit 8 turnover Friday 10/9 - TV Back Boxes - Big D request to cover up \"holes\"",
           "status": "todo",
           "source": "Pulse",
@@ -2819,19 +2819,19 @@
           "externalUrl": ""
         },
         {
+          "name": "Rack Build: Christen, Can we do a handoff tomorrow morning with you and the install techs for Unit 8 ? It should only take 10 minutes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Rack Build: Finish Domotz for Cameras and APs",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "Rack Build: Missing equipment.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Can we get the Security equipment staged for tomorrow, please",
+          "name": "Rack Build: Please turn on \"Auto Reboot\" on pdu 1 and pdu 2 when rack is installed and powered.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3899,7 +3899,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 33,
-      "overdueTasks": 11,
+      "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4090,7 +4090,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Test",
+          "name": "Rack Build: Please turn on \"Auto Reboot\" when rack is installed and powered",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4443,8 +4443,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 83,
-      "overdueTasks": 14,
+      "openTasks": 85,
+      "overdueTasks": 16,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4454,6 +4454,18 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "ATI PM: Need Specifics: Leon Hz44UX-LR",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "ATI PM: Need Specifics: Leon Hz44UX-LR-OS",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "ATI: Parts needing removed from inventory (prewire)",
           "status": "todo",
@@ -5038,7 +5050,7 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 34,
+      "openTasks": 31,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5049,12 +5061,6 @@
         "changeOrders": "Pending"
       },
       "taskList": [
-        {
-          "name": "Admin: Need Current AV system C/O approved 0515 2.1",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Admin: Prewire Additions 0678 needs approved (covers back boxes)",
           "status": "todo",
@@ -5099,24 +5105,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Fitness - B123 — Install Snap One WB-250-IPW-2 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Lockers - B118 — Install Sonance PS-C63RTLP (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Restroom - B110 — Install Sonance PS-C63RTLP",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Restroom - B111 — Install Sonance PS-C63RTLP",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5237,6 +5225,12 @@
         },
         {
           "name": "Install: Head end wiring needs pulled into Mech Room once ladder tray is confirmed installed",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Project Handoff ? - do we have info for zones / speakers / amplifiers stated in system scope? Taps for 70v speakers should be set w",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5566,7 +5560,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 0,
+      "openTasks": 1,
       "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5576,7 +5570,14 @@
         "deposit": "",
         "changeOrders": ""
       },
-      "taskList": [],
+      "taskList": [
+        {
+          "name": "Admin: Turn off lights on all WAPs",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
