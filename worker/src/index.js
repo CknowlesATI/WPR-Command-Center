@@ -1,3 +1,4 @@
+import { normalizePlanningItem } from "./planning-contract.js";
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
   "access-control-allow-origin": "*",
@@ -44,6 +45,10 @@ export default {
         const body = await request.json();
         if (body.action === "authorize") return json(await createSession(body, env));
         const actor = await authorizeWrite(request, env);
+        if (body.action === "listPlanningItems") {
+          if (actor.syncOnly) return json({ok:false,error:"Not authorized"},403);
+          return json({ok:true,planningItems:await listPlanningItems(env.DB, body)});
+        }
         const result = await applyAction(env.DB, body, actor, env);
         if (actor.syncOnly) return json({ ok: true, result: result || null });
         return json({ ok: true, data: await getAllData(env.DB), settings: await getSettings(env.DB, env) });
@@ -63,6 +68,8 @@ async function applyAction(db, body, actor, env) {
   }
   if (body.action === "ensureProcoreReviewProject") return ensureProcoreReviewProject(db);
 
+  if (body.action === "createPlanningItem") return createPlanningItem(db, body, actor);
+  if (body.action === "setPlanningStatus") return setPlanningStatus(db, body, actor);
   if (body.action === "updateProjectControl") return updateProjectControl(db, body, actor);
   if (body.action === "updateTimeline") return updateTimeline(db, body);
   if (body.action === "syncPulseTimelines") return syncPulseTimelines(db, body, actor);
@@ -1083,4 +1090,48 @@ function currentIsoMinute() {
 
 function json(value, status = 200) {
   return new Response(JSON.stringify(value), { status, headers: JSON_HEADERS });
+}
+
+
+// Planning records are separate from Pulse/Procore sync-owned tasks.
+async function listPlanningItems(db, body) {
+  const projectId = String(body.projectId || "").trim();
+  const result = projectId
+    ? await db.prepare("SELECT * FROM planning_items WHERE project_id = ? ORDER BY follow_up_date, due_date, id").bind(projectId).all()
+    : await db.prepare("SELECT * FROM planning_items ORDER BY project_id, follow_up_date, due_date, id LIMIT 1000").all();
+  return (result.results || []).map(r => ({
+    id:r.id,projectId:r.project_id,unitLabel:r.unit_label,title:r.title,description:r.description,
+    itemType:r.item_type,status:r.status,priority:r.priority,owner:r.owner,
+    startDate:r.start_date,dueDate:r.due_date,followUpDate:r.follow_up_date,
+    verificationNote:r.verification_note,sourceTaskId:r.source_task_id||"",updatedAt:r.updated_at
+  }));
+}
+async function createPlanningItem(db, body, actor) {
+  const p = normalizePlanningItem(body.item);
+  const project = await db.prepare("SELECT id FROM projects WHERE id = ?").bind(p.projectId).first();
+  if (!project) throw new Error("Planning project not found");
+  const id = crypto.randomUUID();
+  const now = new Date().toISOString();
+  await db.batch([
+    db.prepare("INSERT INTO planning_items (id,project_id,unit_label,title,description,item_type,status,priority,owner,start_date,due_date,follow_up_date,verification_note,source_task_id,created_at,updated_at,updated_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+      .bind(id,p.projectId,p.unitLabel,p.title,p.description,p.itemType,p.status,p.priority,p.owner,p.startDate,p.dueDate,p.followUpDate,p.verificationNote,p.sourceTaskId||null,now,now,actor.initials),
+    db.prepare("INSERT INTO planning_events (item_id,changed_at,changed_by,action,detail) VALUES (?,?,?,?,?)")
+      .bind(id,now,actor.initials,"created",p.title)
+  ]);
+  return {id};
+}
+async function setPlanningStatus(db, body, actor) {
+  const id=required(body.itemId,"itemId");
+  const status=String(body.status||"").trim();
+  if (!["open","in_progress","waiting","verify","done","cancelled"].includes(status)) throw new Error("Invalid planning status");
+  const row=await db.prepare("SELECT status,follow_up_date FROM planning_items WHERE id = ?").bind(id).first();
+  if (!row) throw new Error("Planning item not found");
+  if (["waiting","verify"].includes(status)&&!row.follow_up_date) throw new Error("Follow-up date required");
+  if (status==="done"&&!String(body.verificationNote||"").trim()) throw new Error("Completion requires verification note");
+  const now=new Date().toISOString();
+  await db.batch([
+    db.prepare("UPDATE planning_items SET status = ?, verification_note = CASE WHEN ? = 'done' THEN ? ELSE verification_note END, completed_at = CASE WHEN ? = 'done' THEN ? ELSE '' END,updated_at = ?,updated_by = ? WHERE id = ?").bind(status,status,String(body.verificationNote||"").trim().slice(0,1000),status,now,now,actor.initials,id),
+    db.prepare("INSERT INTO planning_events (item_id,changed_at,changed_by,action,detail) VALUES (?,?,?,?,?)").bind(id,now,actor.initials,"status",row.status+" -> "+status)
+  ]);
+  return {id,status};
 }
