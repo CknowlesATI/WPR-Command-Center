@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-28T18:17:08.402Z",
+  "lastUpdated": "2026-10-29T18:22:27.744Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -12,7 +12,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 48,
-      "overdueTasks": 2,
+      "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -354,6 +354,13 @@
           "label": "Overdue task",
           "detail": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
           "dueDate": "2026-06-26",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "ATI PM: Leon: PR44UX-OS - Specifics see notes",
+          "dueDate": "2026-10-28",
           "source": "Pulse"
         }
       ],
@@ -1271,7 +1278,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 29,
-      "overdueTasks": 5,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1520,6 +1527,13 @@
           "label": "Overdue task",
           "detail": "Rack Build: Family and Flex PDUs do not match in System and Domotz",
           "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Warehouse: Parts Shuffle/BackOrder: From Stock (1ea) Innovolt INV-2000 - PO#1237 Receive to the Job - Physically back to stock.",
+          "dueDate": "2026-10-28",
           "source": "Pulse"
         }
       ],
@@ -2532,7 +2546,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 49,
-      "overdueTasks": 7,
+      "overdueTasks": 8,
       "highPriorityTasks": 1,
       "risks": 0,
       "nextHandoff": null,
