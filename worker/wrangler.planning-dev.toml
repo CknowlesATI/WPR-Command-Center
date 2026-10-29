@@ -1,0 +1,16 @@
+# Isolated development Worker (NOT deployed)
+name = "wpr-command-center-planning-dev"
+main = "src/dev-index.js"
+compatibility_date = "2026-10-28"
+
+# Fail-closed: deployment requires a DIFFERENT D1 database, created intentionally.
+# Add the separate database binding only after creating a new dev database:
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "wpr-command-center-planning-dev"
+# database_id = "<NEW DEVELOPMENT DATABASE ID>"
+
+# After establishing Cloudflare Access:
+# [vars]
+# ACCESS_TEAM_DOMAIN = "<your-team>.cloudflareaccess.com"
+# ACCESS_AUD = "<development application audience>"
