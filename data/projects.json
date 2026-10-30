@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-29T18:22:27.744Z",
+  "lastUpdated": "2026-10-30T18:03:16.329Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,8 +11,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 48,
-      "overdueTasks": 3,
+      "openTasks": 47,
+      "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -22,12 +22,6 @@
         "changeOrders": "None"
       },
       "taskList": [
-        {
-          "name": "ATI PM: Leon: PR44UX-OS - Specifics see notes",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
           "status": "todo",
@@ -355,13 +349,6 @@
           "detail": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
           "dueDate": "2026-06-26",
           "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "ATI PM: Leon: PR44UX-OS - Specifics see notes",
-          "dueDate": "2026-10-28",
-          "source": "Pulse"
         }
       ],
       "links": []
@@ -375,8 +362,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 62,
-      "overdueTasks": 7,
+      "openTasks": 61,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -388,12 +375,6 @@
       "taskList": [
         {
           "name": "Admin: Big-D Information Request - go into system to double check product documentation. Wwhat they are asking for is in the notes. (AV/Secu",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -800,13 +781,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
-          "dueDate": "2026-08-14",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Warehouse: ATI C/O Revision 5 - Return parts back to stock",
           "dueDate": "2026-08-21",
           "source": "Pulse"
@@ -830,6 +804,13 @@
           "label": "Overdue task",
           "detail": "Install: Review room-by-room installation to-dos and check off accordingly",
           "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Level 3: Adjust pendant speaker so that it's square with the beams",
+          "dueDate": "2026-10-12",
           "source": "Pulse"
         }
       ],
@@ -1962,7 +1943,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 81,
+      "openTasks": 82,
       "overdueTasks": 8,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2458,6 +2439,12 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
+        },
+        {
+          "name": "Procore #893: Unit 07 A/V complete in AV room",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -2545,9 +2532,9 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 49,
+      "openTasks": 50,
       "overdueTasks": 8,
-      "highPriorityTasks": 1,
+      "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -2824,6 +2811,12 @@
           "name": "Install: Unit 8 turnover Friday 10/9 - TV Back Boxes - Big D request to cover up \"holes\"",
           "status": "todo",
           "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #1042: Unit 08 All shade wire to be cut back",
+          "status": "todo",
+          "source": "Procore",
           "externalUrl": ""
         },
         {
