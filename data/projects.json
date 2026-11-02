@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-30T18:03:16.329Z",
+  "lastUpdated": "2026-11-02T21:39:20.351Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -2532,7 +2532,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 50,
+      "openTasks": 47,
       "overdueTasks": 8,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -2670,12 +2670,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 3: L3 Dining — Install James PD62 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Apple TV 4K (128G)",
           "status": "todo",
           "source": "Pulse",
@@ -2683,12 +2677,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install Future Automation PS65",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 3: L3 Flex — Install James PD62 (4)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2749,12 +2737,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install Future Automation PS65",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 3: L3 Living Room — Install James PD62 (4)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2929,7 +2911,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 5,
+      "openTasks": 6,
       "overdueTasks": 1,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -2942,6 +2924,12 @@
       "taskList": [
         {
           "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Level 3: Move BackBox in Library/Office to Center of wall.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5058,7 +5046,7 @@
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
       "openTasks": 31,
-      "overdueTasks": 5,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5320,6 +5308,13 @@
           "detail": "Install: Follow-up regarding Main Lounge Speaker",
           "dueDate": "2026-10-05",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Project Handoff ? - do we have info for zones / speakers / amplifiers stated in system scope? Taps for 70v speakers should be set w",
+          "dueDate": "2026-10-30",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -5333,7 +5328,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 24,
+      "openTasks": 25,
       "overdueTasks": 12,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5382,6 +5377,12 @@
         },
         {
           "name": "AV: BL - Rack Room: Get a latch for the side of the 2-post",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Rack Room: Order a set of 2U rack ears from Ubiquiti store for the NVR that was brought back on a CO. Originals were lost.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5567,7 +5568,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 1,
+      "openTasks": 0,
       "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5577,14 +5578,7 @@
         "deposit": "",
         "changeOrders": ""
       },
-      "taskList": [
-        {
-          "name": "Admin: Turn off lights on all WAPs",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        }
-      ],
+      "taskList": [],
       "timelines": [
         {
           "key": "prewire",
