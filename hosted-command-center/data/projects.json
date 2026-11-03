@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-02T21:39:20.351Z",
+  "lastUpdated": "2026-11-03T19:24:29.062Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -362,7 +362,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 61,
+      "openTasks": 57,
       "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -707,30 +707,6 @@
           "name": "Install: Wire and lable TVs BED 1,2,3 Primary and flex",
           "status": "todo",
           "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #3438: Install motion sensor",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #3466: Roller Shade needs to hide the white",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #3483: Shade Box Not Level",
-          "status": "progress",
-          "source": "Procore",
-          "externalUrl": ""
-        },
-        {
-          "name": "Procore #3546: Roller Shade is out of drywall",
-          "status": "progress",
-          "source": "Procore",
           "externalUrl": ""
         },
         {
@@ -1529,8 +1505,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 54,
-      "overdueTasks": 5,
+      "openTasks": 53,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1540,12 +1516,6 @@
         "changeOrders": "Pending"
       },
       "taskList": [
-        {
-          "name": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 1 — Install Apple TV 4K (128G)",
           "status": "todo",
@@ -1913,13 +1883,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
-          "dueDate": "2026-07-31",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Install: Site walk",
           "dueDate": "2026-10-05",
           "source": "Pulse"
@@ -1943,8 +1906,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 82,
-      "overdueTasks": 8,
+      "openTasks": 81,
+      "overdueTasks": 7,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2082,12 +2045,6 @@
         },
         {
           "name": "Admin: Lvl 3 Flex Room - will need horizontal adapter for mounting TV at install",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Admin: Solus: Need to Refund Kyle for Enclosures that have been contracted with Homeowner.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3303,7 +3260,7 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 22,
+      "openTasks": 23,
       "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3442,6 +3399,12 @@
         },
         {
           "name": "Install: Turn auto reboot back on in rack PDU 1 once rack is up and running stable.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: We currently don't have an outlet for Starlink.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3893,7 +3856,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 33,
+      "openTasks": 29,
       "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3947,18 +3910,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Bed 2 — Install Ubiquiti U7-Pro-Max",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Bed 5 — Install Ubiquiti U7-Pro-Max",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Apple TV 4K (128G)",
           "status": "todo",
           "source": "Pulse",
@@ -3972,12 +3923,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Samsung QN75QN80FAFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4002,12 +3947,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Pantry — Install Ubiquiti U7-Pro-Max",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Primary Closet — Install Ubiquiti U7-Pro-Max",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5328,8 +5267,8 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 25,
-      "overdueTasks": 12,
+      "openTasks": 23,
+      "overdueTasks": 11,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5353,12 +5292,6 @@
         },
         {
           "name": "AV: Admin: Update Solar System Network drawings",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: BL - Gun Display: Install 10U rack w/ all related equipment",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5389,12 +5322,6 @@
         },
         {
           "name": "AV: LL - Batcave: Entry: Remove camera back-box and install flat black plate",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: LL - Batcave: Install X2 cameras on East Wall",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5531,13 +5458,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "AV: LL - Batcave: Install X2 cameras on East Wall",
-          "dueDate": "2026-10-07",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "AV: LL - Theater: Run an audio calibration",
           "dueDate": "2026-10-08",
           "source": "Pulse"
@@ -5554,6 +5474,13 @@
           "label": "Overdue task",
           "detail": "AV: LL Gym: Lower tv so the backbox is not visible",
           "dueDate": "2026-10-08",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "AV: BL - Gun Display: Wiring/HDMI to new TV location",
+          "dueDate": "2026-10-09",
           "source": "Pulse"
         }
       ],
