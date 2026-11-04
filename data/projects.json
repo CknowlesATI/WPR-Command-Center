@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-03T19:24:29.062Z",
+  "lastUpdated": "2026-11-04T19:39:54.642Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -2490,7 +2490,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 47,
-      "overdueTasks": 8,
+      "overdueTasks": 9,
       "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
@@ -3260,7 +3260,7 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 23,
+      "openTasks": 25,
       "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3314,12 +3314,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Add Power splitter off of rack fans Outlet For Allwest Modem.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Clean up Pendant Speaker Wires.",
           "status": "todo",
           "source": "Pulse",
@@ -3344,6 +3338,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Glue the IR emitters onto the remaining TVs, following the primary-bedroom sound bar installation.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Install Starlink on Penthouse rooftop",
           "status": "todo",
           "source": "Pulse",
@@ -3362,6 +3362,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Power Whips",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -3375,6 +3381,12 @@
         },
         {
           "name": "Install: Run conduit and wiring for Starlink",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: SA20 off the floor",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3857,7 +3869,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 29,
-      "overdueTasks": 10,
+      "overdueTasks": 11,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5267,8 +5279,8 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 23,
-      "overdueTasks": 11,
+      "openTasks": 22,
+      "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5322,12 +5334,6 @@
         },
         {
           "name": "AV: LL - Batcave: Entry: Remove camera back-box and install flat black plate",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: LL - Theater: Run an audio calibration",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5458,13 +5464,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "AV: LL - Theater: Run an audio calibration",
-          "dueDate": "2026-10-08",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "AV: LL Gym: Look into centering the TV on cabinet",
           "dueDate": "2026-10-08",
           "source": "Pulse"
@@ -5480,6 +5479,13 @@
           "severity": "red",
           "label": "Overdue task",
           "detail": "AV: BL - Gun Display: Wiring/HDMI to new TV location",
+          "dueDate": "2026-10-09",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "AV: BL - Rack Room: Get a latch for the side of the 2-post",
           "dueDate": "2026-10-09",
           "source": "Pulse"
         }
