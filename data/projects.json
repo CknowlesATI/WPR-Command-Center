@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-04T19:39:54.642Z",
+  "lastUpdated": "2026-11-05T19:50:01.275Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -807,7 +807,7 @@
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
-        "contract": "",
+        "contract": "Accepted",
         "deposit": "",
         "changeOrders": ""
       },
@@ -2489,7 +2489,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 47,
+      "openTasks": 46,
       "overdueTasks": 9,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -2586,12 +2586,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Samsung QN85LS03FWFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Sonance VX66R (4)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2869,7 +2863,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 6,
-      "overdueTasks": 1,
+      "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2952,6 +2946,13 @@
           "label": "Overdue task",
           "detail": "Install: WB Back boxes are onsite (9 total) - these need to be installed. Some areas still need framing finished. (talk to Bill about which ",
           "dueDate": "2026-06-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Level 3: Move BackBox in Library/Office to Center of wall.",
+          "dueDate": "2026-11-04",
           "source": "Pulse"
         }
       ],
@@ -3260,7 +3261,7 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 25,
+      "openTasks": 28,
       "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3332,6 +3333,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Flex - SP-117 Showing Short",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Garage Mech Room: Need to determine how wiring is going to be managed. Follow-up with SIGIL regarding this",
           "status": "todo",
           "source": "Pulse",
@@ -3351,6 +3358,18 @@
         },
         {
           "name": "Install: Install speaker grill in Master Closet",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Kitchen - SP-120 showing short",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Living Room - SP-125 showing short",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4389,7 +4408,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 85,
+      "openTasks": 86,
       "overdueTasks": 16,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -4909,6 +4928,12 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Pull from Stock and Stage Pallet: JL Audio D108-Gloss",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -4996,7 +5021,7 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 31,
+      "openTasks": 32,
       "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5152,6 +5177,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Did we get confirmation of the wiring for the 3 volume control zones downstairs so the as-builts can be updated?",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -5279,7 +5310,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 22,
+      "openTasks": 21,
       "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5322,12 +5353,6 @@
         },
         {
           "name": "AV: BL - Rack Room: Get a latch for the side of the 2-post",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: BL - Rack Room: Order a set of 2U rack ears from Ubiquiti store for the NVR that was brought back on a CO. Originals were lost.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
