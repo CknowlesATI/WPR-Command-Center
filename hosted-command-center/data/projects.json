@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-05T19:50:01.275Z",
+  "lastUpdated": "2026-11-06T19:14:40.023Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -801,7 +801,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 9,
+      "openTasks": 10,
       "overdueTasks": 3,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -812,6 +812,12 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "Admin: Please add Townhome Unit 3 to Pulse System",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "Admin: Unit 3 - Observation #2027: QC - FIELD OBSERVATION - Doorbell Wrong Location",
           "status": "todo",
@@ -941,13 +947,13 @@
       "name": "WPR Unit 4",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "amber",
+      "health": "green",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
       "openTasks": 32,
       "overdueTasks": 9,
-      "highPriorityTasks": 1,
+      "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -1132,7 +1138,7 @@
         },
         {
           "name": "Procore #4890: Need to adjust all Smurf tubes to be 2” in unit 4",
-          "status": "todo",
+          "status": "progress",
           "source": "Procore",
           "externalUrl": ""
         },
@@ -2489,7 +2495,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 46,
+      "openTasks": 42,
       "overdueTasks": 9,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -2567,12 +2573,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 2: L2 Bedroom 3 — Install Ubiquiti U7-Pro-Max",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Apple TV 4K (128G)",
           "status": "todo",
           "source": "Pulse",
@@ -2586,18 +2586,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 2: L2 Family Room — Install Samsung QN85LS03FWFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Bath — Install Sonance VX66R (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 2: L2 Primary Closet — Install Ubiquiti U7-Pro-Max",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2652,12 +2640,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 3: L3 Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 3: L3 Kitchen — Install Sonance VX66R (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3261,8 +3243,8 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 28,
-      "overdueTasks": 10,
+      "openTasks": 25,
+      "overdueTasks": 8,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": "2026-08-14",
@@ -3321,12 +3303,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Condo 101 Master Bed TV – move TV up as far as possible",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -3352,12 +3328,6 @@
         },
         {
           "name": "Install: Install Starlink on Penthouse rooftop",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Install speaker grill in Master Closet",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3394,12 +3364,6 @@
         },
         {
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Run conduit and wiring for Starlink",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3496,13 +3460,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Install speaker grill in Master Closet",
-          "dueDate": "2026-10-01",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Admin: Markup Drawings - Primary Closet change from 2 speakers to 1 DVC",
           "dueDate": "2026-10-05",
           "source": "Pulse"
@@ -3511,6 +3468,13 @@
           "severity": "red",
           "label": "Overdue task",
           "detail": "Install: Garage Mech Room: Need to determine how wiring is going to be managed. Follow-up with SIGIL regarding this",
+          "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Install Starlink on Penthouse rooftop",
           "dueDate": "2026-10-05",
           "source": "Pulse"
         }
@@ -4408,8 +4372,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 86,
-      "overdueTasks": 16,
+      "openTasks": 83,
+      "overdueTasks": 14,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4419,18 +4383,6 @@
         "changeOrders": ""
       },
       "taskList": [
-        {
-          "name": "ATI PM: Need Specifics: Leon Hz44UX-LR",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "ATI PM: Need Specifics: Leon Hz44UX-LR-OS",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "ATI: Parts needing removed from inventory (prewire)",
           "status": "todo",
@@ -4928,12 +4880,6 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Pull from Stock and Stage Pallet: JL Audio D108-Gloss",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -5022,7 +4968,7 @@
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
       "openTasks": 32,
-      "overdueTasks": 6,
+      "overdueTasks": 7,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5310,7 +5256,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 21,
+      "openTasks": 24,
       "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5443,6 +5389,24 @@
         },
         {
           "name": "AV: UL - Loft: Prep shielded cat6 for Starlink connection",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Camer NVR offline - Thursday 11-5-26 2:38pm",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Current Devices Offline",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: What did the Axis camera password get set to? The default does not work",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
