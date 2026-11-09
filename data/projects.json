@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-06T19:14:40.023Z",
+  "lastUpdated": "2026-11-09T22:13:52.305Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -7,7 +7,7 @@
       "name": "WPR Unit 1",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "pending",
+      "health": "green",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
@@ -316,8 +316,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-02-23",
-          "end": "2026-02-23",
+          "start": "2026-11-12",
+          "end": "2026-11-12",
           "status": "complete"
         },
         {
@@ -330,8 +330,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2026-12-07",
+          "end": "2026-12-07",
           "status": ""
         }
       ],
@@ -358,7 +358,7 @@
       "name": "WPR Unit 2",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "red",
+      "health": "green",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
@@ -727,8 +727,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": null,
-          "end": null,
+          "start": "2026-10-05",
+          "end": "2026-10-05",
           "status": "complete"
         },
         {
@@ -741,8 +741,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-10-19",
-          "end": "2026-10-19",
+          "start": "2027-01-04",
+          "end": "2027-01-04",
           "status": ""
         }
       ],
@@ -797,7 +797,7 @@
       "name": "WPR Unit 3",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "pending",
+      "health": "amber",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
@@ -884,8 +884,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-03-09",
-          "end": "2026-03-09",
+          "start": "2026-12-01",
+          "end": "2026-12-01",
           "status": "complete"
         },
         {
@@ -898,8 +898,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": null,
-          "end": null,
+          "start": "2027-01-11",
+          "end": "2027-01-11",
           "status": ""
         }
       ],
@@ -1166,8 +1166,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": null,
-          "end": null,
+          "start": "2026-11-16",
+          "end": "2026-11-16",
           "status": "complete"
         },
         {
@@ -1180,8 +1180,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-11-10",
-          "end": "2026-11-10",
+          "start": "2026-12-16",
+          "end": "2026-12-16",
           "status": ""
         }
       ],
@@ -1236,7 +1236,7 @@
       "name": "WPR Unit 5",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "red",
+      "health": "green",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
@@ -1437,8 +1437,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-03-16",
-          "end": "2026-03-16",
+          "start": "2026-10-05",
+          "end": "2026-10-05",
           "status": "complete"
         },
         {
@@ -1451,8 +1451,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-09-14",
-          "end": "2026-09-14",
+          "start": "2026-11-19",
+          "end": "2026-11-19",
           "status": ""
         }
       ],
@@ -1507,7 +1507,7 @@
       "name": "WPR Unit 6",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "red",
+      "health": "green",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
@@ -1852,8 +1852,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-03-16",
-          "end": "2026-03-16",
+          "start": "2026-12-03",
+          "end": "2026-12-03",
           "status": "complete"
         },
         {
@@ -1866,8 +1866,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-09-14",
-          "end": "2026-09-14",
+          "start": "2026-12-22",
+          "end": "2026-12-22",
           "status": ""
         }
       ],
@@ -1908,7 +1908,7 @@
       "name": "WPR Unit 7",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "red",
+      "health": "green",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
@@ -2421,8 +2421,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-03-23",
-          "end": "2026-03-23",
+          "start": "2026-12-04",
+          "end": "2026-12-04",
           "status": ""
         },
         {
@@ -2435,8 +2435,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-10-05",
-          "end": "2026-10-05",
+          "start": "2026-12-28",
+          "end": "2026-12-28",
           "status": ""
         }
       ],
@@ -2491,11 +2491,11 @@
       "name": "WPR Unit 8",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "red",
+      "health": "amber",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 42,
+      "openTasks": 41,
       "overdueTasks": 9,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -2741,12 +2741,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Rack Build: Christen, Can we do a handoff tomorrow morning with you and the install techs for Unit 8 ? It should only take 10 minutes",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Rack Build: Finish Domotz for Cameras and APs",
           "status": "todo",
           "source": "Pulse",
@@ -2770,8 +2764,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-03-23",
-          "end": "2026-03-23",
+          "start": "2026-11-09",
+          "end": "2026-11-09",
           "status": "active"
         },
         {
@@ -2784,8 +2778,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-10-05",
-          "end": "2026-10-05",
+          "start": "2026-11-16",
+          "end": "2026-11-16",
           "status": ""
         }
       ],
@@ -2840,13 +2834,13 @@
       "name": "WPR Unit 9",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "green",
+      "health": "amber",
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 6,
+      "openTasks": 10,
       "overdueTasks": 2,
-      "highPriorityTasks": 0,
+      "highPriorityTasks": 4,
       "risks": 0,
       "nextHandoff": null,
       "approvalsPayments": {
@@ -2889,6 +2883,30 @@
           "name": "Install: WB Back boxes are onsite (9 total) - these need to be installed. Some areas still need framing finished. (talk to Bill about which ",
           "status": "todo",
           "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #366: WPR Observation TH Unit 9 There are several penetrations through the CLT that are not caulked.",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #381: WPR Observation TH Unit 9 Acoustical caulk around wires",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #385: WPR Observation TH Unit 9 Acoustical caulk needed around wire",
+          "status": "todo",
+          "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Procore #388: WPR Observation TH Unit 9 Acoustical caulk drywall to CLT",
+          "status": "todo",
+          "source": "Procore",
           "externalUrl": ""
         }
       ],
@@ -2936,6 +2954,34 @@
           "detail": "Install: Level 3: Move BackBox in Library/Office to Center of wall.",
           "dueDate": "2026-11-04",
           "source": "Pulse"
+        },
+        {
+          "severity": "green",
+          "label": "New",
+          "detail": "Procore #366: WPR Observation TH Unit 9 There are several penetrations through the CLT that are not caulked.",
+          "dueDate": null,
+          "source": "Procore"
+        },
+        {
+          "severity": "green",
+          "label": "New",
+          "detail": "Procore #381: WPR Observation TH Unit 9 Acoustical caulk around wires",
+          "dueDate": null,
+          "source": "Procore"
+        },
+        {
+          "severity": "green",
+          "label": "New",
+          "detail": "Procore #385: WPR Observation TH Unit 9 Acoustical caulk needed around wire",
+          "dueDate": null,
+          "source": "Procore"
+        },
+        {
+          "severity": "green",
+          "label": "New",
+          "detail": "Procore #388: WPR Observation TH Unit 9 Acoustical caulk drywall to CLT",
+          "dueDate": null,
+          "source": "Procore"
         }
       ],
       "links": []
@@ -3239,12 +3285,12 @@
       "name": "WPR Condo 101",
       "area": "Condos/Penthouse",
       "team": "Big-D Condos/Penthouse",
-      "health": "red",
+      "health": "green",
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
       "openTasks": 25,
-      "overdueTasks": 8,
+      "overdueTasks": 12,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": "2026-08-14",
@@ -3430,8 +3476,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-08-24",
-          "end": "2026-08-24",
+          "start": "2026-11-09",
+          "end": "2026-11-09",
           "status": ""
         }
       ],
@@ -3777,8 +3823,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-09-28",
-          "end": "2026-09-28",
+          "start": "2026-11-24",
+          "end": "2026-11-24",
           "status": "active"
         },
         {
@@ -3791,8 +3837,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-12-07",
-          "end": "2026-12-07",
+          "start": "2026-11-30",
+          "end": "2026-11-30",
           "status": ""
         }
       ],
@@ -4048,8 +4094,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-10-05",
-          "end": "2026-10-05",
+          "start": "2026-11-19",
+          "end": "2026-11-19",
           "status": "active"
         },
         {
@@ -4062,8 +4108,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-11-09",
-          "end": "2026-11-09",
+          "start": "2026-11-23",
+          "end": "2026-11-23",
           "status": ""
         }
       ],
@@ -4319,8 +4365,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-10-05",
-          "end": "2026-10-05",
+          "start": "2026-11-19",
+          "end": "2026-11-19",
           "status": "active"
         },
         {
@@ -4333,8 +4379,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-11-09",
-          "end": "2026-11-09",
+          "start": "2026-12-17",
+          "end": "2026-12-17",
           "status": ""
         }
       ],
@@ -4893,8 +4939,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-10-12",
-          "end": "2026-10-12",
+          "start": "2026-12-09",
+          "end": "2026-12-09",
           "status": "active"
         },
         {
@@ -4907,8 +4953,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-12-07",
-          "end": "2026-12-07",
+          "start": "2026-12-30",
+          "end": "2026-12-30",
           "status": ""
         }
       ],
@@ -4967,7 +5013,7 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 32,
+      "openTasks": 33,
       "overdueTasks": 7,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5169,6 +5215,12 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
+        },
+        {
+          "name": "Procore #832: Speaker not centered in T&G",
+          "status": "progress",
+          "source": "Procore",
+          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -5182,8 +5234,8 @@
         {
           "key": "trim",
           "label": "Trim",
-          "start": "2026-11-02",
-          "end": "2026-11-02",
+          "start": "2026-11-23",
+          "end": "2026-11-23",
           "status": ""
         },
         {
@@ -5196,8 +5248,8 @@
         {
           "key": "install",
           "label": "Install",
-          "start": "2026-11-16",
-          "end": "2026-11-16",
+          "start": "2026-12-14",
+          "end": "2026-12-14",
           "status": ""
         }
       ],
@@ -5257,7 +5309,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 24,
-      "overdueTasks": 10,
+      "overdueTasks": 13,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
