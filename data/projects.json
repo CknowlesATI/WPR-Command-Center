@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-09T22:13:52.305Z",
+  "lastUpdated": "2026-11-10T19:37:02.799Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1912,8 +1912,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 81,
-      "overdueTasks": 7,
+      "openTasks": 82,
+      "overdueTasks": 8,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2407,6 +2407,12 @@
           "name": "Procore #893: Unit 07 A/V complete in AV room",
           "status": "progress",
           "source": "Procore",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Please stage bin for this job.",
+          "status": "todo",
+          "source": "Pulse",
           "externalUrl": ""
         }
       ],
@@ -3285,7 +3291,7 @@
       "name": "WPR Condo 101",
       "area": "Condos/Penthouse",
       "team": "Big-D Condos/Penthouse",
-      "health": "green",
+      "health": "red",
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
@@ -5542,7 +5548,7 @@
       "phase": "Pre-Wire",
       "startDate": null,
       "endDate": null,
-      "openTasks": 0,
+      "openTasks": 3,
       "overdueTasks": 0,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5552,7 +5558,26 @@
         "deposit": "",
         "changeOrders": ""
       },
-      "taskList": [],
+      "taskList": [
+        {
+          "name": "Satcom - Prewire: In the Lower level bar we need roughly 10 feet of plastic conduit and two 90 conduit pieces for the bar to get the flood w",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Satcom - Prewire: In the main level powder, the wire for the toilet needs to be moved. They added an extra 2 x 6 wall.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Satcom - Prewire: In the master bedroom closet, the flood is on the opposite wall from where the washer and dryer will be",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        }
+      ],
       "timelines": [
         {
           "key": "prewire",
