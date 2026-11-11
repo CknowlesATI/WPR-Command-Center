@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-10T19:37:02.799Z",
+  "lastUpdated": "2026-11-11T19:29:29.954Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -1912,8 +1912,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 82,
-      "overdueTasks": 8,
+      "openTasks": 81,
+      "overdueTasks": 7,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -2408,12 +2408,6 @@
           "status": "progress",
           "source": "Procore",
           "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Please stage bin for this job.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -2501,8 +2495,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 41,
-      "overdueTasks": 9,
+      "openTasks": 40,
+      "overdueTasks": 8,
       "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
@@ -2512,12 +2506,6 @@
         "changeOrders": ""
       },
       "taskList": [
-        {
-          "name": "Admin: ATI: Please look into possible duplicate back boxes contracted between AV System Proposal & AV Prewire Additions Proposal.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "status": "todo",
@@ -3295,8 +3283,8 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 25,
-      "overdueTasks": 12,
+      "openTasks": 23,
+      "overdueTasks": 11,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": "2026-08-14",
@@ -3361,19 +3349,7 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Flex - SP-117 Showing Short",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Garage Mech Room: Need to determine how wiring is going to be managed. Follow-up with SIGIL regarding this",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Glue the IR emitters onto the remaining TVs, following the primary-bedroom sound bar installation.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
