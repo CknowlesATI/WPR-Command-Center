@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-11T19:29:29.954Z",
+  "lastUpdated": "2026-11-12T19:48:34.881Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,7 +11,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 47,
+      "openTasks": 48,
       "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -299,6 +299,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Rack Build: Add APs to Domotz after install",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "This is a test",
           "status": "todo",
           "source": "Command Center",
@@ -362,8 +368,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 57,
-      "overdueTasks": 6,
+      "openTasks": 56,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -373,12 +379,6 @@
         "changeOrders": "None"
       },
       "taskList": [
-        {
-          "name": "Admin: Big-D Information Request - go into system to double check product documentation. Wwhat they are asking for is in the notes. (AV/Secu",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Equipment Installation Tracker - Lvl 1: L1 Bedroom 1 — Install Future Automation PS40",
           "status": "todo",
@@ -750,13 +750,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: Big-D Information Request - go into system to double check product documentation. Wwhat they are asking for is in the notes. (AV/Secu",
-          "dueDate": "2026-07-14",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Warehouse: ATI C/O Revision 5 - Return parts back to stock",
           "dueDate": "2026-08-21",
           "source": "Pulse"
@@ -801,7 +794,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 10,
+      "openTasks": 9,
       "overdueTasks": 3,
       "highPriorityTasks": 2,
       "risks": 0,
@@ -812,12 +805,6 @@
         "changeOrders": ""
       },
       "taskList": [
-        {
-          "name": "Admin: Please add Townhome Unit 3 to Pulse System",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Admin: Unit 3 - Observation #2027: QC - FIELD OBSERVATION - Doorbell Wrong Location",
           "status": "todo",
@@ -951,8 +938,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 32,
-      "overdueTasks": 9,
+      "openTasks": 29,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -982,18 +969,6 @@
         },
         {
           "name": "Admin: Update as-built",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Design: Follow up with Earth Shades on Turn around",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Design: Get first order for Earthshade completed, so we can get discounted pricing",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1143,12 +1118,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Project Handoff: Get lead time on fabric to Justin and Nate owens",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Project Handoff: Get with Logan and Lake Flato on Mock-up for side channels in corner conditions",
           "status": "todo",
           "source": "Pulse",
@@ -1210,22 +1179,22 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Design: Get first order for Earthshade completed, so we can get discounted pricing",
-          "dueDate": "2026-07-31",
+          "detail": "Project Handoff: Get with Logan and Lake Flato on Mock-up for side channels in corner conditions",
+          "dueDate": "2026-08-04",
           "source": "Pulse"
         },
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Project Handoff: Get lead time on fabric to Justin and Nate owens",
-          "dueDate": "2026-07-31",
+          "detail": "Install: Close open observation",
+          "dueDate": "2026-10-05",
           "source": "Pulse"
         },
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Design: Follow up with Earth Shades on Turn around",
-          "dueDate": "2026-08-03",
+          "detail": "Install: Full site walk",
+          "dueDate": "2026-10-12",
           "source": "Pulse"
         }
       ],
@@ -1240,8 +1209,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 29,
-      "overdueTasks": 6,
+      "openTasks": 28,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1418,12 +1387,6 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Parts Shuffle/BackOrder: From Stock (1ea) Innovolt INV-2000 - PO#1237 Receive to the Job - Physically back to stock.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -1490,13 +1453,6 @@
           "label": "Overdue task",
           "detail": "Rack Build: Family and Flex PDUs do not match in System and Domotz",
           "dueDate": "2026-10-05",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Warehouse: Parts Shuffle/BackOrder: From Stock (1ea) Innovolt INV-2000 - PO#1237 Receive to the Job - Physically back to stock.",
-          "dueDate": "2026-10-28",
           "source": "Pulse"
         }
       ],
@@ -3283,8 +3239,8 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 23,
-      "overdueTasks": 11,
+      "openTasks": 26,
+      "overdueTasks": 12,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": "2026-08-14",
@@ -3295,6 +3251,12 @@
       },
       "taskList": [
         {
+          "name": "ATI: Sonos account needs to be transferred to owners account.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "ATI: Trim Phone/Data wires in Flex Room A101c.",
           "status": "todo",
           "source": "Pulse",
@@ -3302,6 +3264,12 @@
         },
         {
           "name": "ATI: Trim Phone/Data wires in Primary Suite.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "ATI: Turn On Auto Reboot on PDU 1 and PDU 3. When rack is installed and powered and internet is live.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3428,6 +3396,12 @@
         },
         {
           "name": "Install: We currently don't have an outlet for Starlink.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Please stage a PG9986. I was asked to add it, CO in process",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5290,8 +5264,8 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 24,
-      "overdueTasks": 13,
+      "openTasks": 23,
+      "overdueTasks": 12,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5320,7 +5294,7 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: BL - Gun Display: Swap out black camera back plate to white",
+          "name": "AV: BL - Gun Display: Clean up wiring in rack",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5332,13 +5306,25 @@
           "externalUrl": ""
         },
         {
+          "name": "AV: BL - Rack Room: Clean up racks",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "AV: BL - Rack Room: Clean up wiring behind racks (in the closet)",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "AV: BL - Rack Room: Get a latch for the side of the 2-post",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
-          "name": "AV: LL - Batcave: Entry: Remove camera back-box and install flat black plate",
+          "name": "AV: BL - Rack Room: Make sure that I/O sheets are up to date",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5392,18 +5378,6 @@
           "externalUrl": ""
         },
         {
-          "name": "AV: Punch List: ML/LL: ML Deck WAP was relocated to the Lap Pool. Need to update the name of this WAP in Ubiquiti",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AV: Punch List: ML: Deck- Add new WAP to Ubiquiti system",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "AV: Techs Priority List: Master landscape speaker pair needs a box, box will be buried in the dirt because wire comes out below grade, speak",
           "status": "todo",
           "source": "Pulse",
@@ -5435,12 +5409,6 @@
         },
         {
           "name": "Install: Current Devices Offline",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: What did the Axis camera password get set to? The default does not work",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
