@@ -26,7 +26,7 @@ test('live numeric project IDs and offline IDs both show all 24 installation win
   assert.equal(html, readFileSync('index.html', 'utf8'));
   const script = html.match(/<script\b[^>]*>([\s\S]*?)<\/script>/i)[1];
   const extract = name => script.slice(script.indexOf('function ' + name + '('), script.indexOf('\nfunction ', script.indexOf('function ' + name + '(') + 1));
-  const names = [...Array.from({length: 8}, (_, i) => 'WPR Unit ' + (i + 1)), ...['101', '102', '201', '202'].map(n => 'WPR Condo ' + n), 'WPR Condo Penthouse', 'Skier Services'];
+  const names = [...Array.from({length: 12}, (_, i) => 'WPR Unit ' + (i + 1)), ...['101', '102', '201', '202'].map(n => 'WPR Condo ' + n), 'WPR Condo Penthouse', 'Skier Services', 'Metni', 'D35', 'D4'];
   for (const numeric of [true, false]) {
     const context = {document: {getElementById: () => context.target}, target: {}, visibleProjects: () => names.map((name, i) => ({id: numeric ? String(i + 1) : 'offline-' + i, name})), escapeHtml: String, escapeAttribute: String, formatDateRange: (a, b) => a + ' – ' + b, formatDateTime: String};
     vm.createContext(context);
@@ -36,6 +36,10 @@ test('live numeric project IDs and offline IDs both show all 24 installation win
     assert.match(context.target.innerHTML, /24 installation windows/);
     assert.equal((context.target.innerHTML.match(/class="timeline-bar /g) || []).length, 24);
     assert.ok(!context.target.innerHTML.includes('NaN'));
+    assert.match(context.target.innerHTML, /7 projects awaiting dates/);
+    assert.equal((context.target.innerHTML.match(/Schedule pending/g) || []).length, 7);
+    for (const name of ['Metni', 'D35', 'D4', 'WPR Unit 12']) assert.ok(context.target.innerHTML.includes(name));
+    assert.ok(!html.includes('Project Phase Overview'));
   }
 });
 
