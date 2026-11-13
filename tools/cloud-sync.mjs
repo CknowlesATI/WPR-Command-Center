@@ -87,6 +87,8 @@ export async function main() {
       ['list completeness could not be verified', 'Observation list count could not be verified'],
       ['grid stopped before', 'Virtual grid extraction incomplete'],
       ['grid scroll container', 'Virtual grid scroll control unavailable'],
+      ['Procore grid scroll limit reached', 'Observation grid exceeded its scroll safety limit'],
+      ['Procore grid count changed during extraction', 'Observation grid row count changed during collection'],
       ['missing or duplicate observation links', 'Observation links failed validation'],
       ['Timed out waiting for Procore observation detail', 'Observation detail did not finish loading'],
       ['Timed out waiting for Chrome command', 'Browser command timed out'],
