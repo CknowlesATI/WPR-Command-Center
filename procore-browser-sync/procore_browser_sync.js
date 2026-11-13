@@ -371,6 +371,7 @@ async function runAutoExtractionRows(args) {
   let lastError = null;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
+      console.log(`Procore stage: attempt ${attempt}/${attempts}`);
       if (!args.quiet) console.log(`Procore extraction attempt ${attempt}/${attempts} started.`);
       const rows = await runAutoExtractionRowsOnce(args);
       if (!args.quiet) console.log(`Procore extraction attempt ${attempt}/${attempts} completed with ${rows.length} row(s).`);
@@ -404,7 +405,8 @@ async function runAutoExtractionRowsOnce(args) {
     }
 
     const allRows = [];
-    for (const url of urls) {
+    for (const [index, url] of urls.entries()) {
+      console.log(`Procore stage: project ${index + 1}/${urls.length}`);
       if (!args.quiet) console.log(`Reading Procore observations: ${url}`);
       await client.send("Page.navigate", { url });
       await waitForPageReadyCdp(client, Number(args["page-timeout"] || DEFAULT_PAGE_TIMEOUT_MS)).catch(() => {});
@@ -414,6 +416,7 @@ async function runAutoExtractionRowsOnce(args) {
         : await waitForRowsCdp(client, Number(args.timeout || DEFAULT_PAGE_TIMEOUT_MS));
       if (!args.quiet) console.log(`Rows found before detail check: ${rows.length}`);
       rows = await enrichRowsFromDetailsCdp(client, rows, { ...args, procoreProjectId: projectId });
+      console.log("Procore stage: validate-project");
       assertUsableProcoreRows(rows, args, url);
       if (!args.quiet) console.log(`Rows ready before filters: ${rows.length}`);
       rows.forEach(row => allRows.push({ ...row, procoreProjectId: row.procoreProjectId || projectId, observationsUrl: url }));

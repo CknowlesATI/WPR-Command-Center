@@ -3,7 +3,7 @@ import { appendFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const apiUrl = 'https://wpr-command-center-api.wpr-command-center.workers.dev';
-const safeProgress = /^(Verified complete Procore list: \d+\/\d+|Read Procore details: \d+\/\d+|Verified Procore extraction: \d+ open ATI observations; \d+ mapped; \d+ require review\.|pulse tasks: \d+ item\(s\), \d+ project scope\(s\)\.|Pulse PM Contracts dates: \d+ dashboard row\(s\) fetched\.|Pulse API to-dos: \d+ Pulse project\(s\), \d+ matched, \d+ to-do item\(s\)\.)$/;
+const safeProgress = /^(Procore stage: [a-z-]+(?: \d+\/\d+)?|Verified complete Procore list: \d+\/\d+|Read Procore details: \d+\/\d+|Verified Procore extraction: \d+ open ATI observations; \d+ mapped; \d+ require review\.|pulse tasks: \d+ item\(s\), \d+ project scope\(s\)\.|Pulse PM Contracts dates: \d+ dashboard row\(s\) fetched\.|Pulse API to-dos: \d+ Pulse project\(s\), \d+ matched, \d+ to-do item\(s\)\.)$/;
 export function isDue(source, now = Date.now()) {
   if (!source || source.status === 'requested') return true;
   const lastAttempt = Date.parse(source.lastAttemptAt);
@@ -89,6 +89,15 @@ export async function main() {
       ['grid scroll container', 'Virtual grid scroll control unavailable'],
       ['missing or duplicate observation links', 'Observation links failed validation'],
       ['Timed out waiting for Procore observation detail', 'Observation detail did not finish loading'],
+      ['Timed out waiting for Chrome command', 'Browser command timed out'],
+      ['Chrome control connection', 'Browser control connection interrupted'],
+      ['Procore returned zero observation rows', 'A source project returned no observations'],
+      ['observation row(s) without status', 'Observation status validation failed'],
+      ['pagination changed', 'Observation pagination changed during extraction'],
+      ['Procore next-page control', 'Observation next-page control unavailable'],
+      ['not authenticated while', 'Procore session expired during extraction'],
+      ['denied access while', 'Procore project access denied'],
+      ['fetch failed', 'Source network request failed'],
       ['Command Center', 'Command Center request or validation failed'],
     ].filter(([pattern]) => result.output.includes(pattern)).map(([,label]) => label);
     summary(`${source}: FAILED. ${[...new Set(reasons)].join('; ') || 'Source extraction did not complete'}. Raw source output was withheld from public logs.`);
