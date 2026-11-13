@@ -9,6 +9,12 @@ import { isDue } from './cloud-sync.mjs';
 const require = createRequire(import.meta.url);
 const { parseObservationPagination, readCompleteObservationList, buildProcoreTasks, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom, observationDetailMatches } = require('../procore-browser-sync/procore_browser_sync.js');
 
+test('Procore diagnostics expose code locations without source content or credentials', () => {
+  const {safeExtractionDiagnostics} = require('../procore-browser-sync/procore_browser_sync.js');
+  const error = {name: 'TypeError', stack: 'TypeError: private project text and password\n    at readCompleteObservationList (D:\\runner\\procore_browser_sync.js:1335:12)\n    at async runAutoExtractionRowsOnce (D:\\runner\\procore_browser_sync.js:415:9)\n    at secret (https://private.example/123:1:1)'};
+  assert.deepEqual(safeExtractionDiagnostics(error), ['Procore diagnostic: TypeError at readCompleteObservationList:1335', 'Procore diagnostic: TypeError at runAutoExtractionRowsOnce:415']);
+});
+
 test('detail navigation rejects stale or misaligned observation content', () => {
   const expected = {number:'2824',detailUrl:'https://app.procore.com/webclients/host/companies/9207/projects/2884198/tools/observations/quality/details/23648272'};
   const detail = {number:'2824',itemUrl:'https://app.procore.com/2884198/project/observations/items/23648272'};

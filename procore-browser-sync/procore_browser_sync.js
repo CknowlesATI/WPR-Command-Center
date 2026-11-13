@@ -378,11 +378,21 @@ async function runAutoExtractionRows(args) {
       return rows;
     } catch (error) {
       lastError = error;
+      // Report only our code locations, never page text, URLs, or credentials.
+      for (const line of safeExtractionDiagnostics(error)) console.log(line);
       console.error(`Procore extraction attempt ${attempt}/${attempts} failed: ${error.message}`);
       if (attempt < attempts) await delay(Number(args["retry-delay"] || 5000));
     }
   }
   throw lastError || new Error("Procore extraction failed.");
+}
+
+function safeExtractionDiagnostics(error) {
+  const kind = ["TypeError", "SyntaxError", "RangeError", "Error"].includes(error?.name) ? error.name : "Error";
+  return String(error?.stack || "").split("\n").slice(1).flatMap(line => {
+    const match = line.match(/at (?:async )?([\w.]+) \(.*procore_browser_sync\.js:(\d+):\d+\)/);
+    return match ? [`Procore diagnostic: ${kind} at ${match[1]}:${match[2]}`] : [];
+  }).slice(0, 4);
 }
 
 async function runAutoExtractionRowsOnce(args) {
@@ -1844,4 +1854,4 @@ if (require.main === module) main().catch(async error => {
   process.exitCode = 1;
 });
 
-module.exports = { buildProcoreTasks, normalizeProcoreTask, assertUsableProcoreRows, readCompleteObservationList, parseObservationPagination, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom, observationDetailMatches };
+module.exports = { buildProcoreTasks, normalizeProcoreTask, assertUsableProcoreRows, readCompleteObservationList, parseObservationPagination, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom, observationDetailMatches, safeExtractionDiagnostics };
