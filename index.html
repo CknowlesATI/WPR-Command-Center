@@ -680,7 +680,7 @@
   /* Each chart scrolls beneath its own pinned calendar ruler. */
   .timeline-grid { min-width: 1040px; max-height: 560px; overflow-y: auto; position: relative; }
   .timeline-months { position: sticky; top: 0; z-index: 5; background: var(--panel); padding: 10px 0 6px; border-bottom: 2px solid #bbc7d5; margin: 0; }
-  .month-track { height: 52px; }
+  .month-track { height: 70px; }
   .month-label { color: #25354b; font-size: 12px; }
   .week-label { position: absolute; top: 26px; font-size: 10px; color: #53647a; white-space: nowrap; border-left: 1px solid #b7c4d3; padding-left: 4px; }
   .timeline-row { min-height: 56px; padding: 8px 0; }
@@ -693,7 +693,9 @@
   .date-gridline.month-boundary { border-color: #94a3b8; border-left-width: 2px; }
   .timeline-bar { top: 22px; height: 14px; z-index: 1; }
   .gantt-window-label { position: absolute; top: 2px; font-size: 10px; font-weight: 750; color: #24364c; white-space: nowrap; z-index: 2; }
-  .timeline-today { z-index: 3; background: #dc2626; opacity: .8; }
+  .timeline-today { z-index: 3; background: #dc2626; opacity: .9; top: -9px; bottom: -9px; pointer-events: none; }
+  .today-label { position: absolute; top: 47px; transform: translateX(-50%); background: #b91c1c; color: white; border-radius: 4px; padding: 3px 7px; font-size: 10px; font-weight: 750; white-space: nowrap; z-index: 6; }
+  .today-legend { display:inline-block; width:2px; height:12px; background:#dc2626; margin-right:5px; vertical-align:middle; }
 
   .timeline-legend {
     display: flex;
@@ -2976,7 +2978,7 @@ function renderNorthVillageSchedule() {
     ${pendingProjects.length ? '<div class="project-sub" style="padding:16px 8px 8px;font-weight:750;">Awaiting installation schedule</div>' : ""}
     ${pendingProjects.map(project => `<div class="timeline-row"><div class="timeline-name">${escapeHtml(project.name)}<div class="project-sub">Schedule pending</div></div><div class="timeline-track" role="img" aria-label="${escapeAttribute(project.name)}: schedule pending">${renderDateGrid(range)}<span class="gantt-window-label" style="left:12px;top:12px;font-weight:500;">Dates to be added</span></div></div>`).join("")}
     ${!rows.length && !pendingProjects.length ? '<div class="empty">No projects match the current filters.</div>' : ""}</div>
-    <div class="timeline-legend"><span><span class="legend-dot prewire"></span>Phase 1</span><span><span class="legend-dot install"></span>Phase 2</span></div><details><summary>Installation scope and schedule notes</summary>
+    <div class="timeline-legend"><span><span class="legend-dot prewire"></span>Phase 1</span><span><span class="legend-dot install"></span>Phase 2</span><span><span class="today-legend"></span>Today · Mountain Time</span></div><details><summary>Installation scope and schedule notes</summary>
       ${(installationSchedule.notes || ["Phase 1: Install all speakers; hang TVs, power them and connect to existing Wi-Fi; trim panel; verify wiring and labeling.", "Phase 2: Install remaining equipment; connect equipment rack; test and verify system operation.", "Penthouse Phase 1 excludes TVs.", "Family Room cabinetry for TH1 and TH3: Nov 20 and Dec 7–10, 2026. The source does not assign these dates to individual units."]).map(note => `<p>${escapeHtml(note)}</p>`).join("")}
       <p>C = Condo · TH = Townhome · SS = Skier Services · PH = Penthouse. Schedule dates check once daily at 6:00 a.m. Mountain Time, or the next time you open the Command Center. The saved schedule is used between morning checks.</p>
     </details>`;
@@ -2997,7 +2999,8 @@ function timelineCalendarTicks(range) {
 }
 
 function renderDateGrid(range) {
-  return timelineCalendarTicks(range).map(tick => `<span class="date-gridline${tick.month ? " month-boundary" : ""}" style="left:${tick.left}%" aria-hidden="true"></span>`).join("");
+  const today = timelineToday(range);
+  return (today === null ? "" : `<span class="timeline-today" style="left:${today}%" aria-hidden="true"></span>`) + timelineCalendarTicks(range).map(tick => `<span class="date-gridline${tick.month ? " month-boundary" : ""}" style="left:${tick.left}%" aria-hidden="true"></span>`).join("");
 }
 
 function renderMonthLabels(range) {
@@ -3005,7 +3008,8 @@ function renderMonthLabels(range) {
   for (let date = new Date(range.min.getFullYear(), range.min.getMonth(), 1); date < range.max; date.setMonth(date.getMonth() + 1)) {
     months.push(`<span class="month-label" style="left:${Math.max(0, ((date - range.min) / (range.max - range.min)) * 100)}%">${date.toLocaleDateString("en-US", {month: "short", year: "numeric"})}</span>`);
   }
-  return months.join("") + timelineCalendarTicks(range).filter(tick => tick.date.getDay() === 1 && tick.left < 96).map(tick => `<span class="week-label" style="left:${tick.left}%">${tick.date.toLocaleDateString("en-US", {month: "short", day: "numeric"})}</span>`).join("");
+  const today = timelineToday(range);
+  return (today === null ? "" : `<span class="today-label" style="left:${today}%">Today</span>`) + months.join("") + timelineCalendarTicks(range).filter(tick => tick.date.getDay() === 1 && tick.left < 96).map(tick => `<span class="week-label" style="left:${tick.left}%">${tick.date.toLocaleDateString("en-US", {month: "short", day: "numeric"})}</span>`).join("");
 }
 
 function timelineSegment(start, end, min, max) {
@@ -3021,11 +3025,11 @@ function timelineSegment(start, end, min, max) {
   };
 }
 
-function timelineToday(range) {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  if (now < range.min || now > range.max) return null;
-  return ((now - range.min) / (range.max - range.min)) * 100;
+function timelineToday(range, currentTime = new Date()) {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", {timeZone: "America/Denver", year: "numeric", month: "2-digit", day: "2-digit"}).formatToParts(currentTime).map(part => [part.type, part.value]));
+  const today = new Date(Number(parts.year), Number(parts.month) - 1, Number(parts.day));
+  if (today < range.min || today >= range.max) return null;
+  return ((today - range.min) / (range.max - range.min)) * 100;
 }
 
 function renderProjectTemplate() {

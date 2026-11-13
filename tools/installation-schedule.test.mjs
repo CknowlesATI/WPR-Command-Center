@@ -6,6 +6,18 @@ import {parseCsv, scheduleRows, getInstallationSchedule} from '../hosted-command
 
 const headers = ['Unit', 'Unit Type', 'Phase', 'Start Date', 'End Date', 'Duration (days)', 'Notes'];
 
+test('today line follows the Mountain date and stays outside unrelated date ranges', () => {
+  const script = readFileSync('index.html', 'utf8');
+  const start = script.indexOf('function timelineToday(');
+  const end = script.indexOf('function renderProjectTemplate', start);
+  const context = vm.createContext({});
+  vm.runInContext(script.slice(start, end), context);
+  const position = time => vm.runInContext(`timelineToday({min:new Date(2026,10,1),max:new Date(2026,11,1)},new Date('${time}'))`, context);
+  assert.equal(position('2026-11-14T06:59:00Z'), 40);
+  assert.equal(position('2026-11-14T07:00:00Z'), 13 / 30 * 100);
+  assert.equal(position('2026-12-02T12:00:00Z'), null);
+});
+
 test('daily refresh rolls over at 6 AM Denver time in winter and summer', () => {
   const script = readFileSync('index.html', 'utf8');
   const start = script.indexOf('function installationMorningKey(');
@@ -31,7 +43,7 @@ test('live numeric project IDs and offline IDs both show all 24 installation win
     const context = {document: {getElementById: () => context.target}, target: {}, visibleProjects: () => names.map((name, i) => ({id: numeric ? String(i + 1) : 'offline-' + i, name})), escapeHtml: String, escapeAttribute: String, formatDateRange: (a, b) => a + ' – ' + b, formatDateTime: String};
     vm.createContext(context);
     vm.runInContext(script.slice(script.indexOf('const NORTH_VILLAGE_INSTALLATIONS'), script.indexOf('async function refreshInstallationSchedule')), context);
-    for (const name of ['parseDate', 'timelineSegment', 'timelineCalendarTicks', 'renderDateGrid', 'renderMonthLabels', 'renderNorthVillageSchedule']) vm.runInContext(extract(name), context);
+    for (const name of ['parseDate', 'timelineSegment', 'timelineToday', 'timelineCalendarTicks', 'renderDateGrid', 'renderMonthLabels', 'renderNorthVillageSchedule']) vm.runInContext(extract(name), context);
     vm.runInContext('renderNorthVillageSchedule()', context);
     assert.match(context.target.innerHTML, /24 installation windows/);
     assert.equal((context.target.innerHTML.match(/class="timeline-bar /g) || []).length, 24);
