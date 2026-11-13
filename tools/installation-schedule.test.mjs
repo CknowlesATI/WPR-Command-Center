@@ -13,8 +13,8 @@ test('today line follows the Mountain date and stays outside unrelated date rang
   const context = vm.createContext({});
   vm.runInContext(script.slice(start, end), context);
   const position = time => vm.runInContext(`timelineToday({min:new Date(2026,10,1),max:new Date(2026,11,1)},new Date('${time}'))`, context);
-  assert.equal(position('2026-11-14T06:59:00Z'), 40);
-  assert.equal(position('2026-11-14T07:00:00Z'), 13 / 30 * 100);
+  assert.equal(position('2026-11-14T06:59:00Z'), vm.runInContext('(new Date(2026,10,13)-new Date(2026,10,1))/(new Date(2026,11,1)-new Date(2026,10,1))*100', context));
+  assert.equal(position('2026-11-14T07:00:00Z'), vm.runInContext('(new Date(2026,10,14)-new Date(2026,10,1))/(new Date(2026,11,1)-new Date(2026,10,1))*100', context));
   assert.equal(position('2026-12-02T12:00:00Z'), null);
 });
 
