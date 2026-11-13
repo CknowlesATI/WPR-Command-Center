@@ -3009,7 +3009,7 @@ function renderMonthLabels(range) {
     months.push(`<span class="month-label" style="left:${Math.max(0, ((date - range.min) / (range.max - range.min)) * 100)}%">${date.toLocaleDateString("en-US", {month: "short", year: "numeric"})}</span>`);
   }
   const today = timelineToday(range);
-  return (today === null ? "" : `<span class="today-label" style="left:${today}%">Today</span>`) + months.join("") + timelineCalendarTicks(range).filter(tick => tick.date.getDay() === 1 && tick.left < 96).map(tick => `<span class="week-label" style="left:${tick.left}%">${tick.date.toLocaleDateString("en-US", {month: "short", day: "numeric"})}</span>`).join("");
+  return (today === null ? "" : `<span class="today-label" style="left:${today}%">Today · ${new Date().toLocaleDateString("en-US", {timeZone: "America/Denver", month: "short", day: "numeric", year: "numeric"})}</span>`) + months.join("") + timelineCalendarTicks(range).filter(tick => tick.date.getDay() === 1 && tick.left < 96).map(tick => `<span class="week-label" style="left:${tick.left}%">${tick.date.toLocaleDateString("en-US", {month: "short", day: "numeric"})}</span>`).join("");
 }
 
 function timelineSegment(start, end, min, max) {
