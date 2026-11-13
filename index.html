@@ -676,6 +676,25 @@
     opacity: .38;
   }
 
+
+  /* Each chart scrolls beneath its own pinned calendar ruler. */
+  .timeline-grid { min-width: 1040px; max-height: 560px; overflow-y: auto; position: relative; }
+  .timeline-months { position: sticky; top: 0; z-index: 5; background: var(--panel); padding: 10px 0 6px; border-bottom: 2px solid #bbc7d5; margin: 0; }
+  .month-track { height: 52px; }
+  .month-label { color: #25354b; font-size: 12px; }
+  .week-label { position: absolute; top: 26px; font-size: 10px; color: #53647a; white-space: nowrap; border-left: 1px solid #b7c4d3; padding-left: 4px; }
+  .timeline-row { min-height: 56px; padding: 8px 0; }
+  .timeline-row:nth-child(even) { background: #f7f9fc; }
+  .timeline-row:hover { background: #edf3fc; }
+  .timeline-name { white-space: normal; padding: 0 8px; }
+  .timeline-name .project-sub { font-weight: 500; font-size: 11px; margin-top: 4px; }
+  .timeline-track { height: 40px; border-radius: 0; background: #f0f4f8; }
+  .date-gridline { position: absolute; top: -9px; bottom: -9px; border-left: 1px solid #cbd5e1; pointer-events: none; }
+  .date-gridline.month-boundary { border-color: #94a3b8; border-left-width: 2px; }
+  .timeline-bar { top: 22px; height: 14px; z-index: 1; }
+  .gantt-window-label { position: absolute; top: 2px; font-size: 10px; font-weight: 750; color: #24364c; white-space: nowrap; z-index: 2; }
+  .timeline-today { z-index: 3; background: #dc2626; opacity: .8; }
+
   .timeline-legend {
     display: flex;
     flex-wrap: wrap;
@@ -2958,7 +2977,7 @@ function renderNorthVillageSchedule() {
   document.getElementById("northVillageSchedule").innerHTML = `<h3>North Village Installation Schedule</h3>
     <p class="project-sub">${escapeHtml(first.toLocaleDateString("en-US", {month: "long", year: "numeric"}))} – ${escapeHtml(last.toLocaleDateString("en-US", {month: "long", year: "numeric"}))} · ${rows.length} installation windows · Dates inclusive</p><p class="project-sub" role="status">${escapeHtml(installationSchedule.error || `Synced ${formatDateTime(installationSchedule.syncedAt)} · Checks daily at 6 AM Mountain`)}</p>
     <p><a href="https://docs.google.com/spreadsheets/d/1NQklo5qpcQ0nUpGWOEQC_S1F5e3eUGQgN_U7nfwIIZs/edit?gid=1461716801#gid=1461716801" target="_blank" rel="noopener noreferrer">Open current source schedule</a></p>
-    <div class="timeline-grid"><div class="timeline-months"><div>Project / Phase</div><div class="month-track">${renderMonthLabels({min: range.min, max: new Date(range.max.getTime() - 1)})}</div></div>
+    <p class="project-sub">Scroll within the chart to see more jobs. The weekly date ruler stays at the top; vertical lines mark each Monday.</p><div class="timeline-grid" tabindex="0" role="region" aria-label="North Village installation Gantt, scroll to view more jobs"><div class="timeline-months"><div>Project / Phase<br><span class="project-sub">Start – Finish</span></div><div class="month-track">${renderMonthLabels(range)}</div></div>
     ${rows.map(item => {
       const endExclusive = parseDate(item.end);
       endExclusive.setDate(endExclusive.getDate() + 1);
@@ -2966,7 +2985,7 @@ function renderNorthVillageSchedule() {
       const label = `${projectName(item.unit)} · Phase ${item.phase}`;
       const dates = formatDateRange(item.start, item.end);
       const detail = `${label}: ${dates}${item.notes ? " · " + item.notes : ""}`;
-      return `<div class="timeline-row"><div class="timeline-name" title="${escapeAttribute(detail)}">${escapeHtml(item.unit)} · Phase ${item.phase}<div class="project-sub">${escapeHtml(dates)}</div></div><div class="timeline-track" role="img" aria-label="${escapeAttribute(detail)}"><div class="timeline-bar ${item.phase === 1 ? "prewire" : "install"}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeAttribute(detail)}"></div></div></div>`;
+      return `<div class="timeline-row"><div class="timeline-name" title="${escapeAttribute(detail)}">${escapeHtml(projectName(item.unit))} · Phase ${item.phase}<div class="project-sub">${escapeHtml(dates)}</div></div><div class="timeline-track" role="img" aria-label="${escapeAttribute(detail)}">${renderDateGrid(range)}<span class="gantt-window-label" style="left:${Math.min(seg.left, 83)}%">${escapeHtml(dates)}</span><div class="timeline-bar ${item.phase === 1 ? "prewire" : "install"}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeAttribute(detail)}"></div></div></div>`;
     }).join("") || '<div class="empty">No North Village installations match the current filters.</div>'}</div>
     <div class="timeline-legend"><span><span class="legend-dot prewire"></span>Phase 1</span><span><span class="legend-dot install"></span>Phase 2</span></div><details><summary>Installation scope and schedule notes</summary>
       ${(installationSchedule.notes || ["Phase 1: Install all speakers; hang TVs, power them and connect to existing Wi-Fi; trim panel; verify wiring and labeling.", "Phase 2: Install remaining equipment; connect equipment rack; test and verify system operation.", "Penthouse Phase 1 excludes TVs.", "Family Room cabinetry for TH1 and TH3: Nov 20 and Dec 7–10, 2026. The source does not assign these dates to individual units."]).map(note => `<p>${escapeHtml(note)}</p>`).join("")}
@@ -2995,7 +3014,7 @@ function renderTimelineRow(project, range) {
   const today = timelineToday(range);
   return `
     <div class="timeline-row">
-      <div class="timeline-name">${escapeHtml(project.name)}</div>
+      <div class="timeline-name">${escapeHtml(project.name)}<div class="project-sub">${project.timelines.filter(item => item.start && item.end).map(item => `${escapeHtml(item.label)}: ${escapeHtml(formatDateRange(item.start, item.end))}`).join("<br>")}</div></div>
       <div class="timeline-track">
         ${today === null ? "" : `<div class="timeline-today" style="left:${today}%"></div>`}
         ${bars || `<span class="project-sub" style="position:absolute;left:7px;top:3px;">Not scheduled</span>`}
@@ -3004,13 +3023,24 @@ function renderTimelineRow(project, range) {
   `;
 }
 
-function renderMonthLabels(range) {
-  const labels = [];
-  const start = new Date(range.min.getFullYear(), range.min.getMonth(), 1);
-  for (let cursor = start; cursor <= range.max; cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)) {
-    labels.push(`<span class="month-label" style="left:${((cursor - range.min) / (range.max - range.min)) * 100}%">${cursor.toLocaleDateString("en-US", { month: "short" })}</span>`);
+function timelineCalendarTicks(range) {
+  const ticks = [];
+  for (let date = new Date(range.min); date < range.max; date.setDate(date.getDate() + 1)) {
+    if (date.getDate() === 1 || date.getDay() === 1) ticks.push({date: new Date(date), left: ((date - range.min) / (range.max - range.min)) * 100, month: date.getDate() === 1});
   }
-  return labels.join("");
+  return ticks;
+}
+
+function renderDateGrid(range) {
+  return timelineCalendarTicks(range).map(tick => `<span class="date-gridline${tick.month ? " month-boundary" : ""}" style="left:${tick.left}%" aria-hidden="true"></span>`).join("");
+}
+
+function renderMonthLabels(range) {
+  const months = [];
+  for (let date = new Date(range.min.getFullYear(), range.min.getMonth(), 1); date < range.max; date.setMonth(date.getMonth() + 1)) {
+    months.push(`<span class="month-label" style="left:${Math.max(0, ((date - range.min) / (range.max - range.min)) * 100)}%">${date.toLocaleDateString("en-US", {month: "short", year: "numeric"})}</span>`);
+  }
+  return months.join("") + timelineCalendarTicks(range).filter(tick => tick.date.getDay() === 1 && tick.left < 96).map(tick => `<span class="week-label" style="left:${tick.left}%">${tick.date.toLocaleDateString("en-US", {month: "short", day: "numeric"})}</span>`).join("");
 }
 
 function getTimelineRange() {
