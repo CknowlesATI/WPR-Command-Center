@@ -6,6 +6,21 @@ import {parseCsv, scheduleRows, getInstallationSchedule} from '../hosted-command
 
 const headers = ['Unit', 'Unit Type', 'Phase', 'Start Date', 'End Date', 'Duration (days)', 'Notes'];
 
+test('daily refresh rolls over at 6 AM Denver time in winter and summer', () => {
+  const script = readFileSync('index.html', 'utf8');
+  const start = script.indexOf('function installationMorningKey(');
+  const end = script.indexOf('async function refreshInstallationSchedule', start);
+  const context = vm.createContext({});
+  vm.runInContext(script.slice(start, end), context);
+  for (const [time, expected] of [
+    ['2026-11-13T12:59:00Z', '2026-11-12'],
+    ['2026-11-13T13:00:00Z', '2026-11-13'],
+    ['2026-07-13T11:59:00Z', '2026-07-12'],
+    ['2026-07-13T12:00:00Z', '2026-07-13'],
+    ['2027-01-01T08:00:00Z', '2026-12-31']
+  ]) assert.equal(vm.runInContext(`installationMorningKey(new Date('${time}'))`, context), expected);
+});
+
 test('live numeric project IDs and offline IDs both show all 24 installation windows', () => {
   const html = readFileSync('hosted-command-center/index.html', 'utf8');
   assert.equal(html, readFileSync('index.html', 'utf8'));

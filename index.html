@@ -2093,14 +2093,33 @@ const NORTH_VILLAGE_INSTALLATIONS = [
   }
 ];
 let installationSchedule = {rows: NORTH_VILLAGE_INSTALLATIONS, syncedAt: null, error: "Connecting to source schedule…"};
+const INSTALLATION_CACHE_KEY = "wpr-installation-schedule-daily-v1";
+let installationCheckedMorning = "";
+function installationMorningKey(now = new Date()) {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", {timeZone: "America/Denver", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23"}).formatToParts(now).map(part => [part.type, part.value]));
+  const date = new Date(Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day)));
+  if (Number(parts.hour) < 6) date.setUTCDate(date.getUTCDate() - 1);
+  return date.toISOString().slice(0, 10);
+}
 async function refreshInstallationSchedule() {
+  const morning = installationMorningKey();
+  try {
+    const saved = JSON.parse(localStorage.getItem(INSTALLATION_CACHE_KEY) || "null");
+    if (saved && Array.isArray(saved.schedule?.rows) && saved.schedule.rows.length) {
+      installationSchedule = saved.schedule;
+      installationCheckedMorning = saved.checkedMorning || "";
+    }
+  } catch (_) { /* Continue with the in-memory schedule when storage is unavailable. */ }
+  if (installationCheckedMorning === morning) { renderNorthVillageSchedule(); return; }
+  installationCheckedMorning = morning;
   try {
     const { getInstallationSchedule } = await import("./assets/installation-schedule.js");
     const result = await getInstallationSchedule();
     installationSchedule = {rows: result.rows, syncedAt: result.syncedAt, notes: result.notes, error: ""};
   } catch (error) {
-    installationSchedule.error = "Source sync unavailable. " + (installationSchedule.syncedAt ? "Showing last successful refresh." : "Showing Nov 13, 2026 snapshot.");
+    installationSchedule.error = "Morning source sync unavailable. " + (installationSchedule.syncedAt ? "Showing last successful refresh." : "Showing Nov 13, 2026 snapshot.");
   }
+  try { localStorage.setItem(INSTALLATION_CACHE_KEY, JSON.stringify({checkedMorning: morning, schedule: installationSchedule})); } catch (_) {}
   renderNorthVillageSchedule();
 }
 const TIMELINE_PHASE_ORDER = ["prewire", "trim", "handover", "install"];
@@ -2937,7 +2956,7 @@ function renderNorthVillageSchedule() {
   const first = parseDate(dates[0]), last = parseDate(dates.at(-1));
   const range = {min: new Date(first.getFullYear(), first.getMonth(), 1), max: new Date(last.getFullYear(), last.getMonth() + 1, 1)};
   document.getElementById("northVillageSchedule").innerHTML = `<h3>North Village Installation Schedule</h3>
-    <p class="project-sub">${escapeHtml(first.toLocaleDateString("en-US", {month: "long", year: "numeric"}))} – ${escapeHtml(last.toLocaleDateString("en-US", {month: "long", year: "numeric"}))} · ${rows.length} installation windows · Dates inclusive</p><p class="project-sub" role="status">${escapeHtml(installationSchedule.error || `Synced ${formatDateTime(installationSchedule.syncedAt)} · Refreshes every 5 minutes`)}</p>
+    <p class="project-sub">${escapeHtml(first.toLocaleDateString("en-US", {month: "long", year: "numeric"}))} – ${escapeHtml(last.toLocaleDateString("en-US", {month: "long", year: "numeric"}))} · ${rows.length} installation windows · Dates inclusive</p><p class="project-sub" role="status">${escapeHtml(installationSchedule.error || `Synced ${formatDateTime(installationSchedule.syncedAt)} · Checks daily at 6 AM Mountain`)}</p>
     <p><a href="https://docs.google.com/spreadsheets/d/1NQklo5qpcQ0nUpGWOEQC_S1F5e3eUGQgN_U7nfwIIZs/edit?gid=1461716801#gid=1461716801" target="_blank" rel="noopener noreferrer">Open current source schedule</a></p>
     <div class="timeline-grid"><div class="timeline-months"><div>Project / Phase</div><div class="month-track">${renderMonthLabels({min: range.min, max: new Date(range.max.getTime() - 1)})}</div></div>
     ${rows.map(item => {
@@ -2951,7 +2970,7 @@ function renderNorthVillageSchedule() {
     }).join("") || '<div class="empty">No North Village installations match the current filters.</div>'}</div>
     <div class="timeline-legend"><span><span class="legend-dot prewire"></span>Phase 1</span><span><span class="legend-dot install"></span>Phase 2</span></div><details><summary>Installation scope and schedule notes</summary>
       ${(installationSchedule.notes || ["Phase 1: Install all speakers; hang TVs, power them and connect to existing Wi-Fi; trim panel; verify wiring and labeling.", "Phase 2: Install remaining equipment; connect equipment rack; test and verify system operation.", "Penthouse Phase 1 excludes TVs.", "Family Room cabinetry for TH1 and TH3: Nov 20 and Dec 7–10, 2026. The source does not assign these dates to individual units."]).map(note => `<p>${escapeHtml(note)}</p>`).join("")}
-      <p>C = Condo · TH = Townhome · SS = Skier Services · PH = Penthouse. Schedule dates refresh from the source sheet on page load and every five minutes.</p>
+      <p>C = Condo · TH = Townhome · SS = Skier Services · PH = Penthouse. Schedule dates check once daily at 6:00 a.m. Mountain Time, or the next time you open the Command Center. The saved schedule is used between morning checks.</p>
     </details>`;
 }
 
@@ -4276,7 +4295,8 @@ function renderAuthStatus() {
 
 renderAuthStatus();
 loadData().then(refreshInstallationSchedule);
-setInterval(refreshInstallationSchedule, 5 * 60 * 1000);
+// Check the local morning boundary; Google Sheets is contacted only once per morning.
+setInterval(refreshInstallationSchedule, 60 * 1000);
 </script>
 </body>
 </html>
