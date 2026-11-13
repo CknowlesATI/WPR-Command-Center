@@ -1,8 +1,28 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
 import {parseCsv, scheduleRows, getInstallationSchedule} from '../hosted-command-center/assets/installation-schedule.js';
 
 const headers = ['Unit', 'Unit Type', 'Phase', 'Start Date', 'End Date', 'Duration (days)', 'Notes'];
+
+test('live numeric project IDs and offline IDs both show all 24 installation windows', () => {
+  const html = readFileSync('hosted-command-center/index.html', 'utf8');
+  assert.equal(html, readFileSync('index.html', 'utf8'));
+  const script = html.match(/<script\b[^>]*>([\s\S]*?)<\/script>/i)[1];
+  const extract = name => script.slice(script.indexOf('function ' + name + '('), script.indexOf('\nfunction ', script.indexOf('function ' + name + '(') + 1));
+  const names = [...Array.from({length: 8}, (_, i) => 'WPR Unit ' + (i + 1)), ...['101', '102', '201', '202'].map(n => 'WPR Condo ' + n), 'WPR Condo Penthouse', 'Skier Services'];
+  for (const numeric of [true, false]) {
+    const context = {document: {getElementById: () => context.target}, target: {}, visibleProjects: () => names.map((name, i) => ({id: numeric ? String(i + 1) : 'offline-' + i, name})), escapeHtml: String, escapeAttribute: String, formatDateRange: (a, b) => a + ' – ' + b, formatDateTime: String};
+    vm.createContext(context);
+    vm.runInContext(script.slice(script.indexOf('const NORTH_VILLAGE_INSTALLATIONS'), script.indexOf('async function refreshInstallationSchedule')), context);
+    for (const name of ['parseDate', 'timelineSegment', 'renderMonthLabels', 'renderNorthVillageSchedule']) vm.runInContext(extract(name), context);
+    vm.runInContext('renderNorthVillageSchedule()', context);
+    assert.match(context.target.innerHTML, /24 installation windows/);
+    assert.equal((context.target.innerHTML.match(/class="timeline-bar /g) || []).length, 24);
+    assert.ok(!context.target.innerHTML.includes('NaN'));
+  }
+});
 
 test('CSV handles Google export quoting and multiline notes', () => {
   assert.deepEqual(parseCsv('a,"b,c","say ""hi""\nnext"\r\nx,y,z'), [['a', 'b,c', 'say "hi"\nnext'], ['x', 'y', 'z']]);

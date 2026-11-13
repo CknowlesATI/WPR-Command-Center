@@ -2930,22 +2930,21 @@ function renderAttention() {
 }
 
 function renderNorthVillageSchedule() {
-  const visibleIds = new Set(visibleProjects().map(project => project.id));
-  const projectId = unit => unit === "SS" ? "skier-services" : unit === "PH" ? "wpr-condo-penthouse" : unit.startsWith("TH") ? "wpr-unit-" + unit.slice(2) : "wpr-condo-" + unit.slice(1);
-  const names = new Map(state.projects.map(project => [project.id, project.name]));
-  const rows = installationSchedule.rows.filter(item => visibleIds.has(projectId(item.unit)));
+  const projectName = unit => unit === "SS" ? "Skier Services" : unit === "PH" ? "WPR Condo Penthouse" : unit.startsWith("TH") ? "WPR Unit " + Number(unit.slice(2)) : "WPR Condo " + Number(unit.slice(1));
+  const visibleNames = new Set(visibleProjects().map(project => project.name));
+  const rows = installationSchedule.rows.filter(item => visibleNames.has(projectName(item.unit)));
   const dates = installationSchedule.rows.flatMap(item => [item.start, item.end]).sort();
   const first = parseDate(dates[0]), last = parseDate(dates.at(-1));
   const range = {min: new Date(first.getFullYear(), first.getMonth(), 1), max: new Date(last.getFullYear(), last.getMonth() + 1, 1)};
   document.getElementById("northVillageSchedule").innerHTML = `<h3>North Village Installation Schedule</h3>
     <p class="project-sub">${escapeHtml(first.toLocaleDateString("en-US", {month: "long", year: "numeric"}))} – ${escapeHtml(last.toLocaleDateString("en-US", {month: "long", year: "numeric"}))} · ${rows.length} installation windows · Dates inclusive</p><p class="project-sub" role="status">${escapeHtml(installationSchedule.error || `Synced ${formatDateTime(installationSchedule.syncedAt)} · Refreshes every 5 minutes`)}</p>
     <p><a href="https://docs.google.com/spreadsheets/d/1NQklo5qpcQ0nUpGWOEQC_S1F5e3eUGQgN_U7nfwIIZs/edit?gid=1461716801#gid=1461716801" target="_blank" rel="noopener noreferrer">Open current source schedule</a></p>
-    <div class="timeline-grid"><div class="timeline-months"><div>Project / Phase</div><div class="month-track">${renderMonthLabels(range)}</div></div>
+    <div class="timeline-grid"><div class="timeline-months"><div>Project / Phase</div><div class="month-track">${renderMonthLabels({min: range.min, max: new Date(range.max.getTime() - 1)})}</div></div>
     ${rows.map(item => {
       const endExclusive = parseDate(item.end);
       endExclusive.setDate(endExclusive.getDate() + 1);
       const seg = timelineSegment(item.start, `${endExclusive.getFullYear()}-${String(endExclusive.getMonth() + 1).padStart(2, "0")}-${String(endExclusive.getDate()).padStart(2, "0")}`, range.min, range.max);
-      const label = `${names.get(projectId(item.unit)) || item.unit} · Phase ${item.phase}`;
+      const label = `${projectName(item.unit)} · Phase ${item.phase}`;
       const dates = formatDateRange(item.start, item.end);
       const detail = `${label}: ${dates}${item.notes ? " · " + item.notes : ""}`;
       return `<div class="timeline-row"><div class="timeline-name" title="${escapeAttribute(detail)}">${escapeHtml(item.unit)} · Phase ${item.phase}<div class="project-sub">${escapeHtml(dates)}</div></div><div class="timeline-track" role="img" aria-label="${escapeAttribute(detail)}"><div class="timeline-bar ${item.phase === 1 ? "prewire" : "install"}" style="left:${seg.left}%;width:${seg.width}%" title="${escapeAttribute(detail)}"></div></div></div>`;
