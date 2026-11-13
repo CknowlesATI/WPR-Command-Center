@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-12T19:48:34.881Z",
+  "lastUpdated": "2026-11-13T19:31:29.278Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -3239,8 +3239,8 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 26,
-      "overdueTasks": 12,
+      "openTasks": 25,
+      "overdueTasks": 11,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": "2026-08-14",
@@ -3396,12 +3396,6 @@
         },
         {
           "name": "Install: We currently don't have an outlet for Starlink.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: Please stage a PG9986. I was asked to add it, CO in process",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
