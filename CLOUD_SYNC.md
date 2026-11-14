@@ -118,3 +118,20 @@ To restore the prior local schedule after stopping cloud collectors, run
 `Enable-ScheduledTask -TaskName 'WPR Pulse Sync'` on the original Windows host.
 This rollback requires that host to remain available. The pre-cutover database
 backup is kept locally in ignored `tmp/cloud-precutover.sql`.
+
+## November 14, 2026 repair
+
+Run `43578421861` logged successful authentication and 123/123 observations
+for the first project, then exhausted the hard-coded 200-scroll limit on
+project 2 on both attempts. The grid reader now uses the verified row total
+as its maximum iteration count: each successful scroll must still add at
+least one unique observation. Loading stalls, duplicate links, count changes,
+and the hosted 45-minute time limit still fail closed. Count-only grid
+progress is logged every 25 scrolls. No raw source data is published.
+
+Changes to the Procore collector, cloud wrapper, safeguard tests, or this
+workflow on `main` now trigger Procore-only read-only hosted verification.
+Scheduled runs retain their existing live-sync behavior and concurrency lock.
+This provides a fresh-browser check of collector changes without requiring
+manual workflow dispatch. Passing local tests does not establish live recovery;
+confirm a subsequent live `CLOUD` success in the API before declaring recovery.

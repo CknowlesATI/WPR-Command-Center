@@ -3,7 +3,7 @@ import { appendFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const apiUrl = 'https://wpr-command-center-api.wpr-command-center.workers.dev';
-const safeProgress = /^(Procore diagnostic: (?:TypeError|SyntaxError|RangeError|Error) at [\w.]+:\d+|Procore stage: [a-z-]+(?: \d+\/\d+)?|Verified complete Procore list: \d+\/\d+|Read Procore details: \d+\/\d+|Verified Procore extraction: \d+ open ATI observations; \d+ mapped; \d+ require review\.|pulse tasks: \d+ item\(s\), \d+ project scope\(s\)\.|Pulse PM Contracts dates: \d+ dashboard row\(s\) fetched\.|Pulse API to-dos: \d+ Pulse project\(s\), \d+ matched, \d+ to-do item\(s\)\.)$/;
+export const safeProgress = /^(Procore diagnostic: (?:TypeError|SyntaxError|RangeError|Error) at [\w.]+:\d+|Procore stage: [a-z-]+(?: \d+\/\d+)?|Verified complete Procore list: \d+\/\d+|Read Procore details: \d+\/\d+|Read Procore grid: \d+\/\d+|Verified Procore extraction: \d+ open ATI observations; \d+ mapped; \d+ require review\.|pulse tasks: \d+ item\(s\), \d+ project scope\(s\)\.|Pulse PM Contracts dates: \d+ dashboard row\(s\) fetched\.|Pulse API to-dos: \d+ Pulse project\(s\), \d+ matched, \d+ to-do item\(s\)\.)$/;
 export function isDue(source, now = Date.now()) {
   if (!source || source.status === 'requested') return true;
   const lastAttempt = Date.parse(source.lastAttemptAt);
@@ -60,7 +60,7 @@ export async function main() {
   const live = await readLive();
   if (source === 'check') {
     for (const name of ['pulse', 'procore']) {
-      const manual = process.env.GITHUB_EVENT_NAME === 'workflow_dispatch';
+      const manual = ['workflow_dispatch', 'push'].includes(process.env.GITHUB_EVENT_NAME);
       const selected = process.env.SELECTED_SOURCE || 'both';
       const enabled = manual || process.env.CLOUD_SYNC_ENABLED === 'true';
       const due = enabled && (manual ? selected === 'both' || selected === name : isDue(live.settings.sources.find(s => s.source === name)));

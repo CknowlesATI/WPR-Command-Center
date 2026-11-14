@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import vm from 'node:vm';
 import worker from '../worker/src/index.js';
-import { isDue } from './cloud-sync.mjs';
+import { isDue, safeProgress } from './cloud-sync.mjs';
 const require = createRequire(import.meta.url);
 const { parseObservationPagination, readCompleteObservationList, buildProcoreTasks, extractObservationDetailFromDom, extractRowsFromCurrentObservationListDom, observationDetailMatches } = require('../procore-browser-sync/procore_browser_sync.js');
 
@@ -181,6 +181,22 @@ test('virtual grid is scrolled and overlapping visible rows are deduplicated', a
   assert.deepEqual(rows.map(r=>r.number),['1','2','3','4']);
 });
 
+test('virtual grid completes a growing list requiring more than 200 scrolls', async () => {
+  const total = 203;
+  let scrolls = 0;
+  const client = { async send(method, {expression}) {
+    if (expression.includes('element.scrollTop')) { scrolls++; return {result:{value:true}}; }
+    if (expression.includes('extractRowsFromCurrentObservationListDom')) {
+      return {result:{value:JSON.stringify([{detailUrl:`https://app.procore.com/details/${scrolls}`,number:String(scrolls)}])}};
+    }
+    if (expression === 'document.body.innerText') return {result:{value:`Rows: ${total}`}};
+    return {result:{value:{text:`Rows: ${total}`}}};
+  }};
+  const rows = await readCompleteObservationList(client,{timeout:100,'grid-wait-ms':1});
+  assert.equal(rows.length,total);
+  assert.equal(scrolls,total - 1);
+});
+
 test('virtual grid waits through delayed and partial rendering without scrolling past rows', async () => {
   const row = id => ({detailUrl:`https://app.procore.com/details/${id}`,number:String(id)});
   let scrolls = 0, reads = 0;
@@ -239,4 +255,12 @@ test('custom observation types keep their own titles and stable links', () => {
   assert.equal(rows[1].detailUrl,links[1].href);
   const duplicateTitleRows=extractRowsFromCurrentObservationListDom(lines.map(line=>line==='Move TV'?'Repair wires':line),links.map(link=>({...link,text:'Repair wires'})),[],'WPR');
   assert.equal(duplicateTitleRows[1].detailUrl,links[1].href);
+});
+
+
+test('grid progress allows only counts in public workflow output', () => {
+  assert.equal(safeProgress.test('Read Procore grid: 200/250'), true);
+  for (const line of ['Read Procore grid: private project', 'Read Procore grid: 200/250 secret', 'Read Procore grid: 200/250\nprivate data']) {
+    assert.equal(safeProgress.test(line), false);
+  }
 });

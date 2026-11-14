@@ -1,5 +1,12 @@
 name: Cloud source sync
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'procore-browser-sync/procore_browser_sync.js'
+      - 'tools/cloud-sync.mjs'
+      - 'tools/cloud-sync.test.mjs'
+      - '.github/workflows/cloud-source-sync.yml'
   workflow_dispatch:
     inputs:
       source:
@@ -39,7 +46,7 @@ jobs:
         run: node --test tools/cloud-sync.test.mjs
       - id: select
         env:
-          SELECTED_SOURCE: ${{ inputs.source || 'both' }}
+          SELECTED_SOURCE: ${{ github.event_name == 'push' && 'procore' || inputs.source || 'both' }}
           CLOUD_SYNC_ENABLED: ${{ vars.CLOUD_SYNC_ENABLED }}
         run: node tools/cloud-sync.mjs check
   pulse:
@@ -59,7 +66,7 @@ jobs:
           PULSE_EMAIL: ${{ secrets.PULSE_EMAIL }}
           PULSE_PASSWORD: ${{ secrets.PULSE_PASSWORD }}
           COMMAND_CENTER_SYNC_TOKEN: ${{ secrets.COMMAND_CENTER_SYNC_TOKEN }}
-          SYNC_MODE: ${{ inputs.mode || 'sync' }}
+          SYNC_MODE: ${{ github.event_name == 'push' && 'verify' || inputs.mode || 'sync' }}
         run: node tools/cloud-sync.mjs pulse "$SYNC_MODE"
   procore:
     needs: select
@@ -80,5 +87,5 @@ jobs:
           PROCORE_COMPANY_ID: ${{ secrets.PROCORE_COMPANY_ID }}
           PROCORE_OBSERVATIONS_URLS: ${{ secrets.PROCORE_OBSERVATIONS_URLS }}
           COMMAND_CENTER_SYNC_TOKEN: ${{ secrets.COMMAND_CENTER_SYNC_TOKEN }}
-          SYNC_MODE: ${{ inputs.mode || 'sync' }}
+          SYNC_MODE: ${{ github.event_name == 'push' && 'verify' || inputs.mode || 'sync' }}
         run: node tools/cloud-sync.mjs procore $env:SYNC_MODE

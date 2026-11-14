@@ -1390,8 +1390,13 @@ async function readVirtualObservationGrid(client, firstRows, total, args) {
     if (rows.size > total) throw new Error("Procore grid count changed during extraction.");
     return JSON.stringify([...seen].sort());
   }
-  for (let step = 0; step < 200; step++) {
+  // Every completed scroll must add at least one unique observation. The
+  // verified total therefore bounds the loop without rejecting large lists
+  // at an arbitrary viewport count. Stalls still fail after loadTimeoutMs;
+  // the hosted process retains its independent 45-minute wall-clock limit.
+  for (let step = 0; step < total; step++) {
     collect(visible);
+    if (step % 25 === 0) console.log(`Read Procore grid: ${rows.size}/${total}`);
     if (rows.size === total) {
       console.log(`Verified complete Procore list: ${rows.size}/${total}`);
       return [...rows.values()];
