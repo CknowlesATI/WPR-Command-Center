@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-13T19:31:29.278Z",
+  "lastUpdated": "2026-11-16T21:55:02.800Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,7 +11,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 48,
+      "openTasks": 49,
       "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -264,6 +264,12 @@
         },
         {
           "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Mudroom: Locate WAP 102 wire and prep for install",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5258,7 +5264,7 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 23,
+      "openTasks": 24,
       "overdueTasks": 12,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -5269,6 +5275,12 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "AV: Admin: Create internal C/O for Ubiquiti chimes",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "AV: Admin: Relabel Equipment accordingly. (See Notes)",
           "status": "todo",
