@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-16T21:55:02.800Z",
+  "lastUpdated": "2026-11-17T20:45:08.597Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -11,7 +11,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 49,
+      "openTasks": 52,
       "overdueTasks": 2,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -305,7 +305,25 @@
           "externalUrl": ""
         },
         {
-          "name": "Rack Build: Add APs to Domotz after install",
+          "name": "Rack Build: Add APs and Cameras to Domotz after install",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: Register Crestron account to Customer account after install",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: Set up Family Room TV for Crestron control.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: Turn auto reboot on in rack PDU 1 after rack is up and running stable.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1473,8 +1491,8 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 53,
-      "overdueTasks": 4,
+      "openTasks": 52,
+      "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1795,12 +1813,6 @@
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
-        },
-        {
-          "name": "Warehouse: ATI C/O 4.4 Frame TV 10/21/26: Return parts back to stock",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -1853,13 +1865,6 @@
           "label": "Overdue task",
           "detail": "Install: Site walk",
           "dueDate": "2026-10-05",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Warehouse: ATI C/O 4.4 Frame TV 10/21/26: Return parts back to stock",
-          "dueDate": "2026-10-27",
           "source": "Pulse"
         }
       ],
@@ -2453,7 +2458,7 @@
       "name": "WPR Unit 8",
       "area": "Units 7-12",
       "team": "Big-D Units 7-12",
-      "health": "amber",
+      "health": "red",
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
@@ -3492,7 +3497,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 44,
+      "openTasks": 39,
       "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -3588,12 +3593,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Dining — Install James Loudspeaker PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Apple TV 4K (128G)",
           "status": "todo",
           "source": "Pulse",
@@ -3612,12 +3611,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install James Loudspeaker PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Samsung QN85LS03FWFXZA",
           "status": "todo",
           "source": "Pulse",
@@ -3625,12 +3618,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Snap One WattBox IP Wi-Fi (2 outlets)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install James Loudspeaker PD42-4 (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3648,12 +3635,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Kitchen — Install James Loudspeaker PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Mudroom Closet — Install Ubiquiti U7-Pro-Max",
           "status": "todo",
           "source": "Pulse",
@@ -3661,12 +3642,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Pantry — Install Ubiquiti U7-Pro-Max",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Primary Bath — Install Sonance VX66R (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4124,7 +4099,7 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 29,
+      "openTasks": 25,
       "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -4148,12 +4123,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Dining Room — Install James Loudspeaker PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Apple TV 4K (128G)",
           "status": "todo",
           "source": "Pulse",
@@ -4161,12 +4130,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install Future Automation PS65",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Family Room — Install James Loudspeaker PD42-4 (2)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4190,12 +4153,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Equipment Installation Tracker - Lvl 1: Flex Room — Install James Loudspeaker PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Equipment Installation Tracker - Lvl 1: Hot Tub Terrace — Install Ubiquiti U7-Outdoor",
           "status": "todo",
           "source": "Pulse",
@@ -4203,18 +4160,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Hot Tub Terrace — Install Ubiquiti UVC-AI-Pro",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Kitchen — Install James Loudspeaker PD42-4 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Living Room — Install James Loudspeaker PD42-4 (4)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4305,6 +4250,12 @@
         },
         {
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Trim out all locations.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
