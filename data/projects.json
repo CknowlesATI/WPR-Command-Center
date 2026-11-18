@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-17T20:45:08.597Z",
+  "lastUpdated": "2026-11-18T20:21:23.699Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -2462,8 +2462,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 40,
-      "overdueTasks": 8,
+      "openTasks": 39,
+      "overdueTasks": 7,
       "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
@@ -2684,12 +2684,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Unit 8 turnover Friday 10/9 - TV Back Boxes - Big D request to cover up \"holes\"",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Procore #1042: Unit 08 All shade wire to be cut back",
           "status": "todo",
           "source": "Procore",
@@ -2783,8 +2777,8 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Unit 8 turnover Friday 10/9 - TV Back Boxes - Big D request to cover up \"holes\"",
-          "dueDate": "2026-10-09",
+          "detail": "Rack Build: Please turn on \"Auto Reboot\" on pdu 1 and pdu 2 when rack is installed and powered.",
+          "dueDate": "2026-11-03",
           "source": "Pulse"
         }
       ],
@@ -3828,8 +3822,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 29,
-      "overdueTasks": 11,
+      "openTasks": 28,
+      "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -3853,12 +3847,6 @@
         },
         {
           "name": "Equipment Installation Tracker - Lvl 1: Any chance tomorrow morning, we can get blessing to put in a blank black bottom plate on your TV bac",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Equipment Installation Tracker - Lvl 1: Back box bottom plate needed in the primary bedroom in 201.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4083,7 +4071,7 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Equipment Installation Tracker - Lvl 1: Back box bottom plate needed in the primary bedroom in 201.",
+          "detail": "Install: Kitchen Patio: Install two black outdoor blank plates on wiring locations",
           "dueDate": "2026-10-16",
           "source": "Pulse"
         }
@@ -4100,7 +4088,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 25,
-      "overdueTasks": 3,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4312,6 +4300,13 @@
           "detail": "Install: Living Room Fireplace: Trim out wiring that was suppose to be \"buried\"",
           "dueDate": "2026-10-05",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Trim out all locations.",
+          "dueDate": "2026-11-17",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -4325,8 +4320,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 83,
-      "overdueTasks": 14,
+      "openTasks": 80,
+      "overdueTasks": 11,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4775,18 +4770,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Follow up with Helix on occupancy sensor in laundry room",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Mech Room - dimmer switch needs moved due to vent (follow up with Helix and BigD)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Primary Steam Shower - need to see if we can get a cat6 to the steam shower controller (need to verify with Shamrock/Plummers if th",
           "status": "todo",
           "source": "Pulse",
@@ -4806,12 +4789,6 @@
         },
         {
           "name": "Install: Rec Room WB31 - touch base with Jason to see if this box can be mounted yet (it was left tacked to the wall). See if BigD need any ",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: SERVICE CONDUIT - this is blocked and we don't have fiber to garage mech",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4883,20 +4860,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Follow up with Helix on occupancy sensor in laundry room",
-          "dueDate": "2026-08-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Mech Room - dimmer switch needs moved due to vent (follow up with Helix and BigD)",
-          "dueDate": "2026-08-17",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Install: Primary Steam Shower - need to see if we can get a cat6 to the steam shower controller (need to verify with Shamrock/Plummers if th",
           "dueDate": "2026-08-17",
           "source": "Pulse"
@@ -4904,8 +4867,22 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: SERVICE CONDUIT - this is blocked and we don't have fiber to garage mech",
+          "detail": "Install: Sauna, needs dvc landed in a speaker bracket (sonance medium ring) once ceiling grid is framed",
           "dueDate": "2026-08-17",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Talk to Shamrock about network cable in Sauna.",
+          "dueDate": "2026-08-18",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: AV Mech Room - ADD a picture of the wall in the mech room where the smurf tube meets the metal conduit that runs to the basement (B",
+          "dueDate": "2026-08-19",
           "source": "Pulse"
         }
       ],
@@ -4920,8 +4897,8 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 33,
-      "overdueTasks": 7,
+      "openTasks": 32,
+      "overdueTasks": 6,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -4933,12 +4910,6 @@
       "taskList": [
         {
           "name": "Admin: Prewire Additions 0678 needs approved (covers back boxes)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Admin: Use RCP for Speaker Grills (Round or Square) - we will need to order accordingly (possible C/O)",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -5171,13 +5142,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: Use RCP for Speaker Grills (Round or Square) - we will need to order accordingly (possible C/O)",
-          "dueDate": "2026-06-19",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Install: Get network switch from Clint MacKay (WPR IT) to add to our rack",
           "dueDate": "2026-08-29",
           "source": "Pulse"
@@ -5202,6 +5166,13 @@
           "detail": "Install: Project Handoff ? - do we have info for zones / speakers / amplifiers stated in system scope? Taps for 70v speakers should be set w",
           "dueDate": "2026-10-30",
           "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Did we get confirmation of the wiring for the 3 volume control zones downstairs so the as-builts can be updated?",
+          "dueDate": "2026-11-05",
+          "source": "Pulse"
         }
       ],
       "links": []
@@ -5215,8 +5186,8 @@
       "phase": "Install",
       "startDate": null,
       "endDate": null,
-      "openTasks": 24,
-      "overdueTasks": 12,
+      "openTasks": 25,
+      "overdueTasks": 13,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5354,6 +5325,12 @@
         },
         {
           "name": "AV: UL - Loft: Prep shielded cat6 for Starlink connection",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Admin: ATI: Reconcile parts for final billing.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
