@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-18T20:21:23.699Z",
+  "lastUpdated": "2026-11-19T20:25:54.622Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -12,7 +12,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 52,
-      "overdueTasks": 2,
+      "overdueTasks": 3,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -378,6 +378,13 @@
           "label": "Overdue task",
           "detail": "Admin: Lvl 2 Family Room - review current proposed short throw projector/screen and BigD provided millwork plan for fit & feedback. BigD is ",
           "dueDate": "2026-06-26",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Rack Build: Set up Family Room TV for Crestron control.",
+          "dueDate": "2026-11-18",
           "source": "Pulse"
         }
       ],
@@ -963,7 +970,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 29,
-      "overdueTasks": 6,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -993,6 +1000,12 @@
         },
         {
           "name": "Admin: Update as-built",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Design: System needs updated with actual parts for rack and to reflect power CO",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1140,12 +1153,6 @@
           "status": "progress",
           "source": "Procore",
           "externalUrl": ""
-        },
-        {
-          "name": "Project Handoff: Get with Logan and Lake Flato on Mock-up for side channels in corner conditions",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
         }
       ],
       "timelines": [
@@ -1198,13 +1205,6 @@
           "label": "Overdue task",
           "detail": "Install: Lvl 3 - we are not doing pendant speakers in this unit. We need to clean up the speaker wire hanging from the beams",
           "dueDate": "2026-06-10",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Project Handoff: Get with Logan and Lake Flato on Mock-up for side channels in corner conditions",
-          "dueDate": "2026-08-04",
           "source": "Pulse"
         },
         {
@@ -3244,8 +3244,8 @@
       "phase": "WPR Handover",
       "startDate": "2025-06-02",
       "endDate": "2026-09-01",
-      "openTasks": 25,
-      "overdueTasks": 11,
+      "openTasks": 24,
+      "overdueTasks": 10,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": "2026-08-14",
@@ -3281,12 +3281,6 @@
         },
         {
           "name": "Admin: ATI: Reconcile parts for final billing.",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Admin: Correct the Lighting Plan based on Thomas Hickman's markup.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -3440,13 +3434,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: Correct the Lighting Plan based on Thomas Hickman's markup.",
-          "dueDate": "2025-10-10",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Install: Turn auto reboot back on in rack PDU 1 once rack is up and running stable.",
           "dueDate": "2026-07-14",
           "source": "Pulse"
@@ -3477,6 +3464,13 @@
           "label": "Overdue task",
           "detail": "Install: Install Starlink on Penthouse rooftop",
           "dueDate": "2026-10-05",
+          "source": "Pulse"
+        },
+        {
+          "severity": "red",
+          "label": "Overdue task",
+          "detail": "Install: Clean up Pendant Speaker Wires.",
+          "dueDate": "2026-10-07",
           "source": "Pulse"
         }
       ],
@@ -4897,8 +4891,8 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 32,
-      "overdueTasks": 6,
+      "openTasks": 31,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5047,12 +5041,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Did we get confirmation of the wiring for the 3 volume control zones downstairs so the as-builts can be updated?",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Final Room Checklist has been completed.",
           "status": "todo",
           "source": "Pulse",
@@ -5166,13 +5154,6 @@
           "detail": "Install: Project Handoff ? - do we have info for zones / speakers / amplifiers stated in system scope? Taps for 70v speakers should be set w",
           "dueDate": "2026-10-30",
           "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Did we get confirmation of the wiring for the 3 volume control zones downstairs so the as-builts can be updated?",
-          "dueDate": "2026-11-05",
-          "source": "Pulse"
         }
       ],
       "links": []
@@ -5187,7 +5168,7 @@
       "startDate": null,
       "endDate": null,
       "openTasks": 25,
-      "overdueTasks": 13,
+      "overdueTasks": 14,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
