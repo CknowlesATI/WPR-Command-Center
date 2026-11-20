@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-19T20:25:54.622Z",
+  "lastUpdated": "2026-11-20T19:56:39.535Z",
   "source": "command-center-api",
   "projects": [
     {
@@ -969,7 +969,7 @@
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 29,
+      "openTasks": 28,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1000,12 +1000,6 @@
         },
         {
           "name": "Admin: Update as-built",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Design: System needs updated with actual parts for rack and to reflect power CO",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1229,11 +1223,11 @@
       "name": "WPR Unit 5",
       "area": "Units 1-6",
       "team": "Big-D Units 1-6",
-      "health": "green",
+      "health": "red",
       "phase": "WPR Handover",
       "startDate": null,
       "endDate": null,
-      "openTasks": 28,
+      "openTasks": 29,
       "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
@@ -1408,6 +1402,12 @@
         },
         {
           "name": "Rack Build: Family and Flex PDUs do not match in System and Domotz",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Warehouse: Need 2 Black 3D printed camera bases.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -1879,8 +1879,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 81,
-      "overdueTasks": 7,
+      "openTasks": 61,
+      "overdueTasks": 5,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -1890,126 +1890,6 @@
         "changeOrders": ""
       },
       "taskList": [
-        {
-          "name": "AI Duplicate?: Bedroom 3 — Install Apple TV 4K (128G)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Bedroom 3 — Install Samsung QN65QN80FAFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Bedroom 3 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Bedroom 3 — Install Ubiquiti U7-Pro-Max",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Bedroom 4 — Install Apple TV 4K (128G)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Bedroom 4 — Install Future Automation PS55",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Bedroom 4 — Install Samsung QN65QN80FAFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Bedroom 4 — Install Snap One WattBox IP Wi-Fi (2 outlets)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Family Room — Install Apple TV 4K (128G)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Family Room — Install Future Automation PS65",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Family Room — Install Samsung QN75QN80FAFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Family Room — Install Snap One WattBox IP Wi-Fi (2 outlets)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Family Room — Install Sonance VX66R (4)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Primary Bath — Install Sonance VX66R (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Primary Sitting — Install Sonance VX66 (2)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Primary Suite — Install Apple TV 4K (128G)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Primary Suite — Install Future Automation PS55",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Primary Suite — Install Samsung QN65QN80FAFXZA",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "AI Duplicate?: Primary Suite — Install Snap One WattBox IP Wi-Fi (2 outlets)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Admin: Eliminate all security wiring? Bury? what are we doing with the panel? (I will discuss on 2/20 from Landon)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
         {
           "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "status": "todo",
@@ -2293,6 +2173,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Kitchen: Move WAP wiring into cabinet",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: LVL1: Mudroom - Move WAP wires in line with lights",
           "status": "todo",
           "source": "Pulse",
@@ -2330,12 +2216,6 @@
         },
         {
           "name": "Install: Lvl 2 Bed 4 - Install WB 26 (Pending Bedroom Back Box Proposal)",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
-          "name": "Install: Lvl 3 WestTerrace - Land speaker wire (2) in planter boxes once the planter boxes have been installed.",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2418,13 +2298,6 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Admin: Eliminate all security wiring? Bury? what are we doing with the panel? (I will discuss on 2/20 from Landon)",
-          "dueDate": "2026-02-20",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
           "detail": "Install: Walk unit and mark up plan accordingly. Install cover plates where needed.",
           "dueDate": "2026-05-26",
           "source": "Pulse"
@@ -2439,15 +2312,15 @@
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Lvl 3 WestTerrace - Land speaker wire (2) in planter boxes once the planter boxes have been installed.",
-          "dueDate": "2026-07-03",
+          "detail": "Install: Lvl 2 Bed 3 - (Pending Bedroom Back Box Proposal) we don’t have enough depth for the WB26, we only have 2.25” of depth. Need a solu",
+          "dueDate": "2026-07-24",
           "source": "Pulse"
         },
         {
           "severity": "red",
           "label": "Overdue task",
-          "detail": "Install: Lvl 2 Bed 3 - (Pending Bedroom Back Box Proposal) we don’t have enough depth for the WB26, we only have 2.25” of depth. Need a solu",
-          "dueDate": "2026-07-24",
+          "detail": "Install: Site walk",
+          "dueDate": "2026-10-05",
           "source": "Pulse"
         }
       ],
@@ -2462,8 +2335,8 @@
       "phase": "Trim",
       "startDate": null,
       "endDate": null,
-      "openTasks": 39,
-      "overdueTasks": 7,
+      "openTasks": 49,
+      "overdueTasks": 8,
       "highPriorityTasks": 2,
       "risks": 0,
       "nextHandoff": null,
@@ -2473,6 +2346,12 @@
         "changeOrders": ""
       },
       "taskList": [
+        {
+          "name": "Admin: ATI project is getting close to final bill, need to reconcile parts",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
         {
           "name": "Admin: Item needs to be added/requested in WeQuote for the job: (1ea) Future Automation IWRE4. Note taken by Quincy on 1/21/26",
           "status": "todo",
@@ -2648,13 +2527,37 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Add Black plate in the Bar ceiling",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Add network line from our pannel to shade pannel",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Bed 1: Cut in LV1 and install blank plate",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
         },
         {
+          "name": "Install: Check tv settings. CEC is not powering down tv only going to art mode",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Final Room Checklist has been completed.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Find a final solution to modem in rack room. Find buried conduit",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2672,6 +2575,12 @@
           "externalUrl": ""
         },
         {
+          "name": "Install: Pdu1 has some has some miss named ports ensure the names are correct names.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -2679,6 +2588,24 @@
         },
         {
           "name": "Install: Project is ready for Client Training / Service Turnover to be scheduled",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: Relable Library Apple TV Port 8 To Library Switch Port 8 in all places needed at panel and switch",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: ensure NVR cameras are working",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Install: troubleshoot landscape speakers. and remaining pendant speakers",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -2703,6 +2630,12 @@
         },
         {
           "name": "Rack Build: Please turn on \"Auto Reboot\" on pdu 1 and pdu 2 when rack is installed and powered.",
+          "status": "todo",
+          "source": "Pulse",
+          "externalUrl": ""
+        },
+        {
+          "name": "Rack Build: Rename Library Apple TV Port 8 To Library Switch Port 8 in all places needed",
           "status": "todo",
           "source": "Pulse",
           "externalUrl": ""
@@ -4891,8 +4824,8 @@
       "phase": "Trim",
       "startDate": "2025-06-04",
       "endDate": "2026-11-30",
-      "openTasks": 31,
-      "overdueTasks": 5,
+      "openTasks": 30,
+      "overdueTasks": 4,
       "highPriorityTasks": 0,
       "risks": 0,
       "nextHandoff": null,
@@ -5065,12 +4998,6 @@
           "externalUrl": ""
         },
         {
-          "name": "Install: Project Handoff ? - do we have info for zones / speakers / amplifiers stated in system scope? Taps for 70v speakers should be set w",
-          "status": "todo",
-          "source": "Pulse",
-          "externalUrl": ""
-        },
-        {
           "name": "Install: Project has been verified as complete with Project Manager",
           "status": "todo",
           "source": "Pulse",
@@ -5146,13 +5073,6 @@
           "label": "Overdue task",
           "detail": "Install: Follow-up regarding Main Lounge Speaker",
           "dueDate": "2026-10-05",
-          "source": "Pulse"
-        },
-        {
-          "severity": "red",
-          "label": "Overdue task",
-          "detail": "Install: Project Handoff ? - do we have info for zones / speakers / amplifiers stated in system scope? Taps for 70v speakers should be set w",
-          "dueDate": "2026-10-30",
           "source": "Pulse"
         }
       ],
